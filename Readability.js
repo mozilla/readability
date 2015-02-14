@@ -410,6 +410,14 @@ Readability.prototype = {
     // Check if any "dir" is set on the toplevel document element
     this._articleDir = doc.documentElement.getAttribute("dir");
 
+    //helper function used below in the 'while' loop:
+    function purgeNode(node, allElements) {
+      for (let i = node.childNodes.length; --i >= 0;) {
+        purgeNode(node.childNodes[i], allElements);
+      }
+      if (node._index !== undefined && allElements[node._index] == node)
+        delete allElements[node._index];
+    }
     while (true) {
       var stripUnlikelyCandidates = this._flagIsActive(this.FLAG_STRIP_UNLIKELYS);
       var allElements = page.getElementsByTagName('*');
@@ -433,14 +441,6 @@ Readability.prototype = {
        * an element from the document, we need to manually remove it - and all
        * of its children - from the allElements array.
        */
-      function purgeNode(node) {
-        for (var i = node.childNodes.length; --i >= 0;) {
-          purgeNode(node.childNodes[i]);
-        }
-        if (node._index !== undefined && allElements[node._index] == node)
-          delete allElements[node._index];
-      }
-
       for (var nodeIndex = 0; nodeIndex < allElements.length; nodeIndex++) {
         if (!(node = allElements[nodeIndex]))
           continue;
@@ -450,7 +450,7 @@ Readability.prototype = {
           if (this._isValidByline(node.textContent)) {
             this._articleByline = node.textContent.trim();
             node.parentNode.removeChild(node);
-            purgeNode(node);
+            purgeNode(node, allElements);
             continue;
           }
         }
@@ -462,7 +462,7 @@ Readability.prototype = {
             node.tagName !== "BODY") {
             this.log("Removing unlikely candidate - " + matchString);
             node.parentNode.removeChild(node);
-            purgeNode(node);
+            purgeNode(node, allElements);
             continue;
           }
         }
@@ -482,7 +482,7 @@ Readability.prototype = {
             if (pIndex >= 0) {
               var newNode = node.childNodes[pIndex];
               node.parentNode.replaceChild(newNode, node);
-              purgeNode(node);
+              purgeNode(node, allElements);
             } else {
               this._setNodeTag(node, "P");
               nodesToScore[nodesToScore.length] = node;
