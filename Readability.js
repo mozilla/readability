@@ -412,7 +412,7 @@ Readability.prototype = {
 
     //helper function used below in the 'while' loop:
     function purgeNode(node, allElements) {
-      for (let i = node.childNodes.length; --i >= 0;) {
+      for (var i = node.childNodes.length; --i >= 0;) {
         purgeNode(node.childNodes[i], allElements);
       }
       if (node._index !== undefined && allElements[node._index] == node)
