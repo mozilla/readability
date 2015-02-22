@@ -1,0 +1,18 @@
+
+#inputs {
+  margin: 20px 0;
+}
+
+#url {
+  width: 400px;
+}
+
+#frames {
+  display: flex;
+  height: 600px;
+  margin: ;
+}
+
+.frame {
+  flex: 1;
+}
