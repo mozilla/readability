@@ -1,0 +1,8 @@
+.DS_Store
+.metadata
+*.pyc
+*~
+.*.sw?
+.sw?
+*.jar
+*.xpi

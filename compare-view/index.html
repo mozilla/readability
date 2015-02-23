@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Readability Compare View</title>
+    <link rel="stylesheet" href="compare.css">
+  </head>
+  <body>
+    <h1>Readability Compare View</h1>
+    <div id="inputs">
+      <input type="url" placeholder="http://localhost:8080/test-pages/margaret.html" id="url"/>
+      <input type="submit" value="Compare" id="compare"/>
+    </div>
+    <div id="frames">
+      <iframe id="original" class="frame"></iframe>
+      <iframe id="readerized" class="frame" src="reader-view.html"></iframe>
+    </div>
+
+    <script src="../Readability.js"></script>
+    <script src="compare.js"></script>
+  </body>
+</html>
