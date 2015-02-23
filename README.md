@@ -1,6 +1,6 @@
 # Readability.js
 
-A standalone version of the readability library used for Firefox Reader View.
+A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an appropriate Firefox/toolkit peer, such as [@leibovic](https://github.com/leibovic) or [@thebnich](https://github.com/thebnich), since these changes will be automatically merged to mozilla-central.
 
 For outstanding issues, see this bug list: https://bugzilla.mozilla.org/show_bug.cgi?id=1102450
 
