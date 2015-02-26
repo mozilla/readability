@@ -2,6 +2,12 @@
 
 A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an appropriate Firefox/toolkit peer, such as [@leibovic](https://github.com/leibovic) or [@thebnich](https://github.com/thebnich), since these changes will be automatically merged to mozilla-central.
 
+## Contributing
+
+For outstanding issues, see the issue list in this repo, as well as this bug list: https://bugzilla.mozilla.org/show_bug.cgi?id=1102450
+
+To test local changes to Readability.js, you can run your own instance of [readable-proxy](https://github.com/n1k0/readable-proxy/) to compare an original test page to its reader-ized content.
+
 ## Usage
 
 To parse a document, you must create a new `Readability` object from a URI object and a document, and then call `parse()`. Here's an example:
@@ -28,11 +34,6 @@ This `article` object will contain the following properties:
 * `byline`: author metadata
 * `dir`: content direction
 
-## Contributing
-
-For outstanding issues, see the issue list in this repo, as well as this bug list: https://bugzilla.mozilla.org/show_bug.cgi?id=1102450
-
-To test local changes to Readability.js, you can run your own instance of [readable-proxy](https://github.com/n1k0/readable-proxy/) to compare an original test page to its reader-ized content.
 
 ## License
 
