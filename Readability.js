@@ -20,7 +20,7 @@
  */
 
 var Readability = function(uri, doc) {
-  const ENABLE_LOGGING = false;
+  var ENABLE_LOGGING = false;
 
   this._uri = uri;
   this._doc = doc;
