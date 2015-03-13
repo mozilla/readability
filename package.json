@@ -1,0 +1,26 @@
+{
+  "name": "readability",
+  "version": "0.0.1",
+  "description": "A standalone version of the readability library used for Firefox Reader View.",
+  "main": "Readability.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mozilla/readability"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mozilla/readability/issues"
+  },
+  "homepage": "https://github.com/mozilla/readability",
+  "devDependencies": {
+    "chai": "^2.1.*",
+    "chai-as-promised": "^4.3.*",
+    "html": "0.0.*",
+    "mocha": "^2.2.*",
+    "readable-proxy": "1.2.*"
+  }
+}
