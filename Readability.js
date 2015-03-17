@@ -663,7 +663,7 @@ Readability.prototype = {
 
           // To ensure a node does not interfere with readability styles,
           // remove its classnames.
-          siblingNode.className = "";
+          siblingNode.removeAttribute("class");
 
           // Append sibling and subtract from our list because it removes
           // the node when you append to another node.
