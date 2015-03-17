@@ -679,8 +679,8 @@ Readability.prototype = {
         div.id = "readability-page-1";
         div.className = "page";
         var children = articleContent.childNodes;
-        for (var i = 0; i < children.length; ++i) {
-          div.appendChild(children[i]);
+        while (children.length) {
+          div.appendChild(children[0]);
         }
         articleContent.appendChild(div);
       }
