@@ -1,4 +1,3 @@
-var scrape = require("readable-proxy").scrape;
 var path = require("path");
 var fs = require("fs");
 var prettyPrint = require("html").prettyPrint;
@@ -18,6 +17,9 @@ var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
 });
 
 describe("Test page", function() {
+  var oldLibPath = process.env.READABILITY_LIB_PATH;
+  process.env.READABILITY_LIB_PATH = path.join(__dirname, "..", "Readability.js");
+  var scrape = require("readable-proxy").scrape;
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
       it("should render as expected", function() {
@@ -33,5 +35,6 @@ describe("Test page", function() {
         }).should.eventually.become(prettyPrint(expected));
       });
     });
-  })
+  });
+  process.env.READABILITY_LIB_PATH = oldLibPath;
 });
