@@ -46,12 +46,25 @@ var Readability = function(uri, doc) {
 
   // Control whether log messages are sent to the console
   if (ENABLE_LOGGING) {
-    var logger;
-    this.log = function (msg) {
+    function logEl(e) {
+      var rv = e.nodeName + " ";
+      if (e.nodeType == e.TEXT_NODE) {
+        return rv + '("' + e.textContent + '")';
+      }
+      var classDesc = e.className && ("." + Array.prototype.join.call(e.classList, "."));
+      var elDesc = e.id ? "(#" + e.id + classDesc + ")" :
+                          (classDesc ? "(" + classDesc + ")" : "");
+      return rv + elDesc;
+    }
+    this.log = function () {
       if ("dump" in root) {
+        var msg = Array.prototype.map.call(arguments, function(x) {
+          return (x && x.nodeName) ? logEl(x) : x;
+        }).join(" ");
         dump("Reader: (Readability) " + msg + "\n");
       } else if ("console" in root) {
-        console.log("Reader: (Readability) " + msg + "\n");
+        var args = ["Reader: (Readability) "].concat(arguments);
+        console.log.apply(console, args);
       }
     };
   } else {
@@ -574,8 +587,7 @@ Readability.prototype = {
         var candidateScore = candidate.readability.contentScore * (1 - this._getLinkDensity(candidate));
         candidate.readability.contentScore = candidateScore;
 
-        this.log('Candidate: ' + candidate + " (" + candidate.className + ":" +
-          candidate.id + ") with score " + candidateScore);
+        this.log('Candidate:', candidate, "with score " + candidateScore);
 
         for (var t = 0; t < this.N_TOP_CANDIDATES; t++) {
           var aTopCandidate = topCandidates[t];
@@ -598,6 +610,7 @@ Readability.prototype = {
         topCandidate = doc.createElement("DIV");
         var children = page.childNodes;
         for (var i = 0; i < children.length; ++i) {
+          this.log("Moving children:", children[i]);
           topCandidate.appendChild(children[i]);
         }
 
@@ -620,7 +633,7 @@ Readability.prototype = {
         var siblingNode = siblingNodes[s];
         var append = false;
 
-        this.log("Looking at sibling node: " + siblingNode.nodeName + " (" + siblingNode.className + ":" + siblingNode.id + ")" + ((typeof siblingNode.readability !== 'undefined') ? (" with score " + siblingNode.readability.contentScore) : ''));
+        this.log("Looking at sibling node:", siblingNode, ((typeof siblingNode.readability !== 'undefined') ? ("with score " + siblingNode.readability.contentScore) : ''));
         this.log("Sibling has score " + (siblingNode.readability ? siblingNode.readability.contentScore : 'Unknown'));
 
         if (siblingNode === topCandidate)
@@ -649,7 +662,7 @@ Readability.prototype = {
         }
 
         if (append) {
-          this.log("Appending node: " + siblingNode.nodeName + " " + siblingNode.className + ":" + siblingNode.id + ")");
+          this.log("Appending node:", siblingNode);
 
           // siblingNodes is a reference to the childNodes array, and
           // siblingNode is removed from the array when we call appendChild()
@@ -661,7 +674,7 @@ Readability.prototype = {
           if (siblingNode.nodeName !== "DIV" && siblingNode.nodeName !== "P") {
             // We have a node that isn't a common block level element, like a form or td tag.
             // Turn it into a div so it doesn't get filtered out later by accident. */
-            this.log("Altering siblingNode of " + siblingNode.nodeName + ' to div.');
+            this.log("Altering siblingNode:", siblingNode, 'to div.');
 
             this._setNodeTag(siblingNode, "DIV");
           }
@@ -1403,7 +1416,7 @@ Readability.prototype = {
       var weight = this._getClassWeight(tagsList[i]);
       var contentScore = 0;
 
-      this.log("Cleaning Conditionally " + tagsList[i] + " (" + tagsList[i].className + ":" + tagsList[i].id + ")");
+      this.log("Cleaning Conditionally", tagsList[i]);
 
       if (weight + contentScore < 0) {
         tagsList[i].parentNode.removeChild(tagsList[i]);
