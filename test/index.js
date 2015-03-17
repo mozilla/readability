@@ -30,6 +30,14 @@ describe("Test page", function() {
         return scrape("file://" + testPage.source).catch(function(err) {
           throw err;
         }).then(function(result) {
+          // print Readability log messages
+          (result.consoleLogs || [])
+            .filter(function(logMessage) {
+              return logMessage.indexOf("Reader: (Readability)") === 0;
+            })
+            .forEach(function(logMessage) {
+              console.log("[LOG]", logMessage);
+            });
           // normalize html
           return prettyPrint(result.content);
         }).should.eventually.become(prettyPrint(expected));

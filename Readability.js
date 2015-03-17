@@ -18,7 +18,7 @@
  * This code is heavily based on Arc90's readability.js (1.7.1) script
  * available at: http://code.google.com/p/arc90labs-readability
  */
-
+var root = this;
 var Readability = function(uri, doc) {
   var ENABLE_LOGGING = false;
 
@@ -46,8 +46,13 @@ var Readability = function(uri, doc) {
 
   // Control whether log messages are sent to the console
   if (ENABLE_LOGGING) {
+    var logger;
     this.log = function (msg) {
-      dump("Reader: (Readability) " + msg + "\n");
+      if ("dump" in root) {
+        dump("Reader: (Readability) " + msg + "\n");
+      } else if ("console" in root) {
+        console.log("Reader: (Readability) " + msg + "\n");
+      }
     };
   } else {
     this.log = function () {};
