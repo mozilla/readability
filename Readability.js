@@ -47,7 +47,7 @@ var Readability = function(uri, doc) {
   // Control whether log messages are sent to the console
   if (ENABLE_LOGGING) {
     this.log = function (msg) {
-      dump("Reader: (Readability) " + msg);
+      dump("Reader: (Readability) " + msg + "\n");
     };
   } else {
     this.log = function () {};
@@ -615,7 +615,7 @@ Readability.prototype = {
         var siblingNode = siblingNodes[s];
         var append = false;
 
-        this.log("Looking at sibling node: " + siblingNode + " (" + siblingNode.className + ":" + siblingNode.id + ")" + ((typeof siblingNode.readability !== 'undefined') ? (" with score " + siblingNode.readability.contentScore) : ''));
+        this.log("Looking at sibling node: " + siblingNode.nodeName + " (" + siblingNode.className + ":" + siblingNode.id + ")" + ((typeof siblingNode.readability !== 'undefined') ? (" with score " + siblingNode.readability.contentScore) : ''));
         this.log("Sibling has score " + (siblingNode.readability ? siblingNode.readability.contentScore : 'Unknown'));
 
         if (siblingNode === topCandidate)
@@ -644,7 +644,7 @@ Readability.prototype = {
         }
 
         if (append) {
-          this.log("Appending node: " + siblingNode);
+          this.log("Appending node: " + siblingNode.nodeName + " " + siblingNode.className + ":" + siblingNode.id + ")");
 
           // siblingNodes is a reference to the childNodes array, and
           // siblingNode is removed from the array when we call appendChild()
@@ -671,8 +671,10 @@ Readability.prototype = {
         }
       }
 
+      this.log("Article content pre-prep: " + articleContent.innerHTML);
       // So we have all of the content that we need. Now we clean it up for presentation.
       this._prepArticle(articleContent);
+      this.log("Article content post-prep: " + articleContent.innerHTML);
 
       if (this._curPageNum === 1) {
         var div = doc.createElement("DIV");
@@ -684,6 +686,8 @@ Readability.prototype = {
         }
         articleContent.appendChild(div);
       }
+
+      this.log("Article content after paging: " + articleContent.innerHTML);
 
       // Now that we've gone through the full algorithm, check to see if
       // we got any meaningful content. If we didn't, we may need to re-run
@@ -1500,6 +1504,8 @@ Readability.prototype = {
     var articleContent = this._grabArticle();
     if (!articleContent)
       return null;
+
+    this.log("Grabbed: " + articleContent.innerHTML);
 
     this._postProcessContent(articleContent);
 
