@@ -17,14 +17,28 @@ describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
       it("should render as expected", function(done) {
+        var source = fs.readFileSync(testPage.source, {encoding: "utf-8"});
         var expected = fs.readFileSync(testPage.expected, {encoding: "utf-8"});
         jsdom.env(
-          fs.readFileSync(testPage.source, {encoding: "utf-8"}),
+          testPage.source,
           [path.join(__dirname, "..", "Readability.js")],
-          function (errors, window) {
-            if (errors) {
-              throw new Error(errors);
+          {
+            features: {
+              FetchExternalResources : [],
+              ProcessExternalResources: false,
+              SkipExternalResources: false
+            },
+            created: function(errors, window) {
+              jsdom.getVirtualConsole(window).on("log", function() {
+                // Very strange argument set passed to describe console.log messages…
+                if (arguments[0].indexOf("Reader:") === 0) {
+                  console.log(arguments[0], arguments[1][0]);
+                }
+              });
             }
+          },
+          function (errors, window) {
+            expect(errors).eql(null);
             var uri = {
               spec: "http://fakehost/test/page.html",
               host: "fakehost",
