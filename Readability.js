@@ -602,16 +602,18 @@ Readability.prototype = {
       }
 
       var topCandidate = topCandidates[0] || null;
+      var neededToCreateTopCandidate = false;
 
       // If we still have no top candidate, just use the body as a last resort.
       // We also have to copy the body node so it is something we can modify.
       if (topCandidate === null || topCandidate.tagName === "BODY") {
         // Move all of the page's children into topCandidate
         topCandidate = doc.createElement("DIV");
+        neededToCreateTopCandidate = true;
         var children = page.childNodes;
-        for (var i = 0; i < children.length; ++i) {
-          this.log("Moving children:", children[i]);
-          topCandidate.appendChild(children[i]);
+        while (children.length) {
+          this.log("Moving child out:", children[0]);
+          topCandidate.appendChild(children[0]);
         }
 
         page.appendChild(topCandidate);
@@ -695,14 +697,23 @@ Readability.prototype = {
       this.log("Article content post-prep: " + articleContent.innerHTML);
 
       if (this._curPageNum === 1) {
-        var div = doc.createElement("DIV");
-        div.id = "readability-page-1";
-        div.className = "page";
-        var children = articleContent.childNodes;
-        while (children.length) {
-          div.appendChild(children[0]);
+        if (neededToCreateTopCandidate) {
+          // We already created a fake div thing, and there wouldn't have been any siblings left
+          // for the previous loop, so there's no point trying to create a new div, and then
+          // move all the children over. Just assign IDs and class names here. No need to append
+          // because that already happened anyway.
+          topCandidate.id = "readability-page-1";
+          topCandidate.className = "page";
+        } else {
+          var div = doc.createElement("DIV");
+          div.id = "readability-page-1";
+          div.className = "page";
+          var children = articleContent.childNodes;
+          while (children.length) {
+            div.appendChild(children[0]);
+          }
+          articleContent.appendChild(div);
         }
-        articleContent.appendChild(div);
       }
 
       this.log("Article content after paging: " + articleContent.innerHTML);
