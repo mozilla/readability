@@ -214,27 +214,15 @@ Readability.prototype = {
   _prepDocument: function() {
     var doc = this._doc;
 
-    // In some cases a body element can't be found (if the HTML is
-    // totally hosed for example) so we create a new body node and
-    // append it to the document.
-    if (!doc.body) {
-      var body = doc.createElement("body");
-
-      try {
-        doc.body = body;
-      } catch(e) {
-        doc.documentElement.appendChild(body);
-        this.log(e);
-      }
-    }
-
     // Remove all style tags in head
     var styleTags = doc.getElementsByTagName("style");
     for (var st = 0; st < styleTags.length; st += 1) {
       styleTags[st].textContent = "";
     }
 
-    this._replaceBrs(doc.body);
+    if (doc.body) {
+      this._replaceBrs(doc.body);
+    }
 
     var fonts = doc.getElementsByTagName("FONT");
     for (var i = fonts.length; --i >=0;) {
@@ -423,6 +411,13 @@ Readability.prototype = {
     var doc = this._doc;
     var isPaging = (page !== null ? true: false);
     page = page ? page : this._doc.body;
+
+    // We can't grab an article if we don't have a page!
+    if (!page) {
+      this.log("No body found in document. Abort.");
+      return null;
+    }
+
     var pageCacheHtml = page.innerHTML;
 
     // Check if any "dir" is set on the toplevel document element
