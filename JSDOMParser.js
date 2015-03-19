@@ -285,18 +285,23 @@
     nodeName: null,
     parentNode: null,
     textContent: null,
+    nextSibling: null,
+    previousSibling: null,
 
     get firstChild() {
       return this.childNodes[0] || null;
     },
 
-    get nextSibling() {
-      if (this.parentNode) {
-        var childNodes = this.parentNode.childNodes;
-        return childNodes[childNodes.indexOf(this) + 1] || null;
-      }
+    get firstElementChild() {
+      return this.children[0] || null;
+    },
 
-      return null;
+    get lastChild() {
+      return this.childNodes[this.childNodes.length - 1] || null;
+    },
+
+    get lastElementChild() {
+      return this.children[this.children.length - 1] || null;
     },
 
     appendChild: function (child) {
@@ -304,6 +309,16 @@
         child.parentNode.removeChild(child);
       }
 
+      var last = this.lastChild;
+      if (last)
+        last.nextSibling = child;
+      child.previousSibling = last;
+
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        child.previousElementSibling = this.children[this.children.length - 1] || null;
+        this.children.push(child);
+        child.previousElementSibling && (child.previousElementSibling.nextElementSibling = child);
+      }
       this.childNodes.push(child);
       child.parentNode = this;
     },
@@ -315,6 +330,23 @@
         throw "removeChild: node not found";
       } else {
         child.parentNode = null;
+        var prev = child.previousSibling;
+        var next = child.nextSibling;
+        if (prev)
+          prev.nextSibling = next;
+        if (next)
+          next.previousSibling = prev;
+
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          prev = child.previousElementSibling;
+          next = child.nextElementSibling;
+          if (prev)
+            prev.nextElementSibling = next;
+          if (next)
+            next.previousElementSibling = prev;
+          this.children.splice(this.children.indexOf(child), 1);
+        }
+
         return childNodes.splice(childIndex, 1)[0];
       }
     },
@@ -329,8 +361,54 @@
           newNode.parentNode.removeChild(newNode);
 
         childNodes[childIndex] = newNode;
+        newNode.nextSibling = oldNode.nextSibling;
+        newNode.previousSibling = oldNode.previousSibling;
+        newNode.nextSibling && (newNode.nextSibling.previousSibling = newNode);
+        newNode.previousSibling && (newNode.previousSibling.nextSibling = newNode);
         newNode.parentNode = this;
+        if (newNode.nodeType === Node.ELEMENT_NODE) {
+          if (oldNode.nodeType === Node.ELEMENT_NODE) {
+            newNode.previousElementSibling = oldNode.previousElementSibling;
+            newNode.nextElementSibling = oldNode.nextElementSibling;
+            this.children[this.children.indexOf(oldNode)] = newNode;
+          } else {
+            // Hard way:
+            newNode.previousElementSibling = (function() {
+              for (var i = childIndex - 1; i >= 0; i--) {
+                if (childNodes[i].nodeType === Node.ELEMENT_NODE)
+                  return childNodes[i];
+              }
+              return null;
+            })();
+            if (newNode.previousElementSibling) {
+              newNode.nextElementSibling = newNode.previousElementSibling.nextElementSibling;
+            } else {
+              newNode.nextElementSibling = (function() {
+                for (var i = childIndex + 1; i < childNodes.length; i++) {
+                  if (childNodes[i].nodeType === Node.ELEMENT_NODE)
+                    return childNodes[i];
+                }
+                return null;
+              })();
+            }
+            if (newNode.previousElementSibling)
+              newNode.previousElementSibling.nextElementSibling = newNode;
+            if (newNode.nextElementSibling)
+              newNode.nextElementSibling.previousElementSibling = newNode;
+            if (newNode.nextElementSibling)
+              this.children.splice(this.children.indexOf(newNode.nextElementSibling), 0, newNode);
+            else
+              this.children.push(newNode);
+          }
+        }
+
         oldNode.parentNode = null;
+        oldNode.previousSibling = null;
+        oldNode.nextSibling = null;
+        if (oldNode.nodeType === Node.ELEMENT_NODE) {
+          oldNode.previousElementSibling = null;
+          oldNode.nextElementSibling = null;
+        }
         return oldNode;
       }
     }
@@ -371,6 +449,7 @@
   var Document = function () {
     this.styleSheets = [];
     this.childNodes = [];
+    this.children = [];
   };
 
   Document.prototype = {
@@ -406,6 +485,8 @@
   var Element = function (tag) {
     this.attributes = [];
     this.childNodes = [];
+    this.children = [];
+    this.nextElementSibling = this.previousElementSibling = null;
     this.localName = tag.toLowerCase();
     this.tagName = tag.toUpperCase();
     this.style = new Style(this);
@@ -801,8 +882,7 @@
       while ((child = this.readNode())) {
         // Don't keep Comment nodes
         if (child.nodeType !== 8) {
-          node.childNodes.push(child);
-          child.parentNode = node;
+          node.appendChild(child);
         }
       }
     },
@@ -814,8 +894,7 @@
       }
       var txt = new Text();
       txt.textContent = this.html.substring(this.currentChar, index === -1 ? this.html.length : index);
-      node.childNodes.push(txt);
-      txt.parentNode = node;
+      node.appendChild(txt);
       this.currentChar = index;
     },
 
