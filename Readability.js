@@ -784,7 +784,7 @@ Readability.prototype = {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
 
-      var name;
+      var name = null;
       if (namePattern.test(elementName)) {
         name = elementName;
       } else if (propertyPattern.test(elementProperty)) {
