@@ -105,6 +105,8 @@ Readability.prototype = {
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
 
+  ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
+
   /**
    * Run any post-process modifications to article content as necessary.
    *
@@ -668,7 +670,7 @@ Readability.prototype = {
           s -= 1;
           sl -= 1;
 
-          if (siblingNode.nodeName !== "DIV" && siblingNode.nodeName !== "P") {
+          if (this.ALTER_TO_DIV_EXCEPTIONS.indexOf(siblingNode.nodeName) === -1) {
             // We have a node that isn't a common block level element, like a form or td tag.
             // Turn it into a div so it doesn't get filtered out later by accident. */
             this.log("Altering siblingNode:", siblingNode, 'to div.');
