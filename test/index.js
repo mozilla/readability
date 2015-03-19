@@ -33,6 +33,7 @@ var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
     dir: dir,
     source: path.join(testPageRoot, dir, "source.html"),
     expected: path.join(testPageRoot, dir, "expected.html"),
+    expectedMetadata: path.join(testPageRoot, dir, "expected-metadata.json"),
   };
 });
 
@@ -41,6 +42,7 @@ describe("Test page", function() {
     describe(testPage.dir, function() {
       it("should render as expected", function(done) {
         var expected = fs.readFileSync(testPage.expected, {encoding: "utf-8"});
+        var expectedMetadata = fs.readFileSync(testPage.expectedMetadata, {encoding: "utf-8"});
         var source = fs.readFileSync(testPage.source, {encoding: "utf-8"});
         var uri = {
           spec: "http://fakehost/test/page.html",
@@ -52,6 +54,12 @@ describe("Test page", function() {
         var doc = new JSDOMParser().parse(source);
         var result = new Readability(uri, doc).parse();
         expect(prettyPrint(result.content)).eql(expected);
+
+        var metadata = JSON.parse(expectedMetadata);
+        expect(result.title).eql(metadata.title);
+        expect(result.byline).eql(metadata.byline);
+        expect(result.excerpt).eql(metadata.excerpt);
+
         done();
       });
     });
