@@ -31,7 +31,7 @@
   }
 
   // When a style is set in JS, map it to the corresponding CSS attribute
-  let styleMap = {
+  var styleMap = {
     "alignmentBaseline": "alignment-baseline",
     "background": "background",
     "backgroundAttachment": "background-attachment",
@@ -223,7 +223,7 @@
   };
 
   // Elements that can be self-closing
-  let voidElems = {
+  var voidElems = {
     "area": true,
     "base": true,
     "br": true,
@@ -239,8 +239,10 @@
     "source": true,
   };
 
+  var whitespace = [" ", "\t", "\n", "\r"];
+
   // See http://www.w3schools.com/dom/dom_nodetype.asp
-  let nodeTypes = {
+  var nodeTypes = {
     ELEMENT_NODE: 1,
     ATTRIBUTE_NODE: 2,
     TEXT_NODE: 3,
@@ -257,12 +259,12 @@
 
   function getElementsByTagName(tag) {
     tag = tag.toUpperCase();
-    let elems = [];
-    let allTags = (tag === "*");
+    var elems = [];
+    var allTags = (tag === "*");
     function getElems(node) {
-      let length = node.childNodes.length;
-      for (let i = 0; i < length; i++) {
-        let child = node.childNodes[i];
+      var length = node.childNodes.length;
+      for (var i = 0; i < length; i++) {
+        var child = node.childNodes[i];
         if (child.nodeType !== 1)
           continue;
         if (allTags || (child.tagName === tag))
@@ -274,7 +276,7 @@
     return elems;
   }
 
-  let Node = function () {};
+  var Node = function () {};
 
   Node.prototype = {
     attributes: null,
@@ -290,7 +292,7 @@
 
     get nextSibling() {
       if (this.parentNode) {
-        let childNodes = this.parentNode.childNodes;
+        var childNodes = this.parentNode.childNodes;
         return childNodes[childNodes.indexOf(this) + 1] || null;
       }
 
@@ -307,8 +309,8 @@
     },
 
     removeChild: function (child) {
-      let childNodes = this.childNodes;
-      let childIndex = childNodes.indexOf(child);
+      var childNodes = this.childNodes;
+      var childIndex = childNodes.indexOf(child);
       if (childIndex === -1) {
         throw "removeChild: node not found";
       } else {
@@ -318,8 +320,8 @@
     },
 
     replaceChild: function (newNode, oldNode) {
-      let childNodes = this.childNodes;
-      let childIndex = childNodes.indexOf(oldNode);
+      var childNodes = this.childNodes;
+      var childIndex = childNodes.indexOf(oldNode);
       if (childIndex === -1) {
         throw "replaceChild: node not found";
       } else {
@@ -334,16 +336,16 @@
     }
   };
 
-  for (let i in nodeTypes) {
+  for (var i in nodeTypes) {
     Node[i] = Node.prototype[i] = nodeTypes[i];
   }
 
-  let Attribute = function (name, value) {
+  var Attribute = function (name, value) {
     this.name = name;
     this.value = value;
   };
 
-  let Comment = function () {
+  var Comment = function () {
     this.childNodes = [];
   };
 
@@ -354,7 +356,7 @@
     nodeType: Node.COMMENT_NODE
   };
 
-  let Text = function () {
+  var Text = function () {
     this.childNodes = [];
   };
 
@@ -366,7 +368,7 @@
     textContent: ""
   }
 
-  let Document = function () {
+  var Document = function () {
     this.styleSheets = [];
     this.childNodes = [];
   };
@@ -382,11 +384,11 @@
 
     getElementById: function (id) {
       function getElem(node) {
-        let length = node.childNodes.length;
+        var length = node.childNodes.length;
         if (node.id === id)
           return node;
-        for (let i = 0; i < length; i++) {
-          let el = getElem(node.childNodes[i]);
+        for (var i = 0; i < length; i++) {
+          var el = getElem(node.childNodes[i]);
           if (el)
             return el;
         }
@@ -396,12 +398,12 @@
     },
 
     createElement: function (tag) {
-      let node = new Element(tag);
+      var node = new Element(tag);
       return node;
     }
   };
 
-  let Element = function (tag) {
+  var Element = function (tag) {
     this.attributes = [];
     this.childNodes = [];
     this.localName = tag.toLowerCase();
@@ -454,16 +456,16 @@
 
     get innerHTML() {
       function getHTML(node) {
-        let i = 0;
+        var i = 0;
         for (i = 0; i < node.childNodes.length; i++) {
-          let child = node.childNodes[i];
+          var child = node.childNodes[i];
           if (child.localName) {
             arr.push("<" + child.localName);
 
             // serialize attribute list
-            for (let j = 0; j < child.attributes.length; j++) {
-              let attr = child.attributes[j];
-              let quote = (attr.value.indexOf('"') === -1 ? '"' : "'");
+            for (var j = 0; j < child.attributes.length; j++) {
+              var attr = child.attributes[j];
+              var quote = (attr.value.indexOf('"') === -1 ? '"' : "'");
               arr.push(" " + attr.name + '=' + quote + attr.value + quote);
             }
 
@@ -484,30 +486,30 @@
 
       // Using Array.join() avoids the overhead from lazy string concatenation.
       // See http://blog.cdleary.com/2012/01/string-representation-in-spidermonkey/#ropes
-      let arr = [];
+      var arr = [];
       getHTML(this);
       return arr.join("");
     },
 
     set innerHTML(html) {
-      let parser = new JSDOMParser();
-      let node = parser.parse(html);
-      for (let i = this.childNodes.length; --i >= 0;) {
+      var parser = new JSDOMParser();
+      var node = parser.parse(html);
+      for (var i = this.childNodes.length; --i >= 0;) {
         this.childNodes[i].parentNode = null;
       }
       this.childNodes = node.childNodes;
-      for (let i = this.childNodes.length; --i >= 0;) {
+      for (var i = this.childNodes.length; --i >= 0;) {
         this.childNodes[i].parentNode = this;
       }
     },
 
     set textContent(text) {
       // clear parentNodes for existing children
-      for (let i = this.childNodes.length; --i >= 0;) {
+      for (var i = this.childNodes.length; --i >= 0;) {
         this.childNodes[i].parentNode = null;
       }
 
-      let node = new Text();
+      var node = new Text();
       this.childNodes = [ node ];
       node.textContent = text;
       node.parentNode = this;
@@ -515,9 +517,9 @@
 
     get textContent() {
       function getText(node) {
-        let nodes = node.childNodes;
-        for (let i = 0; i < nodes.length; i++) {
-          let child = nodes[i];
+        var nodes = node.childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+          var child = nodes[i];
           if (child.nodeType === 3) {
             text.push(child.textContent);
           } else {
@@ -528,14 +530,14 @@
 
       // Using Array.join() avoids the overhead from lazy string concatenation.
       // See http://blog.cdleary.com/2012/01/string-representation-in-spidermonkey/#ropes
-      let text = [];
+      var text = [];
       getText(this);
       return text.join("");
     },
 
     getAttribute: function (name) {
-      for (let i = this.attributes.length; --i >= 0;) {
-        let attr = this.attributes[i];
+      for (var i = this.attributes.length; --i >= 0;) {
+        var attr = this.attributes[i];
         if (attr.name === name)
           return attr.value;
       }
@@ -543,8 +545,8 @@
     },
 
     setAttribute: function (name, value) {
-      for (let i = this.attributes.length; --i >= 0;) {
-        let attr = this.attributes[i];
+      for (var i = this.attributes.length; --i >= 0;) {
+        var attr = this.attributes[i];
         if (attr.name === name) {
           attr.value = value;
           return;
@@ -554,8 +556,8 @@
     },
 
     removeAttribute: function (name) {
-      for (let i = this.attributes.length; --i >= 0;) {
-        let attr = this.attributes[i];
+      for (var i = this.attributes.length; --i >= 0;) {
+        var attr = this.attributes[i];
         if (attr.name === name) {
           this.attributes.splice(i, 1);
           break;
@@ -564,7 +566,7 @@
     }
   };
 
-  let Style = function (node) {
+  var Style = function (node) {
     this.node = node;
   };
 
@@ -575,14 +577,14 @@
   // manipulations, so this should be okay.
   Style.prototype = {
     getStyle: function (styleName) {
-      let attr = this.node.getAttribute("style");
+      var attr = this.node.getAttribute("style");
       if (!attr)
         return undefined;
 
-      let styles = attr.split(";");
-      for (let i = 0; i < styles.length; i++) {
-        let style = styles[i].split(":");
-        let name = style[0].trim();
+      var styles = attr.split(";");
+      for (var i = 0; i < styles.length; i++) {
+        var style = styles[i].split(":");
+        var name = style[0].trim();
         if (name === styleName)
           return style[1].trim();
       }
@@ -591,12 +593,12 @@
     },
 
     setStyle: function (styleName, styleValue) {
-      let value = this.node.getAttribute("style") || "";
-      let index = 0;
+      var value = this.node.getAttribute("style") || "";
+      var index = 0;
       do {
-        let next = value.indexOf(";", index) + 1;
-        let length = next - index - 1;
-        let style = (length > 0 ? value.substr(index, length) : value.substr(index));
+        var next = value.indexOf(";", index) + 1;
+        var length = next - index - 1;
+        var style = (length > 0 ? value.substr(index, length) : value.substr(index));
         if (style.substr(0, style.indexOf(":")).trim() === styleName) {
           value = value.substr(0, index).trim() + (next ? " " + value.substr(next).trim() : "");
           break;
@@ -611,7 +613,7 @@
 
   // For each item in styleMap, define a getter and setter on the style
   // property.
-  for (let jsName in styleMap) {
+  for (var jsName in styleMap) {
     (function (cssName) {
       Style.prototype.__defineGetter__(jsName, function () {
         return this.getStyle(cssName);
@@ -622,7 +624,7 @@
     }) (styleMap[jsName]);
   }
 
-  let JSDOMParser = function () {
+  var JSDOMParser = function () {
     this.currentChar = 0;
 
     // In makeElementNode() we build up many strings one char at a time. Using
@@ -659,8 +661,8 @@
      * character and returns the text string in between.
      */
     readString: function (quote) {
-      let str;
-      let n = this.html.indexOf(quote, this.currentChar);
+      var str;
+      var n = this.html.indexOf(quote, this.currentChar);
       if (n === -1) {
         this.currentChar = this.html.length;
         str = null;
@@ -677,9 +679,9 @@
      * pair and adds the result to the attributes list.
      */
     readAttribute: function (node) {
-      let name = "";
+      var name = "";
 
-      let n = this.html.indexOf("=", this.currentChar);
+      var n = this.html.indexOf("=", this.currentChar);
       if (n === -1) {
         this.currentChar = this.html.length;
       } else {
@@ -692,14 +694,14 @@
         return;
 
       // After a '=', we should see a '"' for the attribute value
-      let c = this.nextChar();
+      var c = this.nextChar();
       if (c !== '"' && c !== "'") {
-        error("expecting '\"'");
+        error("Error reading attribute " + name + ", expecting '\"'");
         return;
       }
 
       // Read the attribute value (and consume the matching quote)
-      let value = this.readString(c);
+      var value = this.readString(c);
 
       if (!value)
         return;
@@ -718,29 +720,30 @@
      *          Element
      */
     makeElementNode: function (retPair) {
-      let c = this.nextChar();
+      var c = this.nextChar();
 
       // Read the Element tag name
-      let strBuf = this.strBuf;
+      var strBuf = this.strBuf;
       strBuf.length = 0;
-      while (c !== " " && c !== ">" && c !== "/") {
+      while (whitespace.indexOf(c) == -1 && c !== ">" && c !== "/") {
         if (c === undefined)
           return false;
         strBuf.push(c);
         c = this.nextChar();
       }
-      let tag = strBuf.join('');
+      var tag = strBuf.join('');
 
       if (!tag)
         return false;
 
-      let node = new Element(tag);
+      var node = new Element(tag);
 
       // Read Element attributes
       while (c !== "/" && c !== ">") {
         if (c === undefined)
           return false;
-        while (this.match(" "));
+        while (whitespace.indexOf(this.html[this.currentChar++]) != -1);
+        this.currentChar--;
         c = this.nextChar();
         if (c !== "/" && c !== ">") {
           --this.currentChar;
@@ -749,12 +752,12 @@
       }
 
       // If this is a self-closing tag, read '/>'
-      let closed = tag in voidElems;
+      var closed = tag in voidElems;
       if (c === "/") {
         closed = true;
         c = this.nextChar();
         if (c !== ">") {
-          error("expected '>'");
+          error("expected '>' to close " + tag);
           return false;
         }
       }
@@ -771,7 +774,7 @@
      * @returns whether input matched string
      */
     match: function (str) {
-      let strlen = str.length;
+      var strlen = str.length;
       if (this.html.substr(this.currentChar, strlen) === str) {
         this.currentChar += strlen;
         return true;
@@ -784,7 +787,7 @@
      * and including the matched string.
      */
     discardTo: function (str) {
-      let index = this.html.indexOf(str, this.currentChar) + str.length;
+      var index = this.html.indexOf(str, this.currentChar) + str.length;
       if (index === -1)
         this.currentChar = this.html.length;
       this.currentChar = index;
@@ -794,7 +797,7 @@
      * Reads child nodes for the given node.
      */
     readChildren: function (node) {
-      let child;
+      var child;
       while ((child = this.readNode())) {
         // Don't keep Comment nodes
         if (child.nodeType !== 8) {
@@ -804,6 +807,19 @@
       }
     },
 
+    readScript: function (node) {
+      var index = this.html.indexOf("</script>", this.currentChar);
+      if (index === -1) {
+        index = this.html.length;
+      }
+      var txt = new Text();
+      txt.textContent = this.html.substring(this.currentChar, index === -1 ? this.html.length : index);
+      node.childNodes.push(txt);
+      txt.parentNode = node;
+      this.currentChar = index;
+    },
+
+
     /**
      * Reads the next child node from the input. If we're reading a closing
      * tag, or if we've reached the end of input, return null.
@@ -811,7 +827,7 @@
      * @returns the node
      */
     readNode: function () {
-      let c = this.nextChar();
+      var c = this.nextChar();
  
       if (c === undefined)
         return null;
@@ -819,8 +835,8 @@
       // Read any text as Text node
       if (c !== "<") {
         --this.currentChar;
-        let node = new Text();
-        let n = this.html.indexOf("<", this.currentChar);
+        var node = new Text();
+        var n = this.html.indexOf("<", this.currentChar);
         if (n === -1) {
           node.textContent = this.html.substring(this.currentChar, this.html.length);
           this.currentChar = this.html.length;
@@ -842,7 +858,7 @@
         if (this.match("--")) {
           this.discardTo("-->");
         } else {
-          let c = this.nextChar();
+          var c = this.nextChar();
           while (c !== ">") {
             if (c === undefined)
               return null;
@@ -862,18 +878,22 @@
       }
 
       // Otherwise, we're looking at an Element node
-      let result = this.makeElementNode(this.retPair);
+      var result = this.makeElementNode(this.retPair);
       if (!result)
         return null;
 
-      let node = this.retPair[0];
-      let closed = this.retPair[1];
-      let localName = node.localName;
+      var node = this.retPair[0];
+      var closed = this.retPair[1];
+      var localName = node.localName;
 
       // If this isn't a void Element, read its child nodes
       if (!closed) {
-        this.readChildren(node);
-        let closingTag = "</" + localName + ">";
+        if (localName == "script") {
+          this.readScript(node);
+        } else {
+          this.readChildren(node);
+        }
+        var closingTag = "</" + localName + ">";
         if (!this.match(closingTag)) {
           error("expected '" + closingTag + "'");
           return null;
@@ -898,14 +918,14 @@
      */
     parse: function (html) {
       this.html = html;
-      let doc = this.doc = new Document();
+      var doc = this.doc = new Document();
       this.readChildren(doc);
 
       // If this is an HTML document, remove root-level children except for the
       // <html> node
       if (doc.documentElement) {
-        for (let i = doc.childNodes.length; --i >= 0;) {
-          let child = doc.childNodes[i];
+        for (var i = doc.childNodes.length; --i >= 0;) {
+          var child = doc.childNodes[i];
           if (child !== doc.documentElement) {
             doc.removeChild(child);
           }
