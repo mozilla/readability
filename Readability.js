@@ -460,8 +460,8 @@ Readability.prototype = {
         if (!(node = allElements[nodeIndex]))
           continue;
 
-        var matchString = node.className + node.id;
-        if (matchString.search(this.REGEXPS.byline) !== -1 && !this._articleByline) {
+        var matchString = node.className + " " + node.id;
+        if (this.REGEXPS.byline.test(matchString) && !this._articleByline) {
           if (this._isValidByline(node.textContent)) {
             this._articleByline = node.textContent.trim();
             node.parentNode.removeChild(node);
@@ -472,9 +472,9 @@ Readability.prototype = {
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
-          if (matchString.search(this.REGEXPS.unlikelyCandidates) !== -1 &&
-            matchString.search(this.REGEXPS.okMaybeItsACandidate) === -1 &&
-            node.tagName !== "BODY") {
+          if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
+              !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
+              node.tagName !== "BODY") {
             this.log("Removing unlikely candidate - " + matchString);
             node.parentNode.removeChild(node);
             purgeNode(node, allElements);
@@ -1350,19 +1350,19 @@ Readability.prototype = {
 
     // Look for a special classname
     if (typeof(e.className) === 'string' && e.className !== '') {
-      if (e.className.search(this.REGEXPS.negative) !== -1)
+      if (this.REGEXPS.negative.test(e.className))
         weight -= 25;
 
-      if (e.className.search(this.REGEXPS.positive) !== -1)
+      if (this.REGEXPS.positive.test(e.className))
         weight += 25;
     }
 
     // Look for a special ID
     if (typeof(e.id) === 'string' && e.id !== '') {
-      if (e.id.search(this.REGEXPS.negative) !== -1)
+      if (this.REGEXPS.negative.test(e.id))
         weight -= 25;
 
-      if (e.id.search(this.REGEXPS.positive) !== -1)
+      if (this.REGEXPS.positive.test(e.id))
         weight += 25;
     }
 
@@ -1390,11 +1390,11 @@ Readability.prototype = {
         }
 
         // First, check the elements attributes to see if any of them contain youtube or vimeo
-        if (attributeValues.search(this.REGEXPS.videos) !== -1)
+        if (this.REGEXPS.videos.test(attributeValues))
           continue;
 
         // Then check the elements inside this element for the same.
-        if (targetList[y].innerHTML.search(this.REGEXPS.videos) !== -1)
+        if (this.REGEXPS.videos.test(targetList[y].innerHTML))
           continue;
       }
 
@@ -1440,7 +1440,7 @@ Readability.prototype = {
         var embedCount = 0;
         var embeds = tagsList[i].getElementsByTagName("embed");
         for (var ei = 0, il = embeds.length; ei < il; ei += 1) {
-          if (embeds[ei].src.search(this.REGEXPS.videos) === -1)
+          if (!this.REGEXPS.videos.test(embeds[ei].src))
             embedCount += 1;
         }
 
