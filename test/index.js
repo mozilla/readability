@@ -29,6 +29,14 @@ vm.runInNewContext(fs.readFileSync(readabilityPath), scopeContext, readabilityPa
 var Readability = scopeContext.Readability;
 var JSDOMParser = scopeContext.JSDOMParser;
 
+function readFile(path) {
+  return fs.readFileSync(path, {encoding: "utf-8"});
+}
+
+function readJSON(path) {
+  return JSON.parse(readFile(path));
+}
+
 var testPageRoot = path.join(__dirname, "test-pages");
 var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
   return {
@@ -49,33 +57,42 @@ if (filterThing) {
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
-      it("should render as expected", function(done) {
-        var expected = fs.readFileSync(testPage.expected, {encoding: "utf-8"});
-        var expectedMetadata = fs.readFileSync(testPage.expectedMetadata, {encoding: "utf-8"});
-        var source = fs.readFileSync(testPage.source, {encoding: "utf-8"});
-        var uri = {
-          spec: "http://fakehost/test/page.html",
-          host: "fakehost",
-          prePath: "http://fakehost",
-          scheme: "http",
-          pathBase: "http://fakehost/test"
-        };
+      var doc, result, metadata;
 
-        try {
-          var doc = new JSDOMParser().parse(source);
-          var result = new Readability(uri, doc).parse();
-        } catch (ex) {
-          console.error(ex, ex.stack);
-        }
-        expect(result && prettyPrint(result.content)).eql(expected);
+      var expectedMetadata = readJSON(testPage.expectedMetadata);
+      var expectedContent = readFile(testPage.expected);
+      var source = readFile(testPage.source);
+      var uri = {
+        spec: "http://fakehost/test/page.html",
+        host: "fakehost",
+        prePath: "http://fakehost",
+        scheme: "http",
+        pathBase: "http://fakehost/test"
+      };
 
-        if (result) {
-          var metadata = JSON.parse(expectedMetadata);
-          expect(result.title).eql(metadata.title);
-          expect(result.byline).eql(metadata.byline);
-          expect(result.excerpt).eql(metadata.excerpt);
-        }
-        done();
+      beforeEach(function() {
+        doc = new JSDOMParser().parse(source);
+        result = new Readability(uri, doc).parse();
+      });
+
+      it("should return a result object", function() {
+        expect(result).to.include.keys("content", "title", "excerpt", "byline");
+      });
+
+      it("should extract expected content", function() {
+        expect(expectedContent).eql(prettyPrint(result.content));
+      });
+
+      it("should extract expected title", function() {
+        expect(expectedMetadata.title).eql(result.title);
+      });
+
+      it("should extract expected byline", function() {
+        expect(expectedMetadata.byline).eql(result.byline);
+      });
+
+      it("should extract expected excerpt", function() {
+        expect(expectedMetadata.excerpt).eql(result.excerpt);
       });
     });
   });
