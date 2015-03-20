@@ -4,7 +4,7 @@
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "Readability.js",
   "scripts": {
-    "test": "mocha test/index.js",
+    "test": "mocha test/test-*.js",
     "generate-testcase": "node test/generate-testcase.js"
   },
   "repository": {

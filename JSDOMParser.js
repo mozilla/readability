@@ -347,6 +347,9 @@
           this.children.splice(this.children.indexOf(child), 1);
         }
 
+        child.previousSibling = child.nextSibling = null;
+        child.previousElementSibling = child.nextElementSibling = null;
+
         return childNodes.splice(childIndex, 1)[0];
       }
     },
@@ -357,19 +360,33 @@
       if (childIndex === -1) {
         throw "replaceChild: node not found";
       } else {
+        // This will take care of updating the new node if it was somewhere else before:
         if (newNode.parentNode)
           newNode.parentNode.removeChild(newNode);
 
         childNodes[childIndex] = newNode;
+
+        // update the new node's sibling properties, and its new siblings' sibling properties
         newNode.nextSibling = oldNode.nextSibling;
         newNode.previousSibling = oldNode.previousSibling;
-        newNode.nextSibling && (newNode.nextSibling.previousSibling = newNode);
-        newNode.previousSibling && (newNode.previousSibling.nextSibling = newNode);
+        if (newNode.nextSibling)
+          newNode.nextSibling.previousSibling = newNode;
+        if (newNode.previousSibling)
+          newNode.previousSibling.nextSibling = newNode;
+
         newNode.parentNode = this;
+
+        // Now deal with elements before we clear out those values for the old node,
+        // because it can help us take shortcuts here:
         if (newNode.nodeType === Node.ELEMENT_NODE) {
           if (oldNode.nodeType === Node.ELEMENT_NODE) {
+            // Both were elements, which makes this easier, we just swap things out:
             newNode.previousElementSibling = oldNode.previousElementSibling;
             newNode.nextElementSibling = oldNode.nextElementSibling;
+            if (newNode.previousElementSibling)
+              newNode.previousElementSibling.nextElementSibling = newNode;
+            if (newNode.nextElementSibling)
+              newNode.nextElementSibling.previousElementSibling = newNode;
             this.children[this.children.indexOf(oldNode)] = newNode;
           } else {
             // Hard way:
@@ -395,12 +412,26 @@
               newNode.previousElementSibling.nextElementSibling = newNode;
             if (newNode.nextElementSibling)
               newNode.nextElementSibling.previousElementSibling = newNode;
+
             if (newNode.nextElementSibling)
               this.children.splice(this.children.indexOf(newNode.nextElementSibling), 0, newNode);
             else
               this.children.push(newNode);
           }
+        } else {
+          // new node is not an element node.
+          // if the old one was, update its element siblings:
+          if (oldNode.nodeType === Node.ELEMENT_NODE) {
+            if (oldNode.previousElementSibling)
+              oldNode.previousElementSibling.nextElementSibling = oldNode.nextElementSibling;
+            if (oldNode.nextElementSibling)
+              oldNode.nextElementSibling.previousElementSibling = oldNode.previousElementSibling;
+            this.children.splice(this.children.indexOf(oldNode), 1);
+          }
+          // If the old node wasn't an element, neither the new nor the old node was an element,
+          // and the children array and its members shouldn't need any updating.
         }
+
 
         oldNode.parentNode = null;
         oldNode.previousSibling = null;
