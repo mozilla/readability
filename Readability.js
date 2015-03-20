@@ -99,7 +99,8 @@ Readability.prototype = {
     videos: /https?:\/\/(www\.)?(youtube|vimeo)\.com/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
-    whitespace: /^\s*$/
+    whitespace: /^\s*$/,
+    nonWhitespace: /\S/,
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
@@ -526,11 +527,19 @@ Readability.prototype = {
             for (var i = 0, il = node.childNodes.length; i < il; i += 1) {
               var childNode = node.childNodes[i];
               if (childNode.nodeType === Node.TEXT_NODE) {
-                var p = doc.createElement('p');
-                p.textContent = childNode.textContent;
-                p.style.display = 'inline';
-                p.className = 'readability-styled';
-                node.replaceChild(p, childNode);
+                var text = childNode.textContent;
+                if (this.REGEXPS.nonWhitespace.test(text)) {
+                  node.removeChild(childNode);
+                  // correct index and length so we see the next node and don't overrun:
+                  i--;
+                  il--;
+                } else {
+                  var p = doc.createElement('p');
+                  p.textContent = text;
+                  p.style.display = 'inline';
+                  p.className = 'readability-styled';
+                  node.replaceChild(p, childNode);
+                }
               }
             }
           }
