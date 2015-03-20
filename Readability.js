@@ -434,6 +434,23 @@ Readability.prototype = {
     return node && node.nextElementSibling;
   },
 
+  _checkByline: function(node, matchString) {
+    if (this._articleByline) {
+      return false;
+    }
+
+    if (node.getAttribute !== undefined) {
+      var rel = node.getAttribute("rel");
+    }
+
+    if ((rel === "author" || this.REGEXPS.byline.test(matchString)) && this._isValidByline(node.textContent)) {
+      this._articleByline = node.textContent.trim();
+      return true;
+    }
+
+    return false;
+  },
+
   /***
    * grabArticle - Using a variety of metrics (content score, classname, element types), find the content that is
    *         most likely to be the stuff a user wants to read. Then return it wrapped up in a div.
@@ -468,12 +485,11 @@ Readability.prototype = {
 
       while (node) {
         var matchString = node.className + " " + node.id;
-        if (this.REGEXPS.byline.test(matchString) && !this._articleByline) {
-          if (this._isValidByline(node.textContent)) {
-            this._articleByline = node.textContent.trim();
-            node = this._removeAndGetNext(node);
-            continue;
-          }
+
+        // Check to see if this node is a byline, and remove it if it is.
+        if (this._checkByline(node, matchString)) {
+          node = this._removeAndGetNext(node);
+          continue;
         }
 
         // Remove unlikely candidates
@@ -756,19 +772,12 @@ Readability.prototype = {
   },
 
   /**
-   * Attempts to get the excerpt from these
-   * sources in the following order:
-   * - meta description tag
-   * - open-graph description
-   * - twitter cards description
-   * - article's first paragraph
-   * If no excerpt is found, an empty string will be
-   * returned.
-   *
-   * @param Element - root element of the processed version page
-   * @return String - excerpt of the article
-  **/
-  _getExcerpt: function(articleContent) {
+   * Attempts to get excerpt and byline metadata for the article.
+   * 
+   * @return Object with optional "excerpt" and "byline" properties
+   */
+  _getArticleMetadata: function() {
+    var metadata = {};
     var values = {};
     var metaElements = this._doc.getElementsByTagName("meta");
 
@@ -784,6 +793,11 @@ Readability.prototype = {
       var element = metaElements[i];
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
+
+      if (elementName === "author") {
+        metadata.byline = element.getAttribute("content");
+        continue;
+      }
 
       var name = null;
       if (namePattern.test(elementName)) {
@@ -804,26 +818,16 @@ Readability.prototype = {
     }
 
     if ("description" in values) {
-      return values["description"];
-    }
-
-    if ("og:description" in values) {
+      metadata.excerpt = values["description"];
+    } else if ("og:description" in values) {
       // Use facebook open graph description.
-      return values["og:description"];
-    }
-
-    if ("twitter:description" in values) {
+      metadata.excerpt = values["og:description"];
+    } else if ("twitter:description" in values) {
       // Use twitter cards description.
-      return values["twitter:description"];
+      metadata.excerpt = values["twitter:description"];
     }
 
-    // No description meta tags, use the article's first paragraph.
-    var paragraphs = articleContent.getElementsByTagName("p");
-    if (paragraphs.length > 0) {
-      return paragraphs[0].textContent;
-    }
-
-    return "";
+    return metadata;
   },
 
   /**
@@ -1527,6 +1531,8 @@ Readability.prototype = {
     this._prepDocument();
 
     var articleTitle = this._getArticleTitle();
+    var metadata = this._getArticleMetadata();
+
     var articleContent = this._grabArticle();
     if (!articleContent)
       return null;
@@ -1543,14 +1549,22 @@ Readability.prototype = {
     //   }).bind(this), 500);
     // }
 
-    var excerpt = this._getExcerpt(articleContent);
+    // If we haven't found an excerpt in the article's metadata, use the article's
+    // first paragraph as the excerpt. This is used for displaying a preview of
+    // the article's content.
+    if (!metadata.excerpt) {
+      var paragraphs = articleContent.getElementsByTagName("p");
+      if (paragraphs.length > 0) {
+        metadata.excerpt = paragraphs[0].textContent;
+      }
+    }
 
     return { uri: this._uri,
              title: articleTitle,
-             byline: this._articleByline,
+             byline: metadata.byline || this._articleByline,
              dir: this._articleDir,
              content: articleContent.innerHTML,
              length: articleContent.textContent.length,
-             excerpt: excerpt };
+             excerpt: metadata.excerpt };
   }
 };
