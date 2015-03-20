@@ -1,7 +1,9 @@
 var path = require("path");
 var fs = require("fs");
 var prettyPrint = require("html").prettyPrint;
-var expect = require("chai").expect;
+var chai = require("chai");
+chai.config.includeStack = true;
+var expect = chai.expect;
 
 // We want to load Readability and JSDOMParser, which aren't set up as commonjs libraries,
 // and so we need to do some hocus-pocus with 'vm' to import them on a separate scope
@@ -37,6 +39,13 @@ var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
   };
 });
 
+var filterThing = process.env.TESTFILTER || "";
+if (filterThing) {
+  testPages = testPages.filter(function(dir) {
+    return dir.dir.indexOf(filterThing) !== -1;
+  });
+}
+
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
@@ -51,15 +60,21 @@ describe("Test page", function() {
           scheme: "http",
           pathBase: "http://fakehost/test"
         };
-        var doc = new JSDOMParser().parse(source);
-        var result = new Readability(uri, doc).parse();
-        expect(prettyPrint(result.content)).eql(expected);
 
-        var metadata = JSON.parse(expectedMetadata);
-        expect(result.title).eql(metadata.title);
-        expect(result.byline).eql(metadata.byline);
-        expect(result.excerpt).eql(metadata.excerpt);
+        try {
+          var doc = new JSDOMParser().parse(source);
+          var result = new Readability(uri, doc).parse();
+        } catch (ex) {
+          console.error(ex, ex.stack);
+        }
+        expect(result && prettyPrint(result.content)).eql(expected);
 
+        if (result) {
+          var metadata = JSON.parse(expectedMetadata);
+          expect(result.title).eql(metadata.title);
+          expect(result.byline).eql(metadata.byline);
+          expect(result.excerpt).eql(metadata.excerpt);
+        }
         done();
       });
     });
