@@ -47,13 +47,6 @@ var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
   };
 });
 
-var filterThing = process.env.TESTFILTER || "";
-if (filterThing) {
-  testPages = testPages.filter(function(dir) {
-    return dir.dir.indexOf(filterThing) !== -1;
-  });
-}
-
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
