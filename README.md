@@ -1,5 +1,7 @@
 # Readability.js
 
+[![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
+
 A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an appropriate Firefox/toolkit peer, such as [@leibovic](https://github.com/leibovic) or [@thebnich](https://github.com/thebnich), since these changes will be automatically merged to mozilla-central.
 
 ## Contributing
@@ -34,6 +36,19 @@ This `article` object will contain the following properties:
 * `byline`: author metadata
 * `dir`: content direction
 
+## Tests
+
+To run the test suite:
+
+    $ mocha test/index.js
+
+To run a specific test page by its name:
+
+    $ mocha test/index.js -g 001
+
+To run the test suite in TDD mode:
+
+    $ mocha test/index.js -w
 
 ## License
 
