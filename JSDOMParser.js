@@ -262,11 +262,9 @@
     var elems = [];
     var allTags = (tag === "*");
     function getElems(node) {
-      var length = node.childNodes.length;
+      var length = node.children.length;
       for (var i = 0; i < length; i++) {
-        var child = node.childNodes[i];
-        if (child.nodeType !== 1)
-          continue;
+        var child = node.children[i];
         if (allTags || (child.tagName === tag))
           elems.push(child);
         getElems(child);
@@ -494,11 +492,11 @@
 
     getElementById: function (id) {
       function getElem(node) {
-        var length = node.childNodes.length;
+        var length = node.children.length;
         if (node.id === id)
           return node;
         for (var i = 0; i < length; i++) {
-          var el = getElem(node.childNodes[i]);
+          var el = getElem(node.children[i]);
           if (el)
             return el;
         }
