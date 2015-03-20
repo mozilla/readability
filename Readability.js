@@ -95,7 +95,6 @@ Readability.prototype = {
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
-    trim: /^\s+|\s+$/g,
     normalize: /\s{2,}/g,
     videos: /https?:\/\/(www\.)?(youtube|vimeo)\.com/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
@@ -199,7 +198,7 @@ Readability.prototype = {
         curTitle = this._getInnerText(hOnes[0]);
     }
 
-    curTitle = curTitle.replace(this.REGEXPS.trim, "");
+    curTitle = curTitle.trim();
 
     if (curTitle.split(' ').length <= 4)
       curTitle = origTitle;
@@ -218,8 +217,8 @@ Readability.prototype = {
 
     // Remove all style tags in head
     var styleTags = doc.getElementsByTagName("style");
-    for (var st = 0; st < styleTags.length; st += 1) {
-      styleTags[st].textContent = "";
+    for (var st = styleTags.length - 1; st >= 0; st -= 1) {
+      styleTags[st].parentNode.removeChild(styleTags[st]);
     }
 
     if (doc.body) {
@@ -300,6 +299,8 @@ Readability.prototype = {
   },
 
   _setNodeTag: function (node, tag) {
+    // FIXME this doesn't work on anything but JSDOMParser (ie the node's tag
+    // won't actually be set).
     node.localName = tag.toLowerCase();
     node.tagName = tag.toUpperCase();
   },
@@ -402,6 +403,37 @@ Readability.prototype = {
     node.readability.contentScore += this._getClassWeight(node);
   },
 
+  _removeAndGetNext: function(node) {
+    var nextNode = this._getNextNode(node, true);
+    node.parentNode.removeChild(node);
+    return nextNode;
+  },
+
+  /**
+   * Traverse the DOM from node to node, starting at the node passed in.
+   * Pass true for the second parameter to indicate this node itself
+   * (and its kids) are going away, and we want the next node over.
+   *
+   * Calling this in a loop will traverse the DOM depth-first.
+   */
+  _getNextNode: function(node, ignoreSelfAndKids) {
+    // First check for kids if those aren't being ignored
+    if (!ignoreSelfAndKids && node.firstElementChild) {
+      return node.firstElementChild;
+    }
+    // Then for siblings...
+    if (node.nextElementSibling) {
+      return node.nextElementSibling;
+    }
+    // And finally, move up the parent chain *and* find a sibling
+    // (because this is depth-first traversal, we will have already
+    // seen the parent nodes themselves).
+    do {
+      node = node.parentNode;
+    } while (node && !node.nextElementSibling);
+    return node && node.nextElementSibling;
+  },
+
   /***
    * grabArticle - Using a variety of metrics (content score, classname, element types), find the content that is
    *         most likely to be the stuff a user wants to read. Then return it wrapped up in a div.
@@ -425,47 +457,21 @@ Readability.prototype = {
     // Check if any "dir" is set on the toplevel document element
     this._articleDir = doc.documentElement.getAttribute("dir");
 
-    //helper function used below in the 'while' loop:
-    function purgeNode(node, allElements) {
-      for (var i = node.childNodes.length; --i >= 0;) {
-        purgeNode(node.childNodes[i], allElements);
-      }
-      if (node._index !== undefined && allElements[node._index] == node)
-        delete allElements[node._index];
-    }
     while (true) {
       var stripUnlikelyCandidates = this._flagIsActive(this.FLAG_STRIP_UNLIKELYS);
-      var allElements = page.getElementsByTagName('*');
 
       // First, node prepping. Trash nodes that look cruddy (like ones with the
       // class name "comment", etc), and turn divs into P tags where they have been
       // used inappropriately (as in, where they contain no other block level elements.)
-      //
-      // Note: Assignment from index for performance. See http://www.peachpit.com/articles/article.aspx?p=31567&seqNum=5
-      // TODO: Shouldn't this be a reverse traversal?
-      var node = null;
       var nodesToScore = [];
+      var node = this._doc.documentElement;
 
-      // var each node know its index in the allElements array.
-      for (var i = allElements.length; --i >= 0;) {
-        allElements[i]._index = i;
-      }
-
-      /**
-       * JSDOMParser returns static node lists, not live ones. When we remove
-       * an element from the document, we need to manually remove it - and all
-       * of its children - from the allElements array.
-       */
-      for (var nodeIndex = 0; nodeIndex < allElements.length; nodeIndex++) {
-        if (!(node = allElements[nodeIndex]))
-          continue;
-
+      while (node) {
         var matchString = node.className + " " + node.id;
         if (this.REGEXPS.byline.test(matchString) && !this._articleByline) {
           if (this._isValidByline(node.textContent)) {
             this._articleByline = node.textContent.trim();
-            node.parentNode.removeChild(node);
-            purgeNode(node, allElements);
+            node = this._removeAndGetNext(node);
             continue;
           }
         }
@@ -476,14 +482,13 @@ Readability.prototype = {
               !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
               node.tagName !== "BODY") {
             this.log("Removing unlikely candidate - " + matchString);
-            node.parentNode.removeChild(node);
-            purgeNode(node, allElements);
+            node = this._removeAndGetNext(node);
             continue;
           }
         }
 
         if (node.tagName === "P" || node.tagName === "TD" || node.tagName === "PRE")
-          nodesToScore[nodesToScore.length] = node;
+          nodesToScore.push(node);
 
         // Turn all divs that don't have children block level elements into p's
         if (node.tagName === "DIV") {
@@ -493,32 +498,28 @@ Readability.prototype = {
           // algorithm with DIVs with are, in practice, paragraphs.
           var pIndex = this._getSinglePIndexInsideDiv(node);
 
-          if (pIndex >= 0 || !this._hasChildBlockElement(node)) {
-            if (pIndex >= 0) {
-              var newNode = node.childNodes[pIndex];
-              node.parentNode.replaceChild(newNode, node);
-              purgeNode(node, allElements);
-            } else {
-              this._setNodeTag(node, "P");
-              nodesToScore[nodesToScore.length] = node;
-            }
+          if (pIndex >= 0) {
+            var newNode = node.childNodes[pIndex];
+            node.parentNode.replaceChild(newNode, node);
+            node = newNode;
+          } else if (!this._hasChildBlockElement(node)) {
+            this._setNodeTag(node, "P");
+            nodesToScore.push(node);
           } else {
             // EXPERIMENTAL
             for (var i = 0, il = node.childNodes.length; i < il; i += 1) {
               var childNode = node.childNodes[i];
-              if (!childNode)
-                continue;
-
-              if (childNode.nodeType === 3) { // Node.TEXT_NODE
+              if (childNode.nodeType === Node.TEXT_NODE) {
                 var p = doc.createElement('p');
                 p.textContent = childNode.textContent;
                 p.style.display = 'inline';
                 p.className = 'readability-styled';
-                childNode.parentNode.replaceChild(p, childNode);
+                node.replaceChild(p, childNode);
               }
             }
           }
         }
+        node = this._getNextNode(node);
       }
 
       /**
@@ -880,7 +881,7 @@ Readability.prototype = {
     var length = e.childNodes.length;
     for (var i = 0; i < length; i++) {
       var child = e.childNodes[i];
-      if (child.nodeType != 1)
+      if (child.nodeType != Node.ELEMENT_NODE)
         continue;
 
       if (this.DIV_TO_P_ELEMS.indexOf(child.tagName) !== -1 || this._hasChildBlockElement(child))
@@ -897,7 +898,7 @@ Readability.prototype = {
    * @return string
   **/
   _getInnerText: function(e, normalizeSpaces) {
-    var textContent = e.textContent.replace(this.REGEXPS.trim, "");
+    var textContent = e.textContent.trim();
     normalizeSpaces = (typeof normalizeSpaces === 'undefined') ? true : normalizeSpaces;
 
     if (normalizeSpaces) {
@@ -928,10 +929,9 @@ Readability.prototype = {
   **/
   _cleanStyles: function(e) {
     e = e || this._doc;
-    var cur = e.firstChild;
-
     if (!e)
       return;
+    var cur = e.firstChild;
 
     // Remove any root styles, if we're able.
     if (typeof e.removeAttribute === 'function' && e.className !== 'readability-styled')
@@ -939,7 +939,7 @@ Readability.prototype = {
 
     // Go until there are no more child nodes
     while (cur !== null) {
-      if (cur.nodeType === 1) {
+      if (cur.nodeType === cur.ELEMENT_NODE) {
         // Remove style attribute(s) :
         if (cur.className !== "readability-styled")
           cur.removeAttribute("style");
