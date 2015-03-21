@@ -634,6 +634,29 @@ Readability.prototype = {
         page.appendChild(topCandidate);
 
         this._initializeNode(topCandidate);
+      } else if (topCandidate) {
+        // Because of our bonus system, parents of candidates might have scores
+        // themselves. They get half of the node. There won't be nodes with higher
+        // scores than our topCandidate, but if we see the score going *up* in the first
+        // few steps up the tree, that's a decent sign that there might be more content
+        // lurking in other places that we want to unify in. The sibling stuff
+        // below does some of that - but only if we've looked high enough up the DOM
+        // tree.
+        var parentOfTopCandidate = topCandidate.parentNode;
+        // The scores shouldn't get too low.
+        var scoreThreshold = topCandidate.readability.contentScore / 3;
+        var lastScore = parentOfTopCandidate.readability.contentScore;
+        while (parentOfTopCandidate && parentOfTopCandidate.readability) {
+          var parentScore = parentOfTopCandidate.readability.contentScore;
+          if (parentScore < scoreThreshold)
+            break;
+          if (parentScore > lastScore) {
+            // Alright! We found a better parent to use.
+            topCandidate = parentOfTopCandidate;
+            break;
+          }
+          parentOfTopCandidate = parentOfTopCandidate.parentNode;
+        }
       }
 
       // Now that we have the top candidate, look through its siblings for content
