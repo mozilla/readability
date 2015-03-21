@@ -915,7 +915,7 @@ Readability.prototype = {
   _hasChildBlockElement: function (element) {
     return this._someNode(element.childNodes, function(node) {
       return this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
-             this._hasChildBlockElement(node)
+             this._hasChildBlockElement(node);
     });
   },
 
@@ -928,9 +928,10 @@ Readability.prototype = {
    * @return string
   **/
   _getInnerText: function(e, normalizeSpaces) {
+    normalizeSpaces = (typeof normalizeSpaces === 'undefined') ? true : normalizeSpaces;
     var textContent = e.textContent.trim();
 
-    if (!Boolean(normalizeSpaces)) {
+    if (normalizeSpaces) {
       return textContent.replace(this.REGEXPS.normalize, " ");
     } else {
       return textContent;
@@ -989,6 +990,9 @@ Readability.prototype = {
   **/
   _getLinkDensity: function(element) {
     var textLength = this._getInnerText(element).length;
+    if (textLength === 0)
+      return;
+
     var linkLength = 0;
 
     // XXX implement _reduceNodeList?
@@ -996,7 +1000,7 @@ Readability.prototype = {
       linkLength += this._getInnerText(linkNode).length;
     });
 
-    return textLength !== 0 ? linkLength / textLength : 0;
+    return linkLength / textLength;
   },
 
   /**
