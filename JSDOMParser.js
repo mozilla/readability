@@ -1008,7 +1008,10 @@
         }
       }
 
-      if (localName === "title") {
+      // Only use the first title, because SVG might have other
+      // title elements which we don't care about (medium.com
+      // does this, at least).
+      if (localName === "title" && !this.doc.title) {
         this.doc.title = node.textContent.trim();
       } else if (localName === "head") {
         this.doc.head = node;
