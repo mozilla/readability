@@ -40,15 +40,19 @@ This `article` object will contain the following properties:
 
 To run the test suite:
 
-    $ mocha test/index.js
+    $ mocha test/test-*.js
 
 To run a specific test page by its name:
 
-    $ mocha test/index.js -g 001
+    $ mocha test/test-*.js -g 001
 
 To run the test suite in TDD mode:
 
-    $ mocha test/index.js -w
+    $ mocha test/test-*.js -w
+
+Combo time:
+
+    $ mocha test/test-*.js -w -g 001
 
 ## License
 
