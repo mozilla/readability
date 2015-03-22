@@ -119,6 +119,36 @@ Readability.prototype = {
   },
 
   /**
+   * Iterate over a NodeList, which doesn't natively fully implement the Array
+   * interface.
+   *
+   * For convenience, the current object context is applied to the provided
+   * iterate function.
+   *
+   * @param  NodeList nodeList The NodeList.
+   * @param  Function fn       The iterate function.
+   * @return void
+   */
+  _forEachNode: function(nodeList, fn) {
+    return Array.prototype.forEach.call(nodeList, fn, this);
+  },
+
+  /**
+   * Iterate over a NodeList, return true if any of the provided iterate
+   * function calls returns true, false otherwise.
+   *
+   * For convenience, the current object context is applied to the
+   * provided iterate function.
+   *
+   * @param  NodeList nodeList The NodeList.
+   * @param  Function fn       The iterate function.
+   * @return Boolean
+   */
+  _someNode: function(nodeList, fn) {
+    return Array.prototype.some.call(nodeList, fn, this);
+  },
+
+  /**
    * Converts each <a> and <img> uri in the given element to an absolute URI.
    *
    * @param Element
@@ -149,19 +179,18 @@ Readability.prototype = {
 
     function convertRelativeURIs(tagName, propName) {
       var elems = articleContent.getElementsByTagName(tagName);
-      for (var i = elems.length; --i >= 0;) {
-        var elem = elems[i];
+      this._forEachNode(elems, function(elem) {
         var relativeURI = elem.getAttribute(propName);
         if (relativeURI != null)
-          elems[i].setAttribute(propName, toAbsoluteURI(relativeURI));
-      }
+          elem.setAttribute(propName, toAbsoluteURI(relativeURI));
+      });
     }
 
      // Fix links.
-    convertRelativeURIs("a", "href");
+    convertRelativeURIs.call(this, "a", "href");
 
      // Fix images.
-    convertRelativeURIs("img", "src");
+    convertRelativeURIs.call(this, "img", "src");
   },
 
   /**
@@ -217,19 +246,17 @@ Readability.prototype = {
     var doc = this._doc;
 
     // Remove all style tags in head
-    var styleTags = doc.getElementsByTagName("style");
-    for (var st = styleTags.length - 1; st >= 0; st -= 1) {
-      styleTags[st].parentNode.removeChild(styleTags[st]);
-    }
+    this._forEachNode(doc.getElementsByTagName("style"), function(styleNode) {
+      styleNode.parentNode.removeChild(styleNode);
+    });
 
     if (doc.body) {
       this._replaceBrs(doc.body);
     }
 
-    var fonts = doc.getElementsByTagName("FONT");
-    for (var i = fonts.length; --i >=0;) {
-      this._setNodeTag(fonts[i], "SPAN");
-    }
+    this._forEachNode(doc.getElementsByTagName("font"), function(fontNode) {
+      this._setNodeTag(fontNode, "SPAN");
+    });
   },
 
   /**
@@ -255,9 +282,7 @@ Readability.prototype = {
    *   <div>foo<br>bar<p>abc</p></div>
    */
   _replaceBrs: function (elem) {
-    var brs = elem.getElementsByTagName("br");
-    for (var i = 0; i < brs.length; i++) {
-      var br = brs[i];
+    this._forEachNode(elem.getElementsByTagName("br"), function(br) {
       var next = br.nextSibling;
 
       // Whether 2 or more <br> elements have been found and replaced with a
@@ -296,7 +321,7 @@ Readability.prototype = {
           next = sibling;
         }
       }
-    }
+    });
   },
 
   _setNodeTag: function (node, tag) {
@@ -336,26 +361,21 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "div");
 
     // Remove extra paragraphs
-    var articleParagraphs = articleContent.getElementsByTagName('p');
-    for (var i = articleParagraphs.length - 1; i >= 0; i -= 1) {
-      var imgCount = articleParagraphs[i].getElementsByTagName('img').length;
-      var embedCount = articleParagraphs[i].getElementsByTagName('embed').length;
-      var objectCount = articleParagraphs[i].getElementsByTagName('object').length;
+    this._forEachNode(articleContent.getElementsByTagName('p'), function(paragraph) {
+      var imgCount = paragraph.getElementsByTagName('img').length;
+      var embedCount = paragraph.getElementsByTagName('embed').length;
+      var objectCount = paragraph.getElementsByTagName('object').length;
+      var totalCount = imgCount + embedCount + objectCount;
 
-      if (imgCount === 0 &&
-        embedCount === 0 &&
-        objectCount === 0 &&
-        this._getInnerText(articleParagraphs[i], false) === '')
-        articleParagraphs[i].parentNode.removeChild(articleParagraphs[i]);
-    }
+      if (totalCount === 0 && !this._getInnerText(paragraph, false))
+        paragraph.parentNode.removeChild(paragraph);
+    });
 
-    var brs = articleContent.getElementsByTagName("BR");
-    for (var i = brs.length; --i >= 0;) {
-      var br = brs[i];
+    this._forEachNode(articleContent.getElementsByTagName("br"), function(br) {
       var next = this._nextElement(br.nextSibling);
       if (next && next.tagName == "P")
         br.parentNode.removeChild(br);
-    }
+    });
   },
 
   /**
@@ -522,8 +542,7 @@ Readability.prototype = {
             elementsToScore.push(node);
           } else {
             // EXPERIMENTAL
-            for (var i = 0, il = node.childNodes.length; i < il; i += 1) {
-              var childNode = node.childNodes[i];
+            this._forEachNode(node.childNodes, function(childNode) {
               if (childNode.nodeType === Node.TEXT_NODE) {
                 var p = doc.createElement('p');
                 p.textContent = childNode.textContent;
@@ -531,7 +550,7 @@ Readability.prototype = {
                 p.className = 'readability-styled';
                 node.replaceChild(p, childNode);
               }
-            }
+            });
           }
         }
         node = this._getNextNode(node);
@@ -544,17 +563,17 @@ Readability.prototype = {
        * A score is determined by things like number of commas, class names, etc. Maybe eventually link density.
       **/
       var candidates = [];
-      for (var pt = 0; pt < elementsToScore.length; pt += 1) {
-        var parentNode = elementsToScore[pt].parentNode;
+      this._forEachNode(elementsToScore, function(elementToScore) {
+        var parentNode = elementToScore.parentNode;
         var grandParentNode = parentNode ? parentNode.parentNode : null;
-        var innerText = this._getInnerText(elementsToScore[pt]);
+        var innerText = this._getInnerText(elementToScore);
 
         if (!parentNode || typeof(parentNode.tagName) === 'undefined')
-          continue;
+          return;
 
         // If this paragraph is less than 25 characters, don't even count it.
         if (innerText.length < 25)
-          continue;
+          return;
 
         // Initialize readability data for the parent.
         if (typeof parentNode.readability === 'undefined') {
@@ -586,7 +605,7 @@ Readability.prototype = {
 
         if (grandParentNode)
           grandParentNode.readability.contentScore += contentScore / 2;
-      }
+      });
 
       // After we've calculated scores, loop through all of the possible
       // candidate nodes we found and find the one with the highest score.
@@ -797,7 +816,7 @@ Readability.prototype = {
 
   /**
    * Attempts to get excerpt and byline metadata for the article.
-   * 
+   *
    * @return Object with optional "excerpt" and "byline" properties
    */
   _getArticleMetadata: function() {
@@ -813,14 +832,13 @@ Readability.prototype = {
     var propertyPattern = /^\s*og\s*:\s*description\s*$/gi;
 
     // Find description tags.
-    for (var i = 0; i < metaElements.length; i++) {
-      var element = metaElements[i];
+    this._forEachNode(metaElements, function(element) {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
 
       if (elementName === "author") {
         metadata.byline = element.getAttribute("content");
-        continue;
+        return;
       }
 
       var name = null;
@@ -839,7 +857,7 @@ Readability.prototype = {
           values[name] = content.trim();
         }
       }
-    }
+    });
 
     if ("description" in values) {
       metadata.excerpt = values["description"];
@@ -860,14 +878,13 @@ Readability.prototype = {
    * @param Element
   **/
   _removeScripts: function(doc) {
-    var scripts = doc.getElementsByTagName('script');
-    for (var i = scripts.length - 1; i >= 0; i -= 1) {
-      scripts[i].nodeValue="";
-      scripts[i].removeAttribute('src');
+    this._forEachNode(doc.getElementsByTagName('script'), function(scriptNode) {
+      scriptNode.nodeValue = "";
+      scriptNode.removeAttribute('src');
 
-      if (scripts[i].parentNode)
-          scripts[i].parentNode.removeChild(scripts[i]);
-    }
+      if (scriptNode.parentNode)
+        scriptNode.parentNode.removeChild(scriptNode);
+    });
   },
 
   /**
@@ -877,22 +894,17 @@ Readability.prototype = {
    *
    * @param Element
   **/
-  _hasSinglePInsideElement: function(e) {
+  _hasSinglePInsideElement: function(element) {
     // There should be exactly 1 element child which is a P:
-    if (e.children.length != 1 || e.firstElementChild.tagName !== "P") {
+    if (element.children.length != 1 || element.firstElementChild.tagName !== "P") {
       return false;
     }
-    // And there should be no text nodes with real content
-    var childNodes = e.childNodes;
-    for (var i = childNodes.length; --i >= 0;) {
-      var node = childNodes[i];
-      if (node.nodeType == Node.TEXT_NODE &&
-          this.REGEXPS.hasContent.test(node.textContent)) {
-        return false;
-      }
-    }
 
-    return true;
+    // And there should be no text nodes with real content
+    return !this._someNode(element.childNodes, function(node) {
+      return node.nodeType === Node.TEXT_NODE &&
+             this.REGEXPS.hasContent.test(node.textContent);
+    });
   },
 
   /**
@@ -900,14 +912,11 @@ Readability.prototype = {
    *
    * @param Element
    */
-  _hasChildBlockElement: function (e) {
-    var length = e.children.length;
-    for (var i = 0; i < length; i++) {
-      var child = e.children[i];
-      if (this.DIV_TO_P_ELEMS.indexOf(child.tagName) !== -1 || this._hasChildBlockElement(child))
-        return true;
-    }
-    return false;
+  _hasChildBlockElement: function (element) {
+    return this._someNode(element.childNodes, function(node) {
+      return this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
+             this._hasChildBlockElement(node);
+    });
   },
 
   /**
@@ -915,11 +924,12 @@ Readability.prototype = {
    * This also strips out any excess whitespace to be found.
    *
    * @param Element
+   * @param Boolean normalizeSpaces (default: true)
    * @return string
   **/
   _getInnerText: function(e, normalizeSpaces) {
-    var textContent = e.textContent.trim();
     normalizeSpaces = (typeof normalizeSpaces === 'undefined') ? true : normalizeSpaces;
+    var textContent = e.textContent.trim();
 
     if (normalizeSpaces) {
       return textContent.replace(this.REGEXPS.normalize, " ");
@@ -978,14 +988,17 @@ Readability.prototype = {
    * @param Element
    * @return number (float)
   **/
-  _getLinkDensity: function(e) {
-    var links = e.getElementsByTagName("a");
-    var textLength = this._getInnerText(e).length;
+  _getLinkDensity: function(element) {
+    var textLength = this._getInnerText(element).length;
+    if (textLength === 0)
+      return;
+
     var linkLength = 0;
 
-    for (var i = 0, il = links.length; i < il; i += 1) {
-      linkLength += this._getInnerText(links[i]).length;
-    }
+    // XXX implement _reduceNodeList?
+    this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
+      linkLength += this._getInnerText(linkNode).length;
+    });
 
     return linkLength / textLength;
   },
@@ -1398,28 +1411,27 @@ Readability.prototype = {
    * @return void
    **/
   _clean: function(e, tag) {
-    var targetList = e.getElementsByTagName(tag);
     var isEmbed = (tag === 'object' || tag === 'embed');
 
-    for (var y = targetList.length - 1; y >= 0; y -= 1) {
+    this._forEachNode(e.getElementsByTagName(tag), function(element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
         var attributeValues = "";
-        for (var i = 0, il = targetList[y].attributes.length; i < il; i += 1) {
-          attributeValues += targetList[y].attributes[i].value + '|';
+        for (var i = 0, il = element.attributes.length; i < il; i += 1) {
+          attributeValues += element.attributes[i].value + '|';
         }
 
         // First, check the elements attributes to see if any of them contain youtube or vimeo
         if (this.REGEXPS.videos.test(attributeValues))
-          continue;
+          return;
 
         // Then check the elements inside this element for the same.
-        if (this.REGEXPS.videos.test(targetList[y].innerHTML))
-          continue;
+        if (this.REGEXPS.videos.test(element.innerHTML))
+          return;
       }
 
-      targetList[y].parentNode.removeChild(targetList[y]);
-    }
+      element.parentNode.removeChild(element);
+    });
   },
 
   /**
@@ -1571,7 +1583,7 @@ Readability.prototype = {
     if (!metadata.excerpt) {
       var paragraphs = articleContent.getElementsByTagName("p");
       if (paragraphs.length > 0) {
-        metadata.excerpt = paragraphs[0].textContent;
+        metadata.excerpt = paragraphs[0].textContent.trim();
       }
     }
 
