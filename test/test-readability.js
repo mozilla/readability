@@ -30,7 +30,7 @@ var Readability = scopeContext.Readability;
 var JSDOMParser = scopeContext.JSDOMParser;
 
 function readFile(path) {
-  return fs.readFileSync(path, {encoding: "utf-8"});
+  return fs.readFileSync(path, {encoding: "utf-8"}).trim();
 }
 
 function readJSON(path) {
