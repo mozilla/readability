@@ -344,6 +344,7 @@ Readability.prototype = {
     // Clean out junk from the article content
     this._cleanConditionally(articleContent, "form");
     this._clean(articleContent, "object");
+    this._clean(articleContent, "embed");
     this._clean(articleContent, "h1");
 
     // If there is only one h2, they are probably using it as a header
