@@ -96,7 +96,7 @@ Readability.prototype = {
     byline: /byline|author|dateline|writtenby/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
     normalize: /\s{2,}/g,
-    videos: /https?:\/\/(www\.)?(youtube|vimeo)\.com/i,
+    videos: /https?:\/\/(www\.)?(youtube|youtube-nocookie|player\.vimeo)\.com/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
@@ -366,7 +366,9 @@ Readability.prototype = {
       var imgCount = paragraph.getElementsByTagName('img').length;
       var embedCount = paragraph.getElementsByTagName('embed').length;
       var objectCount = paragraph.getElementsByTagName('object').length;
-      var totalCount = imgCount + embedCount + objectCount;
+      // At this point, nasty iframes have been removed, only remain embedded video ones.
+      var iframeCount = paragraph.getElementsByTagName('iframe').length;
+      var totalCount = imgCount + embedCount + objectCount + iframeCount;
 
       if (totalCount === 0 && !this._getInnerText(paragraph, false))
         paragraph.parentNode.removeChild(paragraph);
@@ -1412,15 +1414,14 @@ Readability.prototype = {
    * @return void
    **/
   _clean: function(e, tag) {
-    var isEmbed = (tag === 'object' || tag === 'embed');
+    var isEmbed = ["object", "embed", "iframe"].indexOf(tag) !== -1;
 
     this._forEachNode(e.getElementsByTagName(tag), function(element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
-        var attributeValues = "";
-        for (var i = 0, il = element.attributes.length; i < il; i += 1) {
-          attributeValues += element.attributes[i].value + '|';
-        }
+        var attributeValues = [].map.call(element.attributes, function(attr) {
+          return attr.value;
+        }).join("|");
 
         // First, check the elements attributes to see if any of them contain youtube or vimeo
         if (this.REGEXPS.videos.test(attributeValues))

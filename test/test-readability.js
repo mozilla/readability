@@ -63,7 +63,7 @@ describe("Test page", function() {
         pathBase: "http://fakehost/test"
       };
 
-      beforeEach(function() {
+      before(function() {
         doc = new JSDOMParser().parse(source);
         result = new Readability(uri, doc).parse();
       });
