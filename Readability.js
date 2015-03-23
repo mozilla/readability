@@ -669,9 +669,9 @@ Readability.prototype = {
         // below does some of that - but only if we've looked high enough up the DOM
         // tree.
         var parentOfTopCandidate = topCandidate.parentNode;
+        var lastScore = topCandidate.readability.contentScore;
         // The scores shouldn't get too low.
-        var scoreThreshold = topCandidate.readability.contentScore / 3;
-        var lastScore = parentOfTopCandidate.readability.contentScore;
+        var scoreThreshold = lastScore / 3;
         while (parentOfTopCandidate && parentOfTopCandidate.readability) {
           var parentScore = parentOfTopCandidate.readability.contentScore;
           if (parentScore < scoreThreshold)
@@ -681,6 +681,7 @@ Readability.prototype = {
             topCandidate = parentOfTopCandidate;
             break;
           }
+          lastScore = parentOfTopCandidate.readability.contentScore;
           parentOfTopCandidate = parentOfTopCandidate.parentNode;
         }
       }
