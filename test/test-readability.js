@@ -60,7 +60,7 @@ describe("Test page", function() {
         host: "fakehost",
         prePath: "http://fakehost",
         scheme: "http",
-        pathBase: "http://fakehost/test"
+        pathBase: "http://fakehost/test/"
       };
 
       beforeEach(function() {
