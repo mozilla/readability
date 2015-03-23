@@ -172,6 +172,10 @@ Readability.prototype = {
       if (uri[0] == "/")
         return prePath + uri;
 
+      // Dotslash relative URI.
+      if (uri.indexOf("./") === 0)
+        return pathBase + uri.slice(2);
+
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".
       return pathBase + uri;
