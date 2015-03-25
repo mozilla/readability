@@ -85,19 +85,19 @@
 </div>
 <p>The <code>fetch()</code> function’s arguments are the same as those passed
     to the
-    <br/>
+    <br>
 <code>Request()</code> constructor, so you may directly pass arbitrarily
     complex requests to <code>fetch()</code> as discussed below.</p>
 
 <h2>Headers</h2>
 
 <p>Fetch introduces 3 interfaces. These are <code>Headers</code>, <code>Request</code> and
-    <br/>
+    <br>
 <code>Response</code>. They map directly to the underlying HTTP concepts,
     but have
-    <br/>certain visibility filters in place for privacy and security reasons,
+    <br>certain visibility filters in place for privacy and security reasons,
     such as
-    <br/>supporting CORS rules and ensuring cookies aren’t readable by third parties.</p>
+    <br>supporting CORS rules and ensuring cookies aren’t readable by third parties.</p>
 <p>The <a href="https://fetch.spec.whatwg.org/#headers-class">Headers interface</a> is
     a simple multi-map of names to values:</p>
 <div class="wp_syntax">
@@ -117,7 +117,7 @@ reqHeaders.<span>append</span><span>(</span><span>"X-Custom-Header"</span><span>
 </div>
 <p>The same can be achieved by passing an array of arrays or a JS object
     literal
-    <br/>to the constructor:</p>
+    <br>to the constructor:</p>
 <div class="wp_syntax">
     <table>
         <tbody>
@@ -155,25 +155,25 @@ console.<span>log</span><span>(</span>reqHeaders.<span>getAll</span><span>(</spa
     </table>
 </div>
 <p>Some of these operations are only useful in ServiceWorkers, but they provide
-    <br/>a much nicer API to Headers.</p>
+    <br>a much nicer API to Headers.</p>
 <p>Since Headers can be sent in requests, or received in responses, and have
     various limitations about what information can and should be mutable, <code>Headers</code> objects
     have a <strong>guard</strong> property. This is not exposed to the Web, but
     it affects which mutation operations are allowed on the Headers object.
-    <br/>Possible values are:</p>
+    <br>Possible values are:</p>
 <ul>
     <li>“none”: default.</li>
     <li>“request”: guard for a Headers object obtained from a Request (<code>Request.headers</code>).</li>
     <li>“request-no-cors”: guard for a Headers object obtained from a Request
         created
-        <br/>with mode “no-cors”.</li>
+        <br>with mode “no-cors”.</li>
     <li>“response”: naturally, for Headers obtained from Response (<code>Response.headers</code>).</li>
     <li>“immutable”: Mostly used for ServiceWorkers, renders a Headers object
-        <br/>read-only.</li>
+        <br>read-only.</li>
 </ul>
 <p>The details of how each guard affects the behaviors of the Headers object
     are
-    <br/>in the <a href="https://fetch.spec.whatwg.org">specification</a>. For example,
+    <br>in the <a href="https://fetch.spec.whatwg.org">specification</a>. For example,
     you may not append or set a “request” guarded Headers’ “Content-Length”
     header. Similarly, inserting “Set-Cookie” into a Response header is not
     allowed so that ServiceWorkers may not set cookies via synthesized Responses.</p>
@@ -221,9 +221,9 @@ console.<span>log</span><span>(</span>req.<span>url</span><span>)</span><span>;<
     </div>
     <p>You may also pass a Request to the <code>Request()</code> constructor to
         create a copy.
-        <br/>(This is not the same as calling the <code>clone()</code> method, which
+        <br>(This is not the same as calling the <code>clone()</code> method, which
         is covered in
-        <br/>the “Reading bodies” section.).</p>
+        <br>the “Reading bodies” section.).</p>
     <div class="wp_syntax">
         <table>
             <tbody>
@@ -240,7 +240,7 @@ console.<span>log</span><span>(</span>copy.<span>url</span><span>)</span><span>;
     <p>Again, this form is probably only useful in ServiceWorkers.</p>
     <p>The non-URL attributes of the <code>Request</code> can only be set by passing
         initial
-        <br/>values as a second argument to the constructor. This argument is a dictionary.</p>
+        <br>values as a second argument to the constructor. This argument is a dictionary.</p>
     <div
     class="wp_syntax">
         <table>
@@ -266,7 +266,7 @@ console.<span>log</span><span>(</span>copy.<span>url</span><span>)</span><span>;
         <p>The <code>"same-origin"</code> mode is simple, if a request is made to another
             origin with this mode set, the result is simply an error. You could use
             this to ensure that
-            <br/>a request is always being made to your origin.</p>
+            <br>a request is always being made to your origin.</p>
         <div class="wp_syntax">
             <table>
                 <tbody>
@@ -295,7 +295,7 @@ fetch<span>(</span>arbitraryUrl<span>,</span> <span>{</span> mode<span>:</span> 
         <p><code>"cors"</code> mode is what you’ll usually use to make known cross-origin
             requests to access various APIs offered by other vendors. These are expected
             to adhere to
-            <br/>the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS protocol</a>.
+            <br>the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS protocol</a>.
             Only a <a href="https://fetch.spec.whatwg.org/#concept-filtered-response-cors">limited set</a> of
             headers is exposed in the Response, but the body is readable. For example,
             you could get a list of Flickr’s <a href="https://www.flickr.com/services/api/flickr.interestingness.getList.html">most interesting</a> photos
@@ -330,7 +330,7 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
         </div>
         <p>You may not read out the “Date” header since Flickr does not allow it
             via
-            <br/>
+            <br>
 <code>Access-Control-Expose-Headers</code>.</p>
         <div class="wp_syntax">
             <table>
@@ -345,21 +345,21 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
         </div>
         <p>The <code>credentials</code> enumeration determines if cookies for the other
             domain are
-            <br/>sent to cross-origin requests. This is similar to XHR’s <code>withCredentials</code>
+            <br>sent to cross-origin requests. This is similar to XHR’s <code>withCredentials</code>
 
-            <br/>flag, but tri-valued as <code>"omit"</code> (default), <code>"same-origin"</code> and <code>"include"</code>.</p>
+            <br>flag, but tri-valued as <code>"omit"</code> (default), <code>"same-origin"</code> and <code>"include"</code>.</p>
         <p>The Request object will also give the ability to offer caching hints to
             the user-agent. This is currently undergoing some <a href="https://github.com/slightlyoff/ServiceWorker/issues/585">security review</a>.
             Firefox exposes the attribute, but it has no effect.</p>
         <p>Requests have two read-only attributes that are relevant to ServiceWorkers
-            <br/>intercepting them. There is the string <code>referrer</code>, which is
+            <br>intercepting them. There is the string <code>referrer</code>, which is
             set by the UA to be
-            <br/>the referrer of the Request. This may be an empty string. The other is
-            <br/>
+            <br>the referrer of the Request. This may be an empty string. The other is
+            <br>
 <code>context</code> which is a rather <a href="https://fetch.spec.whatwg.org/#requestcredentials">large enumeration</a> defining
             what sort of resource is being fetched. This could be “image” if the request
             is from an
-            <img/>tag in the controlled document, “worker” if it is an attempt to load a
+            <img>tag in the controlled document, “worker” if it is an attempt to load a
             worker script, and so on. When used with the <code>fetch()</code> function,
             it is “fetch”.</p>
         
@@ -377,11 +377,11 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
             The <code>url</code> attribute reflects the URL of the corresponding request.</p>
         <p>Response also has a <code>type</code>, which is “basic”, “cors”, “default”,
             “error” or
-            <br/>“opaque”.</p>
+            <br>“opaque”.</p>
         <ul>
             <li><code>"basic"</code>: normal, same origin response, with all headers exposed
                 except
-                <br/>“Set-Cookie” and “Set-Cookie2″.</li>
+                <br>“Set-Cookie” and “Set-Cookie2″.</li>
             <li><code>"cors"</code>: response was received from a valid cross-origin request.
                 <a
                 href="https://fetch.spec.whatwg.org/#concept-filtered-response-cors">Certain headers and the body</a>may be accessed.</li>
@@ -389,7 +389,7 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
                 the error is available. The Response’s status is 0, headers are empty and
                 immutable. This is the type for a Response obtained from <code>Response.error()</code>.</li>
             <li><code>"opaque"</code>: response for “no-cors” request to cross-origin
-                resource. <a href="https://fetch.spec.whatwg.org/#concept-filtered-response-opaque">Severely<br/>
+                resource. <a href="https://fetch.spec.whatwg.org/#concept-filtered-response-opaque">Severely<br>
   restricted</a>
 
             </li>
@@ -398,7 +398,7 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
             TypeError.</p>
         <p>There are certain attributes that are useful only in a ServiceWorker scope.
             The
-            <br/>idiomatic way to return a Response to an intercepted request in ServiceWorkers
+            <br>idiomatic way to return a Response to an intercepted request in ServiceWorkers
             is:</p>
         <div class="wp_syntax">
             <table>
@@ -421,7 +421,7 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
         <p>The static method <code>Response.error()</code> simply returns an error
             response. Similarly, <code>Response.redirect(url, status)</code> returns
             a Response resulting in
-            <br/>a redirect to <code>url</code>.</p>
+            <br>a redirect to <code>url</code>.</p>
         
 <h2>Dealing with bodies</h2>
 
@@ -561,7 +561,7 @@ res.<span>text</span><span>(</span><span>)</span>.<span>catch</span><span>(</spa
                 <a
                 href="https://github.com/slightlyoff/ServiceWorker/issues">ServiceWorker</a>specifications.</p>
             <p>For a better web!</p>
-            <p><em>The author would like to thank Andrea Marchesini, Anne van Kesteren and Ben<br/>
+            <p><em>The author would like to thank Andrea Marchesini, Anne van Kesteren and Ben<br>
 Kelly for helping with the specification and implementation.</em>
 
             </p>
