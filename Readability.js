@@ -329,10 +329,25 @@ Readability.prototype = {
   },
 
   _setNodeTag: function (node, tag) {
-    // FIXME this doesn't work on anything but JSDOMParser (ie the node's tag
-    // won't actually be set).
-    node.localName = tag.toLowerCase();
-    node.tagName = tag.toUpperCase();
+    this.log("_setNodeTag", node, tag);
+    if (node.__JSDOMParser__) {
+      node.localName = tag.toLowerCase();
+      node.tagName = tag.toUpperCase();
+      return node;
+    }
+
+    var replacement = node.ownerDocument.createElement(tag);
+    while (node.firstChild) {
+      replacement.appendChild(node.firstChild);
+    }
+    node.parentNode.replaceChild(replacement, node);
+    if (node.readability)
+      replacement.readability = node.readability;
+
+    for (var i = 0; i < node.attributes.length; i++) {
+      replacement.setAttribute(node.attributes[i].name, node.attributes[i].value);
+    }
+    return replacement;
   },
 
   /**
@@ -462,6 +477,37 @@ Readability.prototype = {
     return node && node.nextElementSibling;
   },
 
+  /**
+   * Like _getNextNode, but for DOM implementations with no
+   * firstElementChild/nextElementSibling functionality...
+   */
+  _getNextNodeNoElementProperties: function(node, ignoreSelfAndKids) {
+    function nextSiblingEl(n) {
+      do {
+        n = n.nextSibling;
+      } while (n && n.nodeType !== n.ELEMENT_NODE);
+      return n;
+    }
+    // First check for kids if those aren't being ignored
+    if (!ignoreSelfAndKids && node.children[0]) {
+      return node.children[0];
+    }
+    // Then for siblings...
+    var next = nextSiblingEl(node);
+    if (next) {
+      return next;
+    }
+    // And finally, move up the parent chain *and* find a sibling
+    // (because this is depth-first traversal, we will have already
+    // seen the parent nodes themselves).
+    do {
+      node = node.parentNode;
+      if (node)
+        next = nextSiblingEl(node);
+    } while (node && !next);
+    return node && next;
+  },
+
   _checkByline: function(node, matchString) {
     if (this._articleByline) {
       return false;
@@ -487,6 +533,7 @@ Readability.prototype = {
    * @return Element
   **/
   _grabArticle: function (page) {
+    this.log("**** grabArticle ****");
     var doc = this._doc;
     var isPaging = (page !== null ? true: false);
     page = page ? page : this._doc.body;
@@ -541,11 +588,11 @@ Readability.prototype = {
           // safely converted into plain P elements to avoid confusing the scoring
           // algorithm with DIVs with are, in practice, paragraphs.
           if (this._hasSinglePInsideElement(node)) {
-            var newNode = node.firstElementChild;
+            var newNode = node.children[0];
             node.parentNode.replaceChild(newNode, node);
             node = newNode;
           } else if (!this._hasChildBlockElement(node)) {
-            this._setNodeTag(node, "P");
+            node = this._setNodeTag(node, "P");
             elementsToScore.push(node);
           } else {
             // EXPERIMENTAL
@@ -736,7 +783,7 @@ Readability.prototype = {
             // Turn it into a div so it doesn't get filtered out later by accident.
             this.log("Altering sibling:", sibling, 'to div.');
 
-            this._setNodeTag(sibling, "DIV");
+            sibling = this._setNodeTag(sibling, "DIV");
           }
 
           // To ensure a node does not interfere with readability styles,
@@ -904,7 +951,7 @@ Readability.prototype = {
   **/
   _hasSinglePInsideElement: function(element) {
     // There should be exactly 1 element child which is a P:
-    if (element.children.length != 1 || element.firstElementChild.tagName !== "P") {
+    if (element.children.length != 1 || element.children[0].tagName !== "P") {
       return false;
     }
 
@@ -1550,6 +1597,9 @@ Readability.prototype = {
    * @return void
    **/
   parse: function () {
+    if (typeof this._doc.documentElement.firstElementChild === "undefined") {
+      this._getNextNode = this._getNextNodeNoElementProperties;
+    }
     // Remove script tags from the document.
     this._removeScripts(this._doc);
 
