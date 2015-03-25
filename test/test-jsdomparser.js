@@ -48,8 +48,13 @@ describe("Test JSDOM functionality", function() {
     nodeExpect(baseDoc.body.parentNode, baseDoc.documentElement);
     expect(baseDoc.body.childNodes.length).eql(3);
 
-    var generatedHTML = "<html>" + baseDoc.documentElement.innerHTML + "</html>";
-    expect(generatedHTML).eql(BASETESTCASE);
+    var generatedHTML = baseDoc.getElementsByTagName("p")[0].innerHTML;
+    expect(generatedHTML).eql('Some text and <a class="someclass" href="#">a link</a>');
+    var scriptNode = baseDoc.getElementsByTagName("script")[0];
+    generatedHTML = scriptNode.innerHTML;
+    expect(generatedHTML).eql('With &lt; fancy " characters in it because');
+    expect(scriptNode.textContent).eql('With < fancy " characters in it because');
+
   });
 
   it("should deal with script tags", function() {
@@ -206,5 +211,12 @@ describe("Test JSDOM functionality", function() {
           nodeExpect(replacedNode.nextElementSibling.previousElementSibling, replacedNode);
       }
     }
+  });
+
+  it("should handle encoding HTML correctly", function() {
+    var baseStr = "<p>Hello,&nbsp;everyone &amp; all their friends, &lt;this&gt; is a test.</p>";
+    var doc = new JSDOMParser().parse(baseStr);
+    var p = doc.getElementsByTagName("p")[0];
+    expect("<p>" + p.innerHTML + "</p>").eql(baseStr);
   });
 });
