@@ -30,6 +30,33 @@
     dump("JSDOMParser error: " + m + "\n");
   }
 
+  function encodeHTML(s) {
+    return s.replace(/&(?![#\w]*;)|[<>]/g, function(c) {
+      switch (c) {
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case "&":
+          return "&amp;";
+      }
+      return c;
+    });
+  }
+
+  function decodeHTML(s) {
+    return s.replace(/&amp;|&lt;|&gt;/g, function(cp) {
+      switch (cp) {
+        case "&amp;":
+          return "&";
+        case "&lt;":
+          return "<";
+        case "&gt;":
+          return ">";
+      }
+    });
+  }
+
   // When a style is set in JS, map it to the corresponding CSS attribute
   var styleMap = {
     "alignmentBaseline": "alignment-baseline",
@@ -440,7 +467,9 @@
         }
         return oldNode;
       }
-    }
+    },
+
+    __JSDOMParser__: true,
   };
 
   for (var i in nodeTypes) {
@@ -576,12 +605,12 @@
             for (var j = 0; j < child.attributes.length; j++) {
               var attr = child.attributes[j];
               var quote = (attr.value.indexOf('"') === -1 ? '"' : "'");
-              arr.push(" " + attr.name + '=' + quote + attr.value + quote);
+              arr.push(" " + attr.name + '=' + quote + encodeHTML(attr.value) + quote);
             }
 
             if (child.localName in voidElems) {
               // if this is a self-closing element, end it here
-              arr.push("/>");
+              arr.push(">");
             } else {
               // otherwise, add its children
               arr.push(">");
@@ -589,7 +618,7 @@
               arr.push("</" + child.localName + ">");
             }
           } else {
-            arr.push(child.textContent);
+            arr.push(encodeHTML(child.textContent));
           }
         }
       }
@@ -813,10 +842,7 @@
       // Read the attribute value (and consume the matching quote)
       var value = this.readString(c);
 
-      if (!value)
-        return;
-
-      node.attributes.push(new Attribute(name, value));
+      node.attributes.push(new Attribute(name, decodeHTML(value)));
 
       return;
     },
@@ -946,10 +972,10 @@
         var node = new Text();
         var n = this.html.indexOf("<", this.currentChar);
         if (n === -1) {
-          node.textContent = this.html.substring(this.currentChar, this.html.length);
+          node.textContent = decodeHTML(this.html.substring(this.currentChar, this.html.length));
           this.currentChar = this.html.length;
         } else {
-          node.textContent = this.html.substring(this.currentChar, n);
+          node.textContent = decodeHTML(this.html.substring(this.currentChar, n));
           this.currentChar = n;
         }
         return node;
