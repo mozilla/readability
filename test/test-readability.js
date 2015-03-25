@@ -1,6 +1,7 @@
 var path = require("path");
 var fs = require("fs");
 var prettyPrint = require("html").prettyPrint;
+var jsdom = require("jsdom").jsdom;
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -50,7 +51,7 @@ var testPages = fs.readdirSync(testPageRoot).map(function(dir) {
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
-      var doc, result, metadata;
+      var doc, jsdomDoc, result, jsdomResult, metadata;
 
       var expectedMetadata = readJSON(testPage.expectedMetadata);
       var expectedContent = readFile(testPage.expected);
@@ -65,27 +66,36 @@ describe("Test page", function() {
 
       before(function() {
         doc = new JSDOMParser().parse(source);
+        jsdomDoc = jsdom(source);
         result = new Readability(uri, doc).parse();
+        jsdomResult = new Readability(uri, jsdomDoc).parse();
       });
 
       it("should return a result object", function() {
         expect(result).to.include.keys("content", "title", "excerpt", "byline");
+        expect(jsdomResult).to.include.keys("content", "title", "excerpt", "byline");
       });
 
-      it("should extract expected content", function() {
+      it("should extract expected content with JSDOMParser", function() {
         expect(expectedContent).eql(prettyPrint(result.content));
+      });
+      it("should extract expected content with jsdom", function() {
+        expect(expectedContent).eql(prettyPrint(jsdomResult.content));
       });
 
       it("should extract expected title", function() {
         expect(expectedMetadata.title).eql(result.title);
+        expect(expectedMetadata.title).eql(jsdomResult.title);
       });
 
       it("should extract expected byline", function() {
         expect(expectedMetadata.byline).eql(result.byline);
+        expect(expectedMetadata.byline).eql(jsdomResult.byline);
       });
 
       it("should extract expected excerpt", function() {
         expect(expectedMetadata.excerpt).eql(result.excerpt);
+        expect(expectedMetadata.excerpt).eql(jsdomResult.excerpt);
       });
     });
   });
