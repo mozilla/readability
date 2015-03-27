@@ -1487,9 +1487,7 @@ Readability.prototype = {
         var contentLength = this._getInnerText(tagsList[i]).length;
         var toRemove = false;
 
-        if (img > p) {
-          toRemove = true;
-        } else if (li > p && tag !== "ul" && tag !== "ol") {
+        if (li > p && tag !== "ul" && tag !== "ol") {
           toRemove = true;
         } else if ( input > Math.floor(p/3) ) {
           toRemove = true;
