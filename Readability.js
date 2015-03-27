@@ -479,6 +479,25 @@ Readability.prototype = {
     return false;
   },
 
+    /**
+     * Remove deeply nested single DIVs.
+     */
+  _unNestNode: function(node) {
+    if (node.tagName !== "DIV")
+      return;
+    var nonEmptyChildren = [].filter.call(node.childNodes, function(node) {
+      return node.nodeType === 1 ||
+             node.nodeType === 3 && node.textContent.trim();
+    });
+    if (nonEmptyChildren.length !== 1)
+      return;
+    if (nonEmptyChildren[0].tagName === "DIV") {
+      return this._unNestNode(nonEmptyChildren[0]);
+    } else {
+      return nonEmptyChildren[0];
+    }
+  },
+
   /***
    * grabArticle - Using a variety of metrics (content score, classname, element types), find the content that is
    *         most likely to be the stuff a user wants to read. Then return it wrapped up in a div.
@@ -534,8 +553,10 @@ Readability.prototype = {
         if (node.tagName === "P" || node.tagName === "TD" || node.tagName === "PRE")
           elementsToScore.push(node);
 
-        // Turn all divs that don't have children block level elements into p's
-        if (node.tagName === "DIV") {
+        var unNestedNode = this._unNestNode(node);
+        if (unNestedNode) {
+          node.parentNode.replaceChild(unNestedNode, node);
+        } else if (node.tagName === "DIV") {
           // Sites like http://mobile.slate.com encloses each paragraph with a DIV
           // element. DIVs with only a P element inside and no text content can be
           // safely converted into plain P elements to avoid confusing the scoring
