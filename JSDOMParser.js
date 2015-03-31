@@ -919,14 +919,59 @@
     },
 
     readScript: function (node) {
-      var index = this.html.indexOf("</script>", this.currentChar);
-      if (index === -1) {
-        index = this.html.length;
+      while (this.currentChar < this.html.length) {
+        var c = this.nextChar();
+        var nextC = this.peekNext();
+        if (c === "<") {
+          if (nextC === "!" || nextC === "?") {
+            // We're still before the ! or ? that is starting this comment:
+            this.currentChar++;
+            node.appendChild(this.discardNextComment());
+            continue;
+          }
+          if (nextC === "/" && this.html.substr(this.currentChar, 8 /*"/script>".length */).toLowerCase() == "/script>") {
+            // Go back before the '<' so we find the end tag.
+            this.currentChar--;
+            // Done with this script tag, the caller will close:
+            return;
+          }
+        }
+        // Either c wasn't a '<' or it was but we couldn't find either a comment
+        // or a closing script tag, so we should just parse as text until the next one
+        // comes along:
+
+        var haveTextNode = node.lastChild && node.lastChild.nodeType === Node.TEXT_NODE;
+        var textNode = haveTextNode ? node.lastChild : new Text();
+        var n = this.html.indexOf("<", this.currentChar);
+        // Decrement this to include the current character *afterwards* so we don't get stuck
+        // looking for the same < all the time.
+        this.currentChar--;
+        if (n === -1) {
+          textNode.textContent += this.html.substring(this.currentChar, this.html.length);
+          this.currentChar = this.html.length;
+        } else {
+          textNode.textContent += this.html.substring(this.currentChar, n);
+          this.currentChar = n;
+        }
+        if (!haveTextNode)
+          node.appendChild(textNode);
       }
-      var txt = new Text();
-      txt.textContent = this.html.substring(this.currentChar, index === -1 ? this.html.length : index);
-      node.appendChild(txt);
-      this.currentChar = index;
+    },
+
+    discardNextComment: function() {
+      if (this.match("--")) {
+        this.discardTo("-->");
+      } else {
+        var c = this.nextChar();
+        while (c !== ">") {
+          if (c === undefined)
+            return null;
+          if (c === '"' || c === "'")
+            this.readString(c);
+          c = this.nextChar();
+        }
+      }
+      return new Comment();
     },
 
 
@@ -964,20 +1009,9 @@
       // them away in readChildren()). So just returning an empty Comment node
       // here is sufficient.
       if (c === "!" || c === "?") {
+        // We're still before the ! or ? that is starting this comment:
         this.currentChar++;
-        if (this.match("--")) {
-          this.discardTo("-->");
-        } else {
-          var c = this.nextChar();
-          while (c !== ">") {
-            if (c === undefined)
-              return null;
-            if (c === '"' || c === "'")
-              this.readString(c);
-            c = this.nextChar();
-          }
-        }
-        return new Comment();
+        return this.discardNextComment();
       }
 
       // If we're reading a closing tag, return null. This means we've reached

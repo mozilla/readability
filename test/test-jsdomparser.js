@@ -208,3 +208,42 @@ describe("Test JSDOM functionality", function() {
     }
   });
 });
+
+
+describe("Script parsing", function() {
+  it("should strip ?-based comments within script tags", function() {
+    var html = '<script><?Silly test <img src="test"></script>';
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("SCRIPT");
+    expect(doc.firstChild.textContent).eql("");
+    expect(doc.firstChild.children.length).eql(0);
+    expect(doc.firstChild.childNodes.length).eql(1);
+  });
+
+  it("should strip !-based comments within script tags", function() {
+    var html = '<script><!--Silly test > <script src="foo.js"></script>--></script>';
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("SCRIPT");
+    expect(doc.firstChild.textContent).eql("");
+    expect(doc.firstChild.children.length).eql(0);
+    expect(doc.firstChild.childNodes.length).eql(1);
+  });
+
+  it("should strip any other nodes within script tags", function() {
+    var html = "<script><div>Hello, I'm not really in a </div></script>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("SCRIPT");
+    expect(doc.firstChild.textContent).eql("<div>Hello, I'm not really in a </div>");
+    expect(doc.firstChild.children.length).eql(0);
+    expect(doc.firstChild.childNodes.length).eql(1);
+  });
+
+  it("should not be confused by partial closing tags", function() {
+    var html = "<script>var x = '<script>Hi<' + '/script>';</script>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("SCRIPT");
+    expect(doc.firstChild.textContent).eql("var x = '<script>Hi<' + '/script>';");
+    expect(doc.firstChild.children.length).eql(0);
+    expect(doc.firstChild.childNodes.length).eql(1);
+  });
+});
