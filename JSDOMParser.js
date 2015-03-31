@@ -608,6 +608,7 @@
         this.childNodes[i].parentNode = null;
       }
       this.childNodes = node.childNodes;
+      this.children = node.children;
       for (var i = this.childNodes.length; --i >= 0;) {
         this.childNodes[i].parentNode = this;
       }
@@ -621,6 +622,7 @@
 
       var node = new Text();
       this.childNodes = [ node ];
+      this.children = [];
       node.textContent = text;
       node.parentNode = this;
     },
