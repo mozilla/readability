@@ -1442,6 +1442,29 @@ Readability.prototype = {
   },
 
   /**
+   * Check if a given node has one of its ancestor tag name matching the
+   * provided one.
+   * @param  HTMLElement node
+   * @param  String      tagName
+   * @param  Number      maxDepth
+   * @return Boolean
+   */
+  _hasAncestorTag: function(node, tagName, maxDepth) {
+    maxDepth = maxDepth || 3;
+    tagName = tagName.toUpperCase();
+    var depth = 0;
+    while (node.parentNode) {
+      if (depth > maxDepth)
+        return false;
+      if (node.parentNode.tagName === tagName)
+        return true;
+      node = node.parentNode;
+      depth++;
+    }
+    return false;
+  },
+
+  /**
    * Clean an element of all tags of type "tag" if they look fishy.
    * "Fishy" is an algorithm based on content length, classnames, link density, number of images & embeds, etc.
    *
@@ -1486,8 +1509,9 @@ Readability.prototype = {
         var linkDensity = this._getLinkDensity(tagsList[i]);
         var contentLength = this._getInnerText(tagsList[i]).length;
         var toRemove = false;
-
-        if (li > p && tag !== "ul" && tag !== "ol") {
+        if (img > p && !this._hasAncestorTag(tagsList[i], "figure")) {
+          toRemove = true;
+        } else if (li > p && tag !== "ul" && tag !== "ol") {
           toRemove = true;
         } else if ( input > Math.floor(p/3) ) {
           toRemove = true;
@@ -1501,8 +1525,9 @@ Readability.prototype = {
           toRemove = true;
         }
 
-        if (toRemove)
+        if (toRemove) {
           tagsList[i].parentNode.removeChild(tagsList[i]);
+        }
       }
     }
   },
