@@ -1,9 +1,5 @@
 var path = require("path");
 var fs = require("fs");
-var prettyPrint = require("html").prettyPrint;
-var chai = require("chai");
-chai.config.includeStack = true;
-var expect = chai.expect;
 
 // We want to load Readability and JSDOMParser, which aren't set up as commonjs libraries,
 // and so we need to do some hocus-pocus with 'vm' to import them on a separate scope

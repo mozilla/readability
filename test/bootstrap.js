@@ -1,5 +1,6 @@
 var path = require("path");
 var fs = require("fs");
+var prettyPrint = require("html").prettyPrint;
 
 function readFile(path) {
   return fs.readFileSync(path, {encoding: "utf-8"}).trim();
