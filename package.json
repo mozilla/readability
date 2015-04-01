@@ -5,6 +5,7 @@
   "main": "Readability.js",
   "scripts": {
     "test": "mocha test/test-*.js",
+    "perf": "node test/time-readability.js",
     "generate-testcase": "node test/generate-testcase.js"
   },
   "repository": {
