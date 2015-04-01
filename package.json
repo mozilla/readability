@@ -5,7 +5,8 @@
   "main": "Readability.js",
   "scripts": {
     "test": "mocha test/test-*.js",
-    "generate-testcase": "node test/generate-testcase.js"
+    "generate-testcase": "node test/generate-testcase.js",
+    "perf": "matcha benchmarks.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
     "chai": "^2.1.*",
     "html": "0.0.*",
     "jsdom": "^3.1.2",
+    "matcha": "^0.6.0",
     "mocha": "^2.2.*"
   }
 }
