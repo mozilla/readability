@@ -5,25 +5,8 @@ var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
 
-// We want to load JSDOMParser, which isn't set up as commonjs libraries,
-// and so we need to do some hocus-pocus with 'vm' to import them on a separate scope
-// (identical) scope context.
-var vm = require("vm");
-var jsdomPath = path.join(__dirname, "..", "JSDOMParser.js");
-
-
-var scopeContext = {};
-// We generally expect dump() and console.{whatever} to work, so make these available
-// in the scope we're using:
-scopeContext.dump = console.log
-scopeContext.console = console;
-
-// Actually load file. NB: if the file has parse errors,
-// node is dumb and shows you a syntax error *at this callsite* . Don't try to find
-// a syntax error on this line, there isn't one. Go look in the file it's loading instead.
-vm.runInNewContext(fs.readFileSync(jsdomPath), scopeContext, jsdomPath);
-
-var JSDOMParser = scopeContext.JSDOMParser;
+var readability = require("../index.js");
+var JSDOMParser = readability.JSDOMParser;
 
 var BASETESTCASE = '<html><body><p>Some text and <a class="someclass" href="#">a link</a></p>' +
                    '<div id="foo">With a <script>With < fancy " characters in it because' +
