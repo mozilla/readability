@@ -1,7 +1,4 @@
-var matchaPath = require.resolve('matcha');
-var path = require('path');
-
-var clean = require('matcha/lib/matcha/reporters/clean'));
+var clean = require('matcha/lib/matcha/reporters/clean');
 
 function average(list) {
   if (!list.length)

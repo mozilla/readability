@@ -54,6 +54,16 @@ Combo time:
 
     $ mocha test/test-*.js -w -g 001
 
+## Benchmarks
+
+Benchmarks for all test pages:
+
+    $ npm run perf
+
+Reference benchmark:
+
+    $ npm run perf-reference
+
 ## License
 
     Copyright (c) 2010 Arc90 Inc
