@@ -26,13 +26,33 @@ if (process.env.READABILITY_PERF_REFERENCE === "1") {
   });
 }
 
-suite("Readability test page perf", function () {
+suite("JSDOMParser test page perf", function () {
   set("iterations", 1);
   set("type", "static");
 
   testPages.forEach(function(testPage) {
-    bench(testPage.dir + " perf", function() {
+    bench(testPage.dir + " document parse perf", function() {
       new JSDOMParser().parse(testPage.source);
+    });
+  });
+});
+
+
+suite("Readability test page perf", function () {
+  set("iterations", 1);
+  set("type", "static");
+
+  var uri = {
+    spec: "http://fakehost/test/page.html",
+    host: "fakehost",
+    prePath: "http://fakehost",
+    scheme: "http",
+    pathBase: "http://fakehost/test"
+  };
+  testPages.forEach(function(testPage) {
+    var doc = new JSDOMParser().parse(testPage.source);
+    bench(testPage.dir + " readability perf", function() {
+      new Readability(uri, doc).parse();
     });
   });
 });

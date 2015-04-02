@@ -7,7 +7,7 @@
     "test": "mocha test/test-*.js",
     "generate-testcase": "node test/generate-testcase.js",
     "perf": "matcha benchmarks.js",
-    "perf-reference": "READABILITY_PERF_REFERENCE=1 matcha benchmarks.js"
+    "perf-reference": "READABILITY_PERF_REFERENCE=1 matcha --reporter ./benchmark-reporter.js benchmarks.js"
   },
   "repository": {
     "type": "git",
