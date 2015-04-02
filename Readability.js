@@ -1561,6 +1561,39 @@ Readability.prototype = {
   },
 
   /**
+   * Decides whether or not the document is reader-able without parsing the whole thing.
+   *
+   * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
+   */
+  isProbablyReaderable: function() {
+    var nodes = this._doc.getElementsByTagName("p");
+    if (nodes.length < 5) {
+      return false;
+    }
+
+    var possibleParagraphs = 0;
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      var matchString = node.className + " " + node.id;
+
+      if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
+          !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
+        continue;
+      }
+
+      if (node.textContent.trim().length < 100) {
+        continue;
+      }
+
+      possibleParagraphs++;
+      if (possibleParagraphs >= 5) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  /**
    * Runs readability.
    *
    * Workflow:
