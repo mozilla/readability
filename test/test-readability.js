@@ -9,6 +9,23 @@ var JSDOMParser = readability.JSDOMParser;
 
 var testPages = require("./bootstrap").getTestPages();
 
+describe("Test isProbablyReaderable", function() {
+  testPages.forEach(function(testPage) {
+    describe(testPage.dir, function() {
+      var doc, isProbablyReaderable;
+
+      before(function() {
+        doc = new JSDOMParser().parse(testPage.source);
+        isProbablyReaderable = new Readability(null, doc).isProbablyReaderable();
+      });
+
+      it("should probably be readerable", function() {
+        expect(isProbablyReaderable).eql(true);
+      });
+    });
+  });
+});
+
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
