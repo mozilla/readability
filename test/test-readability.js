@@ -3,11 +3,28 @@ var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
 
-var readability = require("../index.js");
+var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
 
 var testPages = require("./bootstrap").getTestPages();
+
+describe("Test isProbablyReaderable", function() {
+  testPages.forEach(function(testPage) {
+    describe(testPage.dir, function() {
+      var doc, isProbablyReaderable;
+
+      before(function() {
+        doc = new JSDOMParser().parse(testPage.source);
+        isProbablyReaderable = new Readability(null, doc).isProbablyReaderable();
+      });
+
+      it("should probably be readerable", function() {
+        expect(isProbablyReaderable).eql(testPage.expectedMetadata.readerable);
+      });
+    });
+  });
+});
 
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
