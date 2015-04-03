@@ -31,8 +31,13 @@ describe("Test JSDOM functionality", function() {
     nodeExpect(baseDoc.body.parentNode, baseDoc.documentElement);
     expect(baseDoc.body.childNodes.length).eql(3);
 
-    var generatedHTML = "<html>" + baseDoc.documentElement.innerHTML + "</html>";
-    expect(generatedHTML).eql(BASETESTCASE);
+    var generatedHTML = baseDoc.getElementsByTagName("p")[0].innerHTML;
+    expect(generatedHTML).eql('Some text and <a class="someclass" href="#">a link</a>');
+    var scriptNode = baseDoc.getElementsByTagName("script")[0];
+    generatedHTML = scriptNode.innerHTML;
+    expect(generatedHTML).eql('With < fancy " characters in it because');
+    expect(scriptNode.textContent).eql('With < fancy " characters in it because');
+
   });
 
   it("should deal with script tags", function() {
@@ -189,6 +194,38 @@ describe("Test JSDOM functionality", function() {
           nodeExpect(replacedNode.nextElementSibling.previousElementSibling, replacedNode);
       }
     }
+  });
+});
+
+describe("Test HTML escaping", function() {
+  var baseStr = "<p>Hello, everyone &amp; all their friends, &lt;this&gt; is a &quot; test with &apos; quotes.</p>";
+  var doc = new JSDOMParser().parse(baseStr);
+  var p = doc.getElementsByTagName("p")[0];
+  var txtNode = p.firstChild;
+  it("should handle encoding HTML correctly", function() {
+    // This /should/ just be cached straight from reading it:
+    expect("<p>" + p.innerHTML + "</p>").eql(baseStr);
+    expect("<p>" + txtNode.innerHTML + "</p>").eql(baseStr);
+  });
+
+  it("should have decoded correctly", function() {
+    expect(p.textContent).eql("Hello, everyone & all their friends, <this> is a \" test with ' quotes.");
+    expect(txtNode.textContent).eql("Hello, everyone & all their friends, <this> is a \" test with ' quotes.");
+  });
+
+  it("should handle updates via textContent correctly", function() {
+    // Because the initial tests might be based on cached innerHTML values,
+    // let's manipulate via textContent in order to test that it alters
+    // the innerHTML correctly.
+    txtNode.textContent = txtNode.textContent + " ";
+    expect("<p>" + txtNode.innerHTML + "</p>").eql(baseStr.replace("</p>", " </p>"));
+    expect("<p>" + p.innerHTML + "</p>").eql(baseStr.replace("</p>", " </p>"));
+
+  });
+
+  it("should handle decimal and hex escape sequences", function() {
+    var doc = new JSDOMParser().parse("<p>&#32;&#x20;</p>");
+    expect(doc.getElementsByTagName("p")[0].textContent).eql("  ");
   });
 });
 

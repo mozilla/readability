@@ -1,4 +1,5 @@
 var prettyPrint = require("html").prettyPrint;
+var jsdom = require("jsdom").jsdom;
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -9,28 +10,45 @@ var JSDOMParser = readability.JSDOMParser;
 
 var testPages = require("./bootstrap").getTestPages();
 
-describe("Test isProbablyReaderable", function() {
-  testPages.forEach(function(testPage) {
-    describe(testPage.dir, function() {
-      var doc, isProbablyReaderable;
-
-      before(function() {
-        doc = new JSDOMParser().parse(testPage.source);
-        isProbablyReaderable = new Readability(null, doc).isProbablyReaderable();
-      });
-
-      it("should probably be readerable", function() {
-        expect(isProbablyReaderable).eql(testPage.expectedMetadata.readerable);
-      });
-    });
+function suite(result, expectedContent, expectedMetadata) {
+  it("should return a result object", function() {
+    expect(result).to.include.keys("content", "title", "excerpt", "byline");
   });
-});
+
+  it("should extract expected content", function() {
+    expect(expectedContent).eql(prettyPrint(result.content));
+  });
+
+  it("should extract expected title", function() {
+    expect(expectedMetadata.title).eql(result.title);
+  });
+
+  it("should extract expected byline", function() {
+    expect(expectedMetadata.byline).eql(result.byline);
+  });
+
+  it("should extract expected excerpt", function() {
+    expect(expectedMetadata.excerpt).eql(result.excerpt);
+  });
+
+  it("should probably be readerable", function() {
+    expect(expectedMetadata.readerable).eql(result.readerable);
+  });
+}
+
+function removeCommentNodesRecursively(node) {
+  [].forEach.call(node.childNodes, function(child) {
+    if (child.nodeType === child.COMMENT_NODE) {
+      node.removeChild(child);
+    } else if (child.nodeType === child.ELEMENT_NODE) {
+      removeCommentNodesRecursively(child);
+    }
+  });
+}
 
 describe("Test page", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
-      var doc, result;
-
       var uri = {
         spec: "http://fakehost/test/page.html",
         host: "fakehost",
@@ -39,29 +57,28 @@ describe("Test page", function() {
         pathBase: "http://fakehost/test/"
       };
 
-      before(function() {
-        doc = new JSDOMParser().parse(testPage.source);
-        result = new Readability(uri, doc).parse();
+      describe("jsdom", function() {
+        var doc = jsdom(testPage.source, {
+          features: {
+            FetchExternalResources: false,
+            ProcessExternalResources: false
+          }
+        });
+        removeCommentNodesRecursively(doc);
+        var readability = new Readability(uri, doc);
+        var readerable = readability.isProbablyReaderable();
+        var result = readability.parse();
+        result.readerable = readerable;
+        suite(result, testPage.expectedContent, testPage.expectedMetadata);
       });
 
-      it("should return a result object", function() {
-        expect(result).to.include.keys("content", "title", "excerpt", "byline");
-      });
-
-      it("should extract expected content", function() {
-        expect(testPage.expectedContent).eql(prettyPrint(result.content));
-      });
-
-      it("should extract expected title", function() {
-        expect(testPage.expectedMetadata.title).eql(result.title);
-      });
-
-      it("should extract expected byline", function() {
-        expect(testPage.expectedMetadata.byline).eql(result.byline);
-      });
-
-      it("should extract expected excerpt", function() {
-        expect(testPage.expectedMetadata.excerpt).eql(result.excerpt);
+      describe("JSDOMParser", function() {
+        var doc = new JSDOMParser().parse(testPage.source);
+        var readability = new Readability(uri, doc);
+        var readerable = readability.isProbablyReaderable();
+        var result = readability.parse();
+        result.readerable = readerable;
+        suite(result, testPage.expectedContent, testPage.expectedMetadata);
       });
     });
   });
