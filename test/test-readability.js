@@ -3,7 +3,7 @@ var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
 
-var readability = require("../index.js");
+var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
 
@@ -20,7 +20,7 @@ describe("Test isProbablyReaderable", function() {
       });
 
       it("should probably be readerable", function() {
-        expect(isProbablyReaderable).eql(true);
+        expect(isProbablyReaderable).eql(testPage.expectedMetadata.readerable);
       });
     });
   });
