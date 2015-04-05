@@ -962,7 +962,7 @@
      */
     match: function (str) {
       var strlen = str.length;
-      if (this.html.substr(this.currentChar, strlen) === str) {
+      if (this.html.substr(this.currentChar, strlen).toLowerCase() === str.toLowerCase()) {
         this.currentChar += strlen;
         return true;
       }
@@ -1058,7 +1058,7 @@
      */
     readNode: function () {
       var c = this.nextChar();
- 
+
       if (c === undefined)
         return null;
 

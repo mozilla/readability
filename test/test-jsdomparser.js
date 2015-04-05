@@ -267,3 +267,16 @@ describe("Script parsing", function() {
     expect(doc.firstChild.childNodes.length).eql(1);
   });
 });
+
+describe("Tag local name case handling", function() {
+  it("should lowercase tag names", function() {
+    var html = "<DIV><svG><clippath/></svG></DIV>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("DIV");
+    expect(doc.firstChild.localName).eql("div");
+    expect(doc.firstChild.firstChild.tagName).eql("SVG");
+    expect(doc.firstChild.firstChild.localName).eql("svg");
+    expect(doc.firstChild.firstChild.firstChild.tagName).eql("CLIPPATH");
+    expect(doc.firstChild.firstChild.firstChild.localName).eql("clippath");
+  });
+});
