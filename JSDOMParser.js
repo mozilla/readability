@@ -1058,7 +1058,7 @@
      */
     readNode: function () {
       var c = this.nextChar();
- 
+
       if (c === undefined)
         return null;
 
@@ -1113,7 +1113,7 @@
           this.readChildren(node);
         }
         var closingTag = "</" + localName + ">";
-        if (!this.match(closingTag)) {
+        if (!this.match(closingTag) && !this.match(closingTag.toUpperCase())) {
           error("expected '" + closingTag + "'");
           return null;
         }
