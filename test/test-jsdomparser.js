@@ -267,3 +267,19 @@ describe("Script parsing", function() {
     expect(doc.firstChild.childNodes.length).eql(1);
   });
 });
+
+describe("Tag name case handling", function() {
+  it("should handle lowercase tag names", function() {
+    var html = "<div>plop</div>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("DIV");
+    expect(doc.firstChild.localName).eql("div");
+  });
+
+  it("should handle uppercase tag names", function() {
+    var html = "<DIV>plop</DIV>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("DIV");
+    expect(doc.firstChild.localName).eql("div");
+  });
+});
