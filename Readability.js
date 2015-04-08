@@ -1629,31 +1629,11 @@ Readability.prototype = {
    * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
    */
   isProbablyReaderable: function() {
-    var nodes = this._doc.getElementsByTagName("p");
-    if (nodes.length < 5) {
-      return false;
-    }
-
-    var possibleParagraphs = 0;
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var matchString = node.className + " " + node.id;
-
-      if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
-          !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
-        continue;
-      }
-
-      if (node.textContent.trim().length < 100) {
-        continue;
-      }
-
-      possibleParagraphs++;
-      if (possibleParagraphs >= 5) {
-        return true;
-      }
-    }
-    return false;
+    return this._someNode(this._doc.body.getElementsByTagName("*"), function(node) {
+      return [1, 3].indexOf(node.nodeType) !== -1 &&
+             node.textContent.indexOf(",") !== -1 &&
+             node.textContent.trim().length > 100;
+    });
   },
 
   /**
