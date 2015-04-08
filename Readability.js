@@ -88,10 +88,10 @@ Readability.prototype = {
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
-    unlikelyCandidates: /combx|comment|community|disqus|extra|foot|header|menu|remark|rss|shoutbox|sidebar|sponsor|ad-break|agegate|pagination|pager|popup/i,
+    unlikelyCandidates: /combx|comment|community|disqus|extra|foot|header|menu|remark|rss|share|shoutbox|sidebar|sponsor|ad-break|agegate|pagination|pager|popup/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
     positive: /article|body|content|entry|hentry|main|page|pagination|post|text|blog|story/i,
-    negative: /hidden|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|shoutbox|sidebar|sponsor|shopping|tags|tool|widget/i,
+    negative: /hidden|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
