@@ -19,14 +19,27 @@
  * available at: http://code.google.com/p/arc90labs-readability
  */
 var root = this;
-var Readability = function(uri, doc) {
-  var ENABLE_LOGGING = false;
+
+/**
+ * Public constructor.
+ * @param {Object}       uri     The URI descriptor object.
+ * @param {HTMLDocument} doc     The document to parse.
+ * @param {Object}       options The options object.
+ */
+var Readability = function(uri, doc, options) {
+  options = options || {};
 
   this._uri = uri;
   this._doc = doc;
   this._biggestFrame = false;
   this._articleByline = null;
   this._articleDir = null;
+
+  // Configureable options
+  this._debug = !!options.debug;
+  this._maxElemsToParse = options.maxElemsToParse || this.DEFAULT_MAX_ELEMS_TO_PARSE;
+  this._nbTopCandidates = options.nbTopCandidates || this.DEFAULT_N_TOP_CANDIDATES;
+  this._maxPages = options.maxPages || this.DEFAULT_MAX_PAGES;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -45,7 +58,7 @@ var Readability = function(uri, doc) {
   this._curPageNum = 1;
 
   // Control whether log messages are sent to the console
-  if (ENABLE_LOGGING) {
+  if (this._debug) {
     function logEl(e) {
       var rv = e.nodeName + " ";
       if (e.nodeType == e.TEXT_NODE) {
@@ -77,13 +90,16 @@ Readability.prototype = {
   FLAG_WEIGHT_CLASSES: 0x2,
   FLAG_CLEAN_CONDITIONALLY: 0x4,
 
+  // Max number of nodes supported by this parser. Default: 0 (no limit)
+  DEFAULT_MAX_ELEMS_TO_PARSE: 0,
+
   // The number of top candidates to consider when analysing how
   // tight the competition is among candidates.
-  N_TOP_CANDIDATES: 5,
+  DEFAULT_N_TOP_CANDIDATES: 5,
 
   // The maximum number of pages to loop through before we call
   // it quits and just show a link.
-  MAX_PAGES: 5,
+  DEFAULT_MAX_PAGES: 5,
 
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
@@ -675,12 +691,12 @@ Readability.prototype = {
 
         this.log('Candidate:', candidate, "with score " + candidateScore);
 
-        for (var t = 0; t < this.N_TOP_CANDIDATES; t++) {
+        for (var t = 0; t < this._nbTopCandidates; t++) {
           var aTopCandidate = topCandidates[t];
 
           if (!aTopCandidate || candidateScore > aTopCandidate.readability.contentScore) {
             topCandidates.splice(t, 0, candidate);
-            if (topCandidates.length > this.N_TOP_CANDIDATES)
+            if (topCandidates.length > this._nbTopCandidates)
               topCandidates.pop();
             break;
           }
@@ -800,11 +816,11 @@ Readability.prototype = {
         }
       }
 
-      if (this.ENABLE_LOGGING)
+      if (this._debug)
         this.log("Article content pre-prep: " + articleContent.innerHTML);
       // So we have all of the content that we need. Now we clean it up for presentation.
       this._prepArticle(articleContent);
-      if (this.ENABLE_LOGGING)
+      if (this._debug)
         this.log("Article content post-prep: " + articleContent.innerHTML);
 
       if (this._curPageNum === 1) {
@@ -827,7 +843,7 @@ Readability.prototype = {
         }
       }
 
-      if (this.ENABLE_LOGGING)
+      if (this._debug)
         this.log("Article content after paging: " + articleContent.innerHTML);
 
       // Now that we've gone through the full algorithm, check to see if
@@ -1330,7 +1346,7 @@ Readability.prototype = {
 
     doc.getElementById("readability-content").appendChild(articlePage);
 
-    if (this._curPageNum > this.MAX_PAGES) {
+    if (this._curPageNum > this._maxPages) {
       var nextPageMarkup = "<div style='text-align: center'><a href='" + nextPageLink + "'>View Next Page</a></div>";
       articlePage.innerHTML = articlePage.innerHTML + nextPageMarkup;
       return;
@@ -1653,6 +1669,14 @@ Readability.prototype = {
    * @return void
    **/
   parse: function () {
+    // Avoid parsing too large documents, as per configuration option
+    if (this._maxElemsToParse > 0) {
+      var numTags = this._doc.getElementsByTagName("*").length;
+      if (numTags > this._maxElemsToParse) {
+        throw new Error("Aborting parsing document; " + numTags + " elements found");
+      }
+    }
+
     if (typeof this._doc.documentElement.firstElementChild === "undefined") {
       this._getNextNode = this._getNextNodeNoElementProperties;
     }

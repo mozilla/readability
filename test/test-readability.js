@@ -53,7 +53,40 @@ function removeCommentNodesRecursively(node) {
   });
 }
 
-describe("Test page", function() {
+describe("Readability API", function() {
+  describe("#constructor", function() {
+    it("should accept a debug option", function() {
+      expect(new Readability({}, {})._debug).eql(false);
+      expect(new Readability({}, {}, {debug: true})._debug).eql(true);
+    });
+
+    it("should accept a nbTopCandidates option", function() {
+      expect(new Readability({}, {})._nbTopCandidates).eql(5);
+      expect(new Readability({}, {}, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
+    });
+
+    it("should accept a maxPages option", function() {
+      expect(new Readability({}, {})._maxPages).eql(5);
+      expect(new Readability({}, {}, {maxPages: 42})._maxPages).eql(42);
+    });
+
+    it("should accept a maxElemsToParse option", function() {
+      expect(new Readability({}, {})._maxElemsToParse).eql(0);
+      expect(new Readability({}, {}, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
+    });
+  });
+
+  describe("#parse", function() {
+    it("shouldn't parse oversized documents as per configuration", function() {
+      var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
+      expect(function() {
+        new Readability({}, doc, {maxElemsToParse: 1}).parse();
+      }).to.Throw("Aborting parsing document; 2 elements found");
+    });
+  });
+});
+
+describe("Test pages", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
       var uri = {
