@@ -10,29 +10,36 @@ var JSDOMParser = readability.JSDOMParser;
 
 var testPages = require("./bootstrap").getTestPages();
 
-function suite(result, expectedContent, expectedMetadata) {
-  it("should return a result object", function() {
-    expect(result).to.include.keys("content", "title", "excerpt", "byline");
-  });
+function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
+  describe(label, function() {
+    var result;
+    before(function() {
+      result = beforeFn();
+    });
 
-  it("should extract expected content", function() {
-    expect(expectedContent).eql(prettyPrint(result.content));
-  });
+    it("should return a result object", function() {
+      expect(result).to.include.keys("content", "title", "excerpt", "byline");
+    });
 
-  it("should extract expected title", function() {
-    expect(expectedMetadata.title).eql(result.title);
-  });
+    it("should extract expected content", function() {
+      expect(expectedContent).eql(prettyPrint(result.content));
+    });
 
-  it("should extract expected byline", function() {
-    expect(expectedMetadata.byline).eql(result.byline);
-  });
+    it("should extract expected title", function() {
+      expect(expectedMetadata.title).eql(result.title);
+    });
 
-  it("should extract expected excerpt", function() {
-    expect(expectedMetadata.excerpt).eql(result.excerpt);
-  });
+    it("should extract expected byline", function() {
+      expect(expectedMetadata.byline).eql(result.byline);
+    });
 
-  it("should probably be readerable", function() {
-    expect(expectedMetadata.readerable).eql(result.readerable);
+    it("should extract expected excerpt", function() {
+      expect(expectedMetadata.excerpt).eql(result.excerpt);
+    });
+
+    it("should probably be readerable", function() {
+      expect(expectedMetadata.readerable).eql(result.readerable);
+    });
   });
 }
 
@@ -57,7 +64,7 @@ describe("Test page", function() {
         pathBase: "http://fakehost/test/"
       };
 
-      describe("jsdom", function() {
+      runTestsWithItems("jsdom", function() {
         var doc = jsdom(testPage.source, {
           features: {
             FetchExternalResources: false,
@@ -69,17 +76,17 @@ describe("Test page", function() {
         var readerable = readability.isProbablyReaderable();
         var result = readability.parse();
         result.readerable = readerable;
-        suite(result, testPage.expectedContent, testPage.expectedMetadata);
-      });
+        return result;
+      }, testPage.expectedContent, testPage.expectedMetadata);
 
-      describe("JSDOMParser", function() {
+      runTestsWithItems("JSDOMParser", function() {
         var doc = new JSDOMParser().parse(testPage.source);
         var readability = new Readability(uri, doc);
         var readerable = readability.isProbablyReaderable();
         var result = readability.parse();
         result.readerable = readerable;
-        suite(result, testPage.expectedContent, testPage.expectedMetadata);
-      });
+        return result;
+      }, testPage.expectedContent, testPage.expectedMetadata);
     });
   });
 });
