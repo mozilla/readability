@@ -20,7 +20,7 @@ if (process.argv.length < 3) {
 var slug = process.argv[2];
 var url = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
 
-var destRoot = path.join(__dirname, "test-pages", slug);
+var destRoot = path.join(__dirname, "test-pages", "extraction", slug);
 
 fs.mkdir(destRoot, function(err) {
   if (err) {

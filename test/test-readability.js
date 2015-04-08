@@ -1,5 +1,6 @@
 var prettyPrint = require("html").prettyPrint;
 var jsdom = require("jsdom").jsdom;
+var serializeDocument = require("jsdom").serializeDocument;
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -7,8 +8,6 @@ var expect = chai.expect;
 var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
-
-var testPages = require("./bootstrap").getTestPages();
 
 function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
   describe(label, function() {
@@ -38,7 +37,7 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
     });
 
     it("should probably be readerable", function() {
-      expect(expectedMetadata.readerable).eql(result.readerable);
+      expect(result.readerable).eql(true);
     });
   });
 }
@@ -86,24 +85,26 @@ describe("Readability API", function() {
   });
 });
 
-describe("Test pages", function() {
-  testPages.forEach(function(testPage) {
-    describe(testPage.dir, function() {
-      var uri = {
-        spec: "http://fakehost/test/page.html",
-        host: "fakehost",
-        prePath: "http://fakehost",
-        scheme: "http",
-        pathBase: "http://fakehost/test/"
-      };
+var uri = {
+  spec: "http://fakehost/test/page.html",
+  host: "fakehost",
+  prePath: "http://fakehost",
+  scheme: "http",
+  pathBase: "http://fakehost/test/"
+};
 
+var jsdomOptions = {
+  features: {
+    FetchExternalResources: false,
+    ProcessExternalResources: false
+  }
+};
+
+describe("Extraction", function() {
+  require("./bootstrap").getExtractionTestPages().forEach(function(testPage) {
+    describe(testPage.dir, function() {
       runTestsWithItems("jsdom", function() {
-        var doc = jsdom(testPage.source, {
-          features: {
-            FetchExternalResources: false,
-            ProcessExternalResources: false
-          }
-        });
+        var doc = jsdom(testPage.source, jsdomOptions);
         removeCommentNodesRecursively(doc);
         var readability = new Readability(uri, doc);
         var readerable = readability.isProbablyReaderable();
@@ -120,6 +121,24 @@ describe("Test pages", function() {
         result.readerable = readerable;
         return result;
       }, testPage.expectedContent, testPage.expectedMetadata);
+    });
+  });
+});
+
+describe("Detection", function() {
+  require("./bootstrap").getDetectionTestPages().forEach(function(testPage) {
+    describe(testPage.file, function() {
+      var readerable;
+
+      before(function() {
+        var readability = new Readability(uri, jsdom(testPage.source, jsdomOptions));
+        readerable = readability.isProbablyReaderable();
+      });
+
+      it("should be detected as " + (testPage.readerable ? "readerable" : "non-readerable"),
+        function() {
+          expect(readerable).eql(testPage.readerable);
+        });
     });
   });
 });
