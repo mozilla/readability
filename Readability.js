@@ -197,20 +197,29 @@ Readability.prototype = {
       return pathBase + uri;
     }
 
-    function convertRelativeURIs(tagName, propName) {
-      var elems = articleContent.getElementsByTagName(tagName);
-      this._forEachNode(elems, function(elem) {
-        var relativeURI = elem.getAttribute(propName);
-        if (relativeURI != null)
-          elem.setAttribute(propName, toAbsoluteURI(relativeURI));
-      });
-    }
+    var links = articleContent.getElementsByTagName("a");
+    this._forEachNode(links, function(link) {
+      var href = link.getAttribute("href");
+      if (href) {
+        // Replace links with javascript: URIs with text content, since
+        // they won't work after scripts have been removed from the page.
+        if (href.indexOf("javascript:") === 0) {
+          var text = new Text();
+          text.textContent = link.textContent;
+          link.parentNode.replaceChild(text, link);
+        } else {
+          link.setAttribute("href", toAbsoluteURI(href));
+        }
+      }
+    });
 
-     // Fix links.
-    convertRelativeURIs.call(this, "a", "href");
-
-     // Fix images.
-    convertRelativeURIs.call(this, "img", "src");
+    var imgs = articleContent.getElementsByTagName("img");
+    this._forEachNode(imgs, function(img) {
+      var src = img.getAttribute("src");
+      if (src) {
+        img.setAttribute("src", toAbsoluteURI(src));
+      }
+    });
   },
 
   /**
@@ -587,7 +596,8 @@ Readability.prototype = {
         if (stripUnlikelyCandidates) {
           if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
               !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
-              node.tagName !== "BODY") {
+              node.tagName !== "BODY" &&
+              node.tagName !== "A") {
             this.log("Removing unlikely candidate - " + matchString);
             node = this._removeAndGetNext(node);
             continue;
