@@ -218,8 +218,10 @@ describe("Test HTML escaping", function() {
     // let's manipulate via textContent in order to test that it alters
     // the innerHTML correctly.
     txtNode.textContent = txtNode.textContent + " ";
-    expect("<p>" + txtNode.innerHTML + "</p>").eql(baseStr.replace("</p>", " </p>"));
-    expect("<p>" + p.innerHTML + "</p>").eql(baseStr.replace("</p>", " </p>"));
+    txtNode.textContent = txtNode.textContent.trim();
+    var expectedHTML = baseStr.replace("&quot;", '"').replace("&apos;", "'");
+    expect("<p>" + txtNode.innerHTML + "</p>").eql(expectedHTML);
+    expect("<p>" + p.innerHTML + "</p>").eql(expectedHTML);
 
   });
 

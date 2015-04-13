@@ -204,8 +204,7 @@ Readability.prototype = {
         // Replace links with javascript: URIs with text content, since
         // they won't work after scripts have been removed from the page.
         if (href.indexOf("javascript:") === 0) {
-          var text = new Text();
-          text.textContent = link.textContent;
+          var text = this._doc.createTextNode(link.textContent);
           link.parentNode.replaceChild(text, link);
         } else {
           link.setAttribute("href", toAbsoluteURI(href));
