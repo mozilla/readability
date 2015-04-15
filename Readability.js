@@ -101,6 +101,9 @@ Readability.prototype = {
   // it quits and just show a link.
   DEFAULT_MAX_PAGES: 5,
 
+  // Element tags to score by default.
+  DEFAULT_TAGS_TO_SCORE: ["SECTION", "P", "TD", "PRE"],
+
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
@@ -436,6 +439,8 @@ Readability.prototype = {
     node.readability = {"contentScore": 0};
 
     switch(node.tagName) {
+      case 'MAIN':
+      case 'ARTICLE':
       case 'DIV':
         node.readability.contentScore += 5;
         break;
@@ -465,6 +470,13 @@ Readability.prototype = {
       case 'H6':
       case 'TH':
         node.readability.contentScore -= 5;
+        break;
+    }
+
+    switch(node.getAttribute("role")) {
+      case 'article':
+      case 'main':
+        node.readability.contentScore += 5;
         break;
     }
 
@@ -604,7 +616,7 @@ Readability.prototype = {
           }
         }
 
-        if (node.tagName === "P" || node.tagName === "TD" || node.tagName === "PRE")
+        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1)
           elementsToScore.push(node);
 
         // Turn all divs that don't have children block level elements into p's
@@ -624,11 +636,17 @@ Readability.prototype = {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
               if (childNode.nodeType === Node.TEXT_NODE) {
-                var p = doc.createElement('p');
-                p.textContent = childNode.textContent;
-                p.style.display = 'inline';
-                p.className = 'readability-styled';
-                node.replaceChild(p, childNode);
+                var textContent = childNode.textContent.trim();
+                if (textContent) {
+                  var p = doc.createElement('p');
+                  p.textContent = childNode.textContent;
+                  p.style.display = 'inline';
+                  p.className = 'readability-styled';
+                  node.replaceChild(p, childNode);
+                } else {
+                  // remove empty text nodes
+                  node.removeChild(childNode);
+                }
               }
             });
           }
