@@ -101,6 +101,9 @@ Readability.prototype = {
   // it quits and just show a link.
   DEFAULT_MAX_PAGES: 5,
 
+  // Element tags to score by default.
+  DEFAULT_TAGS_TO_SCORE: ["SECTION", "P", "TD", "PRE"],
+
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
@@ -604,7 +607,7 @@ Readability.prototype = {
           }
         }
 
-        if (node.tagName === "P" || node.tagName === "TD" || node.tagName === "PRE")
+        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1)
           elementsToScore.push(node);
 
         // Turn all divs that don't have children block level elements into p's
