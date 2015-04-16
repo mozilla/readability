@@ -1642,6 +1642,13 @@ Readability.prototype = {
    * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
    */
   isProbablyReaderable: function() {
+    var nodes = this._doc.getElementsByTagName('input');
+    for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i].value != '' && nodes[i].value.length > 3 && this._doc.title.replace(/\W/g, '').indexOf(nodes[i].value.replace(/\W/g, '')) != - 1 && this._doc.URL.replace(/\W/g, '').indexOf(nodes[i].value.replace(/\W/g, '')) != - 1)  
+    {
+      return false;
+    }
+  }
     var nodes = this._doc.getElementsByTagName("p");
     if (nodes.length < 5) {
       return false;
