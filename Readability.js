@@ -906,10 +906,10 @@ Readability.prototype = {
 
     // Match "description", or Twitter's "twitter:description" (Cards)
     // in name attribute.
-    var namePattern = /^\s*((twitter)\s*:\s*)?description\s*$/gi;
+    var namePattern = /^\s*((twitter)\s*:\s*)?(description|title)\s*$/gi;
 
-    // Match Facebook's og:description (Open Graph) in property attribute.
-    var propertyPattern = /^\s*og\s*:\s*description\s*$/gi;
+    // Match Facebook's Open Graph title & description properties.
+    var propertyPattern = /^\s*og\s*:\s*(description|title)\s*$/gi;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
@@ -947,6 +947,14 @@ Readability.prototype = {
     } else if ("twitter:description" in values) {
       // Use twitter cards description.
       metadata.excerpt = values["twitter:description"];
+    }
+
+    if ("og:title" in values) {
+      // Use facebook open graph title.
+      metadata.title = values["og:title"];
+    } else if ("twitter:title" in values) {
+      // Use twitter cards title.
+      metadata.title = values["twitter:title"];
     }
 
     return metadata;
@@ -1708,8 +1716,8 @@ Readability.prototype = {
 
     this._prepDocument();
 
-    var articleTitle = this._getArticleTitle();
     var metadata = this._getArticleMetadata();
+    var articleTitle = metadata.title || this._getArticleTitle();
 
     var articleContent = this._grabArticle();
     if (!articleContent)
