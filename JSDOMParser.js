@@ -313,6 +313,16 @@
     return elems;
   }
 
+  function getElementsByClassName(classname) {
+    var elems = [];
+    var re = new RegExp('(^| )' + classname + '( |$)');
+    var nodes = this.getElementsByTagName("*");
+    for (var i=0, j=nodes.length; i<j; i++)
+      if (re.test(nodes[i].className))
+        elems.push(nodes[i]);
+    return elems;
+  }
+
   var Node = function () {};
 
   Node.prototype = {
@@ -571,6 +581,8 @@
 
     getElementsByTagName: getElementsByTagName,
 
+    getElementsByClassName: getElementsByClassName,
+
     getElementById: function (id) {
       function getElem(node) {
         var length = node.children.length;
@@ -614,6 +626,8 @@
     nodeType: Node.ELEMENT_NODE,
 
     getElementsByTagName: getElementsByTagName,
+
+    getElementsByClassName: getElementsByClassName,
 
     get className() {
       return this.getAttribute("class") || "";

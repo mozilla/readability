@@ -282,3 +282,36 @@ describe("Tag local name case handling", function() {
     expect(doc.firstChild.firstChild.firstChild.localName).eql("clippath");
   });
 });
+
+describe("#getElementsByClassName", function() {
+  var doc;
+
+  beforeEach(function() {
+    var html = '<div>' +
+    '  <div class="foo bar">plop</div>' +
+    '  <div class="bar">plap</div>' +
+    '  <p>baz</p>' +
+    '</div>';
+    doc = new JSDOMParser().parse(html);
+  });
+
+  it("should find elements having provided class name", function() {
+    expect(doc.getElementsByClassName("foo")).to.have.length.of(1);
+  });
+
+  it("shouldn't find unmacthing elements", function() {
+    expect(doc.getElementsByClassName("baz")).to.have.length.of(0);
+  });
+
+  it("should retrieve multiple elements matching a single class name", function() {
+    expect(doc.getElementsByClassName("bar")).to.have.length.of(2);
+  });
+
+  it("should search combined class names", function() {
+    expect(doc.getElementsByClassName("foo bar")).to.have.length.of(1);
+  });
+
+  it("should perform a case-sensitive search", function() {
+    expect(doc.getElementsByClassName("FOO")).to.have.length.of(0);
+  });
+});
