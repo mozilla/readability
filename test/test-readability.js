@@ -22,7 +22,7 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
     });
 
     it("should extract expected content", function() {
-      expect(expectedContent).eql(prettyPrint(result.content));
+      expect(expectedContent.split("\n")).eql(prettyPrint(result.content).split("\n"));
     });
 
     it("should extract expected title", function() {
