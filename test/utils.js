@@ -1,6 +1,6 @@
 var path = require("path");
 var fs = require("fs");
-var prettyPrint = require("html").prettyPrint;
+var prettyPrint = require("js-beautify").html;
 
 function readFile(path) {
   return fs.readFileSync(path, {encoding: "utf-8"}).trim();
@@ -22,3 +22,19 @@ exports.getTestPages = function() {
     };
   });
 };
+
+exports.prettyPrint = function(html) {
+  return prettyPrint(html, {
+    "indent_size": 4,
+    "indent_char": " ",
+    "indent_level": 0,
+    "indent_with_tabs": false,
+    "preserve_newlines": false,
+    "break_chained_methods": false,
+    "eval_code": false,
+    "unescape_strings": false,
+    "wrap_line_length": 0,
+    "wrap_attributes": "auto",
+    "wrap_attributes_indent_size": 4
+  });
+}

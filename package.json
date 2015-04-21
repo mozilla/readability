@@ -21,7 +21,7 @@
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
     "chai": "^2.1.*",
-    "html": "0.0.*",
+    "js-beautify": "^1.5.5",
     "jsdom": "^3.1.2",
     "matcha": "^0.6.0",
     "mocha": "^2.2.*"

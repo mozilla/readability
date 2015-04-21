@@ -1,4 +1,4 @@
-var prettyPrint = require("html").prettyPrint;
+var prettyPrint = require("./utils").prettyPrint;
 var jsdom = require("jsdom").jsdom;
 var chai = require("chai");
 chai.config.includeStack = true;
@@ -8,11 +8,14 @@ var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
 
-var testPages = require("./bootstrap").getTestPages();
+var testPages = require("./utils").getTestPages();
 
 function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
   describe(label, function() {
+    this.timeout(5000);
+
     var result;
+
     before(function() {
       result = beforeFn();
     });

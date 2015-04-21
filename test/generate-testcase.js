@@ -3,7 +3,7 @@ var debug = false;
 var path = require("path");
 var fs = require("fs");
 var jsdom = require("jsdom").jsdom;
-var prettyPrint = require("html").prettyPrint;
+var prettyPrint = require("./utils").prettyPrint;
 var serializeDocument = require("jsdom").serializeDocument;
 var http = require("http");
 
