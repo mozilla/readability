@@ -6,10 +6,13 @@ var jsdom = require("jsdom").jsdom;
 var prettyPrint = require("./utils").prettyPrint;
 var serializeDocument = require("jsdom").serializeDocument;
 var http = require("http");
+var urlparse = require("url").parse;
 
 var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
+
+var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0";
 
 if (process.argv.length < 3) {
   console.error("Need at least a destination slug and potentially a URL (if the slug doesn't have source).");
@@ -54,7 +57,10 @@ function fetchSource(url, callbackFn) {
   if (url.indexOf("https") == 0) {
     client = require("https");
   }
-  client.get(url, function(response) {
+  var options = urlparse(url);
+  options.headers = {'User-Agent': FFX_UA};
+
+  client.get(options, function(response) {
     if (debug) {
       console.log("STATUS:", response.statusCode);
       console.log("HEADERS:", JSON.stringify(response.headers));
