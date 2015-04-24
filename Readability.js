@@ -165,6 +165,21 @@ Readability.prototype = {
   },
 
   /**
+   * Concat all nodelists passed as arguments.
+   *
+   * @return ...NodeList
+   * @return Array
+   */
+  _concatNodeLists: function() {
+    var slice = Array.prototype.slice;
+    var args = slice.call(arguments);
+    var nodeLists = args.map(function(list) {
+      return slice.call(list);
+    });
+    return Array.prototype.concat.apply([], nodeLists);
+  },
+
+  /**
    * Converts each <a> and <img> uri in the given element to an absolute URI.
    *
    * @param Element
@@ -245,10 +260,24 @@ Readability.prototype = {
       if (curTitle.split(' ').length < 3)
         curTitle = origTitle.replace(/[^\|\-]*[\|\-](.*)/gi,'$1');
     } else if (curTitle.indexOf(': ') !== -1) {
-      curTitle = origTitle.replace(/.*:(.*)/gi, '$1');
+      // Check if we have an heading containing this exact string, so we
+      // could assume it's the full title.
+      var headings = this._concatNodeLists(
+        doc.getElementsByTagName('h1'),
+        doc.getElementsByTagName('h2')
+      );
+      var match = this._someNode(headings, function(heading) {
+        return heading.textContent === curTitle;
+      });
 
-      if (curTitle.split(' ').length < 3)
-        curTitle = origTitle.replace(/[^:]*[:](.*)/gi,'$1');
+      // If we don't, let's extract the title out of the original title string.
+      if (!match) {
+        curTitle = origTitle.substring(origTitle.lastIndexOf(':') + 1);
+
+        // If the title is now too short, try the first colon instead:
+        if (curTitle.split(' ').length < 3)
+          curTitle = origTitle.substring(origTitle.indexOf(':') + 1);
+      }
     } else if (curTitle.length > 150 || curTitle.length < 15) {
       var hOnes = doc.getElementsByTagName('h1');
 
