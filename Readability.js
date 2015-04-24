@@ -844,10 +844,6 @@ Readability.prototype = {
             sibling = this._setNodeTag(sibling, "DIV");
           }
 
-          // To ensure a node does not interfere with readability styles,
-          // remove its classnames.
-          sibling.removeAttribute("class");
-
           articleContent.appendChild(sibling);
           // siblings is a reference to the children array, and
           // sibling is removed from the array when we call appendChild().
