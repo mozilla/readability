@@ -182,6 +182,15 @@ Readability.prototype = {
     return Array.prototype.concat.apply([], nodeLists);
   },
 
+  _getAllNodesWithTag: function(node, tagNames) {
+    if (node.querySelectorAll) {
+      return node.querySelectorAll(tagNames.join(','));
+    }
+    return [].concat.apply([], tagNames.map(function(tag) {
+      return node.getElementsByTagName(tag);
+    }));
+  },
+
   /**
    * Converts each <a> and <img> uri in the given element to an absolute URI.
    *
@@ -1678,32 +1687,42 @@ Readability.prototype = {
    *
    * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
    */
-  isProbablyReaderable: function() {
-    var nodes = this._doc.getElementsByTagName("p");
-    if (nodes.length < 5) {
-      return false;
-    }
+  isProbablyReaderable: function(helperIsVisible) {
+    var nodes = this._getAllNodesWithTag(this._doc, ["p", "pre"]);
 
-    var possibleParagraphs = 0;
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
+    // FIXME we should have a fallback for helperIsVisible, but this is
+    // problematic because of jsdom's elem.style handling - see
+    // https://github.com/mozilla/readability/pull/186 for context.
+
+    var score = 0;
+    // This is a little cheeky, we use the accumulator 'score' to decide what to return from
+    // this callback:
+    return this._someNode(nodes, function(node) {
+      if (helperIsVisible && !helperIsVisible(node))
+        return false;
       var matchString = node.className + " " + node.id;
 
       if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
           !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
-        continue;
+        return false;
       }
 
-      if (node.textContent.trim().length < 100) {
-        continue;
+      if (node.matches && node.matches("li p")) {
+        return false;
       }
 
-      possibleParagraphs++;
-      if (possibleParagraphs >= 5) {
+      var textContentLength = node.textContent.trim().length;
+      if (textContentLength < 140) {
+        return false;
+      }
+
+      score += Math.sqrt(textContentLength - 140);
+
+      if (score > 20) {
         return true;
       }
-    }
-    return false;
+      return false;
+    });
   },
 
   /**
