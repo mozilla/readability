@@ -613,6 +613,12 @@ Readability.prototype = {
       var node = this._doc.documentElement;
 
       while (node) {
+        // Remove hidden elements.
+        if (node.style && node.style.display === "none") {
+          node = this._removeAndGetNext(node);
+          continue;
+        }
+
         var matchString = node.className + " " + node.id;
 
         // Check to see if this node is a byline, and remove it if it is.
