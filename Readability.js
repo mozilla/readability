@@ -1664,7 +1664,7 @@ Readability.prototype = {
     for (var headerIndex = 1; headerIndex < 3; headerIndex += 1) {
       var headers = e.getElementsByTagName('h' + headerIndex);
       for (var i = headers.length - 1; i >= 0; i -= 1) {
-        if (this._getClassWeight(headers[i]) < 0 || this._getLinkDensity(headers[i]) > 0.33)
+        if (this._getClassWeight(headers[i]) < 0)
           headers[i].parentNode.removeChild(headers[i]);
       }
     }
