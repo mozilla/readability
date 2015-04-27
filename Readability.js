@@ -945,7 +945,7 @@ Readability.prototype = {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
 
-      if (elementName === "author") {
+      if ([elementName, elementProperty].indexOf("author") !== -1) {
         metadata.byline = element.getAttribute("content");
         return;
       }
