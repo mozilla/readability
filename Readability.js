@@ -1598,6 +1598,7 @@ Readability.prototype = {
 
     var tagsList = e.getElementsByTagName(tag);
     var curTagsLength = tagsList.length;
+    var isList = tag === "ul" || tag === "ol";
 
     // Gather counts for other typical elements embedded within.
     // Traverse backwards so we can remove nodes at the same time
@@ -1633,13 +1634,13 @@ Readability.prototype = {
         var toRemove = false;
         if (img > p && !this._hasAncestorTag(tagsList[i], "figure")) {
           toRemove = true;
-        } else if (li > p && tag !== "ul" && tag !== "ol") {
+        } else if (!isList && li > p) {
           toRemove = true;
-        } else if ( input > Math.floor(p/3) ) {
+        } else if (input > Math.floor(p/3)) {
           toRemove = true;
-        } else if (contentLength < 25 && (img === 0 || img > 2) ) {
+        } else if (!isList && contentLength < 25 && (img === 0 || img > 2)) {
           toRemove = true;
-        } else if (weight < 25 && linkDensity > 0.2) {
+        } else if (!isList && weight < 25 && linkDensity > 0.2) {
           toRemove = true;
         } else if (weight >= 25 && linkDensity > 0.5) {
           toRemove = true;
