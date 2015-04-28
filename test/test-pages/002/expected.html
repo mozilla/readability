@@ -288,6 +288,14 @@ apiCall.<span>then</span><span>(</span><span>function</span><span>(</span>respon
         <h2>Dealing with bodies</h2>
         <p>Both Requests and Responses may contain body data. We’ve been glossing over it because of the various data types body may contain, but we will cover it in detail now.</p>
         <p>A body is an instance of any of the following types.</p>
+        <ul>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a> </li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView">ArrayBufferView</a> (Uint8Array and friends)</li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Blob</a>/ <a href="https://developer.mozilla.org/en-US/docs/Web/API/File">File</a> </li>
+            <li>string</li>
+            <li><a href="https://url.spec.whatwg.org/#interface-urlsearchparams">URLSearchParams</a> </li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData">FormData</a> – currently not supported by either Gecko or Blink. Firefox expects to ship this in version 39 along with the rest of Fetch.</li>
+        </ul>
         <p>In addition, Request and Response both offer the following methods to extract their body. These all return a Promise that is eventually resolved with the actual content.</p>
         <ul>
             <li><code>arrayBuffer()</code> </li>
