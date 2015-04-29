@@ -591,6 +591,18 @@ Readability.prototype = {
     return false;
   },
 
+  _getNodeAncestors: function(node, maxDepth) {
+    maxDepth = maxDepth || 0;
+    var i = 0, ancestors = [];
+    while (node.parentNode) {
+      ancestors.push(node.parentNode)
+      if (maxDepth && ++i === maxDepth)
+        break;
+      node = node.parentNode;
+    }
+    return ancestors;
+  },
+
   /***
    * grabArticle - Using a variety of metrics (content score, classname, element types), find the content that is
    *         most likely to be the stuff a user wants to read. Then return it wrapped up in a div.
@@ -645,8 +657,9 @@ Readability.prototype = {
           }
         }
 
-        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1)
+        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1) {
           elementsToScore.push(node);
+        }
 
         // Turn all divs that don't have children block level elements into p's
         if (node.tagName === "DIV") {
@@ -685,30 +698,18 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
-        var parentNode = elementToScore.parentNode;
-        var grandParentNode = parentNode ? parentNode.parentNode : null;
-        var innerText = this._getInnerText(elementToScore);
-
-        if (!parentNode || typeof(parentNode.tagName) === 'undefined')
+        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === 'undefined')
           return;
 
         // If this paragraph is less than 25 characters, don't even count it.
+        var innerText = this._getInnerText(elementToScore);
         if (innerText.length < 25)
           return;
 
-        // Initialize readability data for the parent.
-        if (typeof parentNode.readability === 'undefined') {
-          this._initializeNode(parentNode);
-          candidates.push(parentNode);
-        }
-
-        // Initialize readability data for the grandparent.
-        if (grandParentNode &&
-          typeof(grandParentNode.readability) === 'undefined' &&
-          typeof(grandParentNode.tagName) !== 'undefined') {
-          this._initializeNode(grandParentNode);
-          candidates.push(grandParentNode);
-        }
+        // Exclude nodes with no ancestor.
+        var ancestors = this._getNodeAncestors(elementToScore, 3);
+        if (ancestors.length === 0)
+          return;
 
         var contentScore = 0;
 
@@ -721,11 +722,18 @@ Readability.prototype = {
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
 
-        // Add the score to the parent. The grandparent gets half.
-        parentNode.readability.contentScore += contentScore;
+        // Initialize and score ancestors.
+        this._forEachNode(ancestors, function(ancestor, level) {
+          if (!ancestor.tagName)
+            return;
 
-        if (grandParentNode)
-          grandParentNode.readability.contentScore += contentScore / 2;
+          if (typeof(ancestor.readability) === 'undefined') {
+            this._initializeNode(ancestor);
+            candidates.push(ancestor);
+          }
+
+          ancestor.readability.contentScore += contentScore / (level === 0 ? 1 : level * 2);
+        });
       });
 
       // After we've calculated scores, loop through all of the possible

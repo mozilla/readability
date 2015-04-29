@@ -10,6 +10,12 @@ var JSDOMParser = readability.JSDOMParser;
 
 var testPages = require("./utils").getTestPages();
 
+function reformatError(err) {
+  var formattedError = new Error(err.message);
+  formattedError.stack = err.stack;
+  return formattedError;
+}
+
 function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
   describe(label, function() {
     this.timeout(5000);
@@ -17,7 +23,11 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
     var result;
 
     before(function() {
-      result = beforeFn();
+      try {
+        result = beforeFn();
+      } catch(err) {
+        throw reformatError(err);
+      }
     });
 
     it("should return a result object", function() {
