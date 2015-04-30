@@ -115,7 +115,7 @@ Readability.prototype = {
     byline: /byline|author|dateline|writtenby/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
     normalize: /\s{2,}/g,
-    videos: /https?:\/\/(www\.)?(youtube|youtube-nocookie|player\.vimeo)\.com/i,
+    videos: /https?:\/\/(www\.)?(dailymotion|youtube|youtube-nocookie|player\.vimeo)\.com/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
