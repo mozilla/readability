@@ -1,0 +1,134 @@
+<div id="readability-page-1" class="page">
+    <div id="container">
+        <header id="masthead">
+            <aside id="ad-top"> </aside>
+        </header>
+        <section id="content" class="clearfix">
+            <article itemscope="" itemtype="http://schema.org/NewsArticle" class="standalone">
+                <header>
+                    <h2 class="standalone-deck" itemprop="description">Two-year-old bug exposes thousands of servers to crippling attack.</h2> </header>
+                <section id="article-guts">
+                    <div itemprop="articleBody" class="article-content clearfix">
+                        <figure class="intro-image image center full-width"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/04/server-crash-640x426.jpg" width="640" height="331">
+                            <figcaption class="caption"> </figcaption>
+                        </figure>
+                        <p>A flaw in the wildly popular online game <em>Minecraft</em> makes it easy for just about anyone to crash the server hosting the game, according to a computer programmer who has released proof-of-concept code that exploits the vulnerability.</p>
+                        <p>"I thought a lot before writing this post," Pakistan-based developer Ammar Askar wrote in a <a href="http://blog.ammaraskar.com/minecraft-vulnerability-advisory">blog post published Thursday</a>, 21 months, he said, after privately reporting the bug to <em>Minecraft</em> developer Mojang. "On the one hand I don't want to expose thousands of servers to a major vulnerability, yet on the other hand Mojang has failed to act on it."</p>
+                        <p>The bug resides in the <a href="https://github.com/ammaraskar/pyCraft">networking internals of the <em>Minecraft </em>protocol</a>. It allows the contents of inventory slots to be exchanged, so that, among other things, items in players' hotbars are displayed automatically after logging in. <em>Minecraft</em> items can also store arbitrary metadata in a file format known as <a href="http://wiki.vg/NBT">Named Binary Tag (NBT)</a>, which allows complex data structures to be kept in hierarchical nests. Askar has released <a href="https://github.com/ammaraskar/pyCraft/tree/nbt_exploit">proof-of-concept attack code</a> he said exploits the vulnerability to crash any server hosting the game. Here's how it works.</p>
+                        <blockquote>
+                            <p>The vulnerability stems from the fact that the client is allowed to send the server information about certain slots. This, coupled with the NBT format’s nesting allows us to <em>craft</em> a packet that is incredibly complex for the server to deserialize but trivial for us to generate.</p>
+                            <p>In my case, I chose to create lists within lists, down to five levels. This is a json representation of what it looks like.</p>
+                            <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">rekt</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                    <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">]</span>
+                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">]</span>
+                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">]</span>
+                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">]</span>
+                        <span class="p">...</span>
+                    <span class="p">]</span>
+                    <span class="p">...</span>
+                <span class="p">]</span>
+                <span class="p">...</span>
+            <span class="p">]</span>
+            <span class="p">...</span>
+        <span class="p">]</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></div>
+                            <p>The root of the object, <code>rekt</code>, contains 300 lists. Each list has a list with 10 sublists, and each of those sublists has 10 of their own, up until 5 levels of recursion. That’s a total of <code>10^5 * 300 = 30,000,000</code> lists.</p>
+                            <p>And this isn’t even the theoretical maximum for this attack. Just the nbt data for this payload is 26.6 megabytes. But luckily Minecraft implements a way to compress large packets, lucky us! zlib shrinks down our evil data to a mere 39 kilobytes.</p>
+                            <p>Note: in previous versions of Minecraft, there was no protocol wide compression for big packets. Previously, NBT was sent compressed with gzip and prefixed with a signed short of its length, which reduced our maximum payload size to <code>2^15 - 1</code>. Now that the length is a varint capable of storing integers up to <code>2^28</code>, our potential for attack has increased significantly.</p>
+                            <p>When the server will decompress our data, it’ll have 27 megs in a buffer somewhere in memory, but that isn’t the bit that’ll kill it. When it attempts to parse it into NBT, it’ll create java representations of the objects meaning suddenly, the sever is having to create several million java objects including ArrayLists. This runs the server out of memory and causes tremendous CPU load.</p>
+                            <p>This vulnerability exists on almost all previous and current Minecraft versions as of 1.8.3, the packets used as attack vectors are the <a href="http://wiki.vg/Protocol#Player_Block_Placement">0x08: Block Placement Packet</a> and <a href="http://wiki.vg/Protocol#Creative_Inventory_Action">0x10: Creative Inventory Action</a>.</p>
+                            <p>The fix for this vulnerability isn’t exactly that hard, the client should never really send a data structure as complex as NBT of arbitrary size and if it must, some form of recursion and size limits should be implemented.</p>
+                            <p>These were the fixes that I recommended to Mojang 2 years ago.</p>
+                        </blockquote>
+                        <p>Ars is asking Mojang for comment and will update this post if company officials respond.</p>
+                    </div>
+                    <p><a href="http://arstechnica.com/security/2015/04/16/just-released-minecraft-exploit-makes-it-easy-to-crash-game-servers/">Expand full story</a></p>
+                </section>
+                <div id="article-footer-wrap">
+                    <aside class="thin-divide-bottom"> </aside>
+                    <section class="article-author clearfix-redux">
+                        <a href="http://fakehost/author/dan-goodin"><img width="47" height="47" src="http://cdn.arstechnica.net/wp-content/uploads/authors/Dan-Goodin-sq.jpg"></a>
+                        <p><a href="http://fakehost/author/dan-goodin" class="author-name">Dan Goodin</a> / Dan is the Security Editor at Ars Technica, which he joined in 2012 after working for The Register, the Associated Press, Bloomberg News, and other publications.</p> <a href="https://twitter.com/dangoodin001" class="twitter-link">@dangoodin001 on Twitter</a> </section>
+                </div>
+            </article>
+            <section id="article-sidebar" class="column-1 right">
+                <aside class="side-ad thick-divide-bottom"> </aside>
+                <h2 id="recent-featured-title" class="subheading notched">Latest Feature Story</h2>
+                <ul class="column">
+                    <li class="post" id="post-658367">
+                        <article class="in-column" data-post-id="658367">
+                            <a href="http://arstechnica.com/apple/2015/05/03/review-the-absolutely-optional-apple-watch-and-watch-os-1-0/" class="headline-image"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/DSC00588-300x100.jpg" width="300" height="100">
+                                <h2 class="page-count subheading">Feature Story (7 pages)</h2> </a>
+                            <p class="excerpt">A pragmatist's guide to a nice but not quite necessary gadget.</p>
+                        </article>
+                    </li>
+                    <aside class="thick-divide-top">
+                        <h2 class="subheading notched">Watch Ars Video</h2>
+                        <article class="in-column">
+                            <div class="column-video" data-player="2196096102001" data-video="4202322531001" data-key="AQ~~,AAAAlDCBGhk~,VcmqiTAuekrwPweJ20LLt7jwm8LxmhCE"><img src="https://cdn.arstechnica.net/i/http://brightcove.vo.llnwd.net/v1/unsecured/media/636468927001/201504/641/636468927001_4202397654001_LG-G4.jpg?pubId=636468927001" width="300" height="169"></div>
+                            <a href="http://arstechnica.com/gadgets/2015/04/28/hands-on-with-the-leather-backed-lg-g4/"></a>
+                            <p class="excerpt">LG goes with a wild rear design and a Snapdragon 808.</p>
+                        </article>
+                    </aside>
+                    <li id="in-the-know">
+                        <h2 class="subheading notched">Stay in the know with</h2>
+                        <ul class="social clearfix">
+                            <li class="fb">
+                                <a href="https://www.facebook.com/arstechnica"></a>
+                            </li>
+                            <li class="twit">
+                                <a href="https://twitter.com/arstechnica"></a>
+                            </li>
+                            <li class="gplus">
+                                <a href="https://plus.google.com/+ArsTechnica/posts"></a>
+                            </li>
+                            <li class="email">
+                                <a href="http://arstechnica.us1.list-manage.com/subscribe?u=af7f013bad7e785d15aab736f&amp;id=0adf3ee3d9"></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <h2 class="subheading notched">Latest News</h2>
+                    <ol class="rail latest-stories">
+                        <li>
+                            <a href="http://arstechnica.com/tech-policy/2015/05/04/video-of-cop-killing-man-wont-be-public-until-footage-is-played-at-trial/"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/4172577749_8c228f2d83_z-150x150.jpg" width="50" height="50"> </a>
+                        </li>
+                        <li>
+                            <a href="http://arstechnica.com/information-technology/2015/05/04/facebooks-free-internet-for-the-poor-leaves-out-high-bandwidth-sites/"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/zuckerberg-internet.org_-150x150.png" width="50" height="50"> </a>
+                        </li>
+                        <li>
+                            <a href="http://arstechnica.com/information-technology/2015/05/04/your-own-personal-azure-microsofts-new-azure-stack-for-private-clouds/"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/azure-150x150.jpg" width="50" height="50"> </a>
+                        </li>
+                        <li>
+                            <a href="http://arstechnica.com/tech-policy/2015/05/03/department-of-justice-will-review-how-it-deploys-cell-phone-snooping-tech/"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/8483363351_496486eb2f_k-150x150.jpg" width="50" height="50"> </a>
+                        </li>
+                        <li>
+                            <a href="http://arstechnica.com/tech-policy/2015/05/03/nz-court-unfreezes-some-kim-dotcom-assets-to-cover-100k-in-monthly-costs/">
+                                <h2>$11k for groceries and food?</h2> </a>
+                        </li>
+                        <li>
+                            <a href="http://arstechnica.com/business/2015/05/03/how-selerity-reported-twitters-2q15-earnings-before-twitter-did/"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/05/twitter_run_over-150x150.jpg" width="50" height="50"> </a>
+                        </li>
+                    </ol>
+                    <li>
+                        <aside class="side-ad"> </aside>
+                    </li>
+                    <li class="thick-divide-top thick-divide-bottom">
+                        <aside class="side-ad"> </aside>
+                    </li>
+                </ul>
+            </section>
+        </section>
+    </div>
+</div>
