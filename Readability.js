@@ -102,7 +102,7 @@ Readability.prototype = {
   DEFAULT_MAX_PAGES: 5,
 
   // Element tags to score by default.
-  DEFAULT_TAGS_TO_SCORE: ["SECTION", "P", "TD", "PRE"],
+  DEFAULT_TAGS_TO_SCORE: "section,h2,h3,h4,h5,h6,p,td,pre".toUpperCase().split(","),
 
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
