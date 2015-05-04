@@ -430,6 +430,7 @@ Readability.prototype = {
     this._clean(articleContent, "object");
     this._clean(articleContent, "embed");
     this._clean(articleContent, "h1");
+    this._clean(articleContent, "nav");
     this._clean(articleContent, "footer");
 
     // If there is only one h2, they are probably using it as a header
