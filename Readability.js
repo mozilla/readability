@@ -732,7 +732,12 @@ Readability.prototype = {
             candidates.push(ancestor);
           }
 
-          ancestor.readability.contentScore += contentScore / (level === 0 ? 1 : level * 2);
+          // Node score divider:
+          // - parent:             1 (no division)
+          // - grandparent:        2
+          // - great grandparent+: ancestor level * 3
+          var scoreDivider = level === 0 ? 1 : level === 1 ? 2 : level * 3;
+          ancestor.readability.contentScore += contentScore / scoreDivider;
         });
       });
 
