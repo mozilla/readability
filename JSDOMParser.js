@@ -276,6 +276,7 @@
     "meta": true,
     "param": true,
     "source": true,
+    "wbr": true
   };
 
   var whitespace = [" ", "\t", "\n", "\r"];
