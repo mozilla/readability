@@ -1655,8 +1655,6 @@ Readability.prototype = {
           toRemove = true;
         } else if (!isList && weight < 25 && linkDensity > 0.2) {
           toRemove = true;
-        } else if (weight >= 25 && linkDensity > 0.5) {
-          toRemove = true;
         } else if ((embedCount === 1 && contentLength < 75) || embedCount > 1) {
           toRemove = true;
         }
