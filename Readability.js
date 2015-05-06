@@ -110,7 +110,7 @@ Readability.prototype = {
     unlikelyCandidates: /banner|combx|comment|community|disqus|extra|foot|header|menu|related|remark|rss|share|shoutbox|sidebar|skyscraper|sponsor|ad-break|agegate|pagination|pager|popup/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
     positive: /article|body|content|entry|hentry|main|page|pagination|post|text|blog|story/i,
-    negative: /hidden|banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
+    negative: /hidden|banner|combx|comment|com-|contact|control-?bar|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
@@ -721,6 +721,10 @@ Readability.prototype = {
 
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
+
+        if (elementToScore.tagName !== "section" && innerText.length > 300) {
+          contentScore *= 1.5;
+        }
 
         // Initialize and score ancestors.
         this._forEachNode(ancestors, function(ancestor, level) {
