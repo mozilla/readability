@@ -622,6 +622,14 @@ Readability.prototype = {
       return null;
     }
 
+    var articleTags = this._doc.getElementsByTagName("article");
+    if (articleTags.length === 1) {
+      this._forEachNode(page.children, function(pageChild) {
+        page.removeChild(pageChild);
+      });
+      page.appendChild(articleTags[0]);
+    }
+
     var pageCacheHtml = page.innerHTML;
 
     // Check if any "dir" is set on the toplevel document element
@@ -926,7 +934,7 @@ Readability.prototype = {
       } else {
         return articleContent;
       }
-    }
+    } // end while(true)
   },
 
   /**
