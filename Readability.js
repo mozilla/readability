@@ -107,7 +107,7 @@ Readability.prototype = {
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
-    unlikelyCandidates: /banner|combx|comment|community|disqus|extra|foot|header|menu|related|remark|rss|share|shoutbox|sidebar|skyscraper|sponsor|ad-break|agegate|pagination|pager|popup/i,
+    unlikelyCandidates: /banner|combx|comment|community|disqus|extra|foot|header|menu|on-air-board|related|remark|rss|share|shoutbox|sidebar|skyscraper|slider|sponsor|ad-break|agegate|pagination|pager|popup/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
     positive: /article|body|content|entry|hentry|main|page|pagination|post|text|blog|story/i,
     negative: /hidden|banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
@@ -926,7 +926,7 @@ Readability.prototype = {
       } else {
         return articleContent;
       }
-    }
+    } // end while(true)
   },
 
   /**
