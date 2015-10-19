@@ -6,36 +6,36 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
         <title>The sharing economy is a lie: Uber, Ayn Rand and the truth about tech
             and libertarians - Salon.com</title>
         <meta http-equiv="X-UA-Compatible"
-        content="IE=edge">
-        <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        content="IE=edge"/>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <script type="text/javascript">
             (window.NREUM||(NREUM={})).loader_config={xpid:"VQIAWVFSGwIDVFZWAAk="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({QJf3ax:[function(t,e){function n(t){function e(e,n,a){t&&t(e,n,a),a||(a={});for(var c=s(e),f=c.length,u=i(a,o,r),d=0;f>d;d++)c[d].apply(u,n);return u}function a(t,e){f[t]=s(t).concat(e)}function s(t){return f[t]||[]}function c(){return n(e)}var f={};return{on:a,emit:e,create:c,listeners:s,_events:f}}function r(){return{}}var o="nr@context",i=t("gos");e.exports=n()},{gos:"7eSDFh"}],ee:[function(t,e){e.exports=t("QJf3ax")},{}],3:[function(t){function e(t){try{i.console&&console.log(t)}catch(e){}}var n,r=t("ee"),o=t(1),i={};try{n=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(i.console=!0,-1!==n.indexOf("dev")&&(i.dev=!0),-1!==n.indexOf("nr_dev")&&(i.nrDev=!0))}catch(a){}i.nrDev&&r.on("internal-error",function(t){e(t.stack)}),i.dev&&r.on("fn-err",function(t,n,r){e(r.stack)}),i.dev&&(e("NR AGENT IN DEVELOPMENT MODE"),e("flags: "+o(i,function(t){return t}).join(", ")))},{1:23,ee:"QJf3ax"}],4:[function(t){function e(t,e,n,i,s){try{c?c-=1:r("err",[s||new UncaughtException(t,e,n)])}catch(f){try{r("ierr",[f,(new Date).getTime(),!0])}catch(u){}}return"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t("ee"),a=window.onerror,s=!1,c=0;t("loader").features.err=!0,t(4),window.onerror=e;try{throw new Error}catch(f){"stack"in f&&(t(1),t(5),"addEventListener"in window&&t(2),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&t(3),s=!0)}i.on("fn-start",function(){s&&(c+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&c>0&&(c-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:10,2:7,3:11,4:3,5:9,6:24,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],5:[function(t){t("loader").features.ins=!0},{loader:"G9z0Bl"}],6:[function(t){function e(){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var n=t("ee"),r=t("handle"),o=t(1);t("loader").features.stn=!0,t(2),n.on("fn-start",function(t){var e=t[0];e instanceof Event&&(this.bstStart=Date.now())}),n.on("fn-end",function(t,e){var n=t[0];n instanceof Event&&r("bst",[n,e,this.bstStart,Date.now()])}),o.on("fn-start",function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),o.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),this.bstType])}),n.on("pushState-start",function(){this.time=Date.now(),this.startPath=location.pathname+location.hash}),n.on("pushState-end",function(){r("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),"addEventListener"in window.performance&&(window.performance.addEventListener("webkitresourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.webkitClearResourceTimings()},!1),window.performance.addEventListener("resourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.clearResourceTimings()},!1)),document.addEventListener("scroll",e,!1),document.addEventListener("keypress",e,!1),document.addEventListener("click",e,!1)}},{1:10,2:8,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],7:[function(t,e){function n(t){i.inPlace(t,["addEventListener","removeEventListener"],"-",r)}function r(t){return t[1]}var o=(t(1),t("ee").create()),i=t(2)(o),a=t("gos");if(e.exports=o,n(window),"getPrototypeOf"in Object){for(var s=document;s&&!s.hasOwnProperty("addEventListener");)s=Object.getPrototypeOf(s);s&&n(s);for(var c=XMLHttpRequest.prototype;c&&!c.hasOwnProperty("addEventListener");)c=Object.getPrototypeOf(c);c&&n(c)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&n(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=t[1]=a(e,"nr@wrapped",function(){return i(e,"fn-",null,e.name||"anonymous")}):"function"==typeof e.handleEvent&&i.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:24,2:25,ee:"QJf3ax",gos:"7eSDFh"}],8:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window.history,["pushState"],"-")},{1:25,2:24,ee:"QJf3ax"}],9:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=r(t[0],"fn-")})},{1:25,2:24,ee:"QJf3ax"}],10:[function(t,e){function n(t,e,n){var r=t[0];"string"==typeof r&&(r=new Function(r)),t[0]=o(r,"fn-",null,n)}var r=(t(2),t("ee").create()),o=t(1)(r);e.exports=r,o.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",n)},{1:25,2:24,ee:"QJf3ax"}],11:[function(t,e){function n(){f.inPlace(this,p,"fn-")}function r(t,e){f.inPlace(e,["onreadystatechange"],"fn-")}function o(t,e){return e}function i(t,e){for(var n in t)e[n]=t[n];return e}var a=t("ee").create(),s=t(1),c=t(2),f=c(a),u=c(s),d=window.XMLHttpRequest,p=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];e.exports=a,window.XMLHttpRequest=function(t){var e=new d(t);try{a.emit("new-xhr",[],e),u.inPlace(e,["addEventListener","removeEventListener"],"-",function(t,e){return e}),e.addEventListener("readystatechange",n,!1)}catch(r){try{a.emit("internal-error",[r])}catch(o){}}return e},i(d,XMLHttpRequest),XMLHttpRequest.prototype=d.prototype,f.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",o),a.on("send-xhr-start",r),a.on("open-xhr-start",r)},{1:7,2:25,ee:"QJf3ax"}],12:[function(t){function e(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function n(t){var n=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;c>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!n.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){n.status=t.status;var a=t.responseType,f="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,u=e(f);if(u&&(r.rxSize=u),this.sameOrigin){var d=t.getResponseHeader("X-NewRelic-App-Data");d&&(n.cat=d.split(", ").pop())}}else n.status=0;r.cbTime=this.cbTime,o("xhr",[n,r,this.startTime])}}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}if(window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)){t("loader").features.xhr=!0;var o=t("handle"),i=t(2),a=t("ee"),s=["load","error","abort","timeout"],c=s.length,f=t(1);t(4),t(3),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=n,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,n){var r=this.metrics,o=t[0],i=this;if(r&&o){var f=e(o);f&&(r.txSize=f)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof n.onload))&&i.end(n)}catch(e){try{a.emit("internal-error",[e])}catch(r){}}};for(var u=0;c>u;u++)n.addEventListener(s[u],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{1:"XL7HBI",2:13,3:11,4:7,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],13:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],14:[function(t,e){function n(t){return function(){r(t,[(new Date).getTime()].concat(i(arguments)))}}var r=t("handle"),o=t(1),i=t(2);"undefined"==typeof window.newrelic&&(newrelic=window.NREUM);var a=["setPageViewName","addPageAction","setCustomAttribute","finished","addToTrace","inlineHit","noticeError"];o(a,function(t,e){window.NREUM[e]=n("api-"+e)}),e.exports=window.NREUM},{1:23,2:24,handle:"D5DuLP"}],gos:[function(t,e){e.exports=t("7eSDFh")},{}],"7eSDFh":[function(t,e){function n(t,e,n){if(r.call(t,e))return t[e];var o=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:o,writable:!0,enumerable:!1}),o}catch(i){}return t[e]=o,o}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],D5DuLP:[function(t,e){function n(t,e,n){return r.listeners(t).length?r.emit(t,e,n):(o[t]||(o[t]=[]),void o[t].push(e))}var r=t("ee").create(),o={};e.exports=n,n.ee=r,r.q=o},{ee:"QJf3ax"}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],XL7HBI:[function(t,e){function n(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:i(t,o,function(){return r++})}var r=1,o="nr@id",i=t("gos");e.exports=n},{gos:"7eSDFh"}],id:[function(t,e){e.exports=t("XL7HBI")},{}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],G9z0Bl:[function(t,e){function n(){var t=l.info=NREUM.info;if(t&&t.licenseKey&&t.applicationID&&f&&f.body){s(h,function(e,n){e in t||(t[e]=n)}),l.proto="https"===p.split(":")[0]||t.sslForHttp?"https://":"http://",a("mark",["onload",i()]);var e=f.createElement("script");e.src=l.proto+t.agent,f.body.appendChild(e)}}function r(){"complete"===f.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=t(1),c=(t(2),window),f=c.document,u="addEventListener",d="attachEvent",p=(""+location).split("?")[0],h={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-593.min.js"},l=e.exports={offset:i(),origin:p,features:{}};f[u]?(f[u]("DOMContentLoaded",o,!1),c[u]("load",n,!1)):(f[d]("onreadystatechange",r),c[d]("onload",n)),a("mark",["firstbyte",i()])},{1:23,2:14,handle:"D5DuLP"}],23:[function(t,e){function n(t,e){var n=[],o="",i=0;for(o in t)r.call(t,o)&&(n[i]=e(o,t[o]),i+=1);return n}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],24:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],25:[function(t,e){function n(t){return!(t&&"function"==typeof t&&t.apply&&!t[i])}var r=t("ee"),o=t(1),i="nr@wrapper",a=Object.prototype.hasOwnProperty;e.exports=function(t){function e(t,e,r,a){function nrWrapper(){var n,i,s,f;try{i=this,n=o(arguments),s=r&&r(n,i)||{}}catch(d){u([d,"",[n,i,a],s])}c(e+"start",[n,i,a],s);try{return f=t.apply(i,n)}catch(p){throw c(e+"err",[n,i,p],s),p}finally{c(e+"end",[n,i,f],s)}}return n(t)?t:(e||(e=""),nrWrapper[i]=!0,f(t,nrWrapper),nrWrapper)}function s(t,r,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<r.length;c++)s=r[c],a=t[s],n(a)||(t[s]=e(a,f?s+o:o,i,s,t))}function c(e,n,r){try{t.emit(e,n,r)}catch(o){u([o,e,n,r])}}function f(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){u([r])}for(var o in t)a.call(t,o)&&(e[o]=t[o]);return e}function u(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=r),e.inPlace=s,e.flag=i,e}},{1:24,ee:"QJf3ax"}]},{},["G9z0Bl",4,12,6,5]);
         </script>
-        <meta name="viewport" content="width=660px" initial-scale="1.0">
-        <meta name="apple-itunes-app" content="app-id=549374205, app-argument=http://www.salon.com/">
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <meta name="viewport" content="width=660px" initial-scale="1.0"/>
+        <meta name="apple-itunes-app" content="app-id=549374205, app-argument=http://www.salon.com/"/>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
         <!-- Optimizely and Adobe DTM JS snippet, hosted by us -->
         <script src="//media.salon.com/optimizely/698985673.js"></script>
         <script src="//media.salon.com/Adobe-DTM/adobe-dtm-header.js"></script>
         <!-- Meta Info from Old Site -->
-        <meta name="title" content="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians">
-        <meta name="description" content="Disruptive companies talk a good game about sharing. Uber's really just an under-regulated company making riches">
-        <meta name="keywords" content="Salon.com, uber, libertarians, Sydney, Editor's Picks, sharing economy">
-        <link rel="canonical" href="http://www.salon.com/2015/02/01/the_sharing_economy_is_a_lie_uber_ayn_rand_and_the_truth_about_tech_and_libertarians/">
-        <meta property="og:title" content="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians">
-        <meta property="og:url" content="http://www.salon.com/2015/02/01/the_sharing_economy_is_a_lie_uber_ayn_rand_and_the_truth_about_tech_and_libertarians/">
-        <meta property="og:image" content="http://media.salon.com/2014/12/uber_rand_paul.jpg">
-        <meta property="og:description" content="Disruptive companies talk a good game about sharing. Uber's really just an under-regulated company making riches">
-        <meta property="og:type" content="article">
-        <meta property="fb:admins" content="21500228">
-        <meta property="fb:app_id" content="114477658586677">
-        <link rel="index" title="Salon.com" href="http://www.salon.com/">
+        <meta name="title" content="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians"/>
+        <meta name="description" content="Disruptive companies talk a good game about sharing. Uber's really just an under-regulated company making riches"/>
+        <meta name="keywords" content="Salon.com, uber, libertarians, Sydney, Editor's Picks, sharing economy"/>
+        <link rel="canonical" href="http://www.salon.com/2015/02/01/the_sharing_economy_is_a_lie_uber_ayn_rand_and_the_truth_about_tech_and_libertarians/"/>
+        <meta property="og:title" content="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians"/>
+        <meta property="og:url" content="http://www.salon.com/2015/02/01/the_sharing_economy_is_a_lie_uber_ayn_rand_and_the_truth_about_tech_and_libertarians/"/>
+        <meta property="og:image" content="http://media.salon.com/2014/12/uber_rand_paul.jpg"/>
+        <meta property="og:description" content="Disruptive companies talk a good game about sharing. Uber's really just an under-regulated company making riches"/>
+        <meta property="og:type" content="article"/>
+        <meta property="fb:admins" content="21500228"/>
+        <meta property="fb:app_id" content="114477658586677"/>
+        <link rel="index" title="Salon.com" href="http://www.salon.com/"/>
         <link rel="alternate" type="application/rss+xml" title="Salon.com RSS Feed"
-        href="http://www.salon.com/feed/">
+        href="http://www.salon.com/feed/"/>
         <!-- End Meta Info from Old Site -->
-        <link rel="stylesheet" href="/combo/css?fonts/Didot/didot.css&amp;typography.css&amp;resets.css&amp;mainNav.css&amp;top-bar.css&amp;left-sidebars.css&amp;right-sidebars.css&amp;style.css&amp;grid.css&amp;responsive-patch.css&amp;ads.css&amp;livefyre.css&amp;ver=327">
+        <link rel="stylesheet" href="/combo/css?fonts/Didot/didot.css&amp;typography.css&amp;resets.css&amp;mainNav.css&amp;top-bar.css&amp;left-sidebars.css&amp;right-sidebars.css&amp;style.css&amp;grid.css&amp;responsive-patch.css&amp;ads.css&amp;livefyre.css&amp;ver=327"/>
         <script type="text/javascript" src="/combo/js?yui/yui-min.js&amp;oop/oop-min.js&amp;event-custom-base/event-custom-base-min.js&amp;dom-core/dom-core-min.js&amp;dom-base/dom-base-min.js&amp;selector-native/selector-native-min.js&amp;selector/selector-min.js&amp;node-core/node-core-min.js&amp;node-base/node-base-min.js&amp;event-base/event-base-min.js&amp;event-base-ie/event-base-ie-min.js&amp;dom-style-ie/dom-style-ie-min.js&amp;event-delegate/event-delegate-min.js&amp;node-event-delegate/node-event-delegate-min.js&amp;pluginhost-base/pluginhost-base-min.js&amp;pluginhost-config/pluginhost-config-min.js&amp;node-pluginhost/node-pluginhost-min.js&amp;color-base/color-base-min.js&amp;dom-style/dom-style-min.js&amp;dom-screen/dom-screen-min.js&amp;node-screen/node-screen-min.js&amp;node-style/node-style-min.js&amp;slnm/utils/set-browser-css.js&amp;plugins/salon-login/js/salon-user.js&amp;slnm/apps/salon-ads.js&amp;slnm/slnm.js&amp;slnm/modules/salon-modules.js&amp;ver=327"></script>
         <!--[if lt IE 9]>
             <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,20 +74,20 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                     </ul>
                     <div class="ie8-header">
                         <img src="/content/themes/salon/css/images/header-ie8.png" width="980"
-                        border="0" usemap="#ie8-header-map">
+                        border="0" usemap="#ie8-header-map"/>
                         <map id="ie8-header-map" name="ie8-header-map">
-                            <area shape="rect" coords="142,136,250,224" alt="" title="" href="/">
-                            <area shape="rect" coords="0,0,200,57" alt="" title="" href="/">
-                            <area shape="rect" coords="199,0,256,58" alt="" title="" href="/category/news/">
-                            <area shape="rect" coords="255,0,329,58" alt="" title="" href="/category/politics/">
-                            <area shape="rect" coords="328,0,453,58" alt="" title="" href="/category/entertainment/">
-                            <area shape="rect" coords="453,0,496,58" alt="" title="" href="/category/life/">
-                            <area shape="rect" coords="495,0,544,58" alt="" title="" href="/category/technology/">
-                            <area shape="rect" coords="543,0,625,58" alt="" title="" href="/category/business/">
-                            <area shape="rect" coords="624,0,751,58" alt="" title="" href="/category/sustainability/">
-                            <area shape="rect" coords="750,0,803,58" alt="" title="" href="/search/">
-                            <area shape="rect" coords="802,0,843,58" alt="" title="" href="https://www.facebook.com/salon">
-                            <area shape="rect" coords="843,0,878,58" alt="" title="" href="https://twitter.com/salon">
+                            <area shape="rect" coords="142,136,250,224" alt="" title="" href="/"/>
+                            <area shape="rect" coords="0,0,200,57" alt="" title="" href="/"/>
+                            <area shape="rect" coords="199,0,256,58" alt="" title="" href="/category/news/"/>
+                            <area shape="rect" coords="255,0,329,58" alt="" title="" href="/category/politics/"/>
+                            <area shape="rect" coords="328,0,453,58" alt="" title="" href="/category/entertainment/"/>
+                            <area shape="rect" coords="453,0,496,58" alt="" title="" href="/category/life/"/>
+                            <area shape="rect" coords="495,0,544,58" alt="" title="" href="/category/technology/"/>
+                            <area shape="rect" coords="543,0,625,58" alt="" title="" href="/category/business/"/>
+                            <area shape="rect" coords="624,0,751,58" alt="" title="" href="/category/sustainability/"/>
+                            <area shape="rect" coords="750,0,803,58" alt="" title="" href="/search/"/>
+                            <area shape="rect" coords="802,0,843,58" alt="" title="" href="https://www.facebook.com/salon"/>
+                            <area shape="rect" coords="843,0,878,58" alt="" title="" href="https://twitter.com/salon"/>
                         </map>
                     </div>
                 </div>
@@ -101,8 +101,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 
                     <div class="search hideOnDesktop">
                         <form action="/search/">
-                            <input type="text" name="q" placeholder="Enter search term">
-                            <input class="override" type="submit" value="search">
+                            <input type="text" name="q" placeholder="Enter search term"/>
+                            <input class="override" type="submit" value="search"/>
                         </form>
                     </div>
                     <ul class="sections inline-list left p-left-1">
@@ -147,8 +147,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Starbucks' cringe-inducing #RaceTogether campaign has caused a Twitter firestorm">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -168,8 +168,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Ashley Judd pressing charges against misogynist trolls who threatened her over sports">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -189,8 +189,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="&quot;Republicans are getting worse&quot;: Barney Frank unloads on GOP bigotry -- and Obama's mistakes">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -248,8 +248,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="&quot;Republicans are getting worse&quot;: Barney Frank unloads on GOP bigotry -- and Obama's mistakes">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -269,8 +269,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="The Democratic Party is facing a Catholic apocalypse">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -290,8 +290,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Rahm Emanuel's Achilles' heel: 6 reasons he may lose his reelection ">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -349,8 +349,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="The worst song of 2015 is here: Meghan Trainor's &quot;Dear Future Husband&quot;">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -370,8 +370,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Ashley Judd pressing charges against misogynist trolls who threatened her over sports">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -391,8 +391,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="When Buddhism goes bad: How a yoga and meditation retreat turned cult-like and deadly">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -445,8 +445,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="I was the black guy in a white frat">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -466,8 +466,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="The year-long open marriage experiment: What this woman learned could save your sex life">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -487,8 +487,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Starbucks' cringe-inducing #RaceTogether campaign has caused a Twitter firestorm">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -546,8 +546,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Ashley Judd pressing charges against misogynist trolls who threatened her over sports">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -567,8 +567,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Facebook still won't free the nipple -- but it's cracking down on revenge porn">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -588,8 +588,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Welcome to &quot;Libertarian Island&quot;: How these One Percenters are creating a dystopian nightmare">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -642,8 +642,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Welcome to &quot;Libertarian Island&quot;: How these One Percenters are creating a dystopian nightmare">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -663,8 +663,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="&quot;My kids were embarrassed that their dad worked at Target&quot;: My American economy nightmare">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/12/torn_us_flag-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/12/torn_us_flag-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/12/torn_us_flag-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/12/torn_us_flag-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -684,8 +684,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Robert Reich: Economic redistribution is our only hope">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/01/robert_reich-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/01/robert_reich-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/01/robert_reich-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2014/01/robert_reich-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -738,8 +738,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Starbucks' cringe-inducing #RaceTogether campaign has caused a Twitter firestorm">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -759,8 +759,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Fox News now thinks that <em>snow days</em> are a plot against religion">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-2.50.57-PM-90x60.png">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-2.50.57-PM-300x200.png">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-2.50.57-PM-90x60.png"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-2.50.57-PM-300x200.png"/>
                     </span>
                 </a>
 
@@ -780,8 +780,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="We can't believe we have to explain this: Diabetes can't be cured with cinnamon rolls">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/huckabee_roll-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/huckabee_roll-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/huckabee_roll-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/huckabee_roll-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -839,8 +839,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="The big &quot;f**k buddy&quot; lie: Campus hookups and the dark story of male sexual desire">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -860,8 +860,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="Hidden secrets of the right-wing brain: Do you like Scott Walker or Elizabeth Warren? New research explains why">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/walker_warren-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/walker_warren-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/walker_warren-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/walker_warren-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -881,8 +881,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                 title="The quest to save vanishing New York">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/old_new_york_city-copy-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/old_new_york_city-copy-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/old_new_york_city-copy-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/old_new_york_city-copy-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -910,8 +910,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                             <div class="search flyout">
                                 <div class="arrow-box top light p-2">
                                     <form action="/search/">
-                                        <input type="text" name="q" placeholder="Enter search term">
-                                        <input class="override" type="submit" value="search">
+                                        <input type="text" name="q" placeholder="Enter search term"/>
+                                        <input class="override" type="submit" value="search"/>
                                     </form>
                                 </div>
                             </div>
@@ -1054,7 +1054,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                                  <h3>All Share Services</h3>
 
                                                 <div>
-                                                    <input placeholder="Start typing to search for share service" class="quickRefine">
+                                                    <input placeholder="Start typing to search for share service" class="quickRefine"/>
                                                 </div>
                                                 <div class="shareButtonsHolder"></div>
                                             </li>
@@ -1078,7 +1078,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     href="http://www.salon.com/category/technology/" rel="tag">Technology News</a>
                         </p>
                         <div class="featuredMedia"><a class="lightBox" title="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians"
-                            href="http://media.salon.com/2014/12/uber_rand_paul.jpg"><img alt="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians" title="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians" src="http://media.salon.com/2014/12/uber_rand_paul.jpg"></a>
+                            href="http://media.salon.com/2014/12/uber_rand_paul.jpg"><img alt="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians" title="The sharing economy is a lie: Uber, Ayn Rand and the truth about tech and libertarians" src="http://media.salon.com/2014/12/uber_rand_paul.jpg"/></a>
                             <span
                             class="caption">Ayn Rand, Rand Paul <span class="photoCredit">(Credit: AP/Manuel Balce Ceneta/Photo montage by Salon)</span></span>
                         </div>
@@ -1125,9 +1125,9 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                         <p><em>“… Fares have increased to encourage more drivers to come online &amp; pick up passengers in the area.”</em>
                         </p>
                         <div class="recirc2"></div>
-                        <hr>
+                        <hr/>
                         <div data-position-name="300-mi1" class="adPosition bigBox ad-300-mi1 flex"></div>
-                        <hr>
+                        <hr/>
                         <div class="toggle-group target hideOnInit" data-toggle-group="story-13850779">
                             <p>But, despite the expression of shared concern, there is no sense of <em>civitas</em> to
                                 be found in the statement that follows. There is only a transaction, executed
@@ -1398,7 +1398,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                          <h3>All Share Services</h3>
 
                                         <div>
-                                            <input placeholder="Start typing to search for share service" class="quickRefine">
+                                            <input placeholder="Start typing to search for share service" class="quickRefine"/>
                                         </div>
                                         <div class="shareButtonsHolder"></div>
                                     </li>
@@ -1414,7 +1414,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                     </div>
                     <div class="nextArticle"> <a href="http://www.salon.com/2015/01/31/satoshi_nakamoto%e2%80%99s_greatest_creation/"
                         class="nextThumbWrap gaTrackLinkEvent" data-ga-track-json="[&quot;nextArticle&quot;,&quot;click&quot;,&quot;Satoshi Nakamoto’s greatest creation&quot;]">
-                                    <img width="620" height="412" src="http://media.salon.com/2015/02/bitcoin_figure.jpg" class="attachment-lg_horizontal wp-post-image" alt="bitcoin_figure" title="bitcoin_figure">
+                                    <img width="620" height="412" src="http://media.salon.com/2015/02/bitcoin_figure.jpg" class="attachment-lg_horizontal wp-post-image" alt="bitcoin_figure" title="bitcoin_figure"/>
                                     <h3>Satoshi Nakamoto’s greatest creation</h3>
                                     <p class="button right arrow">Next Article</p>
                                 </a>
@@ -1436,7 +1436,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                 <li> <a title="Ashley Judd pressing charges against misogynist trolls who threatened her over sports"
                                     href="http://www.salon.com/2015/03/17/ashley_judd_pressing_charges_against_misogynist_trolls_who_threatened_her_over_sports/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Ashley Judd pressing charges against misogynist trolls who threatened her over sports&quot;]">
-                        <img class="lazyLoad" alt="Ashley Judd pressing charges against misogynist trolls who threatened her over sports" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-150x150.jpg">
+                        <img class="lazyLoad" alt="Ashley Judd pressing charges against misogynist trolls who threatened her over sports" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-150x150.jpg"/>
                         <span class="title">
                             Ashley Judd pressing charges against misogynist trolls who threatened her over sports
                         </span>
@@ -1447,7 +1447,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     " one=" " percenters=" " are=" " creating=" " a=" " dystopian=" " nightmare"=""
                                     href="http://www.salon.com/2015/03/16/welcome_to_libertarian_island_how_silicon_valley_billionaires_are_creating_a_capitalist_nightmare/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Welcome to &quot;Libertarian Island&quot;: How these One Percenters are creating a dystopian nightmare&quot;]">
-                        <img class="lazyLoad" alt="Welcome to " libertarian="" island":="" how="" these="" one="" percenters="" are="" creating="" a="" dystopian="" nightmare"="" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-150x150.jpg">
+                        <img class="lazyLoad" alt="Welcome to " libertarian="" island":="" how="" these="" one="" percenters="" are="" creating="" a="" dystopian="" nightmare"="" data-source-standard="http://media.salon.com/2015/03/rand_thiel_paul-150x150.jpg"/>
                         <span class="title">
                             Welcome to "Libertarian Island": How these One Percenters are creating a dystopian nightmare
                         </span>
@@ -1457,7 +1457,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                 <li> <a title="Facebook still won't free the nipple -- but it's cracking down on revenge porn"
                                     href="http://www.salon.com/2015/03/16/facebook_still_wont_free_the_nipple_but_its_cracking_down_on_revenge_porn/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Facebook still won't free the nipple -- but it's cracking down on revenge porn&quot;]">
-                        <img class="lazyLoad" alt="Facebook still won't free the nipple -- but it's cracking down on revenge porn" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-150x150.jpg">
+                        <img class="lazyLoad" alt="Facebook still won't free the nipple -- but it's cracking down on revenge porn" data-source-standard="http://media.salon.com/2014/11/facebook-privacy-policy.jpeg-150x150.jpg"/>
                         <span class="title">
                             Facebook still won't free the nipple -- but it's cracking down on revenge porn
                         </span>
@@ -1468,7 +1468,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     ":=" " apple's=" " $10,000=" " smartwatch=" " roundly=" " mocked=" " by="
                                     " internet"="" href="http://www.salon.com/2015/03/09/the_new_gold_standard_in_douchebag_detection_apples_10000_smartwatch_roundly_mocked_by_the_internet/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;&quot;The new gold standard in douchebag detection&quot;: Apple's $10,000 smartwatch roundly mocked by the Internet&quot;]">
-                        <img class="lazyLoad" alt="" the="" new="" gold="" standard="" in="" douchebag="" detection":="" apple's="" $10,000="" smartwatch="" roundly="" mocked="" by="" internet"="" data-source-standard="http://media.salon.com/2015/03/apple_watch-150x150.jpg">
+                        <img class="lazyLoad" alt="" the="" new="" gold="" standard="" in="" douchebag="" detection":="" apple's="" $10,000="" smartwatch="" roundly="" mocked="" by="" internet"="" data-source-standard="http://media.salon.com/2015/03/apple_watch-150x150.jpg"/>
                         <span class="title">
                             "The new gold standard in douchebag detection": Apple's $10,000 smartwatch roundly mocked by the Internet
                         </span>
@@ -1478,7 +1478,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                 <li> <a title="Apple and HBO announce HBO Now with thrilling new trailer for "
                                     game="" of="" thrones "=" " season=" " five"="" href="http://www.salon.com/2015/03/09/watch_the_thrilling_new_trailer_for_game_of_thrones_season_five/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Apple and HBO announce HBO Now with thrilling new trailer for &quot;Game of Thrones&quot; season five&quot;]">
-                        <img class="lazyLoad" alt="Apple and HBO announce HBO Now with thrilling new trailer for " game="" of="" thrones"="" season="" five"="" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-09-at-2.03.46-PM-150x150.png">
+                        <img class="lazyLoad" alt="Apple and HBO announce HBO Now with thrilling new trailer for " game="" of="" thrones"="" season="" five"="" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-09-at-2.03.46-PM-150x150.png"/>
                         <span class="title">
                             Apple and HBO announce HBO Now with thrilling new trailer for "Game of Thrones" season five
                         </span>
@@ -1488,7 +1488,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                 <li> <a title="Malaysia Airlines Flight 370, one year later: " nothing="" is=""
                                     certain,="" as="" everything="" possible ""="" href="http://www.salon.com/2015/03/08/malaysian_airlines_flight_370_one_year_later_nothing_is_certain_as_everything_is_possible/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Malaysia Airlines Flight 370, one year later: &quot;Nothing is certain, as everything is possible&quot;&quot;]">
-                        <img class="lazyLoad" alt="Malaysia Airlines Flight 370, one year later: " nothing="" is="" certain,="" as="" everything="" possible""="" data-source-standard="http://media.salon.com/2014/03/mh370_coverage-150x150.jpg">
+                        <img class="lazyLoad" alt="Malaysia Airlines Flight 370, one year later: " nothing="" is="" certain,="" as="" everything="" possible""="" data-source-standard="http://media.salon.com/2014/03/mh370_coverage-150x150.jpg"/>
                         <span class="title">
                             Malaysia Airlines Flight 370, one year later: "Nothing is certain, as everything is possible"
                         </span>
@@ -1498,7 +1498,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                 <li> <a title="The Internet killed privacy: Our liberation, and our capture, are within the same tool"
                                     href="http://www.salon.com/2015/03/07/the_internet_killed_privacy_our_liberation_and_our_capture_are_within_the_same_tool/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;The Internet killed privacy: Our liberation, and our capture, are within the same tool&quot;]">
-                        <img class="lazyLoad" alt="The Internet killed privacy: Our liberation, and our capture, are within the same tool" data-source-standard="http://media.salon.com/2015/02/snowden_cheney-150x150.jpg">
+                        <img class="lazyLoad" alt="The Internet killed privacy: Our liberation, and our capture, are within the same tool" data-source-standard="http://media.salon.com/2015/02/snowden_cheney-150x150.jpg"/>
                         <span class="title">
                             The Internet killed privacy: Our liberation, and our capture, are within the same tool
                         </span>
@@ -1511,7 +1511,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                         <img class="lazyLoad " alt=" " do=" " what="
                                     " we=" " want=" " in=" " afghanistan,=" " or=" " we'll=" " have=" " the="
                                     " americans=" " drone=" " you":="" our="" immoral="" war="" —="" and="" how="" cia=""
-                                    gets="" used "=" " data-source-standard="http://media.salon.com/2015/03/drone_graffiti-150x150.jpg ">
+                                    gets="" used "=" " data-source-standard="http://media.salon.com/2015/03/drone_graffiti-150x150.jpg "/>
                         <span class="title ">
                             "Do what we want in Afghanistan, or we
                                     'll have the Americans drone you": Our immoral drone war — and how the CIA gets used
@@ -1520,7 +1520,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                 </li>
                 <li>
                     <a title="Protest sexism with " squirt="" alert,"="" the="" app="" where="" female="" ejaculation="" is="" only="" goal"="" href="http://www.salon.com/2015/03/06/protest_sexism_with_squirt_alert_the_app_where_female_ejaculation_is_the_only_goal/" class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Protest sexism with &quot;Squirt Alert,&quot; the app where female ejaculation is the only goal&quot;]">
-                        <img class="lazyLoad" alt="Protest sexism with " squirt="" alert,"="" the="" app="" where="" female="" ejaculation="" is="" only="" goal"="" data-source-standard="http://media.salon.com/2015/03/50292_SA_game_01-150x150.jpg">
+                        <img class="lazyLoad" alt="Protest sexism with " squirt="" alert,"="" the="" app="" where="" female="" ejaculation="" is="" only="" goal"="" data-source-standard="http://media.salon.com/2015/03/50292_SA_game_01-150x150.jpg"/>
                         <span class="title">
                             Protest sexism with "Squirt Alert," the app where female ejaculation is the only goal
                         </span>
@@ -1531,7 +1531,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     " class="plain gaTrackLinkEvent " data-ga-track-json="[&quot;morerelatedstories&quot;,
                                     &quot;click&quot;, &quot;What went viral 5 years ago today: OK Go
                                     's hypnotizing Rube Goldberg machine &quot;]">
-                        <img class="lazyLoad" alt="What went viral 5 years ago today: OK Go's hypnotizing Rube Goldberg machine " data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-05-at-2.53.21-PM-150x150.png ">
+                        <img class="lazyLoad" alt="What went viral 5 years ago today: OK Go's hypnotizing Rube Goldberg machine " data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-05-at-2.53.21-PM-150x150.png "/>
                         <span class="title ">
                             What went viral 5 years ago today: OK Go's hypnotizing Rube Goldberg machine 
                         </span>
@@ -1545,7 +1545,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     reduce &quot;involuntary pornography&quot;&quot;] ">
                         <img class="lazyLoad " alt="Dudebros of Reddit
                                     freak out as site tries to reduce " involuntary=" " pornography" "="
-                                    " data-source-standard="http://media.salon.com/2014/08/laptop_flames-150x150.jpg ">
+                                    " data-source-standard="http://media.salon.com/2014/08/laptop_flames-150x150.jpg "/>
                         <span class="title
                                     ">
                             Dudebros of Reddit freak out as site tries to reduce "involuntary pornography "
@@ -1560,7 +1560,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     of life is absolutely mindblowing&quot;] ">
                         <img class="lazyLoad " alt="This Neil deGrasse
                                     Tyson podcast on the origins of life is absolutely mindblowing
-                                    " data-source-standard="http://media.salon.com/2014/05/neil_degrasse_tyson-150x150.jpg ">
+                                    " data-source-standard="http://media.salon.com/2014/05/neil_degrasse_tyson-150x150.jpg "/>
                         <span class="title ">
                             This Neil deGrasse Tyson podcast on the origins of life is absolutely mindblowing
                         </span>
@@ -1573,7 +1573,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     &quot;click&quot;, &quot;Scientists are hunting for black holes on the
                                     South Pole&quot;] ">
                         <img class="lazyLoad " alt="Scientists are hunting
-                                    for black holes on the South Pole " data-source-standard="http://media.salon.com/2015/02/shutterstock_90296737-150x150.jpg ">
+                                    for black holes on the South Pole " data-source-standard="http://media.salon.com/2015/02/shutterstock_90296737-150x150.jpg "/>
                         <span class="title ">
                             Scientists are hunting for black holes on the South Pole
                         </span>
@@ -1588,7 +1588,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     deGrasse Tyson answers cosmos-related questions&quot;] ">
                         <img class="lazyLoad " alt=" " can=" " you="
                                     " get=" " pregnant=" " in=" " space?"="" neil="" degrasse="" tyson="" answers=""
-                                    cosmos-related="" questions "=" " data-source-standard="http://media.salon.com/2014/07/neil_degrasse_tyson4-150x150.jpg ">
+                                    cosmos-related="" questions "=" " data-source-standard="http://media.salon.com/2014/07/neil_degrasse_tyson4-150x150.jpg "/>
                         <span class="title ">
                             "Can you get pregnant in space? " Neil deGrasse Tyson answers cosmos-related questions
                         </span>
@@ -1602,7 +1602,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     glare of technology perverts our darkest pain&quot;] ">
                         <img class="lazyLoad " alt="Misery in the age
                                     of Facebook: How the blinding glare of technology perverts our darkest
-                                    pain " data-source-standard="http://media.salon.com/2015/03/sad_facebook_man-150x150.jpg ">
+                                    pain " data-source-standard="http://media.salon.com/2015/03/sad_facebook_man-150x150.jpg "/>
                         <span class="title ">
                             Misery in the age of Facebook: How the blinding glare of technology perverts our darkest pain
                         </span>
@@ -1613,7 +1613,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     " class="plain gaTrackLinkEvent " data-ga-track-json="[&quot;morerelatedstories&quot;,
                                     &quot;click&quot;, &quot;Google has captured your mind&quot;] ">
                         <img class="lazyLoad " alt="Google has captured
-                                    your mind " data-source-standard="http://media.salon.com/2015/02/google_head-150x150.jpg ">
+                                    your mind " data-source-standard="http://media.salon.com/2015/02/google_head-150x150.jpg "/>
                         <span class="title ">
                             Google has captured your mind
                         </span>
@@ -1626,7 +1626,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     &quot;click&quot;, &quot;FCC adopts Open Internet Order for net neutrality
                                     in historic 3-2 vote &quot;] ">
                         <img class="lazyLoad " alt="FCC adopts Open Internet
-                                    Order for net neutrality in historic 3-2 vote " data-source-standard="http://media.salon.com/2014/09/internet-fast-lanes.jpeg-150x150.jpg ">
+                                    Order for net neutrality in historic 3-2 vote " data-source-standard="http://media.salon.com/2014/09/internet-fast-lanes.jpeg-150x150.jpg "/>
                         <span class="title ">
                             FCC adopts Open Internet Order for net neutrality in historic 3-2 vote 
                         </span>
@@ -1640,7 +1640,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     montage set to Taylor Swift&quot;] ">
                         <img class="lazyLoad " alt="Jon Stewart mocks
                                     Rep. Aaron Schock with Instagram montage set to Taylor Swift
-                                    " data-source-standard="http://media.salon.com/2015/02/Screen-Shot-2015-02-26-at-9.31.43-AM-150x150.png ">
+                                    " data-source-standard="http://media.salon.com/2015/02/Screen-Shot-2015-02-26-at-9.31.43-AM-150x150.png "/>
                         <span class="title ">
                             Jon Stewart mocks Rep. Aaron Schock with Instagram montage set to Taylor Swift
                         </span>
@@ -1652,14 +1652,14 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     's="" new="" policies="" really="" prevent="" "involuntary="" pornography"?"="" href="http://www.salon.com/2015/02/25/we_missed_a_chance_to_be_a_leader_can_reddits_new_policies_really_prevent_involuntary_pornography/" class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;&quot;We missed a chance to be a leader&quot;: Can Reddit's new policies really prevent &quot;involuntary pornography&quot;?&quot;] ">
                         <img class="lazyLoad " alt=" " we="
                                     " missed=" " a=" " chance=" " to=" " be=" " leader":="" can="" reddit
-                                    's="" new="" policies="" really="" prevent="" "involuntary="" pornography"?"="" data-source-standard="http://media.salon.com/2013/04/revenge_porn_legislation-150x150.jpg">
+                                    's="" new="" policies="" really="" prevent="" "involuntary="" pornography"?"="" data-source-standard="http://media.salon.com/2013/04/revenge_porn_legislation-150x150.jpg"/>
                         <span class="title">
                             "We missed a chance to be a leader": Can Reddit's new policies really prevent "involuntary pornography"? </span>
 </a>
                                 </li>
                                 <li> <a title="We're finally getting non-white emoji" href="http://www.salon.com/2015/02/23/were_finally_getting_non_white_emoji/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;We're finally getting non-white emoji&quot;]">
-                        <img class="lazyLoad" alt="We're finally getting non-white emoji" data-source-standard="http://media.salon.com/2015/02/emoji1-150x150.jpg">
+                        <img class="lazyLoad" alt="We're finally getting non-white emoji" data-source-standard="http://media.salon.com/2015/02/emoji1-150x150.jpg"/>
                         <span class="title">
                             We're finally getting non-white emoji
                         </span>
@@ -1670,7 +1670,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                                     having="" pointed="" out="" the="" obvious="" --="" and="" most="" of=""
                                     rest="" luck ""="" href="http://www.salon.com/2015/02/22/nate_silver_mostly_i_was_getting_credit_for_having_pointed_out_the_obvious_and_most_of_the_rest_was_luck/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;morerelatedstories&quot;, &quot;click&quot;, &quot;Nate Silver: &quot;Mostly I was getting credit for having pointed out the obvious -- and most of the rest was luck&quot;&quot;]">
-                        <img class="lazyLoad" alt="Nate Silver: " mostly="" i="" was="" getting="" credit="" for="" having="" pointed="" out="" the="" obvious="" --="" and="" most="" of="" rest="" luck""="" data-source-standard="http://media.salon.com/2015/02/nate_silver4-150x150.jpg">
+                        <img class="lazyLoad" alt="Nate Silver: " mostly="" i="" was="" getting="" credit="" for="" having="" pointed="" out="" the="" obvious="" --="" and="" most="" of="" rest="" luck""="" data-source-standard="http://media.salon.com/2015/02/nate_silver4-150x150.jpg"/>
                         <span class="title">
                             Nate Silver: "Mostly I was getting credit for having pointed out the obvious -- and most of the rest was luck"
                         </span>
@@ -1707,7 +1707,7 @@ of <span class="countTotal">5</span>
                                             <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo11.jpg"
                                             data-source-fullscreen_small="http://media.salon.com/2015/03/Photo11.jpg"
                                             data-source-fullscreen_large="http://media.salon.com/2015/03/Photo11.jpg"
-                                            alt="">
+                                            alt=""/>
                                             <ul class="nav hideOnMobile">
                                                 <li class="arrowBox prev"></li>
                                                 <li class="arrowBox next"></li>
@@ -1731,7 +1731,7 @@ of <span class="countTotal">5</span>
                                             <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo31-1280x960.jpg"
                                             data-source-fullscreen_small="http://media.salon.com/2015/03/Photo31-1280x960.jpg"
                                             data-source-fullscreen_large="http://media.salon.com/2015/03/Photo31-1900x1200.jpg"
-                                            alt="">
+                                            alt=""/>
                                             <ul class="nav hideOnMobile">
                                                 <li class="arrowBox prev"></li>
                                                 <li class="arrowBox next"></li>
@@ -1755,7 +1755,7 @@ of <span class="countTotal">5</span>
                                             <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/superhero1-1280x960.jpg"
                                             data-source-fullscreen_small="http://media.salon.com/2015/03/superhero1-1280x960.jpg"
                                             data-source-fullscreen_large="http://media.salon.com/2015/03/superhero1-1900x1200.jpg"
-                                            alt="">
+                                            alt=""/>
                                             <ul class="nav hideOnMobile">
                                                 <li class="arrowBox prev"></li>
                                                 <li class="arrowBox next"></li>
@@ -1783,7 +1783,7 @@ of <span class="countTotal">5</span>
                                             <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/SuperHero5-1112x960.jpg"
                                             data-source-fullscreen_small="http://media.salon.com/2015/03/SuperHero5-1112x960.jpg"
                                             data-source-fullscreen_large="http://media.salon.com/2015/03/SuperHero5-1112x1200.jpg"
-                                            alt="">
+                                            alt=""/>
                                             <ul class="nav hideOnMobile">
                                                 <li class="arrowBox prev"></li>
                                                 <li class="arrowBox next"></li>
@@ -1809,28 +1809,28 @@ of <span class="countTotal">5</span>
                                         <ul class="otherSlideShows lastSlide">
                                             <div class="arrowBox prev hideOnMobile"></div>
                                             <li> <a href="http://www.salon.com/2015/03/08/slideshow/" title="“One girl can be silenced, but a nation of girls telling their stories becomes free” slideshow">
-                <img src="http://media.salon.com/2015/03/Photo11-150x150.jpg">
+                <img src="http://media.salon.com/2015/03/Photo11-150x150.jpg"/>
                 <h4>“One girl can be silenced, but a nation of girls telling their stories becomes free” slideshow</h4>
             </a>
 
                                             </li>
                                             <li> <a href="http://www.salon.com/2015/03/02/overdevelopment_overpopulation_overshoot/"
                                                 title="Overdevelopment, Overpopulation, Overshoot">
-                <img src="http://media.salon.com/2015/02/Material-World-Containers-and-City-Lights-e1425042763140-150x150.jpg">
+                <img src="http://media.salon.com/2015/02/Material-World-Containers-and-City-Lights-e1425042763140-150x150.jpg"/>
                 <h4>Overdevelopment, Overpopulation, Overshoot</h4>
             </a>
 
                                             </li>
                                             <li> <a href="http://www.salon.com/2015/02/26/most_popular_dog_breeds_in_america/"
                                                 title="Most popular dog breeds in America">
-                <img src="http://media.salon.com/2015/02/shutterstock_126021596-150x150.jpg">
+                <img src="http://media.salon.com/2015/02/shutterstock_126021596-150x150.jpg"/>
                 <h4>Most popular dog breeds in America</h4>
             </a>
 
                                             </li>
                                             <li> <a href="http://www.salon.com/2015/02/20/when_marriage_is_an_act_of_political_protest_partner/"
                                                 title="When marriage is an act of political protest">
-                <img src="http://media.salon.com/2015/02/EKjxq8WT6kSWxQlwHYja1eGDW72-Bukqll1h5XWkCyMg0PbYIScTDjFV2h2nIez044-ShPyW2WEE02X4KBg6Ro1-150x150.jpg">
+                <img src="http://media.salon.com/2015/02/EKjxq8WT6kSWxQlwHYja1eGDW72-Bukqll1h5XWkCyMg0PbYIScTDjFV2h2nIez044-ShPyW2WEE02X4KBg6Ro1-150x150.jpg"/>
                 <h4>When marriage is an act of political protest</h4>
             </a>
 
@@ -1846,16 +1846,16 @@ of <span class="countTotal">5</span>
                                 </div>
                                 <ul class="thumbnailsHolder">
                                     <li>
-                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo11-150x150.jpg">
+                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo11-150x150.jpg"/>
                                     </li>
                                     <li>
-                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo31-150x150.jpg">
+                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/Photo31-150x150.jpg"/>
                                     </li>
                                     <li>
-                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/superhero1-150x150.jpg">
+                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/superhero1-150x150.jpg"/>
                                     </li>
                                     <li>
-                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/SuperHero5-150x150.jpg">
+                                        <img class="lazyLoad" data-source-standard="http://media.salon.com/2015/03/SuperHero5-150x150.jpg"/>
                                     </li>
                                 </ul>
                             </div>
@@ -1865,7 +1865,7 @@ of <span class="countTotal">5</span>
                             <ul class="">
                                 <li> <a title="When marriage is an act of political protest" href="http://www.salon.com/2015/02/20/when_marriage_is_an_act_of_political_protest_partner/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;When marriage is an act of political protest&quot;]">
-                        <img class="lazyLoad" alt="When marriage is an act of political protest" data-source-standard="http://media.salon.com/2015/02/EKjxq8WT6kSWxQlwHYja1eGDW72-Bukqll1h5XWkCyMg0PbYIScTDjFV2h2nIez044-ShPyW2WEE02X4KBg6Ro1-150x150.jpg">
+                        <img class="lazyLoad" alt="When marriage is an act of political protest" data-source-standard="http://media.salon.com/2015/02/EKjxq8WT6kSWxQlwHYja1eGDW72-Bukqll1h5XWkCyMg0PbYIScTDjFV2h2nIez044-ShPyW2WEE02X4KBg6Ro1-150x150.jpg"/>
                         <span class="title">
                             When marriage is an act of political protest
                         </span>
@@ -1874,7 +1874,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="Photos from the Happy Ending Salon" href="http://www.salon.com/2014/09/22/photos_from_the_happy_ending_salon/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Photos from the Happy Ending Salon&quot;]">
-                        <img class="lazyLoad" alt="Photos from the Happy Ending Salon" data-source-standard="http://media.salon.com/2014/09/picks1-7G5A7893-S1-150x150.jpg">
+                        <img class="lazyLoad" alt="Photos from the Happy Ending Salon" data-source-standard="http://media.salon.com/2014/09/picks1-7G5A7893-S1-150x150.jpg"/>
                         <span class="title">
                             Photos from the Happy Ending Salon
                         </span>
@@ -1883,7 +1883,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="Make Summer More Poetic with These 10 International Works" href="http://www.salon.com/2014/06/17/make_your_summer_more_poetic_with_these_10_international_works/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Make Summer More Poetic with These 10 International Works&quot;]">
-                        <img class="lazyLoad" alt="Make Summer More Poetic with These 10 International Works" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books4-150x150.jpg">
+                        <img class="lazyLoad" alt="Make Summer More Poetic with These 10 International Works" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books4-150x150.jpg"/>
                         <span class="title">
                             Make Summer More Poetic with These 10 International Works
                         </span>
@@ -1893,7 +1893,7 @@ of <span class="countTotal">5</span>
                                 <li> <a title="8 Illustrated Books for Every Age and Every Summer Reading List "
                                     href="http://www.salon.com/2014/06/12/8_illustrated_books_for_every_age_and_every_summer_reading_list/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;8 Illustrated Books for Every Age and Every Summer Reading List &quot;]">
-                        <img class="lazyLoad" alt="8 Illustrated Books for Every Age and Every Summer Reading List " data-source-standard="http://media.salon.com/2014/06/Photo-of-Books3-150x150.jpg">
+                        <img class="lazyLoad" alt="8 Illustrated Books for Every Age and Every Summer Reading List " data-source-standard="http://media.salon.com/2014/06/Photo-of-Books3-150x150.jpg"/>
                         <span class="title">
                             8 Illustrated Books for Every Age and Every Summer Reading List 
                         </span>
@@ -1902,7 +1902,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="10 Great Science Reads That You Can Take to the Beach" href="http://www.salon.com/2014/06/11/10_great_science_reads_that_you_can_take_to_the_beach/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;10 Great Science Reads That You Can Take to the Beach&quot;]">
-                        <img class="lazyLoad" alt="10 Great Science Reads That You Can Take to the Beach" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books2-150x150.jpg">
+                        <img class="lazyLoad" alt="10 Great Science Reads That You Can Take to the Beach" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books2-150x150.jpg"/>
                         <span class="title">
                             10 Great Science Reads That You Can Take to the Beach
                         </span>
@@ -1912,7 +1912,7 @@ of <span class="countTotal">5</span>
                                 <li> <a title="Turn Summer into a Literary Field Day with these 9 Collections of Non-Fiction Sports Writing"
                                     href="http://www.salon.com/2014/06/10/turn_summer_into_a_literary_field_day_with_these_9_sports_novels/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Turn Summer into a Literary Field Day with these 9 Collections of Non-Fiction Sports Writing&quot;]">
-                        <img class="lazyLoad" alt="Turn Summer into a Literary Field Day with these 9 Collections of Non-Fiction Sports Writing" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books1-150x150.jpg">
+                        <img class="lazyLoad" alt="Turn Summer into a Literary Field Day with these 9 Collections of Non-Fiction Sports Writing" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books1-150x150.jpg"/>
                         <span class="title">
                             Turn Summer into a Literary Field Day with these 9 Collections of Non-Fiction Sports Writing
                         </span>
@@ -1921,7 +1921,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="Travel to Foreign Lands in 10 Newly Translated Novels" href="http://www.salon.com/2014/06/09/travel_to_foreign_lands_in_10_newly_translated_novels/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Travel to Foreign Lands in 10 Newly Translated Novels&quot;]">
-                        <img class="lazyLoad" alt="Travel to Foreign Lands in 10 Newly Translated Novels" data-source-standard="http://media.salon.com/2014/06/TranslationCollage11-150x150.png">
+                        <img class="lazyLoad" alt="Travel to Foreign Lands in 10 Newly Translated Novels" data-source-standard="http://media.salon.com/2014/06/TranslationCollage11-150x150.png"/>
                         <span class="title">
                             Travel to Foreign Lands in 10 Newly Translated Novels
                         </span>
@@ -1931,7 +1931,7 @@ of <span class="countTotal">5</span>
                                 <li> <a title="Get Lost in 8 Great Biographies – from Lawrence of Arabia to Margaret Fuller"
                                     href="http://www.salon.com/2014/06/06/get_lost_in_8_great_biographies_%e2%80%93_from_lawrence_of_arabia_to_margaret_fuller/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Get Lost in 8 Great Biographies – from Lawrence of Arabia to Margaret Fuller&quot;]">
-                        <img class="lazyLoad" alt="Get Lost in 8 Great Biographies – from Lawrence of Arabia to Margaret Fuller" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books-1-150x150.jpg">
+                        <img class="lazyLoad" alt="Get Lost in 8 Great Biographies – from Lawrence of Arabia to Margaret Fuller" data-source-standard="http://media.salon.com/2014/06/Photo-of-Books-1-150x150.jpg"/>
                         <span class="title">
                             Get Lost in 8 Great Biographies – from Lawrence of Arabia to Margaret Fuller
                         </span>
@@ -1941,7 +1941,7 @@ of <span class="countTotal">5</span>
                                 <li> <a title="Explore Diverse Cultures Through Varied Genres with These 8 New Works"
                                     href="http://www.salon.com/2014/06/04/explore_diverse_cultures_through_varied_genres_with_these_8_new_works/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Explore Diverse Cultures Through Varied Genres with These 8 New Works&quot;]">
-                        <img class="lazyLoad" alt="Explore Diverse Cultures Through Varied Genres with These 8 New Works" data-source-standard="http://media.salon.com/2014/06/IMG_5565-150x142.jpg">
+                        <img class="lazyLoad" alt="Explore Diverse Cultures Through Varied Genres with These 8 New Works" data-source-standard="http://media.salon.com/2014/06/IMG_5565-150x142.jpg"/>
                         <span class="title">
                             Explore Diverse Cultures Through Varied Genres with These 8 New Works
                         </span>
@@ -1950,7 +1950,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="8 Great Essay Collections for Your Reading Pleasure" href="http://www.salon.com/2014/06/02/eight_great_essay_collections_for_your_reading_pleasure/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;8 Great Essay Collections for Your Reading Pleasure&quot;]">
-                        <img class="lazyLoad" alt="8 Great Essay Collections for Your Reading Pleasure" data-source-standard="http://media.salon.com/2014/06/Diamonstein-longlist-covers-150x80.jpg">
+                        <img class="lazyLoad" alt="8 Great Essay Collections for Your Reading Pleasure" data-source-standard="http://media.salon.com/2014/06/Diamonstein-longlist-covers-150x80.jpg"/>
                         <span class="title">
                             8 Great Essay Collections for Your Reading Pleasure
                         </span>
@@ -1959,7 +1959,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="Looking for Fresh Fiction for your Summer Reading? " href="http://www.salon.com/2014/05/30/looking_for_fresh_fiction_for_your_summer_reading/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Looking for Fresh Fiction for your Summer Reading? &quot;]">
-                        <img class="lazyLoad" alt="Looking for Fresh Fiction for your Summer Reading? " data-source-standard="http://media.salon.com/2014/05/Photo-of-Books-150x150.jpg">
+                        <img class="lazyLoad" alt="Looking for Fresh Fiction for your Summer Reading? " data-source-standard="http://media.salon.com/2014/05/Photo-of-Books-150x150.jpg"/>
                         <span class="title">
                             Looking for Fresh Fiction for your Summer Reading? 
                         </span>
@@ -1969,7 +1969,7 @@ of <span class="countTotal">5</span>
                                 <li> <a title="Tough love: An intimate look at Mexico City's retired (and semi-retired) sex workers"
                                     href="http://www.salon.com/2014/04/21/tough_love_an_intimate_look_at_mexico_citys_retired_and_semi_retired_sex_workers_partner/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Tough love: An intimate look at Mexico City's retired (and semi-retired) sex workers&quot;]">
-                        <img class="lazyLoad" alt="Tough love: An intimate look at Mexico City's retired (and semi-retired) sex workers" data-source-standard="http://media.salon.com/2014/04/iXNQ_VNO3fPy6G4D63c3yEtExOcRDlVYPyhG_iiPI98-150x150.jpg">
+                        <img class="lazyLoad" alt="Tough love: An intimate look at Mexico City's retired (and semi-retired) sex workers" data-source-standard="http://media.salon.com/2014/04/iXNQ_VNO3fPy6G4D63c3yEtExOcRDlVYPyhG_iiPI98-150x150.jpg"/>
                         <span class="title">
                             Tough love: An intimate look at Mexico City's retired (and semi-retired) sex workers
                         </span>
@@ -1978,7 +1978,7 @@ of <span class="countTotal">5</span>
                                 </li>
                                 <li> <a title="Famous literary meals" href="http://www.salon.com/2014/04/17/famous_literary_meals/"
                                     class="plain gaTrackLinkEvent" data-ga-track-json="[&quot;featuredslideshows&quot;, &quot;click&quot;, &quot;Famous literary meals&quot;]">
-                        <img class="lazyLoad" alt="Famous literary meals" data-source-standard="http://media.salon.com/2014/04/Fictitious_Dishes_aliceinwonderland-150x150.jpg">
+                        <img class="lazyLoad" alt="Famous literary meals" data-source-standard="http://media.salon.com/2014/04/Fictitious_Dishes_aliceinwonderland-150x150.jpg"/>
                         <span class="title">
                             Famous literary meals
                         </span>
@@ -2060,9 +2060,9 @@ of <span class="countTotal">5</span>
                 </ul>
                 <form class="newsletterSignup" action="/newsletter/subscribe/" method="post">
                     <div class="msg"></div>
-                    <input placeholder="Email Address" class="email hideOnSuccess" name="contact[email]">
-                    <input name="subscribe" value="1" type="hidden">
-                    <input type="submit" class="submit button hideOnSuccess" value="Subscribe">
+                    <input placeholder="Email Address" class="email hideOnSuccess" name="contact[email]"/>
+                    <input name="subscribe" value="1" type="hidden"/>
+                    <input type="submit" class="submit button hideOnSuccess" value="Subscribe"/>
                 </form>
             </div>
             <div class="125-custom-ad-widget one-twenty-five-custom widget">
@@ -2080,8 +2080,8 @@ of <span class="countTotal">5</span>
                         title="The worst song of 2015 is here: Meghan Trainor's &quot;Dear Future Husband&quot;">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/trainor3-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2101,8 +2101,8 @@ of <span class="countTotal">5</span>
                         title="I was the black guy in a white frat">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/kasai_rex4-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2122,8 +2122,8 @@ of <span class="countTotal">5</span>
                         title="The year-long open marriage experiment: What this woman learned could save your sex life">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/robin_rinaldi-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2143,8 +2143,8 @@ of <span class="countTotal">5</span>
                         title="Starbucks' cringe-inducing #RaceTogether campaign has caused a Twitter firestorm">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/race_together-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2164,8 +2164,8 @@ of <span class="countTotal">5</span>
                         title="Ashley Judd pressing charges against misogynist trolls who threatened her over sports">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/12/ashley_judd_rect-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2185,8 +2185,8 @@ of <span class="countTotal">5</span>
                         title="&quot;Republicans are getting worse&quot;: Barney Frank unloads on GOP bigotry -- and Obama's mistakes">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2013/08/barney_frank-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2206,8 +2206,8 @@ of <span class="countTotal">5</span>
                         title="The big &quot;f**k buddy&quot; lie: Campus hookups and the dark story of male sexual desire">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/neighbors6-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2227,8 +2227,8 @@ of <span class="countTotal">5</span>
                         title="The Democratic Party is facing a Catholic apocalypse">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/pope_francis_jfk-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2248,8 +2248,8 @@ of <span class="countTotal">5</span>
                         title="When Buddhism goes bad: How a yoga and meditation retreat turned cult-like and deadly">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/roach_mcnally-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2269,8 +2269,8 @@ of <span class="countTotal">5</span>
                         title="&quot;Holy sh*t!&quot; John Oliver blasts NCAA over $1 billion March Madness scam">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-8.59.22-AM-90x60.png">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-8.59.22-AM-300x200.png">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-8.59.22-AM-90x60.png"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/Screen-Shot-2015-03-16-at-8.59.22-AM-300x200.png"/>
                     </span>
                 </a>
 
@@ -2290,8 +2290,8 @@ of <span class="countTotal">5</span>
                         title="Rahm Emanuel's Achilles' heel: 6 reasons he may lose his reelection ">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/rahm_emanuel3-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2311,8 +2311,8 @@ of <span class="countTotal">5</span>
                         title="A guy most famous for saying &quot;F*** you Michael Moore&quot; is now marrying Bristol Palin">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/sarah_bristol_palin-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/sarah_bristol_palin-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/sarah_bristol_palin-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2015/03/sarah_bristol_palin-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2332,8 +2332,8 @@ of <span class="countTotal">5</span>
                         title="What's the secret to learning a second language?">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/08/ravenous_brain_rect-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/08/ravenous_brain_rect-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/08/ravenous_brain_rect-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2012/08/ravenous_brain_rect-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2353,8 +2353,8 @@ of <span class="countTotal">5</span>
                         title="Bringing up the rear">
                     <span class="thumbWrap">
                         
-                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2011/03/bringing_up_the_rear-90x60.jpg">
-                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2011/03/bringing_up_the_rear-300x200.jpg">
+                        <img class="lazyLoad hideOnMobile" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2011/03/bringing_up_the_rear-90x60.jpg"/>
+                        <img class="lazyLoad mobileOnly" data-yab-app="lazy-loader" data-source-standard="http://media.salon.com/2011/03/bringing_up_the_rear-300x200.jpg"/>
                     </span>
                 </a>
 
@@ -2393,7 +2393,7 @@ of <span class="countTotal">5</span>
             </div>
             <div class="widget linkList hideOnMobile salon-partner-widget ">
                 <div class="sectionHeader"><a class="source" title="Buzzfeed Tech" href="http://www.buzzfeed.com/tech"
-                    target="_blank"><img src="http://media.salon.com/2012/10/buzzfeed_tech.png" class="icon"></a>
+                    target="_blank"><img src="http://media.salon.com/2012/10/buzzfeed_tech.png" class="icon"/></a>
                 </div>
                 <div class="widgetContent">
                     <ul class="listContent">
@@ -2466,15 +2466,15 @@ of <span class="countTotal">5</span>
         </div>
         <div id="footer" class="container_12">Copyright © 2015 Salon Media Group, Inc. Reproduction of material from
             any Salon pages without written permission is strictly prohibited.
-            <br>
-            <br>SALON ® is registered in the U.S. Patent and Trademark Office as a trademark
+            <br/>
+            <br/>SALON ® is registered in the U.S. Patent and Trademark Office as a trademark
             of Salon Media Group Inc.
-            <br>
-            <br>Associated Press articles: Copyright © 2015 The Associated Press. All
+            <br/>
+            <br/>Associated Press articles: Copyright © 2015 The Associated Press. All
             rights reserved. This material may not be published, broadcast, rewritten
             or redistributed.
-            <br>
-            <br>
+            <br/>
+            <br/>
         </div>
         <div class="trackingCode hide">
             <script type="json/config" class="gaTrackingConfig">
