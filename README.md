@@ -24,8 +24,8 @@ var uri = {
   pathBase: location.protocol + "//" + location.host + location.pathname.substr(0, location.pathname.lastIndexOf("/") + 1)
 };
 var article = new Readability(uri, document).parse();
-// var documentClone = document.cloneNode(true);                // or, you could use clone of the document to prevent
-// var article = new Readability(uri, documentClone).parse();   // the scrambling of DOM on parse()
+// var documentClone = document.cloneNode(true);                // or, you could clone the document to prevent
+// var article = new Readability(uri, documentClone).parse();   // the DOM getting scrambled on parse()
 ```
 
 This `article` object will contain the following properties:
