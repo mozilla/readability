@@ -24,8 +24,6 @@ var uri = {
   pathBase: location.protocol + "//" + location.host + location.pathname.substr(0, location.pathname.lastIndexOf("/") + 1)
 };
 var article = new Readability(uri, document).parse();
-// var documentClone = document.cloneNode(true);                // or, you could clone the document to prevent
-// var article = new Readability(uri, documentClone).parse();   // the DOM getting scrambled on parse()
 ```
 
 This `article` object will contain the following properties:
@@ -37,6 +35,16 @@ This `article` object will contain the following properties:
 * `excerpt`: article description, or short excerpt from content
 * `byline`: author metadata
 * `dir`: content direction
+
+### Optional
+
+Readability's `parse()` works by modifying the DOM. This removes some elements in the web page. You could avoid this by passing the clone of the `document` object while creating a `Readability` object.
+
+
+```
+var documentClone = document.cloneNode(true); 
+var article = new Readability(uri, documentClone).parse();   
+```
 
 ## Tests
 
