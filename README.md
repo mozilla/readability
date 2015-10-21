@@ -36,6 +36,16 @@ This `article` object will contain the following properties:
 * `byline`: author metadata
 * `dir`: content direction
 
+### Optional
+
+Readability's `parse()` works by modifying the DOM. This removes some elements in the web page. You could avoid this by passing the clone of the `document` object while creating a `Readability` object.
+
+
+```
+var documentClone = document.cloneNode(true); 
+var article = new Readability(uri, documentClone).parse();   
+```
+
 ## Tests
 
 To run the test suite:
