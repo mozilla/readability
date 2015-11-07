@@ -1,8 +1,11 @@
 {
-  "name": "readability",
-  "version": "0.0.1",
-  "description": "A standalone version of the readability library used for Firefox Reader View.",
-  "main": "Readability.js",
+  "name": "moz-readability",
+  "version": "0.1.0",
+  "description": "Fork of mozilla/readability to work with node",
+  "main": "index.js",
+  "engines": {
+    "node": ">=4.2.1"
+  },
   "scripts": {
     "test": "mocha test/test-*.js",
     "generate-testcase": "node test/generate-testcase.js",
@@ -16,13 +19,13 @@
   "author": "",
   "license": "Apache2",
   "bugs": {
-    "url": "https://github.com/mozilla/readability/issues"
+    "url": "https://github.com/seanmcgary/readability/issues"
   },
-  "homepage": "https://github.com/mozilla/readability",
+  "homepage": "https://github.com/seanmcgary/readability",
   "devDependencies": {
     "chai": "^2.1.*",
     "js-beautify": "^1.5.5",
-    "jsdom": "^3.1.2",
+    "jsdom": "^7.0.2",
     "matcha": "^0.6.0",
     "mocha": "^2.2.*"
   }

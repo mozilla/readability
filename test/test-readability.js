@@ -5,6 +5,7 @@ chai.config.includeStack = true;
 var expect = chai.expect;
 
 var readability = require("../index");
+console.log(readability);
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
 
