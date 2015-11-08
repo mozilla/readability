@@ -27,6 +27,8 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
       try {
         result = beforeFn();
       } catch(err) {
+        console.log(err);
+        console.log(err.stack);
         throw reformatError(err);
       }
     });
@@ -103,21 +105,24 @@ describe("Readability API", function() {
 describe("Test pages", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
+      this.timeout(2000);
       var uri = {
-        spec: "http://fakehost/test/page.html",
-        host: "fakehost",
-        prePath: "http://fakehost",
+        spec: "http://fakehost.com/test/page.html",
+        host: "fakehost.com",
+        prePath: "http://fakehost.com",
         scheme: "http",
-        pathBase: "http://fakehost/test/"
+        pathBase: "http://fakehost.com/test/"
       };
 
       runTestsWithItems("jsdom", function() {
+
         var doc = jsdom(testPage.source, {
           features: {
             FetchExternalResources: false,
             ProcessExternalResources: false
           }
         });
+        
         removeCommentNodesRecursively(doc);
         var readability = new Readability(uri, doc);
         var readerable = readability.isProbablyReaderable();

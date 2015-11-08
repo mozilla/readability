@@ -43,11 +43,11 @@ suite("Readability test page perf", function () {
   set("type", "static");
 
   var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
+    spec: "http://fakehost.com/test/page.html",
+    host: "fakehost.com",
+    prePath: "http://fakehost.com",
     scheme: "http",
-    pathBase: "http://fakehost/test"
+    pathBase: "http://fakehost.com/test"
   };
   testPages.forEach(function(testPage) {
     var doc = new JSDOMParser().parse(testPage.source);
@@ -62,11 +62,11 @@ suite("isProbablyReaderable perf", function () {
   set("type", "static");
 
   var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
+    spec: "http://fakehost.com/test/page.html",
+    host: "fakehost.com",
+    prePath: "http://fakehost.com",
     scheme: "http",
-    pathBase: "http://fakehost/test"
+    pathBase: "http://fakehost.com/test"
   };
   testPages.forEach(function(testPage) {
     var doc = new JSDOMParser().parse(testPage.source);
