@@ -19,6 +19,7 @@
  * available at: http://code.google.com/p/arc90labs-readability
  */
 var root = this;
+var Node = require('./lib/node');
 
 /**
  * Public constructor.
@@ -1816,3 +1817,5 @@ Readability.prototype = {
              excerpt: metadata.excerpt };
   }
 };
+
+module.exports = Readability;

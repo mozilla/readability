@@ -102,11 +102,11 @@ function onResponseReceived(source) {
 function runReadability(source, destPath, metadataDestPath) {
   var doc = new JSDOMParser().parse(source);
   var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
+    spec: "http://fakehost.com/test/page.html",
+    host: "fakehost.com",
+    prePath: "http://fakehost.com",
     scheme: "http",
-    pathBase: "http://fakehost/test/"
+    pathBase: "http://fakehost.com/test/"
   };
   var readability, result, readerable;
   try {
