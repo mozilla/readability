@@ -1,5 +1,5 @@
 {
-  "name": "moz-readability",
+  "name": "readability-node",
   "version": "0.1.0",
   "description": "Fork of mozilla/readability to work with node",
   "main": "index.js",
