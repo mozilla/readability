@@ -26,10 +26,6 @@
  */
 (function (global) {
 
-  function error(m) {
-    dump("JSDOMParser error: " + m + "\n");
-  }
-
   // XML only defines these and the numeric ones:
 
   var entityTable = {
@@ -669,9 +665,9 @@
               arr.push(" " + attr.name + '=' + quote + val + quote);
             }
 
-            if (child.localName in voidElems) {
+            if (child.localName in voidElems && !child.childNodes.length) {
               // if this is a self-closing element, end it here
-              arr.push(">");
+              arr.push("/>");
             } else {
               // otherwise, add its children
               arr.push(">");
@@ -842,9 +838,16 @@
     // makeElementNode(), which saves us from having to allocate a new array
     // every time.
     this.retPair = [];
+
+    this.errorState = "";
   };
 
   JSDOMParser.prototype = {
+    error: function(m) {
+      dump("JSDOMParser error: " + m + "\n");
+      this.errorState += m + "\n";
+    },
+
     /**
      * Look at the next character without advancing the index.
      */
@@ -899,7 +902,7 @@
       // After a '=', we should see a '"' for the attribute value
       var c = this.nextChar();
       if (c !== '"' && c !== "'") {
-        error("Error reading attribute " + name + ", expecting '\"'");
+        this.error("Error reading attribute " + name + ", expecting '\"'");
         return;
       }
 
@@ -952,12 +955,12 @@
       }
 
       // If this is a self-closing tag, read '/>'
-      var closed = tag in voidElems;
+      var closed = false;
       if (c === "/") {
         closed = true;
         c = this.nextChar();
         if (c !== ">") {
-          error("expected '>' to close " + tag);
+          this.error("expected '>' to close " + tag);
           return false;
         }
       }
@@ -1127,7 +1130,7 @@
         }
         var closingTag = "</" + localName + ">";
         if (!this.match(closingTag)) {
-          error("expected '" + closingTag + "'");
+          this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
           return null;
         }
       }

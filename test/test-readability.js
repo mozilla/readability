@@ -16,7 +16,41 @@ function reformatError(err) {
   return formattedError;
 }
 
-function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
+function inOrderTraverse(fromNode) {
+  if (fromNode.firstChild) {
+    return fromNode.firstChild;
+  }
+  while (fromNode && !fromNode.nextSibling) {
+    fromNode = fromNode.parentNode;
+  }
+  return fromNode ? fromNode.nextSibling : null;
+}
+
+function inOrderIgnoreEmptyTextNodes(fromNode) {
+  do {
+    fromNode = inOrderTraverse(fromNode);
+  } while (fromNode && fromNode.nodeType == 3 && !fromNode.textContent.trim());
+  return fromNode;
+}
+
+function traverseDOM(callback, expectedDOM, actualDOM) {
+  var actualNode = actualDOM.documentElement || actualDOM.childNodes[0];
+  var expectedNode = expectedDOM.documentElement || expectedDOM.childNodes[0];
+  while (actualNode) {
+    if (!callback(actualNode, expectedNode)) {
+      break;
+    }
+    actualNode = inOrderIgnoreEmptyTextNodes(actualNode);
+    expectedNode = inOrderIgnoreEmptyTextNodes(expectedNode);
+  }
+}
+
+// Collapse subsequent whitespace like HTML:
+function htmlTransform(str) {
+  return str.replace(/\s+/g, " ");
+}
+
+function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent, expectedMetadata) {
   describe(label, function() {
     this.timeout(5000);
 
@@ -24,7 +58,11 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
 
     before(function() {
       try {
-        result = beforeFn();
+        var doc = domGenerationFn(source);
+        var readability = new Readability(uri, doc);
+        var readerable = readability.isProbablyReaderable();
+        result = readability.parse();
+        result.readerable = readerable;
       } catch(err) {
         throw reformatError(err);
       }
@@ -35,7 +73,37 @@ function runTestsWithItems(label, beforeFn, expectedContent, expectedMetadata) {
     });
 
     it("should extract expected content", function() {
-      expect(expectedContent.split("\n")).eql(prettyPrint(result.content).split("\n"));
+      function nodeStr(n) {
+        if (n.nodeType == 3) {
+          return "#text(" + htmlTransform(n.textContent) + ")";
+        }
+        return n.localName + "#" + n.id + ".(" + n.className + ")";
+      }
+      var actualDOM = domGenerationFn(result.content);
+      var expectedDOM = domGenerationFn(expectedContent);
+      traverseDOM(function(actualNode, expectedNode) {
+        expect(!!actualNode).eql(!!expectedNode);
+        if (actualNode && expectedNode) {
+          var actualDesc = nodeStr(actualNode);
+          var expectedDesc = nodeStr(expectedNode);
+          if (actualDesc != expectedDesc) {
+            expect(actualDesc).eql(expectedDesc);
+            return false;
+          }
+          // Compare text for text nodes:
+          if (actualNode.nodeType == 3) {
+            var actualText = htmlTransform(actualNode.textContent);
+            var expectedText = htmlTransform(expectedNode.textContent);
+            expect(actualText).eql(expectedText);
+            if (actualText != expectedText) {
+              return false;
+            }
+          }
+        } else {
+          return false;
+        }
+        return true;
+      }, actualDOM, expectedDOM);
     });
 
     it("should extract expected title", function() {
@@ -110,29 +178,26 @@ describe("Test pages", function() {
         pathBase: "http://fakehost/test/"
       };
 
-      runTestsWithItems("jsdom", function() {
-        var doc = jsdom(testPage.source, {
+      runTestsWithItems("jsdom", function(source) {
+        var doc = jsdom(source, {
           features: {
             FetchExternalResources: false,
             ProcessExternalResources: false
           }
         });
         removeCommentNodesRecursively(doc);
-        var readability = new Readability(uri, doc);
-        var readerable = readability.isProbablyReaderable();
-        var result = readability.parse();
-        result.readerable = readerable;
-        return result;
-      }, testPage.expectedContent, testPage.expectedMetadata);
+        return doc;
+      }, uri, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
 
-      runTestsWithItems("JSDOMParser", function() {
-        var doc = new JSDOMParser().parse(testPage.source);
-        var readability = new Readability(uri, doc);
-        var readerable = readability.isProbablyReaderable();
-        var result = readability.parse();
-        result.readerable = readerable;
-        return result;
-      }, testPage.expectedContent, testPage.expectedMetadata);
+      runTestsWithItems("JSDOMParser", function(source) {
+        var parser = new JSDOMParser();
+        var doc = parser.parse(source);
+        if (parser.errorState) {
+          console.error("Parsing this DOM caused errors:", parser.errorState);
+          return null;
+        }
+        return doc;
+      }, uri, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
     });
   });
 });

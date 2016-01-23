@@ -9,9 +9,9 @@ help.</strong> </p>
         <p>Actually I've only found one which provides an adapter for <a href="http://visionmedia.github.io/mocha/">Mocha</a> and actually works…</p>
         <blockquote class="twitter-tweet tw-align-center">
             <p>Drinking game for web devs:
-                <br>(1) Think of a noun
-                <br>(2) Google "&lt;noun&gt;.js"
-                <br>(3) If a library with that name exists - drink</p>— Shay Friedman (@ironshay) <a href="https://twitter.com/ironshay/statuses/370525864523743232">August 22, 2013</a> </blockquote>
+                <br/>(1) Think of a noun
+                <br/>(2) Google "&lt;noun&gt;.js"
+                <br/>(3) If a library with that name exists - drink</p>— Shay Friedman (@ironshay) <a href="https://twitter.com/ironshay/statuses/370525864523743232">August 22, 2013</a> </blockquote>
         <p><strong><a href="http://blanketjs.org/">Blanket.js</a></strong> is an <em>easy to install, easy to configure,
 and easy to use JavaScript code coverage library that works both in-browser and
 with nodejs.</em> </p>
@@ -88,7 +88,7 @@ describe("Cow", function() {
             <li>The HTML test file <em>must</em> be served over HTTP for the adapter to be loaded.</li>
         </ul>
         <p>Running the tests now gives us something like this:</p>
-        <p> <img alt="screenshot" src="http://fakehost/static/code/2013/blanket-coverage.png"> </p>
+        <p> <img alt="screenshot" src="http://fakehost/static/code/2013/blanket-coverage.png"/> </p>
         <p>As you can see, the report at the bottom highlights that we haven't actually tested the case where an error is raised in case a target name is missing. We've been informed of that, nothing more, nothing less. We simply know we're missing a test here. Isn't this cool? I think so!</p>
         <p>Just remember that code coverage will only <a href="http://codebetter.com/karlseguin/2008/12/09/code-coverage-use-it-wisely/">bring you numbers</a> and raw information, not actual proofs that the whole of your <em>code logic</em> has been actually covered. If you ask me, the best inputs you can get about your code logic and implementation ever are the ones issued out of <a href="http://www.extremeprogramming.org/rules/pair.html">pair programming</a> sessions and <a href="http://alexgaynor.net/2013/sep/26/effective-code-review/">code reviews</a> — but that's another story.</p>
         <p><strong>So is code coverage silver bullet? No. Is it useful? Definitely. Happy testing!</strong> </p>

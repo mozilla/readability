@@ -282,3 +282,15 @@ describe("Tag local name case handling", function() {
     expect(doc.firstChild.firstChild.firstChild.localName).eql("clippath");
   });
 });
+
+describe("Recovery from self-closing tags that have close tags", function() {
+  it("should handle delayed closing of a tag", function() {
+    var html = "<div><input><p>I'm in an input</p></input></div>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.localName).eql("div");
+    expect(doc.firstChild.childNodes.length).eql(1);
+    expect(doc.firstChild.firstChild.localName).eql("input");
+    expect(doc.firstChild.firstChild.childNodes.length).eql(1);
+    expect(doc.firstChild.firstChild.firstChild.localName).eql("p");
+  });
+});
