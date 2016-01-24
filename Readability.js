@@ -109,6 +109,7 @@ Readability.prototype = {
   REGEXPS: {
     unlikelyCandidates: /banner|combx|comment|community|disqus|extra|foot|header|menu|related|remark|rss|share|shoutbox|sidebar|skyscraper|sponsor|ad-break|agegate|pagination|pager|popup/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
+    unlikelyNodes: /script/i, // Because of the internet, we sometimes want to keep things like <header> nodes, so we can't just blinly include nodes in the unlikelyCandidates list above
     positive: /article|body|content|entry|hentry|main|page|pagination|post|text|blog|story/i,
     negative: /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
@@ -647,7 +648,7 @@ Readability.prototype = {
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
-          if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
+          if ((this.REGEXPS.unlikelyCandidates.test(matchString) || this.REGEXPS.unlikelyNodes.test(node.tagName)) &&
               !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
               node.tagName !== "BODY" &&
               node.tagName !== "A") {
@@ -1716,7 +1717,7 @@ Readability.prototype = {
         return false;
       var matchString = node.className + " " + node.id;
 
-      if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
+      if ((this.REGEXPS.unlikelyCandidates.test(matchString) || this.REGEXPS.unlikelyNodes.test(node.tagName)) &&
           !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
         return false;
       }
