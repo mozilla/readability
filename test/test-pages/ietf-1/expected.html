@@ -49,49 +49,49 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in <a href="http://fakehost/test/#section-4">Section 4</a>.e of
+   include Simplified BSD License text as described in <a href="#section-4">Section 4</a>.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
 
 <span class="grey">de Jong                                                         [Page 1]</span>
-</pre><pre class="newpage"><a name="page-2" id="page-2" href="http://fakehost/test/#page-2" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-2" id="page-2" href="#page-2" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
 Table of Contents
 
-   <a href="http://fakehost/test/#section-1">1</a>. Introduction...................................................<a href="http://fakehost/test/#page-2">2</a>
-   <a href="http://fakehost/test/#section-2">2</a>. Terminology....................................................<a href="http://fakehost/test/#page-3">3</a>
-   <a href="http://fakehost/test/#section-3">3</a>. Storage model..................................................<a href="http://fakehost/test/#page-3">3</a>
-   <a href="http://fakehost/test/#section-4">4</a>. Requests.......................................................<a href="http://fakehost/test/#page-4">4</a>
-   <a href="http://fakehost/test/#section-5">5</a>. Response codes.................................................<a href="http://fakehost/test/#page-7">7</a>
-   <a href="http://fakehost/test/#section-6">6</a>. Versioning.....................................................<a href="http://fakehost/test/#page-7">7</a>
-   <a href="http://fakehost/test/#section-7">7</a>. CORS headers...................................................<a href="http://fakehost/test/#page-8">8</a>
-   <a href="http://fakehost/test/#section-8">8</a>. Session description............................................<a href="http://fakehost/test/#page-8">8</a>
-   <a href="http://fakehost/test/#section-9">9</a>. Bearer tokens and access control...............................<a href="http://fakehost/test/#page-9">9</a>
-  <a href="http://fakehost/test/#section-10">10</a>. Application-first bearer token issuance.......................<a href="http://fakehost/test/#page-10">10</a>
-  <a href="http://fakehost/test/#section-11">11</a>. Storage-first bearer token issuance...........................<a href="http://fakehost/test/#page-11">11</a>
-  <a href="http://fakehost/test/#section-12">12</a>. Example wire transcripts......................................<a href="http://fakehost/test/#page-12">12</a>
-     <a href="http://fakehost/test/#section-12.1">12.1</a>. WebFinger................................................<a href="http://fakehost/test/#page-12">12</a>
-     <a href="http://fakehost/test/#section-12.2">12.2</a>. OAuth dialog form........................................<a href="http://fakehost/test/#page-13">13</a>
-     <a href="http://fakehost/test/#section-12.3">12.3</a>. OAuth dialog form submission.............................<a href="http://fakehost/test/#page-14">14</a>
-     <a href="http://fakehost/test/#section-12.4">12.4</a>. OPTIONS preflight........................................<a href="http://fakehost/test/#page-15">15</a>
-     <a href="http://fakehost/test/#section-12.5">12.5</a>. Initial PUT..............................................<a href="http://fakehost/test/#page-15">15</a>
-     <a href="http://fakehost/test/#section-12.6">12.6</a>. Subsequent PUT...........................................<a href="http://fakehost/test/#page-16">16</a>
-     <a href="http://fakehost/test/#section-12.7">12.7</a>. GET......................................................<a href="http://fakehost/test/#page-16">16</a>
-     <a href="http://fakehost/test/#section-12.8">12.8</a>. DELETE...................................................<a href="http://fakehost/test/#page-17">17</a>
-  <a href="http://fakehost/test/#section-13">13</a>. Distributed versioning........................................<a href="http://fakehost/test/#page-17">17</a>
-  <a href="http://fakehost/test/#section-14">14</a>. Security Considerations.......................................<a href="http://fakehost/test/#page-19">19</a>
-  <a href="http://fakehost/test/#section-15">15</a>. IANA Considerations...........................................<a href="http://fakehost/test/#page-20">20</a>
-  <a href="http://fakehost/test/#section-16">16</a>. Acknowledgments...............................................<a href="http://fakehost/test/#page-20">20</a>
-  <a href="http://fakehost/test/#section-17">17</a>. References....................................................<a href="http://fakehost/test/#page-21">21</a>
-     <a href="http://fakehost/test/#section-17.1">17.1</a>. Normative References.....................................<a href="http://fakehost/test/#page-21">21</a>
-     <a href="http://fakehost/test/#section-17.2">17.2</a>. Informative References...................................<a href="http://fakehost/test/#page-21">21</a>
-  <a href="http://fakehost/test/#section-18">18</a>. Authors' addresses............................................<a href="http://fakehost/test/#page-22">22</a>
+   <a href="#section-1">1</a>. Introduction...................................................<a href="#page-2">2</a>
+   <a href="#section-2">2</a>. Terminology....................................................<a href="#page-3">3</a>
+   <a href="#section-3">3</a>. Storage model..................................................<a href="#page-3">3</a>
+   <a href="#section-4">4</a>. Requests.......................................................<a href="#page-4">4</a>
+   <a href="#section-5">5</a>. Response codes.................................................<a href="#page-7">7</a>
+   <a href="#section-6">6</a>. Versioning.....................................................<a href="#page-7">7</a>
+   <a href="#section-7">7</a>. CORS headers...................................................<a href="#page-8">8</a>
+   <a href="#section-8">8</a>. Session description............................................<a href="#page-8">8</a>
+   <a href="#section-9">9</a>. Bearer tokens and access control...............................<a href="#page-9">9</a>
+  <a href="#section-10">10</a>. Application-first bearer token issuance.......................<a href="#page-10">10</a>
+  <a href="#section-11">11</a>. Storage-first bearer token issuance...........................<a href="#page-11">11</a>
+  <a href="#section-12">12</a>. Example wire transcripts......................................<a href="#page-12">12</a>
+     <a href="#section-12.1">12.1</a>. WebFinger................................................<a href="#page-12">12</a>
+     <a href="#section-12.2">12.2</a>. OAuth dialog form........................................<a href="#page-13">13</a>
+     <a href="#section-12.3">12.3</a>. OAuth dialog form submission.............................<a href="#page-14">14</a>
+     <a href="#section-12.4">12.4</a>. OPTIONS preflight........................................<a href="#page-15">15</a>
+     <a href="#section-12.5">12.5</a>. Initial PUT..............................................<a href="#page-15">15</a>
+     <a href="#section-12.6">12.6</a>. Subsequent PUT...........................................<a href="#page-16">16</a>
+     <a href="#section-12.7">12.7</a>. GET......................................................<a href="#page-16">16</a>
+     <a href="#section-12.8">12.8</a>. DELETE...................................................<a href="#page-17">17</a>
+  <a href="#section-13">13</a>. Distributed versioning........................................<a href="#page-17">17</a>
+  <a href="#section-14">14</a>. Security Considerations.......................................<a href="#page-19">19</a>
+  <a href="#section-15">15</a>. IANA Considerations...........................................<a href="#page-20">20</a>
+  <a href="#section-16">16</a>. Acknowledgments...............................................<a href="#page-20">20</a>
+  <a href="#section-17">17</a>. References....................................................<a href="#page-21">21</a>
+     <a href="#section-17.1">17.1</a>. Normative References.....................................<a href="#page-21">21</a>
+     <a href="#section-17.2">17.2</a>. Informative References...................................<a href="#page-21">21</a>
+  <a href="#section-18">18</a>. Authors' addresses............................................<a href="#page-22">22</a>
 
 
-<span class="h2"><a class="selflink" name="section-1" href="http://fakehost/test/#section-1">1</a>.  Introduction</span>
+<span class="h2"><a class="selflink" name="section-1" href="#section-1">1</a>.  Introduction</span>
 
     Many services for data storage are available over the internet. This
     specification describes a vendor-independent interface for such
@@ -105,7 +105,7 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 2]</span>
-</pre><pre class="newpage"><a name="page-3" id="page-3" href="http://fakehost/test/#page-3" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-3" id="page-3" href="#page-3" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -124,11 +124,11 @@ Table of Contents
     The exact details of these four actions are described in this
     specification.
 
-<span class="h2"><a class="selflink" name="section-2" href="http://fakehost/test/#section-2">2</a>. Terminology</span>
+<span class="h2"><a class="selflink" name="section-2" href="#section-2">2</a>. Terminology</span>
 
     The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
     "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-    document are to be interpreted as described in <a href="http://fakehost/test/rfc2119">RFC 2119</a> [<a href="http://fakehost/test/#ref-WORDS">WORDS</a>].
+    document are to be interpreted as described in <a href="http://fakehost/test/rfc2119">RFC 2119</a> [<a href="#ref-WORDS">WORDS</a>].
 
     "SHOULD" and "SHOULD NOT" are appropriate when valid exceptions to a
     general requirement are known to exist or appear to exist, and it is
@@ -137,7 +137,7 @@ Table of Contents
     implement the general requirement when such failure would result in
     interoperability failure.
 
-<span class="h2"><a class="selflink" name="section-3" href="http://fakehost/test/#section-3">3</a>. Storage model</span>
+<span class="h2"><a class="selflink" name="section-3" href="#section-3">3</a>. Storage model</span>
 
     The server stores data in nodes that form a tree structure.
     Internal nodes are called 'folders' and leaf nodes are called
@@ -155,7 +155,7 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 3]</span>
-</pre><pre class="newpage"><a name="page-4" id="page-4" href="http://fakehost/test/#page-4" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-4" id="page-4" href="#page-4" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -165,12 +165,12 @@ Table of Contents
        * content length
        * content
 
-<span class="h2"><a class="selflink" name="section-4" href="http://fakehost/test/#section-4">4</a>. Requests</span>
+<span class="h2"><a class="selflink" name="section-4" href="#section-4">4</a>. Requests</span>
 
-    Client-to-server requests SHOULD be made over https [<a href="http://fakehost/test/#ref-HTTPS">HTTPS</a>], and
-    servers MUST comply with HTTP/1.1 [<a href="http://fakehost/test/#ref-HTTP">HTTP</a>]. Specifically, they
+    Client-to-server requests SHOULD be made over https [<a href="#ref-HTTPS">HTTPS</a>], and
+    servers MUST comply with HTTP/1.1 [<a href="#ref-HTTP">HTTP</a>]. Specifically, they
     MUST support chunked transfer coding on PUT requests. Servers MAY
-    also offer an optional switch from https to SPDY [<a href="http://fakehost/test/#ref-SPDY">SPDY</a>].
+    also offer an optional switch from https to SPDY [<a href="#ref-SPDY">SPDY</a>].
 
     A request is considered successful if the HTTP response code is in
     the 2xx range (e.g. 200 OK, 201 Created), and unsuccessful if an
@@ -205,14 +205,14 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 4]</span>
-</pre><pre class="newpage"><a name="page-5" id="page-5" href="http://fakehost/test/#page-5" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-5" id="page-5" href="#page-5" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
     field, representing the folder's current version.
 
     A successful GET request to a folder MUST be responded to with a
-    JSON-LD [<a href="http://fakehost/test/#ref-JSON-LD">JSON-LD</a>] document (content type 'application/ld+json'),
+    JSON-LD [<a href="#ref-JSON-LD">JSON-LD</a>] document (content type 'application/ld+json'),
     containing as its 'items' field a map in which contained documents
     appear as entries &lt;item_name&gt; to a document description, and
     contained non-empty folders appear as entries &lt;item_name&gt; '/' to a
@@ -255,7 +255,7 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 5]</span>
-</pre><pre class="newpage"><a name="page-6" id="page-6" href="http://fakehost/test/#page-6" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-6" id="page-6" href="#page-6" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -266,9 +266,9 @@ Table of Contents
     gzipped when requested by the client, since the two bodies would not
     be identical byte-for-byte.
 
-    Servers MAY support Content-Range headers [<a href="http://fakehost/test/#ref-RANGE">RANGE</a>] on GET requests,
+    Servers MAY support Content-Range headers [<a href="#ref-RANGE">RANGE</a>] on GET requests,
     but whether or not they do SHOULD be announced through the &lt;ranges&gt;
-    variable mentioned below in <a href="http://fakehost/test/#section-10">section 10</a>.
+    variable mentioned below in <a href="#section-10">section 10</a>.
 
     A successful PUT request to a document MUST result in:
 
@@ -281,7 +281,7 @@ Table of Contents
          document's new content type,
        * its version being updated, as well as that of its parent folder
          and further ancestor folders, using a strong validator [HTTP,
-         <a href="http://fakehost/test/#section-7.2">section 7.2</a>].
+         <a href="#section-7.2">section 7.2</a>].
 
     The response MUST contain a strong ETag header, with the document's
     new version (for instance a hash of its contents) as its value.
@@ -305,14 +305,14 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 6]</span>
-</pre><pre class="newpage"><a name="page-7" id="page-7" href="http://fakehost/test/#page-7" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-7" id="page-7" href="#page-7" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
-<span class="h2"><a class="selflink" name="section-5" href="http://fakehost/test/#section-5">5</a>. Response codes</span>
+<span class="h2"><a class="selflink" name="section-5" href="#section-5">5</a>. Response codes</span>
 
-    Response codes SHOULD be given as defined by [HTTP, <a href="http://fakehost/test/#section-6">section 6</a>] and
-    [BEARER, <a href="http://fakehost/test/#section-3.1">section 3.1</a>]. The following is a non-normative checklist
+    Response codes SHOULD be given as defined by [HTTP, <a href="#section-6">section 6</a>] and
+    [BEARER, <a href="#section-3.1">section 3.1</a>]. The following is a non-normative checklist
     of status codes that are likely to occur in practice:
 
        * 500 if an internal server error occurs,
@@ -342,27 +342,27 @@ Table of Contents
     Clients SHOULD also handle the case where a response takes too long
     to arrive, or where no response is received at all.
 
-<span class="h2"><a class="selflink" name="section-6" href="http://fakehost/test/#section-6">6</a>. Versioning</span>
+<span class="h2"><a class="selflink" name="section-6" href="#section-6">6</a>. Versioning</span>
 
-    All successful requests MUST return an 'ETag' header [<a href="http://fakehost/test/#ref-HTTP">HTTP</a>] with, in
+    All successful requests MUST return an 'ETag' header [<a href="#ref-HTTP">HTTP</a>] with, in
     the case of GET, the current version, in the case of PUT, the new
     version, and in case of DELETE, the version that was deleted. All
     successful GET requests MUST return an 'Expires: 0' header. PUT and
-    DELETE requests MAY have an 'If-Match' request header [<a href="http://fakehost/test/#ref-COND">COND</a>], and
+    DELETE requests MAY have an 'If-Match' request header [<a href="#ref-COND">COND</a>], and
     MUST fail with a 412 response code if that doesn't match the
     document's current version.
 
 
 
 <span class="grey">de Jong                                                         [Page 7]</span>
-</pre><pre class="newpage"><a name="page-8" id="page-8" href="http://fakehost/test/#page-8" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-8" id="page-8" href="#page-8" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
     GET requests MAY have a comma-separated list of revisions in an
-    'If-None-Match' header [<a href="http://fakehost/test/#ref-COND">COND</a>], and SHOULD be responded to with a 304
+    'If-None-Match' header [<a href="#ref-COND">COND</a>], and SHOULD be responded to with a 304
     response if that list includes the document or folder's current
-    version. A PUT request MAY have an 'If-None-Match: *' header [<a href="http://fakehost/test/#ref-COND">COND</a>],
+    version. A PUT request MAY have an 'If-None-Match: *' header [<a href="#ref-COND">COND</a>],
     in which case it MUST fail with a 412 response code if the document
     already exists.
 
@@ -372,14 +372,14 @@ Table of Contents
     A provider MAY offer version rollback functionality to its users,
     but this specification does not define the user interface for that.
 
-<span class="h2"><a class="selflink" name="section-7" href="http://fakehost/test/#section-7">7</a>. CORS headers</span>
+<span class="h2"><a class="selflink" name="section-7" href="#section-7">7</a>. CORS headers</span>
 
-    All responses MUST carry CORS headers [<a href="http://fakehost/test/#ref-CORS">CORS</a>]. The server MUST also
+    All responses MUST carry CORS headers [<a href="#ref-CORS">CORS</a>]. The server MUST also
     reply to OPTIONS requests as per CORS. For GET requests, a wildcard
     origin MAY be returned, but for PUT and DELETE requests, the
     response MUST echo back the Origin header sent by the client.
 
-<span class="h2"><a class="selflink" name="section-8" href="http://fakehost/test/#section-8">8</a>. Session description</span>
+<span class="h2"><a class="selflink" name="section-8" href="#section-8">8</a>. Session description</span>
 
     The information that a client needs to receive in order to be able
     to connect to a server SHOULD reach the client as described in the
@@ -387,12 +387,12 @@ Table of Contents
 
        * &lt;storage_root&gt;, consisting of 'https://' followed by a server
          host, and optionally a server port and a path prefix as per
-         [<a href="http://fakehost/test/#ref-IRI">IRI</a>]. Examples:
+         [<a href="#ref-IRI">IRI</a>]. Examples:
          * 'https://example.com' (host only)
          * 'https://example.com:8080' (host and port)
          * 'https://example.com/path/to/storage' (host, port and
            path prefix; note there is no trailing slash)
-       * &lt;access_token&gt; as per [<a href="http://fakehost/test/#ref-OAUTH">OAUTH</a>]. The token SHOULD be hard to
+       * &lt;access_token&gt; as per [<a href="#ref-OAUTH">OAUTH</a>]. The token SHOULD be hard to
          guess and SHOULD NOT be reused from one client to another. It
          can however be reused in subsequent interactions with the same
          client, as long as that client is still trusted. Example:
@@ -405,7 +405,7 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                         [Page 8]</span>
-</pre><pre class="newpage"><a name="page-9" id="page-9" href="http://fakehost/test/#page-9" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-9" id="page-9" href="#page-9" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -420,7 +420,7 @@ Table of Contents
     * https://storage.example.com/bob/public/documents/
     * https://storage.example.com/bob/public/documents/draft.txt
 
-<span class="h2"><a class="selflink" name="section-9" href="http://fakehost/test/#section-9">9</a>. Bearer tokens and access control</span>
+<span class="h2"><a class="selflink" name="section-9" href="#section-9">9</a>. Bearer tokens and access control</span>
 
     A bearer token represents one or more access scopes. These access
     scopes are represented as strings of the form &lt;module&gt; &lt;level&gt;,
@@ -442,7 +442,7 @@ Table of Contents
     As a special exceptions, GET requests to a document (but not a
     folder) whose path starts with '/public/' are always allowed. They,
     as well as OPTIONS requests, can be made without a bearer token.
-    Unless [<a href="http://fakehost/test/#ref-KERBEROS">KERBEROS</a>] is used (see <a href="http://fakehost/test/#section-10">section 10</a> below), all other requests
+    Unless [<a href="#ref-KERBEROS">KERBEROS</a>] is used (see <a href="#section-10">section 10</a> below), all other requests
     SHOULD present a bearer token with sufficient access scope, using a
     header of the following form (no double quotes here):
 
@@ -451,20 +451,20 @@ Table of Contents
     In addition, providing the access token via a HTTP query parameter
     for GET requests MAY be supported by the server, although its use
     is not recommended, due to its security deficiencies; see [BEARER,
-    <a href="http://fakehost/test/#section-2.3">section 2.3</a>].
+    <a href="#section-2.3">section 2.3</a>].
 
 
 <span class="grey">de Jong                                                         [Page 9]</span>
-</pre><pre class="newpage"><a name="page-10" id="page-10" href="http://fakehost/test/#page-10" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-10" id="page-10" href="#page-10" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
 
-<span class="h2"><a class="selflink" name="section-10" href="http://fakehost/test/#section-10">10</a>. Application-first bearer token issuance</span>
+<span class="h2"><a class="selflink" name="section-10" href="#section-10">10</a>. Application-first bearer token issuance</span>
 
     To make a remoteStorage server available as 'the remoteStorage of
     &lt;account&gt; at &lt;host&gt;', exactly one link of the following format
-    SHOULD be added to the WebFinger record [<a href="http://fakehost/test/#ref-WEBFINGER">WEBFINGER</a>] of &lt;account&gt; at
+    SHOULD be added to the WebFinger record [<a href="#ref-WEBFINGER">WEBFINGER</a>] of &lt;account&gt; at
     &lt;host&gt;:
 
     {
@@ -479,7 +479,7 @@ Table of Contents
 
     Here &lt;storage_root&gt; and &lt;storage_api&gt; are as per "Session
     description" above, and &lt;auth-dialog&gt; SHOULD be either null or a
-    URL where an OAuth 2.0 implicit-grant flow dialog [<a href="http://fakehost/test/#ref-OAUTH">OAUTH</a>] is
+    URL where an OAuth 2.0 implicit-grant flow dialog [<a href="#ref-OAUTH">OAUTH</a>] is
     presented.
 
     If &lt;auth-dialog&gt; is a URL, the user can supply their credentials
@@ -491,7 +491,7 @@ Table of Contents
 
     If &lt;auth-dialog&gt; is null, the client will not have a way to obtain
     an access token, and SHOULD send all requests without Authorization
-    header, and rely on Kerberos [<a href="http://fakehost/test/#ref-KERBEROS">KERBEROS</a>] instead for requests that
+    header, and rely on Kerberos [<a href="#ref-KERBEROS">KERBEROS</a>] instead for requests that
     would normally be sent with a bearer token, but servers SHOULD NOT
     impose any such access barriers for resources that would normally
     not require an access token.
@@ -500,19 +500,19 @@ Table of Contents
     Non-breaking examples that have been proposed so far, include a
     "<a href="http://tools.ietf.org/html/rfc6750#section-2.3">http://tools.ietf.org/html/rfc6750#section-2.3</a>" property, set to
     the string value "true" if the server supports passing the bearer
-    token in the URI query parameter as per section 2.3 of [<a href="http://fakehost/test/#ref-BEARER">BEARER</a>],
+    token in the URI query parameter as per section 2.3 of [<a href="#ref-BEARER">BEARER</a>],
     instead of in the request header.
 
 
 <span class="grey">de Jong                                                        [Page 10]</span>
-</pre><pre class="newpage"><a name="page-11" id="page-11" href="http://fakehost/test/#page-11" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-11" id="page-11" href="#page-11" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
 
     Another example is "<a href="http://tools.ietf.org/html/rfc7233">http://tools.ietf.org/html/rfc7233</a>" with a
     string value of "GET" if Content-Range headers are supported for
-    GET requests as per [<a href="http://fakehost/test/#ref-RANGE">RANGE</a>], "PUT" if they are supported for PUT
+    GET requests as per [<a href="#ref-RANGE">RANGE</a>], "PUT" if they are supported for PUT
     requests, and "GET,PUT" if supported for both.
 
     Both these proposals are non-breaking extensions, since the client
@@ -523,7 +523,7 @@ Table of Contents
     A "<a href="http://remotestorage.io/spec/web-authoring">http://remotestorage.io/spec/web-authoring</a>" property has been
     proposed with a string value of the fully qualified domain name to
     which web authoring content is published if the server supports web
-    authoring as per [<a href="http://fakehost/test/#ref-AUTHORING">AUTHORING</a>]. Note that this extension is a breaking
+    authoring as per [<a href="#ref-AUTHORING">AUTHORING</a>]. Note that this extension is a breaking
     extension in the sense that it divides users into "haves", whose
     remoteStorage accounts allow them to author web content, and
     "have-nots", whose remoteStorage account does not support this
@@ -535,10 +535,10 @@ Table of Contents
     client_id parameter in favor of relying on the redirect_uri
     parameter for client identification.
 
-<span class="h2"><a class="selflink" name="section-11" href="http://fakehost/test/#section-11">11</a>. Storage-first bearer token issuance</span>
+<span class="h2"><a class="selflink" name="section-11" href="#section-11">11</a>. Storage-first bearer token issuance</span>
 
     The provider MAY also present a dashboard to the user, where they
-    have some way to add open web app manifests [<a href="http://fakehost/test/#ref-MANIFEST">MANIFEST</a>]. Adding a
+    have some way to add open web app manifests [<a href="#ref-MANIFEST">MANIFEST</a>]. Adding a
     manifest to the dashboard is considered equivalent to clicking
     'accept' in the dialog of the application-first flow. Removing one
     is considered equivalent to revoking its access token.
@@ -547,7 +547,7 @@ Table of Contents
     field SHOULD be present in the root of such an application manifest
     document, with entries &lt;module&gt; -&gt; '{"access": "readonly"}' for
     &lt;level&gt; 'r' or '{"access": "readwrite"}' for &lt;level&gt; 'rw', as
-    prescribed in [<a href="http://fakehost/test/#ref-DATASTORE">DATASTORE</a>].
+    prescribed in [<a href="#ref-DATASTORE">DATASTORE</a>].
 
     When the user gestures they want to use a certain application whose
     manifest is present on the dashboard, the dashboard SHOULD redirect
@@ -555,7 +555,7 @@ Table of Contents
 
 
 <span class="grey">de Jong                                                        [Page 11]</span>
-</pre><pre class="newpage"><a name="page-12" id="page-12" href="http://fakehost/test/#page-12" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-12" id="page-12" href="#page-12" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -593,19 +593,19 @@ Table of Contents
     debug tool, thus bypassing the need for an OAuth dance. Clients
     SHOULD NOT rely on this in production.
 
-<span class="h2"><a class="selflink" name="section-12" href="http://fakehost/test/#section-12">12</a>. Example wire transcripts</span>
+<span class="h2"><a class="selflink" name="section-12" href="#section-12">12</a>. Example wire transcripts</span>
 
     The following examples are not normative ("\" indicates a line was
     wrapped).
 
-<span class="h3"><a class="selflink" name="section-12.1" href="http://fakehost/test/#section-12.1">12.1</a>. WebFinger</span>
+<span class="h3"><a class="selflink" name="section-12.1" href="#section-12.1">12.1</a>. WebFinger</span>
 
     In application-first, an in-browser application might issue the
     following request, using XMLHttpRequest and CORS:
 
 
 <span class="grey">de Jong                                                        [Page 12]</span>
-</pre><pre class="newpage"><a name="page-13" id="page-13" href="http://fakehost/test/#page-13" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-13" id="page-13" href="#page-13" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -645,7 +645,7 @@ motestorage-04",
            }]
          }
 
-<span class="h3"><a class="selflink" name="section-12.2" href="http://fakehost/test/#section-12.2">12.2</a>. OAuth dialog form</span>
+<span class="h3"><a class="selflink" name="section-12.2" href="#section-12.2">12.2</a>. OAuth dialog form</span>
 
     Once the in-browser application has discovered the server's OAuth
     end-point, it will typically redirect the user to this URL, in
@@ -655,7 +655,7 @@ motestorage-04",
 
 
 <span class="grey">de Jong                                                        [Page 13]</span>
-</pre><pre class="newpage"><a name="page-14" id="page-14" href="http://fakehost/test/#page-14" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-14" id="page-14" href="#page-14" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -675,7 +675,7 @@ unhosted.5apps.com&amp;response_type=token HTTP/1.1
             &lt;title&gt;Allow access?&lt;/title&gt;
         ...
 
-<span class="h3"><a class="selflink" name="section-12.3" href="http://fakehost/test/#section-12.3">12.3</a>. OAuth dialog form submission</span>
+<span class="h3"><a class="selflink" name="section-12.3" href="#section-12.3">12.3</a>. OAuth dialog form submission</span>
 
     When the user submits the form, the request would look something
     like this:
@@ -700,12 +700,12 @@ low
         Location:https://drinks-unhosted.5apps.com/#access_token=j2YnGt\
 XjzzzHNjkd1CJxoQubA1o%3D&amp;token_type=bearer&amp;state=
 
-<span class="h3"><a class="selflink" name="section-12.4" href="http://fakehost/test/#section-12.4">12.4</a>. OPTIONS preflight</span>
+<span class="h3"><a class="selflink" name="section-12.4" href="#section-12.4">12.4</a>. OPTIONS preflight</span>
 
 
 
 <span class="grey">de Jong                                                        [Page 14]</span>
-</pre><pre class="newpage"><a name="page-15" id="page-15" href="http://fakehost/test/#page-15" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-15" id="page-15" href="#page-15" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -728,7 +728,7 @@ XjzzzHNjkd1CJxoQubA1o%3D&amp;token_type=bearer&amp;state=
         Access-Control-Allow-Headers: Authorization, Content-Length, Co\
 ntent-Type, Origin, X-Requested-With, If-Match, If-None-Match
 
-<span class="h3"><a class="selflink" name="section-12.5" href="http://fakehost/test/#section-12.5">12.5</a>. Initial PUT</span>
+<span class="h3"><a class="selflink" name="section-12.5" href="#section-12.5">12.5</a>. Initial PUT</span>
 
     An initial PUT may contain an 'If-None-Match: *' header, like this:
 
@@ -751,11 +751,11 @@ ntent-Type, Origin, X-Requested-With, If-Match, If-None-Match
         Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694045000"
 
-<span class="h3"><a class="selflink" name="section-12.6" href="http://fakehost/test/#section-12.6">12.6</a>. Subsequent PUT</span>
+<span class="h3"><a class="selflink" name="section-12.6" href="#section-12.6">12.6</a>. Subsequent PUT</span>
 
 
 <span class="grey">de Jong                                                        [Page 15]</span>
-</pre><pre class="newpage"><a name="page-16" id="page-16" href="http://fakehost/test/#page-16" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-16" id="page-16" href="#page-16" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -781,7 +781,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
         Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694048000"
 
-<span class="h3"><a class="selflink" name="section-12.7" href="http://fakehost/test/#section-12.7">12.7</a>. GET</span>
+<span class="h3"><a class="selflink" name="section-12.7" href="#section-12.7">12.7</a>. GET</span>
 
     A GET request would also include the bearer token, and optionally
     an If-None-Match header:
@@ -805,7 +805,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
 
 
 <span class="grey">de Jong                                                        [Page 16]</span>
-</pre><pre class="newpage"><a name="page-17" id="page-17" href="http://fakehost/test/#page-17" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-17" id="page-17" href="#page-17" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -840,7 +840,7 @@ charset=UTF-8","Content-Length":106}}}
         HTTP/1.1 404 Not Found
         Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
 
-<span class="h3"><a class="selflink" name="section-12.8" href="http://fakehost/test/#section-12.8">12.8</a>. DELETE</span>
+<span class="h3"><a class="selflink" name="section-12.8" href="#section-12.8">12.8</a>. DELETE</span>
 
     A DELETE request may look like this:
 
@@ -855,7 +855,7 @@ charset=UTF-8","Content-Length":106}}}
 
 
 <span class="grey">de Jong                                                        [Page 17]</span>
-</pre><pre class="newpage"><a name="page-18" id="page-18" href="http://fakehost/test/#page-18" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-18" id="page-18" href="#page-18" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -865,7 +865,7 @@ charset=UTF-8","Content-Length":106}}}
         Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694048000"
 
-<span class="h2"><a class="selflink" name="section-13" href="http://fakehost/test/#section-13">13</a>. Distributed versioning</span>
+<span class="h2"><a class="selflink" name="section-13" href="#section-13">13</a>. Distributed versioning</span>
 
     This section is non-normative, and is intended to explain some of
     the design choices concerning ETags and folder listings. At the
@@ -905,7 +905,7 @@ charset=UTF-8","Content-Length":106}}}
 
 
 <span class="grey">de Jong                                                        [Page 18]</span>
-</pre><pre class="newpage"><a name="page-19" id="page-19" href="http://fakehost/test/#page-19" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-19" id="page-19" href="#page-19" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -927,7 +927,7 @@ charset=UTF-8","Content-Length":106}}}
     but it is up to whichever client discovers a given version
     conflict, to resolve it.
 
-<span class="h2"><a class="selflink" name="section-14" href="http://fakehost/test/#section-14">14</a>. Security Considerations</span>
+<span class="h2"><a class="selflink" name="section-14" href="#section-14">14</a>. Security Considerations</span>
 
     To prevent man-in-the-middle attacks, the use of https instead of
     http is important for both the interface itself and all end-points
@@ -955,7 +955,7 @@ charset=UTF-8","Content-Length":106}}}
 
 
 <span class="grey">de Jong                                                        [Page 19]</span>
-</pre><pre class="newpage"><a name="page-20" id="page-20" href="http://fakehost/test/#page-20" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-20" id="page-20" href="#page-20" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -972,7 +972,7 @@ charset=UTF-8","Content-Length":106}}}
     The server SHOULD also detect and stop denial-of-service attacks
     that aim to overwhelm its interface with too much traffic.
 
-<span class="h2"><a class="selflink" name="section-15" href="http://fakehost/test/#section-15">15</a>. IANA Considerations</span>
+<span class="h2"><a class="selflink" name="section-15" href="#section-15">15</a>. IANA Considerations</span>
 
     This document registers the 'remotestorage' link relation, as well
     as the following WebFinger properties:
@@ -982,7 +982,7 @@ charset=UTF-8","Content-Length":106}}}
       * "<a href="http://tools.ietf.org/html/rfc7233">http://tools.ietf.org/html/rfc7233</a>"
       * "<a href="http://remotestorage.io/spec/web-authoring">http://remotestorage.io/spec/web-authoring</a>"
 
-<span class="h2"><a class="selflink" name="section-16" href="http://fakehost/test/#section-16">16</a>. Acknowledgements</span>
+<span class="h2"><a class="selflink" name="section-16" href="#section-16">16</a>. Acknowledgements</span>
 
     The authors would like to thank everybody who contributed to the
     development of this protocol, including Kenny Bentley, Javier Diaz,
@@ -995,9 +995,9 @@ charset=UTF-8","Content-Length":106}}}
     Rick van Rein, Mark Nottingham, Julian Reschke, and Markus
     Lanthaler, among many others.
 
-<span class="h2"><a class="selflink" name="section-17" href="http://fakehost/test/#section-17">17</a>. References</span>
+<span class="h2"><a class="selflink" name="section-17" href="#section-17">17</a>. References</span>
 
-<span class="h3"><a class="selflink" name="section-17.1" href="http://fakehost/test/#section-17.1">17.1</a>. Normative References</span>
+<span class="h3"><a class="selflink" name="section-17.1" href="#section-17.1">17.1</a>. Normative References</span>
 
     [<a name="ref-WORDS" id="ref-WORDS">WORDS</a>]
         Bradner, S., "Key words for use in RFCs to Indicate Requirement
@@ -1005,7 +1005,7 @@ charset=UTF-8","Content-Length":106}}}
 
 
 <span class="grey">de Jong                                                        [Page 20]</span>
-</pre><pre class="newpage"><a name="page-21" id="page-21" href="http://fakehost/test/#page-21" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-21" id="page-21" href="#page-21" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -1019,10 +1019,10 @@ charset=UTF-8","Content-Length":106}}}
         "WebFinger", <a href="http://fakehost/test/rfc7033">RFC7033</a>, September 2013.
 
     [<a name="ref-OAUTH" id="ref-OAUTH">OAUTH</a>]
-        "<a href="http://fakehost/test/#section-4.2">Section 4.2</a>: Implicit Grant", in: Hardt, D. (ed), "The OAuth
+        "<a href="#section-4.2">Section 4.2</a>: Implicit Grant", in: Hardt, D. (ed), "The OAuth
         2.0 Authorization Framework", <a href="http://fakehost/test/rfc6749">RFC6749</a>, October 2012.
 
-<span class="h3"><a class="selflink" name="section-17.2" href="http://fakehost/test/#section-17.2">17.2</a>. Informative References</span>
+<span class="h3"><a class="selflink" name="section-17.2" href="#section-17.2">17.2</a>. Informative References</span>
 
     [<a name="ref-HTTPS" id="ref-HTTPS">HTTPS</a>]
         Rescorla, E., "HTTP Over TLS", <a href="http://fakehost/test/rfc2818">RFC2818</a>, May 2000.
@@ -1055,7 +1055,7 @@ charset=UTF-8","Content-Length":106}}}
 
 
 <span class="grey">de Jong                                                        [Page 21]</span>
-</pre><pre class="newpage"><a name="page-22" id="page-22" href="http://fakehost/test/#page-22" class="invisible"> </a>
+</pre><pre class="newpage"><a name="page-22" id="page-22" href="#page-22" class="invisible"> </a>
 <span class="grey">Internet-Draft              remoteStorage                  December 2014</span>
 
 
@@ -1083,7 +1083,7 @@ charset=UTF-8","Content-Length":106}}}
         September 2014. <a href="https://github.com/michielbdejong/resite/wiki">https://github.com/michielbdejong/resite/wiki</a>
         /Using-remoteStorage-for-web-authoring
 
-<span class="h2"><a class="selflink" name="section-18" href="http://fakehost/test/#section-18">18</a>. Authors' addresses</span>
+<span class="h2"><a class="selflink" name="section-18" href="#section-18">18</a>. Authors' addresses</span>
 
     Michiel B. de Jong
     IndieHosters
