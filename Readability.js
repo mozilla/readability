@@ -192,7 +192,8 @@ Readability.prototype = {
   },
 
   /**
-   * Converts each <a> and <img> uri in the given element to an absolute URI.
+   * Converts each <a> and <img> uri in the given element to an absolute URI,
+   * ignoring #ref URIs.
    *
    * @param Element
    * @return void
@@ -218,6 +219,10 @@ Readability.prototype = {
       // Dotslash relative URI.
       if (uri.indexOf("./") === 0)
         return pathBase + uri.slice(2);
+
+      // Ignore hash URIs:
+      if (uri[0] == "#")
+        return uri;
 
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".

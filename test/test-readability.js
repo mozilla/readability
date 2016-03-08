@@ -77,7 +77,14 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
         if (n.nodeType == 3) {
           return "#text(" + htmlTransform(n.textContent) + ")";
         }
-        return n.localName + "#" + n.id + ".(" + n.className + ")";
+        var rv = n.localName;
+        if (n.id) {
+          rv += "#" + n.id;
+        }
+        if (n.className) {
+          rv += ".(" + n.className + ")";
+        }
+        return rv;
       }
       var actualDOM = domGenerationFn(result.content);
       var expectedDOM = domGenerationFn(expectedContent);
@@ -97,6 +104,15 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
             expect(actualText).eql(expectedText);
             if (actualText != expectedText) {
               return false;
+            }
+          // Compare attributes for element nodes:
+          } else if (actualNode.nodeType == 1) {
+            expect(actualNode.attributes.length).eql(expectedNode.attributes.length);
+            for (var i = 0; i < actualNode.attributes.length; i++) {
+              var attr = actualNode.attributes[i].name;
+              var actualValue = actualNode.getAttribute(attr);
+              var expectedValue = expectedNode.getAttribute(attr);
+              expect(expectedValue, "node '" + actualDesc + "' attribute " + attr + " should match").eql(actualValue);
             }
           }
         } else {
