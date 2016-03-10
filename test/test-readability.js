@@ -77,6 +77,9 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
         if (n.nodeType == 3) {
           return "#text(" + htmlTransform(n.textContent) + ")";
         }
+        if (n.nodeType != 1) {
+          return "some other node type: " + n.nodeType + " with data " + n.data;
+        }
         var rv = n.localName;
         if (n.id) {
           rv += "#" + n.id;
@@ -141,13 +144,14 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
 }
 
 function removeCommentNodesRecursively(node) {
-  [].forEach.call(node.childNodes, function(child) {
+  for (var i = node.childNodes.length - 1; i >= 0; i--) {
+    var child = node.childNodes[i];
     if (child.nodeType === child.COMMENT_NODE) {
       node.removeChild(child);
     } else if (child.nodeType === child.ELEMENT_NODE) {
       removeCommentNodesRecursively(child);
     }
-  });
+  }
 }
 
 describe("Readability API", function() {
