@@ -1,3 +1,4 @@
+/*eslint-env es6:false*/
 /*
  * Copyright (c) 2010 Arc90 Inc
  *
@@ -65,8 +66,11 @@ var Readability = function(uri, doc, options) {
         return rv + '("' + e.textContent + '")';
       }
       var classDesc = e.className && ("." + e.className.replace(/ /g, "."));
-      var elDesc = e.id ? "(#" + e.id + classDesc + ")" :
-                          (classDesc ? "(" + classDesc + ")" : "");
+      var elDesc = "";
+      if (e.id)
+        elDesc = "(#" + e.id + classDesc + ")";
+      else if (classDesc)
+        elDesc = "(" + classDesc + ")";
       return rv + elDesc;
     }
     this.log = function () {
@@ -368,9 +372,9 @@ Readability.prototype = {
       // (which will be replaced with a <p> later).
       while ((next = this._nextElement(next)) && (next.tagName == "BR")) {
         replaced = true;
-        var sibling = next.nextSibling;
+        var brSibling = next.nextSibling;
         next.parentNode.removeChild(next);
-        next = sibling;
+        next = brSibling;
       }
 
       // If we removed a <br> chain, replace the remaining <br> with a <p>. Add
@@ -741,7 +745,12 @@ Readability.prototype = {
           // - parent:             1 (no division)
           // - grandparent:        2
           // - great grandparent+: ancestor level * 3
-          var scoreDivider = level === 0 ? 1 : level === 1 ? 2 : level * 3;
+          if (level === 0)
+            var scoreDivider = 1;
+          else if (level === 1)
+            scoreDivider = 2;
+          else
+            scoreDivider = level * 3;
           ancestor.readability.contentScore += contentScore / scoreDivider;
         });
       });
@@ -854,7 +863,8 @@ Readability.prototype = {
 
             if (nodeLength > 80 && linkDensity < 0.25) {
               append = true;
-            } else if (nodeLength < 80 && linkDensity === 0 && nodeContent.search(/\.( |$)/) !== -1) {
+            } else if (nodeLength < 80 && nodeLength > 0 && linkDensity === 0 &&
+                       nodeContent.search(/\.( |$)/) !== -1) {
               append = true;
             }
           }
@@ -1139,7 +1149,7 @@ Readability.prototype = {
   _getLinkDensity: function(element) {
     var textLength = this._getInnerText(element).length;
     if (textLength === 0)
-      return;
+      return 0;
 
     var linkLength = 0;
 

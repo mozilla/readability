@@ -4,6 +4,7 @@
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "Readability.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "mocha test/test-*.js",
     "generate-testcase": "node test/generate-testcase.js",
     "perf": "matcha benchmarks/benchmarks.js",
@@ -21,8 +22,9 @@
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
     "chai": "^2.1.*",
+    "eslint": ">1.10",
     "js-beautify": "^1.5.5",
-    "jsdom": "^3.1.2",
+    "jsdom": "^7.0",
     "matcha": "^0.6.0",
     "mocha": "^2.2.*"
   }

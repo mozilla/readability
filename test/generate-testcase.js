@@ -17,7 +17,7 @@ var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100
 if (process.argv.length < 3) {
   console.error("Need at least a destination slug and potentially a URL (if the slug doesn't have source).");
   process.exit(0);
-  return;
+  throw "Abort";
 }
 
 var slug = process.argv[2];
