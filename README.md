@@ -15,13 +15,13 @@ To test local changes to Readability.js, you can run your own instance of [reada
 To parse a document, you must create a new `Readability` object from a URI object and a document, and then call `parse()`. Here's an example:
 
 ```javascript
-var location = document.location;
+var loc = document.location;
 var uri = {
-  spec: location.href,
-  host: location.host,
-  prePath: location.protocol + "//" + location.host,
-  scheme: location.protocol.substr(0, location.protocol.indexOf(":")),
-  pathBase: location.protocol + "//" + location.host + location.pathname.substr(0, location.pathname.lastIndexOf("/") + 1)
+  spec: loc.href,
+  host: loc.host,
+  prePath: loc.protocol + "//" + loc.host,
+  scheme: loc.protocol.substr(0, loc.protocol.indexOf(":")),
+  pathBase: loc.protocol + "//" + loc.host + loc.pathname.substr(0, loc.pathname.lastIndexOf("/") + 1)
 };
 var article = new Readability(uri, document).parse();
 ```
