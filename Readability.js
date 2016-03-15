@@ -58,9 +58,11 @@ var Readability = function(uri, doc, options) {
   // Make an AJAX request for each page and append it to the document.
   this._curPageNum = 1;
 
+  var logEl;
+
   // Control whether log messages are sent to the console
   if (this._debug) {
-    function logEl(e) {
+    logEl = function(e) {
       var rv = e.nodeName + " ";
       if (e.nodeType == e.TEXT_NODE) {
         return rv + '("' + e.textContent + '")';
@@ -72,7 +74,7 @@ var Readability = function(uri, doc, options) {
       else if (classDesc)
         elDesc = "(" + classDesc + ")";
       return rv + elDesc;
-    }
+    };
     this.log = function () {
       if ("dump" in root) {
         var msg = Array.prototype.map.call(arguments, function(x) {
