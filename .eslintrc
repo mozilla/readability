@@ -86,6 +86,9 @@
     // No overwriting defined functions
     "no-func-assign": 2,
 
+    // Declarations in Program or Function Body
+    "no-inner-declarations": 2,
+
     // No invalid regular expresions
     "no-invalid-regexp": 2,
 
