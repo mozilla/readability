@@ -193,7 +193,8 @@ Readability.prototype = {
       return node.querySelectorAll(tagNames.join(','));
     }
     return [].concat.apply([], tagNames.map(function(tag) {
-      return node.getElementsByTagName(tag);
+      var collection = node.getElementsByTagName(tag);
+      return Array.isArray(collection) ? collection : Array.from(collection);
     }));
   },
 
