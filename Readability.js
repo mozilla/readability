@@ -1825,13 +1825,14 @@ Readability.prototype = {
       }
     }
 
+    var textContent = articleContent.textContent;
     return { uri: this._uri,
              title: articleTitle,
              byline: metadata.byline || this._articleByline,
              dir: this._articleDir,
              content: articleContent.innerHTML,
-             length: articleContent.textContent.length,
-             textContent: articleContent.textContent,
+             textContent: textContent,
+             length: textContent.length,
              excerpt: metadata.excerpt };
   }
 };
