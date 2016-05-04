@@ -1831,6 +1831,7 @@ Readability.prototype = {
              dir: this._articleDir,
              content: articleContent.innerHTML,
              length: articleContent.textContent.length,
+             textContent: articleContent.textContent,
              excerpt: metadata.excerpt };
   }
 };
