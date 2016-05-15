@@ -155,7 +155,15 @@ Readability.prototype = {
    * @return void
    */
   _forEachNode: function(nodeList, fn) {
-    return Array.prototype.forEach.call(nodeList, fn, this);
+    var i = 0;
+    while (nodeList[i]) {
+      var el = nodeList[i];
+      fn.call(this, el, i, nodeList);
+      // Only increment i if the element is still in the list:
+      if (nodeList[i] == el) {
+        i++
+      }
+    }
   },
 
   /**
