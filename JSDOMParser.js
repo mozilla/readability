@@ -888,28 +888,29 @@
      */
     readAttribute: function (node) {
       var name = "";
-
-      var n = this.html.indexOf("=", this.currentChar);
-      if (n === -1) {
-        this.currentChar = this.html.length;
-      } else {
-        // Read until a '=' character is hit; this will be the attribute key
-        name = this.html.substring(this.currentChar, n);
-        this.currentChar = n + 1;
+      var c;
+      while((c = this.nextChar()) && /[\w-]/i.test(c)) {
+        name += c;
       }
 
       if (!name)
         return;
 
-      // After a '=', we should see a '"' for the attribute value
-      var c = this.nextChar();
-      if (c !== '"' && c !== "'") {
-        this.error("Error reading attribute " + name + ", expecting '\"'");
-        return;
-      }
+      var value;
+      if(c === "=") {
+        // After a '=', we should see a '"' for the attribute value
+        c = this.nextChar();
+        if (c !== '"' && c !== "'") {
+          this.error("Error reading attribute " + name + ", expecting '\"'");
+          return;
+        }
 
-      // Read the attribute value (and consume the matching quote)
-      var value = this.readString(c);
+        // Read the attribute value (and consume the matching quote)
+        value = this.readString(c);
+      } else {
+        value = "";
+        this.currentChar--;
+      }
 
       node.attributes.push(new Attribute(name, value));
 
