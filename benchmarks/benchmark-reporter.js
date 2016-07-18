@@ -4,7 +4,9 @@ function average(list) {
   if (!list.length)
     return 0;
 
-  var sum = list.reduce(function(previous, current) { return previous + current; });
+  var sum = list.reduce(function(previous, current) {
+    return previous + current;
+  });
   return (sum / list.length).toFixed(0);
 }
 
@@ -16,8 +18,8 @@ module.exports = function(runner, utils) {
   var color = utils.color;
   var results = {};
   var currentResults = [];
-  runner.on('bench end', function(results) {
-    currentResults.push(results.ops);
+  runner.on('bench end', function(benchResults) {
+    currentResults.push(benchResults.ops);
   });
   runner.on('suite end', function(suite) {
     var avg = humanize(average(currentResults));

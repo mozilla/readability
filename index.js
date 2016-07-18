@@ -12,7 +12,7 @@ var jsdomPath = path.join(__dirname, "JSDOMParser.js");
 var scopeContext = {};
 // We generally expect dump() and console.{whatever} to work, so make these available
 // in the scope we're using:
-scopeContext.dump = console.log
+scopeContext.dump = console.log;
 scopeContext.console = console;
 
 // Actually load files. NB: if either of the files has parse errors,

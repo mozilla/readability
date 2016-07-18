@@ -10,10 +10,10 @@
     // "block-spacing": 1,
 
     // No newline before open brace for a block
-    // "brace-style": 2,
+    "brace-style": 2,
 
     // No space before always a space after a comma
-    // "comma-spacing": [2, {"before": false, "after": true}],
+    "comma-spacing": [2, {"before": false, "after": true}],
 
     // Commas at the end of the line not the start
     // "comma-style": 2,
@@ -36,16 +36,16 @@
     // "generator-star-spacing": [2, {"before": false, "after": true}],
 
     // Two space indent
-    // "indent": [2, 2, { "SwitchCase": 1 }],
+    "indent": [2, 2, { "SwitchCase": 1 }],
 
     // Space after colon not before in property declarations
-    // "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "minimum" }],
+    "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "minimum" }],
 
     // Unix linebreaks
     "linebreak-style": [2, "unix"],
 
     // Always require parenthesis for new calls
-    // "new-parens": 2,
+    "new-parens": 2,
 
     // Use [] instead of Array()
     // "no-array-constructor": 2,
@@ -63,10 +63,10 @@
     "no-labels": 2,
 
     // If an if block ends with a return no need for an else block
-    // "no-else-return": 2,
+    "no-else-return": 2,
 
     // No empty statements
-    // "no-empty": 2,
+    "no-empty": 2,
 
     // No empty character classes in regex
     "no-empty-character-class": 2,
@@ -96,13 +96,13 @@
     "no-irregular-whitespace": 2,
 
     // No single if block inside an else block
-    // "no-lonely-if": 2,
+    "no-lonely-if": 2,
 
     // No mixing spaces and tabs in indent
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
 
     // No unnecessary spacing
-    // "no-multi-spaces": [2, { exceptions: { "AssignmentExpression": true, "VariableDeclarator": true, "ArrayExpression": true, "ObjectExpression": true } }],
+    "no-multi-spaces": [2, { exceptions: { "AssignmentExpression": true, "VariableDeclarator": true, "ArrayExpression": true, "ObjectExpression": true } }],
 
     // No reassigning native JS objects
     "no-native-reassign": 2,
@@ -129,13 +129,13 @@
     "no-self-compare": 2,
 
     // No declaring variables from an outer scope
-    // "no-shadow": 2,
+    "no-shadow": 2,
 
     // No declaring variables that hide things like arguments
-    // "no-shadow-restricted-names": 2,
+    "no-shadow-restricted-names": 2,
 
     // No spaces between function name and parentheses
-    // "no-spaced-func": 2,
+    "no-spaced-func": 2,
 
     // No trailing whitespace
     "no-trailing-spaces": 2,
@@ -147,13 +147,13 @@
     "no-unexpected-multiline": 2,
 
     // No unreachable statements
-    // "no-unreachable": 2,
+    "no-unreachable": 2,
 
     // No expressions where a statement is expected
     // "no-unused-expressions": 2,
 
     // No declaring variables that are never used
-    // "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+    "no-unused-vars": [2, {"vars": "all", "args": "none"}],
 
     // No using variables before defined
     // "no-use-before-define": [2, "nofunc"],
@@ -162,13 +162,13 @@
     "no-with": 2,
 
     // Always require semicolon at end of statement
-    // "semi": [2, "always"],
+    "semi": [2, "always"],
 
     // Require space after keywords
-    // "space-after-keywords": 2,
+    "keyword-spacing": 2,
 
     // Require space before blocks
-    // "space-before-blocks": 2,
+    "space-before-blocks": 2,
 
     // Never use spaces before function parentheses
     // "space-before-function-paren": [2, { "anonymous": "always", "named": "never" }],
