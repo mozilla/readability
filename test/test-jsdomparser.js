@@ -1,6 +1,3 @@
-var path = require("path");
-var fs = require("fs");
-
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -226,8 +223,8 @@ describe("Test HTML escaping", function() {
   });
 
   it("should handle decimal and hex escape sequences", function() {
-    var doc = new JSDOMParser().parse("<p>&#32;&#x20;</p>");
-    expect(doc.getElementsByTagName("p")[0].textContent).eql("  ");
+    var parsedDoc = new JSDOMParser().parse("<p>&#32;&#x20;</p>");
+    expect(parsedDoc.getElementsByTagName("p")[0].textContent).eql("  ");
   });
 });
 

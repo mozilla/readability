@@ -1,4 +1,3 @@
-var prettyPrint = require("./utils").prettyPrint;
 var jsdom = require("jsdom").jsdom;
 var chai = require("chai");
 chai.config.includeStack = true;
@@ -59,11 +58,11 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
     before(function() {
       try {
         var doc = domGenerationFn(source);
-        var readability = new Readability(uri, doc);
-        var readerable = readability.isProbablyReaderable();
-        result = readability.parse();
+        var myReader = new Readability(uri, doc);
+        var readerable = myReader.isProbablyReaderable();
+        result = myReader.parse();
         result.readerable = readerable;
-      } catch(err) {
+      } catch (err) {
         throw reformatError(err);
       }
     });

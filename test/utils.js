@@ -2,12 +2,12 @@ var path = require("path");
 var fs = require("fs");
 var prettyPrint = require("js-beautify").html;
 
-function readFile(path) {
-  return fs.readFileSync(path, {encoding: "utf-8"}).trim();
+function readFile(filePath) {
+  return fs.readFileSync(filePath, {encoding: "utf-8"}).trim();
 }
 
-function readJSON(path) {
-  return JSON.parse(readFile(path));
+function readJSON(jsonPath) {
+  return JSON.parse(readFile(jsonPath));
 }
 
 var testPageRoot = path.join(__dirname, "test-pages");
@@ -37,4 +37,4 @@ exports.prettyPrint = function(html) {
     "wrap_attributes": "auto",
     "wrap_attributes_indent_size": 4
   });
-}
+};

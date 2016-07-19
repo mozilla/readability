@@ -19,7 +19,6 @@
  * This code is heavily based on Arc90's readability.js (1.7.1) script
  * available at: http://code.google.com/p/arc90labs-readability
  */
-var root = this;
 
 /**
  * Public constructor.
@@ -27,7 +26,7 @@ var root = this;
  * @param {HTMLDocument} doc     The document to parse.
  * @param {Object}       options The options object.
  */
-var Readability = function(uri, doc, options) {
+function Readability(uri, doc, options) {
   options = options || {};
 
   this._uri = uri;
@@ -76,12 +75,12 @@ var Readability = function(uri, doc, options) {
       return rv + elDesc;
     };
     this.log = function () {
-      if ("dump" in root) {
+      if (typeof dump !== undefined) {
         var msg = Array.prototype.map.call(arguments, function(x) {
           return (x && x.nodeName) ? logEl(x) : x;
         }).join(" ");
         dump("Reader: (Readability) " + msg + "\n");
-      } else if ("console" in root) {
+      } else if (typeof console !== undefined) {
         var args = ["Reader: (Readability) "].concat(arguments);
         console.log.apply(console, args);
       }
@@ -158,7 +157,7 @@ Readability.prototype = {
       var node = nodeList[i];
       var parentNode = node.parentNode;
       if (parentNode) {
-        if(!filterFn || filterFn.call(this, node, i, nodeList)) {
+        if (!filterFn || filterFn.call(this, node, i, nodeList)) {
           parentNode.removeChild(node);
         }
       }
@@ -178,7 +177,7 @@ Readability.prototype = {
    * @return void
    */
   _forEachNode: function(nodeList, fn, backward) {
-      Array.prototype.forEach.call(nodeList, fn, this);
+    Array.prototype.forEach.call(nodeList, fn, this);
   },
 
   /**
@@ -299,13 +298,13 @@ Readability.prototype = {
       // If they had an element with id "title" in their HTML
       if (typeof curTitle !== "string")
         curTitle = origTitle = this._getInnerText(doc.getElementsByTagName('title')[0]);
-    } catch(e) {}
+    } catch (e) {/* ignore exceptions setting the title. */}
 
     if (curTitle.match(/ [\|\-] /)) {
-      curTitle = origTitle.replace(/(.*)[\|\-] .*/gi,'$1');
+      curTitle = origTitle.replace(/(.*)[\|\-] .*/gi, '$1');
 
       if (curTitle.split(' ').length < 3)
-        curTitle = origTitle.replace(/[^\|\-]*[\|\-](.*)/gi,'$1');
+        curTitle = origTitle.replace(/[^\|\-]*[\|\-](.*)/gi, '$1');
     } else if (curTitle.indexOf(': ') !== -1) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
@@ -508,7 +507,7 @@ Readability.prototype = {
   _initializeNode: function(node) {
     node.readability = {"contentScore": 0};
 
-    switch(node.tagName) {
+    switch (node.tagName) {
       case 'DIV':
         node.readability.contentScore += 5;
         break;
@@ -627,7 +626,7 @@ Readability.prototype = {
     maxDepth = maxDepth || 0;
     var i = 0, ancestors = [];
     while (node.parentNode) {
-      ancestors.push(node.parentNode)
+      ancestors.push(node.parentNode);
       if (maxDepth && ++i === maxDepth)
         break;
       node = node.parentNode;
@@ -1109,9 +1108,8 @@ Readability.prototype = {
 
     if (normalizeSpaces) {
       return textContent.replace(this.REGEXPS.normalize, " ");
-    } else {
-      return textContent;
     }
+    return textContent;
   },
 
   /**
@@ -1121,7 +1119,7 @@ Readability.prototype = {
    * @param string - what to split on. Default is ","
    * @return number (integer)
   **/
-  _getCharCount: function(e,s) {
+  _getCharCount: function(e, s) {
     s = s || ",";
     return this._getInnerText(e).split(s).length - 1;
   },
@@ -1390,15 +1388,14 @@ Readability.prototype = {
       }
     }
 
+    var nextHref = null;
     if (topPage) {
-      var nextHref = topPage.href.replace(/\/$/,'');
+      nextHref = topPage.href.replace(/\/$/, '');
 
       this.log('NEXT PAGE IS ' + nextHref);
       this._parsedPages[nextHref] = true;
-      return nextHref;
-    } else {
-      return null;
     }
+    return nextHref;
   },
 
   _successfulRequest: function(request) {
@@ -1415,9 +1412,8 @@ Readability.prototype = {
         if (this._successfulRequest(request)) {
           if (options.success)
             options.success(request);
-        } else {
-          if (options.error)
-            options.error(request);
+        } else if (options.error) {
+          options.error(request);
         }
       }
     }
@@ -1470,9 +1466,8 @@ Readability.prototype = {
               this.log("Exact duplicate page found via ETag. Aborting.");
               articlePage.style.display = 'none';
               return;
-            } else {
-              this._pageETags[eTag] = 1;
             }
+            this._pageETags[eTag] = 1;
           }
 
           // TODO: this ends up doubling up page numbers on NYTimes articles. Need to generically parse those away.
@@ -1486,9 +1481,9 @@ Readability.prototype = {
           // - Turn all double br's into p's - was handled by prepDocument in the original view.
           //   Maybe in the future abstract out prepDocument to work for both the original document
           //   and AJAX-added pages.
-          var responseHtml = r.responseText.replace(/\n/g,'\uffff').replace(/<script.*?>.*?<\/script>/gi, '');
-          responseHtml = responseHtml.replace(/\n/g,'\uffff').replace(/<script.*?>.*?<\/script>/gi, '');
-          responseHtml = responseHtml.replace(/\uffff/g,'\n').replace(/<(\/?)noscript/gi, '<$1div');
+          var responseHtml = r.responseText.replace(/\n/g, '\uffff').replace(/<script.*?>.*?<\/script>/gi, '');
+          responseHtml = responseHtml.replace(/\n/g, '\uffff').replace(/<script.*?>.*?<\/script>/gi, '');
+          responseHtml = responseHtml.replace(/\uffff/g, '\n').replace(/<(\/?)noscript/gi, '<$1div');
           responseHtml = responseHtml.replace(this.REGEXPS.replaceFonts, '<$1span>');
 
           page.innerHTML = responseHtml;
@@ -1498,7 +1493,7 @@ Readability.prototype = {
           // disable as necessary at the end of grabArticle.
           this._flags = 0x1 | 0x2 | 0x4;
 
-          var nextPageLink = this._findNextPageLink(page);
+          var secondNextPageLink = this._findNextPageLink(page);
 
           // NOTE: if we end up supporting _appendNextPage(), we'll need to
           // change this call to be async
@@ -1537,8 +1532,8 @@ Readability.prototype = {
           }).bind(this), 500);
 
 
-          if (nextPageLink)
-            this._appendNextPage(nextPageLink);
+          if (secondNextPageLink)
+            this._appendNextPage(secondNextPageLink);
         }
       });
     }).bind(this)(nextPageLink, articlePage);
@@ -1659,7 +1654,7 @@ Readability.prototype = {
         return true;
       }
 
-      if (this._getCharCount(node,',') < 10) {
+      if (this._getCharCount(node, ',') < 10) {
         // If there are not very many commas, and the number of
         // non-paragraph elements is more than paragraphs or other
         // ominous signs, remove the element.
@@ -1689,7 +1684,7 @@ Readability.prototype = {
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         return haveToRemove;
       }
-      return false
+      return false;
     });
   },
 

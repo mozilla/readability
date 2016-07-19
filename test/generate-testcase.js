@@ -21,7 +21,7 @@ if (process.argv.length < 3) {
 }
 
 var slug = process.argv[2];
-var url = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
+var argURL = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
 
 var destRoot = path.join(__dirname, "test-pages", slug);
 
@@ -30,8 +30,8 @@ fs.mkdir(destRoot, function(err) {
     var sourceFile = path.join(destRoot, "source.html");
     fs.exists(sourceFile, function(exists) {
       if (exists) {
-        fs.readFile(sourceFile, {encoding: "utf-8"}, function(err, data) {
-          if (err) {
+        fs.readFile(sourceFile, {encoding: "utf-8"}, function(readFileErr, data) {
+          if (readFileErr) {
             console.error("Source existed but couldn't be read?");
             process.exit(1);
             return;
@@ -39,12 +39,12 @@ fs.mkdir(destRoot, function(err) {
           onResponseReceived(data);
         });
       } else {
-        fetchSource(url, onResponseReceived);
+        fetchSource(argURL, onResponseReceived);
       }
     });
     return;
   }
-  fetchSource(url, onResponseReceived);
+  fetchSource(argURL, onResponseReceived);
 });
 
 function fetchSource(url, callbackFn) {
@@ -108,11 +108,11 @@ function runReadability(source, destPath, metadataDestPath) {
     scheme: "http",
     pathBase: "http://fakehost/test/"
   };
-  var readability, result, readerable;
+  var myReader, result, readerable;
   try {
-    readability = new Readability(uri, doc);
-    readerable = readability.isProbablyReaderable();
-    result = readability.parse();
+    myReader = new Readability(uri, doc);
+    readerable = myReader.isProbablyReaderable();
+    result = myReader.parse();
   } catch (ex) {
     console.error(ex);
     ex.stack.forEach(console.log.bind(console));
@@ -122,10 +122,10 @@ function runReadability(source, destPath, metadataDestPath) {
     return;
   }
 
-  fs.writeFile(destPath, prettyPrint(result.content), function(err) {
-    if (err) {
+  fs.writeFile(destPath, prettyPrint(result.content), function(fileWriteErr) {
+    if (fileWriteErr) {
       console.error("Couldn't write data to expected.html!");
-      console.error(err);
+      console.error(fileWriteErr);
     }
 
     // Delete the result data we don't care about checking.
@@ -136,10 +136,10 @@ function runReadability(source, destPath, metadataDestPath) {
     // Add isProbablyReaderable result
     result.readerable = readerable;
 
-    fs.writeFile(metadataDestPath, JSON.stringify(result, null, 2) + "\n", function(err) {
-      if (err) {
+    fs.writeFile(metadataDestPath, JSON.stringify(result, null, 2) + "\n", function(metadataWriteErr) {
+      if (metadataWriteErr) {
         console.error("Couldn't write data to expected-metadata.json!");
-        console.error(err);
+        console.error(metadataWriteErr);
       }
 
       process.exit(0);
