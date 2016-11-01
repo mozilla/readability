@@ -59,7 +59,9 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
       try {
         var doc = domGenerationFn(source);
         var myReader = new Readability(uri, doc);
-        var readerable = myReader.isProbablyReaderable();
+        // Needs querySelectorAll function to test isProbablyReaderable method.
+        // jsdom implements querySelector but JSDOMParser doesn't.
+        var readerable = label === "jsdom" ? myReader.isProbablyReaderable() : null;
         result = myReader.parse();
         result.readerable = readerable;
       } catch (err) {
@@ -136,7 +138,7 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
       expect(expectedMetadata.excerpt).eql(result.excerpt);
     });
 
-    it("should probably be readerable", function() {
+    label === "jsdom" && it("should probably be readerable", function() {
       expect(expectedMetadata.readerable).eql(result.readerable);
     });
   });

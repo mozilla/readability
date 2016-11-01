@@ -1722,6 +1722,22 @@ Readability.prototype = {
   isProbablyReaderable: function(helperIsVisible) {
     var nodes = this._getAllNodesWithTag(this._doc, ["p", "pre"]);
 
+    // Get <div> nodes which have <br> node(s) and append them into the `nodes` variable.
+    // Some articles' DOM structures might look like
+    // <div>
+    //   Sentences<br>
+    //   <br>
+    //   Sentences<br>
+    // </div>
+    var brNodes = this._getAllNodesWithTag(this._doc, ["div > br"]);
+    if (brNodes.length) {
+      var set = new Set();
+      [].forEach.call(brNodes, function(node) {
+        set.add(node.parentNode);
+      });
+      nodes = [].concat.apply(Array.from(set), nodes);
+    }
+
     // FIXME we should have a fallback for helperIsVisible, but this is
     // problematic because of jsdom's elem.style handling - see
     // https://github.com/mozilla/readability/pull/186 for context.
@@ -1826,13 +1842,15 @@ Readability.prototype = {
     }
 
     var textContent = articleContent.textContent;
-    return { uri: this._uri,
-             title: articleTitle,
-             byline: metadata.byline || this._articleByline,
-             dir: this._articleDir,
-             content: articleContent.innerHTML,
-             textContent: textContent,
-             length: textContent.length,
-             excerpt: metadata.excerpt };
+    return {
+      uri: this._uri,
+      title: articleTitle,
+      byline: metadata.byline || this._articleByline,
+      dir: this._articleDir,
+      content: articleContent.innerHTML,
+      textContent: textContent,
+      length: textContent.length,
+      excerpt: metadata.excerpt,
+    };
   }
 };
