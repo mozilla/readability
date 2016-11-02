@@ -476,6 +476,11 @@ Readability.prototype = {
       this._clean(articleContent, "h2");
 
     this._clean(articleContent, "iframe");
+    this._clean(articleContent, "input");
+    this._clean(articleContent, "textarea");
+    this._clean(articleContent, "select");
+    this._clean(articleContent, "button");
+
     this._cleanHeaders(articleContent);
 
     // Do these last as the previous stuff may have removed junk
