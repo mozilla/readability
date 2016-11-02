@@ -177,7 +177,13 @@ Readability.prototype = {
    * @return void
    */
   _forEachNode: function(nodeList, fn, backward) {
-    Array.prototype.forEach.call(nodeList, fn, this);
+    if (backward) {
+      for (var i = nodeList.length - 1; i >= 0; i --) {
+        fn.call(this, nodeList[i]);
+      }
+	} else {
+      Array.prototype.forEach.call(nodeList, fn, this);
+    }
   },
 
   /**
@@ -357,7 +363,7 @@ Readability.prototype = {
 
     this._forEachNode(doc.getElementsByTagName("font"), function(fontNode) {
       this._setNodeTag(fontNode, "SPAN");
-    });
+    }, true);
   },
 
   /**
