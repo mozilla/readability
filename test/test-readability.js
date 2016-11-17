@@ -138,6 +138,10 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
       expect(expectedMetadata.excerpt).eql(result.excerpt);
     });
 
+    expectedMetadata.dir && it("should extract expected direction", function() {
+      expect(expectedMetadata.dir).eql(result.dir);
+    });
+
     label === "jsdom" && it("should probably be readerable", function() {
       expect(expectedMetadata.readerable).eql(result.readerable);
     });

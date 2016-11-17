@@ -655,9 +655,6 @@ Readability.prototype = {
 
     var pageCacheHtml = page.innerHTML;
 
-    // Check if any "dir" is set on the toplevel document element
-    this._articleDir = doc.documentElement.getAttribute("dir");
-
     while (true) {
       var stripUnlikelyCandidates = this._flagIsActive(this.FLAG_STRIP_UNLIKELYS);
 
@@ -805,6 +802,7 @@ Readability.prototype = {
 
       var topCandidate = topCandidates[0] || null;
       var neededToCreateTopCandidate = false;
+      var parentOfTopCandidate;
 
       // If we still have no top candidate, just use the body as a last resort.
       // We also have to copy the body node so it is something we can modify.
@@ -831,7 +829,7 @@ Readability.prototype = {
         // lurking in other places that we want to unify in. The sibling stuff
         // below does some of that - but only if we've looked high enough up the DOM
         // tree.
-        var parentOfTopCandidate = topCandidate.parentNode;
+        parentOfTopCandidate = topCandidate.parentNode;
         var lastScore = topCandidate.readability.contentScore;
         // The scores shouldn't get too low.
         var scoreThreshold = lastScore / 3;
@@ -857,7 +855,9 @@ Readability.prototype = {
         articleContent.id = "readability-content";
 
       var siblingScoreThreshold = Math.max(10, topCandidate.readability.contentScore * 0.2);
-      var siblings = topCandidate.parentNode.children;
+      // Keep potential top candidate's parent node to try to get text direction of it later.
+      parentOfTopCandidate = topCandidate.parentNode;
+      var siblings = parentOfTopCandidate.children;
 
       for (var s = 0, sl = siblings.length; s < sl; s++) {
         var sibling = siblings[s];
@@ -961,6 +961,18 @@ Readability.prototype = {
           return null;
         }
       } else {
+        // Find out text direction from ancestors of final top candidate.
+        var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
+        this._someNode(ancestors, function(ancestor) {
+          if (!ancestor.tagName)
+            return false;
+          var articleDir = ancestor.getAttribute("dir");
+          if (articleDir) {
+            this._articleDir = articleDir;
+            return true;
+          }
+          return false;
+        });
         return articleContent;
       }
     }
