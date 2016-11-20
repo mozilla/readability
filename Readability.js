@@ -719,12 +719,14 @@ Readability.prototype = {
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
-              if (childNode.nodeType === Node.TEXT_NODE && childNode.textContent.trim() != "") {
+              if (childNode.nodeType === Node.TEXT_NODE && childNode.textContent.trim().length > 0) {
                 var p = doc.createElement('p');
                 p.textContent = childNode.textContent;
                 p.style.display = 'inline';
                 p.className = 'readability-styled';
                 node.replaceChild(p, childNode);
+              } else if (this._isEmptyDivElement(childNode)) {
+                node.replaceChild(doc.createTextNode(childNode.textContent), childNode);
               }
             });
           }
@@ -1099,6 +1101,13 @@ Readability.prototype = {
       return node.nodeType === Node.TEXT_NODE &&
              this.REGEXPS.hasContent.test(node.textContent);
     });
+  },
+
+  _isEmptyDivElement: function(node) {
+    return node.nodeType === Node.ELEMENT_NODE &&
+      node.tagName === "DIV" &&
+      node.children.length == 0 &&
+      node.textContent.trim().length == 0;
   },
 
   /**
