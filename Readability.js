@@ -860,14 +860,16 @@ Readability.prototype = {
           lastScore = parentOfTopCandidate.readability.contentScore;
           parentOfTopCandidate = parentOfTopCandidate.parentNode;
         }
-		
-		// If the top candidate is the only child, use parent instead. This will help sibling
-		// joining logic when adjacent content is actually located in parent's sibling node.
-		parentOfTopCandidate = topCandidate.parentNode;
-		while (parentOfTopCandidate.tagName != "BODY" && parentOfTopCandidate.children.length == 1) {
-			topCandidate = parentOfTopCandidate;
-			parentOfTopCandidate = topCandidate.parentNode;
-		}
+        
+        // If the top candidate is the only child, use parent instead. This will help sibling
+        // joining logic when adjacent content is actually located in parent's sibling node.
+        parentOfTopCandidate = topCandidate.parentNode;
+        while (parentOfTopCandidate.tagName != "BODY" && parentOfTopCandidate.children.length == 1) {
+          topCandidate = parentOfTopCandidate;
+          parentOfTopCandidate = topCandidate.parentNode;
+        }
+        if (typeof(topCandidate.readability) === 'undefined')
+          this._initializeNode(topCandidate);
       }
 
       // Now that we have the top candidate, look through its siblings for content
