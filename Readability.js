@@ -1711,8 +1711,7 @@ Readability.prototype = {
         var contentLength = this._getInnerText(node).length;
 
         var haveToRemove =
-          // Make an exception for elements with no p's and exactly 1 img.
-          (img > p && !this._hasAncestorTag(node, "figure")) ||
+          (img > 1 && img > p && !this._hasAncestorTag(node, "figure")) ||
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
           (!isList && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
