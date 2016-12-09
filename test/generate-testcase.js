@@ -131,6 +131,7 @@ function runReadability(source, destPath, metadataDestPath) {
     // Delete the result data we don't care about checking.
     delete result.uri;
     delete result.content;
+    delete result.textContent;
     delete result.length;
 
     // Add isProbablyReaderable result
