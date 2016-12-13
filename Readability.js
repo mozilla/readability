@@ -1055,12 +1055,15 @@ Readability.prototype = {
       metadata.excerpt = values["twitter:description"];
     }
 
-    if ("og:title" in values) {
-      // Use facebook open graph title.
-      metadata.title = values["og:title"];
-    } else if ("twitter:title" in values) {
-      // Use twitter cards title.
-      metadata.title = values["twitter:title"];
+    metadata.title = this._getArticleTitle();
+    if (!metadata.title) {
+      if ("og:title" in values) {
+        // Use facebook open graph title.
+        metadata.title = values["og:title"];
+      } else if ("twitter:title" in values) {
+        // Use twitter cards title.
+        metadata.title = values["twitter:title"];
+      }
     }
 
     return metadata;
@@ -1850,7 +1853,7 @@ Readability.prototype = {
     this._prepDocument();
 
     var metadata = this._getArticleMetadata();
-    var articleTitle = metadata.title || this._getArticleTitle();
+    var articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
     if (!articleContent)
