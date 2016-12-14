@@ -51,7 +51,7 @@ function htmlTransform(str) {
 
 function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent, expectedMetadata) {
   describe(label, function() {
-    this.timeout(6000);
+    this.timeout(10000);
 
     var result;
 
