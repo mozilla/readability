@@ -177,7 +177,13 @@ Readability.prototype = {
    * @return void
    */
   _forEachNode: function(nodeList, fn, backward) {
-    Array.prototype.forEach.call(nodeList, fn, this);
+    if (backward) {
+      for (var i = nodeList.length - 1; i >= 0; i --) {
+        fn.call(this, nodeList[i]);
+      }
+	} else {
+      Array.prototype.forEach.call(nodeList, fn, this);
+    }
   },
 
   /**
@@ -357,7 +363,7 @@ Readability.prototype = {
 
     this._forEachNode(doc.getElementsByTagName("font"), function(fontNode) {
       this._setNodeTag(fontNode, "SPAN");
-    });
+    }, true);
   },
 
   /**
@@ -476,6 +482,11 @@ Readability.prototype = {
       this._clean(articleContent, "h2");
 
     this._clean(articleContent, "iframe");
+    this._clean(articleContent, "input");
+    this._clean(articleContent, "textarea");
+    this._clean(articleContent, "select");
+    this._clean(articleContent, "button");
+
     this._cleanHeaders(articleContent);
 
     // Do these last as the previous stuff may have removed junk
@@ -711,12 +722,14 @@ Readability.prototype = {
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
-              if (childNode.nodeType === Node.TEXT_NODE) {
+              if (childNode.nodeType === Node.TEXT_NODE && childNode.textContent.trim().length > 0) {
                 var p = doc.createElement('p');
                 p.textContent = childNode.textContent;
                 p.style.display = 'inline';
                 p.className = 'readability-styled';
                 node.replaceChild(p, childNode);
+              } else if (this._isEmptyDivElement(childNode)) {
+                node.replaceChild(doc.createTextNode(childNode.textContent), childNode);
               }
             });
           }
@@ -851,6 +864,16 @@ Readability.prototype = {
           lastScore = parentOfTopCandidate.readability.contentScore;
           parentOfTopCandidate = parentOfTopCandidate.parentNode;
         }
+        
+        // If the top candidate is the only child, use parent instead. This will help sibling
+        // joining logic when adjacent content is actually located in parent's sibling node.
+        parentOfTopCandidate = topCandidate.parentNode;
+        while (parentOfTopCandidate.tagName != "BODY" && parentOfTopCandidate.children.length == 1) {
+          topCandidate = parentOfTopCandidate;
+          parentOfTopCandidate = topCandidate.parentNode;
+        }
+        if (typeof(topCandidate.readability) === 'undefined')
+          this._initializeNode(topCandidate);
       }
 
       // Now that we have the top candidate, look through its siblings for content
@@ -1101,6 +1124,13 @@ Readability.prototype = {
       return node.nodeType === Node.TEXT_NODE &&
              this.REGEXPS.hasContent.test(node.textContent);
     });
+  },
+
+  _isEmptyDivElement: function(node) {
+    return node.nodeType === Node.ELEMENT_NODE &&
+      node.tagName === "DIV" &&
+      node.children.length == 0 &&
+      node.textContent.trim().length == 0;
   },
 
   /**
