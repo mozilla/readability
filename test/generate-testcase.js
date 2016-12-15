@@ -111,8 +111,21 @@ function runReadability(source, destPath, metadataDestPath) {
   var myReader, result, readerable;
   try {
     myReader = new Readability(uri, doc);
-    readerable = myReader.isProbablyReaderable();
     result = myReader.parse();
+  } catch (ex) {
+    console.error(ex);
+    ex.stack.forEach(console.log.bind(console));
+  }
+  // Use jsdom for isProbablyReaderable because it supports querySelectorAll
+  try {
+    var jsdomDoc = jsdom(source, {
+      features: {
+        FetchExternalResources: false,
+        ProcessExternalResources: false
+      }
+    });
+    myReader = new Readability(uri, jsdomDoc);
+    readerable = myReader.isProbablyReaderable();
   } catch (ex) {
     console.error(ex);
     ex.stack.forEach(console.log.bind(console));
