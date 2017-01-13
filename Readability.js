@@ -1239,11 +1239,6 @@ Readability.prototype = {
           segment = segment.split(".")[0];
       }
 
-      // EW-CMS specific segment replacement. Ugly.
-      // Example: http://www.ew.com/ew/article/0,,20313460_20369436,00.html
-      if (segment.indexOf(',00') !== -1)
-        segment = segment.replace(',00', '');
-
       // If our first or second segment has anything looking like a page number, remove it.
       if (segment.match(/((_|-)?p[a-z]*|(_|-))[0-9]{1,2}$/i) && ((i === 1) || (i === 0)))
         segment = segment.replace(/((_|-)?p[a-z]*|(_|-))[0-9]{1,2}$/i, "");
