@@ -75,12 +75,12 @@ function Readability(uri, doc, options) {
       return rv + elDesc;
     };
     this.log = function () {
-      if (typeof dump !== undefined) {
+      if (typeof dump !== "undefined") {
         var msg = Array.prototype.map.call(arguments, function(x) {
           return (x && x.nodeName) ? logEl(x) : x;
         }).join(" ");
         dump("Reader: (Readability) " + msg + "\n");
-      } else if (typeof console !== undefined) {
+      } else if (typeof console !== "undefined") {
         var args = ["Reader: (Readability) "].concat(arguments);
         console.log.apply(console, args);
       }
