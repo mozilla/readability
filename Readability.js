@@ -112,7 +112,7 @@ Readability.prototype = {
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
-    unlikelyCandidates: /banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|foot|header|legends|menu|modal|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|ad-break|agegate|pagination|pager|popup|yom-remote/i,
+    unlikelyCandidates: /banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|foot|header|legends|menu|modal|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
     positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
     negative: /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|modal|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
@@ -707,6 +707,15 @@ Readability.prototype = {
           }
         }
 
+        // Remove empty DIV, SECTION, and HEADER nodes
+        if ((node.tagName === "DIV" || node.tagName === "SECTION" || node.tagName === "HEADER" ||
+             node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3" ||
+             node.tagName === "H4" || node.tagName === "H5" || node.tagName === "H6") &&
+            this._isEmptyElement(node)) {
+          node = this._removeAndGetNext(node);
+          continue;
+        }
+
         if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1) {
           elementsToScore.push(node);
         }
@@ -733,8 +742,6 @@ Readability.prototype = {
                 p.style.display = 'inline';
                 p.className = 'readability-styled';
                 node.replaceChild(p, childNode);
-              } else if (this._isEmptyDivElement(childNode)) {
-                node.replaceChild(doc.createTextNode(childNode.textContent), childNode);
               }
             });
           }
@@ -907,6 +914,9 @@ Readability.prototype = {
         while (parentOfTopCandidate.tagName != "BODY" && parentOfTopCandidate.children.length == 1) {
           topCandidate = parentOfTopCandidate;
           parentOfTopCandidate = topCandidate.parentNode;
+        }
+        if (!topCandidate.readability) {
+          this._initializeNode(topCandidate);
         }
       }
 
@@ -1160,9 +1170,8 @@ Readability.prototype = {
     });
   },
 
-  _isEmptyDivElement: function(node) {
+  _isEmptyElement: function(node) {
     return node.nodeType === Node.ELEMENT_NODE &&
-      node.tagName === "DIV" &&
       node.children.length == 0 &&
       node.textContent.trim().length == 0;
   },
@@ -1754,7 +1763,7 @@ Readability.prototype = {
         var contentLength = this._getInnerText(node).length;
 
         var haveToRemove =
-          (img > 1 && img > p && !this._hasAncestorTag(node, "figure")) ||
+          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
           (!isList && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
