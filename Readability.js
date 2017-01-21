@@ -245,6 +245,25 @@ Readability.prototype = {
     var prePath = this._uri.prePath;
     var pathBase = this._uri.pathBase;
 
+    // Use `<base>` tag's href if it exists.
+    var bases = this._doc.getElementsByTagName("base");
+    var baseHref = null;
+    if (bases.length) {
+      baseHref = bases[0].getAttribute("href");
+      if (baseHref) {
+        if (baseHref.slice(-1) === "/") {
+          prePath = baseHref.slice(0, -1);
+          pathBase = baseHref;
+        } else if (baseHref.slice(-1) === "\\") {
+          prePath = baseHref.slice(0, -1);
+          pathBase = prePath + "/";
+        } else {
+          prePath = baseHref;
+          pathBase = baseHref + "/";
+        }
+      }
+    }
+
     function toAbsoluteURI(uri) {
       // If this is already an absolute URI, return it.
       if (/^[a-zA-Z][a-zA-Z0-9\+\-\.]*:/.test(uri))
@@ -262,8 +281,8 @@ Readability.prototype = {
       if (uri.indexOf("./") === 0)
         return pathBase + uri.slice(2);
 
-      // Ignore hash URIs:
-      if (uri[0] == "#")
+      // Ignore hash URIs if there is no base tag.
+      if (uri[0] == "#" && !baseHref)
         return uri;
 
       // Standard relative URI; add entire path. pathBase already includes a
