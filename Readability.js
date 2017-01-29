@@ -32,6 +32,7 @@ function Readability(uri, doc, options) {
   this._uri = uri;
   this._doc = doc;
   this._biggestFrame = false;
+  this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
 
@@ -482,10 +483,18 @@ Readability.prototype = {
       this._cleanMatchedNodes(topCandidate, /share/);
     });
 
-    // If there is only one h2, they are probably using it as a header
-    // and not a subheader, so remove it since we already have a header.
-    if (articleContent.getElementsByTagName('h2').length === 1)
-      this._clean(articleContent, "h2");
+    // If there is only one h2 and its text content substantially equals article title,
+    // they are probably using it as a header and not a subheader,
+    // so remove it since we already extract the title separately.
+    var h2 = articleContent.getElementsByTagName('h2');
+    if (h2.length === 1) {
+      var lengthSimilarRate = (h2[0].textContent.length - this._articleTitle.length) / this._articleTitle.length;
+      if (Math.abs(lengthSimilarRate) < 0.5 &&
+          (lengthSimilarRate > 0 ? h2[0].textContent.includes(this._articleTitle) :
+                                   this._articleTitle.includes(h2[0].textContent))) {
+        this._clean(articleContent, "h2");
+      }
+    }
 
     this._clean(articleContent, "iframe");
     this._clean(articleContent, "input");
@@ -1920,7 +1929,7 @@ Readability.prototype = {
     this._prepDocument();
 
     var metadata = this._getArticleMetadata();
-    var articleTitle = metadata.title;
+    this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
     if (!articleContent)
@@ -1951,7 +1960,7 @@ Readability.prototype = {
     var textContent = articleContent.textContent;
     return {
       uri: this._uri,
-      title: articleTitle,
+      title: this._articleTitle,
       byline: metadata.byline || this._articleByline,
       dir: this._articleDir,
       content: articleContent.innerHTML,
