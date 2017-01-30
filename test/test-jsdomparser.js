@@ -7,7 +7,7 @@ var JSDOMParser = readability.JSDOMParser;
 
 var BASETESTCASE = '<html><body><p>Some text and <a class="someclass" href="#">a link</a></p>' +
                    '<div id="foo">With a <script>With < fancy " characters in it because' +
-                   '</script> that is fun.<span>And another node to make it harder</span></div><form><input type="text"/><input type="number"/>Here\'s a form</form></body></html>';
+                   '</script> that is fun.<span>And another node to make it harder</span></div><form method="GET" novalidate><input type="text"/><input disabled type="number" readonly/>Here\'s a form</form></body></html>';
 
 var baseDoc = new JSDOMParser().parse(BASETESTCASE);
 
@@ -107,6 +107,11 @@ describe("Test JSDOM functionality", function() {
     expect(link.getAttribute("class")).eql(link.className);
     var foo = baseDoc.getElementById("foo");
     expect(foo.id).eql(foo.getAttribute("id"));
+    var form = baseDoc.getElementsByTagName('form')[0];
+    expect(form.getAttribute("novalidate")).eql("");
+    var input = baseDoc.getElementsByTagName("input")[1];
+    expect(input.getAttribute("readonly")).eql("");
+    expect(input.getAttribute("disabled")).eql("");
   });
 
   it("should have a working replaceChild", function() {
