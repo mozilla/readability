@@ -468,6 +468,11 @@ Readability.prototype = {
   _prepArticle: function(articleContent) {
     this._cleanStyles(articleContent);
 
+    // Check for data tables before we continue, to avoid removing items in
+    // those tables, which will often be isolated even though they're
+    // visually linked to other content-ful elements (text, images, etc.).
+    this._markDataTables(articleContent);
+
     // Clean out junk from the article content
     this._cleanConditionally(articleContent, "form");
     this._cleanConditionally(articleContent, "fieldset");
@@ -1673,21 +1678,109 @@ Readability.prototype = {
    * @param  HTMLElement node
    * @param  String      tagName
    * @param  Number      maxDepth
+   * @param  Function    filterFn a filter to invoke to determine whether this node 'counts'
    * @return Boolean
    */
-  _hasAncestorTag: function(node, tagName, maxDepth) {
+  _hasAncestorTag: function(node, tagName, maxDepth, filterFn) {
     maxDepth = maxDepth || 3;
     tagName = tagName.toUpperCase();
     var depth = 0;
     while (node.parentNode) {
-      if (depth > maxDepth)
+      if (maxDepth > 0 && depth > maxDepth)
         return false;
-      if (node.parentNode.tagName === tagName)
+      if (node.parentNode.tagName === tagName && (!filterFn || filterFn(node.parentNode)))
         return true;
       node = node.parentNode;
       depth++;
     }
     return false;
+  },
+
+  /**
+   * Return an object indicating how many rows and columns this table has.
+   */
+  _getRowAndColumnCount: function(table) {
+    var rows = 0;
+    var columns = 0;
+    var trs = table.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+      var rowspan = trs[i].getAttribute("rowspan") || 0;
+      if (rowspan) {
+        rowspan = parseInt(rowspan, 10);
+      }
+      rows += (rowspan || 1);
+
+      // Now look for column-related info
+      var columnsInThisRow = 0;
+      var cells = trs[i].getElementsByTagName("td");
+      for (var j = 0; j < cells.length; j++) {
+        var colspan = cells[j].getAttribute("colspan") || 0;
+        if (colspan) {
+          colspan = parseInt(colspan, 10);
+        }
+        columnsInThisRow += (colspan || 1);
+      }
+      columns = Math.max(columns, columnsInThisRow);
+    }
+    return {rows: rows, columns: columns};
+  },
+
+  /**
+   * Look for 'data' (as opposed to 'layout') tables, for which we use
+   * similar checks as
+   * https://dxr.mozilla.org/mozilla-central/rev/71224049c0b52ab190564d3ea0eab089a159a4cf/accessible/html/HTMLTableAccessible.cpp#920
+   */
+  _markDataTables: function(root) {
+    var tables = root.getElementsByTagName("table");
+    for (var i = 0; i < tables.length; i++) {
+      var table = tables[i];
+      var role = table.getAttribute("role");
+      if (role == "presentation") {
+        table._readabilityDataTable = false;
+        continue;
+      }
+      var datatable = table.getAttribute("datatable");
+      if (datatable == "0") {
+        table._readabilityDataTable = false;
+        continue;
+      }
+      var summary = table.getAttribute("summary");
+      if (summary) {
+        table._readabilityDataTable = true;
+        continue;
+      }
+
+      var caption = table.getElementsByTagName("caption")[0];
+      if (caption && caption.childNodes.length > 0) {
+        table._readabilityDataTable = true;
+        continue;
+      }
+
+      // If the table has a descendant with any of these tags, consider a data table:
+      var dataTableDescendants = ["col", "colgroup", "tfoot", "thead", "th"];
+      var descendantExists = function(tag) {
+        return !!table.getElementsByTagName(tag)[0];
+      };
+      if (dataTableDescendants.some(descendantExists)) {
+        this.log("Data table because found data-y descendant");
+        table._readabilityDataTable = true;
+        continue;
+      }
+
+      // Nested tables indicate a layout table:
+      if (table.getElementsByTagName("table")[0]) {
+        table._readabilityDataTable = false;
+        continue;
+      }
+
+      var sizeInfo = this._getRowAndColumnCount(table);
+      if (sizeInfo.rows >= 10 || sizeInfo.columns > 4) {
+        table._readabilityDataTable = true;
+        continue;
+      }
+      // Now just go by size entirely:
+      table._readabilityDataTable = sizeInfo.rows * sizeInfo.columns > 10;
+    }
   },
 
   /**
@@ -1708,6 +1801,15 @@ Readability.prototype = {
     //
     // TODO: Consider taking into account original contentScore here.
     this._removeNodes(e.getElementsByTagName(tag), function(node) {
+      // First check if we're in a data table, in which case don't remove us.
+      var isDataTable = function(t) {
+        return t._readabilityDataTable;
+      };
+
+      if (this._hasAncestorTag(node, "table", -1, isDataTable)) {
+        return false;
+      }
+
       var weight = this._getClassWeight(node);
       var contentScore = 0;
 
@@ -1723,7 +1825,7 @@ Readability.prototype = {
         // ominous signs, remove the element.
         var p = node.getElementsByTagName("p").length;
         var img = node.getElementsByTagName("img").length;
-        var li = node.getElementsByTagName("li").length-100;
+        var li = node.getElementsByTagName("li").length - 100;
         var input = node.getElementsByTagName("input").length;
 
         var embedCount = 0;
