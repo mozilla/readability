@@ -90,6 +90,24 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
         }
         return rv;
       }
+
+      function genPath(node) {
+        if (node.id) {
+          return '#' + node.id;
+        }
+        if (node.tagName == "BODY") {
+          return 'body';
+        }
+        var parent = node.parentNode;
+        var parentPath = genPath(parent);
+        var index = Array.prototype.indexOf.call(parent.childNodes, node) + 1;
+        return parentPath + " > " + nodeStr(node) + ":nth-child(" + index + ")";
+      }
+
+      function findableNodeDesc(node) {
+        return genPath(node) + "(in: ``" + node.parentNode.innerHTML + "``)";
+      }
+
       var actualDOM = domGenerationFn(result.content);
       var expectedDOM = domGenerationFn(expectedContent);
       traverseDOM(function(actualNode, expectedNode) {
@@ -98,14 +116,14 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
           var actualDesc = nodeStr(actualNode);
           var expectedDesc = nodeStr(expectedNode);
           if (actualDesc != expectedDesc) {
-            expect(actualDesc).eql(expectedDesc);
+            expect(actualDesc, findableNodeDesc(actualNode)).eql(expectedDesc);
             return false;
           }
           // Compare text for text nodes:
           if (actualNode.nodeType == 3) {
             var actualText = htmlTransform(actualNode.textContent);
             var expectedText = htmlTransform(expectedNode.textContent);
-            expect(actualText).eql(expectedText);
+            expect(actualText, findableNodeDesc(actualNode)).eql(expectedText);
             if (actualText != expectedText) {
               return false;
             }
@@ -116,7 +134,7 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
               var attr = actualNode.attributes[i].name;
               var actualValue = actualNode.getAttribute(attr);
               var expectedValue = expectedNode.getAttribute(attr);
-              expect(expectedValue, "node '" + actualDesc + "' attribute " + attr + " should match").eql(actualValue);
+              expect(expectedValue, "node (" + findableNodeDesc(actualNode) + ") attribute " + attr + " should match").eql(actualValue);
             }
           }
         } else {
