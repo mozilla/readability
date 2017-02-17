@@ -721,11 +721,11 @@ Readability.prototype = {
           }
         }
 
-        // Remove empty DIV, SECTION, and HEADER nodes
+        // Remove DIV, SECTION, and HEADER nodes without any content(e.g. text, image, video, or iframe).
         if ((node.tagName === "DIV" || node.tagName === "SECTION" || node.tagName === "HEADER" ||
              node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3" ||
              node.tagName === "H4" || node.tagName === "H5" || node.tagName === "H6") &&
-            this._isEmptyElement(node)) {
+            this._isElementWithoutContent(node)) {
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -1184,10 +1184,11 @@ Readability.prototype = {
     });
   },
 
-  _isEmptyElement: function(node) {
+  _isElementWithoutContent: function(node) {
     return node.nodeType === Node.ELEMENT_NODE &&
-      node.children.length == 0 &&
-      node.textContent.trim().length == 0;
+      node.textContent.trim().length == 0 &&
+      (node.children.length == 0 ||
+       node.children.length == node.getElementsByTagName("br").length + node.getElementsByTagName("hr").length);
   },
 
   /**
