@@ -115,7 +115,7 @@ actualités, news"/>
             } else {
                 sas_master = 'S';
             };
-            document.write('<scr' + 'ipt src="http://ww14.smartadserver.com/call/pubj/' + sas_pageid + '/' + sas_formatid + '/' + sas_master + '/' + sas_tmstp + '/' + escape(sas_target) + '?"></scr' + 'ipt>');
+            document.write('&lt;scr' + 'ipt src="http://ww14.smartadserver.com/call/pubj/' + sas_pageid + '/' + sas_formatid + '/' + sas_master + '/' + sas_tmstp + '/' + escape(sas_target) + '?">&lt;/scr' + 'ipt>');
         }
 
         function sasmobile(sas_pageid, sas_formatid, sas_target) {
@@ -125,7 +125,7 @@ actualités, news"/>
             } else {
                 sas_master = 'S';
             };
-            document.write('<scr' + 'ipt src="http://ww14.smartadserver.com/call2/pubmj/' + sas_pageid + '/' + sas_formatid + '/' + sas_master + '/' + sas_tmstp + '/' + escape(sas_target) + '?"></scr' + 'ipt>');
+            document.write('&lt;scr' + 'ipt src="http://ww14.smartadserver.com/call2/pubmj/' + sas_pageid + '/' + sas_formatid + '/' + sas_master + '/' + sas_tmstp + '/' + escape(sas_target) + '?">&lt;/scr' + 'ipt>');
         }
 
         function sascc(sas_imageid, sas_pageid) {
@@ -175,7 +175,7 @@ actualités, news"/>
             if (!isPubActive || !mobileBrowserAgent) {
                 return;
             }
-            if (clientWidth <= 767) {
+            if (clientWidth &lt;= 767) {
                 var sas_pageid = '57488/431228';
                 var sas_formatid = 25226;
             } else {
@@ -188,7 +188,7 @@ actualités, news"/>
         }
 
         function isVisibleAd(format_str) {
-            if (((format_str == 'square1' || format_str == 'partnersquare1') && client_width <= 768) || (format_str == 'dhtml' && client_width <= 640)) {
+            if (((format_str == 'square1' || format_str == 'partnersquare1') && client_width &lt;= 768) || (format_str == 'dhtml' && client_width &lt;= 640)) {
                 return false;
             }
             return true;
@@ -205,14 +205,14 @@ actualités, news"/>
         };
         var isPubActive = true;
         if (session_cookie) {
-            document.write('<script type="text/javascript" src="/session_info/?format=json&confirm=' + escape(session_cookie) + '"></' + 'script>');
+            document.write('&lt;script type="text/javascript" src="/session_info/?format=json&confirm=' + escape(session_cookie) + '">&lt;/' + 'script>');
         } else {
             libeUserInfo = {
                 "access_level": "BAS",
                 "authenticated": false
             };
         }
-        var is_responsive_mobile = (document.documentElement.clientWidth <= 640);
+        var is_responsive_mobile = (document.documentElement.clientWidth &lt;= 640);
         var releaseSuffix = "5ab453ca06a48f0e53b210afa383781f";
     </script>
     <script type="text/javascript">
@@ -240,7 +240,7 @@ actualités, news"/>
         var cookie_notified = getCookie('cookie_notified');
         /* check the cookie and display the notification */
         if (!cookie_notified && libeUserInfo['authenticated'] == false) {
-            var cookie_notify_html = '<div class="cookie_notify_js cookie-notify"><div class="wrapper"><div  onClick="cookie_notified_handler(this);" class="close"><span>Fermer </span><i class="icon-cancel-circle"></i></div><p>En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies pour vous proposer des services et offres adaptés à vos centres d\'intérêt.&nbsp;<a onclick="window.location.assign(\'/donnees-personnelles/\');" title="Conditions générales de vente de Libération">En savoir plus</a></p></div></div>'
+            var cookie_notify_html = '&lt;div class="cookie_notify_js cookie-notify">&lt;div class="wrapper">&lt;div  onClick="cookie_notified_handler(this);" class="close">&lt;span>Fermer &lt;/span>&lt;i class="icon-cancel-circle">&lt;/i>&lt;/div>&lt;p>En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies pour vous proposer des services et offres adaptés à vos centres d\'intérêt.&nbsp;&lt;a onclick="window.location.assign(\'/donnees-personnelles/\');" title="Conditions générales de vente de Libération">En savoir plus&lt;/a>&lt;/p>&lt;/div>&lt;/div>'
             document.write(cookie_notify_html);
         }
         setCookie('cookie_notified', true, '.liberation.Fr', 1000 * 60 * 60 * 24 * 7);
@@ -265,9 +265,9 @@ actualités, news"/>
         </div>
         <script type="text/javascript">
             if (libeUserInfo['authenticated']) {
-                document.getElementById('account_username').innerHTML = dispayName + '<span>&nbsp;&nbsp;-&nbsp;&nbsp;Gérer mon compte</span>';
+                document.getElementById('account_username').innerHTML = dispayName + '&lt;span>&nbsp;&nbsp;-&nbsp;&nbsp;Gérer mon compte&lt;/span>';
                 if (isPubActive) {
-                    document.getElementById('header-paper-link').innerHTML = '<a href="http://token.liberation.fr/accounts/offers/">Abonnez-vous à partir de 1€</a>';
+                    document.getElementById('header-paper-link').innerHTML = '&lt;a href="http://token.liberation.fr/accounts/offers/">Abonnez-vous à partir de 1€&lt;/a>';
                 }
             }
             // recovery
@@ -275,9 +275,9 @@ actualités, news"/>
                 document.body.className = document.body.className + ' recovery-mode';
                 // something is wrong!
                 if (typeof libeUserInfo.forced_recovery != 'undefined') {
-                    var recoveryMsg = "<h3>Libération.fr est actuellement en maintenance... L'identification est temporairement désactivée, veuillez nous excuser pour la gêne occasionnée.</h3>";
+                    var recoveryMsg = "&lt;h3>Libération.fr est actuellement en maintenance... L'identification est temporairement désactivée, veuillez nous excuser pour la gêne occasionnée.&lt;/h3>";
                 } else {
-                    var recoveryMsg = "<h3> Libération.fr rencontre des problèmes techniques. L'identification est temporairement désactivée, veuillez nous excuser pour la gêne occasionnée.</h3>";
+                    var recoveryMsg = "&lt;h3> Libération.fr rencontre des problèmes techniques. L'identification est temporairement désactivée, veuillez nous excuser pour la gêne occasionnée.&lt;/h3>";
                 }
                 document.getElementById('user-bar').innerHTML = recoveryMsg;
             }
@@ -398,7 +398,7 @@ actualités, news"/>
                                 name: "Événements",
                                 url: '/evenements-libe,100200'
                             }];
-                            for (var i = 0; i < menu_list.length; i++) {
+                            for (var i = 0; i &lt; menu_list.length; i++) {
                                 item = menu_list[i];
                                 var section = document.createElement('li');
                                 if (item.name == current_section) {
@@ -457,7 +457,7 @@ actualités, news"/>
         }
         var header_mobile = document.getElementById('header_mobile');
         var item_list = header_mobile.getElementsByTagName("a");
-        for (var i = 0; i < item_list.length; i++) {
+        for (var i = 0; i &lt; item_list.length; i++) {
             var dataHref = item_list[i].attributes['data-href'];
             if (typeof(dataHref) != "undefined") {
                 item_list[i].href = dataHref.nodeValue;
@@ -1194,7 +1194,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
                                     <script type="text/javascript">
                                         if (typeof isPubActive !== 'undefined' && isPubActive) {
                                             if (typeof(desactive_asq) == 'undefined' || desactive_asq != 1) {
-                                                document.write('<script src="http://ib.adnxs.com/ttj?id=1028479&size=300x600&amp;promo_sizes=300x250&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript"><' + '/script>');
+                                                document.write('&lt;script src="http://ib.adnxs.com/ttj?id=1028479&size=300x600&amp;promo_sizes=300x250&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript">&lt;' + '/script>');
                                             }
                                         }
                                     </script>
@@ -1231,7 +1231,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
                                     <script type="text/javascript">
                                         if (typeof isPubActive !== 'undefined' && isPubActive) {
                                             if (typeof(desactive_asq) == 'undefined' || desactive_asq != 1) {
-                                                document.write('<script src="http://ib.adnxs.com/ttj?id=1028480&size=300x250&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript"><' + '/script>');
+                                                document.write('&lt;script src="http://ib.adnxs.com/ttj?id=1028480&size=300x250&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript">&lt;' + '/script>');
                                             }
                                         }
                                     </script>
@@ -1377,7 +1377,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
                                 <script type="text/javascript">
                                     if (typeof isPubActive !== 'undefined' && isPubActive) {
                                         if (typeof(desactive_asq) == 'undefined' || desactive_asq != 1) {
-                                            document.write('<script src="http://ib.adnxs.com/ttj?id=1028523&size=728x90&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript"><' + '/script>');
+                                            document.write('&lt;script src="http://ib.adnxs.com/ttj?id=1028523&size=728x90&promo_alignment=center&referrer=www.liberation.fr&cb=' + Math.floor(Math.random() * 9999999999) + '&pt1=http://ib.adnxs.com/seg?add=486980&t=1" type="text/javascript">&lt;' + '/script>');
                                         }
                                     }
                                 </script>
@@ -1634,7 +1634,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
                         widget.stop();
                         $('#' + 'comments_container').addClass('closed');
                     } else if (libeUserInfo.authenticated) {
-                        $('<div class="fyre-moderation-message">' + '<p>Votre commentaire apparaîtra dès validation par le modérateur (généralement en moins de 30 minutes).</p>' + '<p>Cet espace est réservé aux commentaires sur cet article. Vous souhaitez discuter d\'autres sujets ? Rendez-vous sur <a href="http://www.liberation.fr/forums,24">nos forums thématiques</a>. Merci de respecter <a href="http://www.liberation.fr/charte/">notre charte</a>.</p>' + '</div>').insertAfter('.fyre-editor:first');
+                        $('&lt;div class="fyre-moderation-message">' + '&lt;p>Votre commentaire apparaîtra dès validation par le modérateur (généralement en moins de 30 minutes).&lt;/p>' + '&lt;p>Cet espace est réservé aux commentaires sur cet article. Vous souhaitez discuter d\'autres sujets ? Rendez-vous sur &lt;a href="http://www.liberation.fr/forums,24">nos forums thématiques&lt;/a>. Merci de respecter &lt;a href="http://www.liberation.fr/charte/">notre charte&lt;/a>.&lt;/p>' + '&lt;/div>').insertAfter('.fyre-editor:first');
                     };
                 });
             });
@@ -1693,7 +1693,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
     <script type="text/javascript">
         var n_pbt = '';
         var nuggrid = encodeURIComponent(top.location.href);
-        document.write('<scr' + 'ipt type="text/javascript" src="//asqliberation.nuggad.net/rc?nuggn=400929945&nuggsid=1646502667&nuggrid=' + nuggrid + '"><\/scr' + 'ipt>');
+        document.write('&lt;scr' + 'ipt type="text/javascript" src="//asqliberation.nuggad.net/rc?nuggn=400929945&nuggsid=1646502667&nuggrid=' + nuggrid + '">&lt;\/scr' + 'ipt>');
     </script>
     <!-- // nuggad -->
     <script type="text/javascript">
@@ -1741,7 +1741,7 @@ Par<span class="authorname"> Pierre Alonso</span> </span>
                     LR_PARTNERS: 763629,
                     slot: '#article-body',
                     child: '1:1',
-                    passbackHtml: '<center><scr' + 'ipt type=\'text/javascript\'>(function(e,t){ t=t||{};var n=document.createElement(\'script\');var r=\'https:\'==window.location.protocol?\'https://\':\'http://\';n.src=r+\'cdn.adikteev.com/lib/v3/aksdk.moment?t=\'+((new Date).getTime()/1e3/3600).toFixed();n.type=\'text/javascript\';n.async=\'true\';n.onload=n.onreadystatechange=function(){if(top.AKSdk&&top.isInitAKSdk===true)return;var n=this.readyState;if(n&&n!=\'complete\'&&n!=\'loaded\')return;try{top.isInitAKSdk=true;top.AKSdk.init(e,t) }catch(r){}};try{ var i=top.document.getElementsByTagName(\'script\')[0];i.parentNode.insertBefore(n,i); }catch(e){};})({desktop:\'KYvbNsp6ATbQsAUa31pbow==\'});</sc' + 'ript></center>'
+                    passbackHtml: '&lt;center>&lt;scr' + 'ipt type=\'text/javascript\'>(function(e,t){ t=t||{};var n=document.createElement(\'script\');var r=\'https:\'==window.location.protocol?\'https://\':\'http://\';n.src=r+\'cdn.adikteev.com/lib/v3/aksdk.moment?t=\'+((new Date).getTime()/1e3/3600).toFixed();n.type=\'text/javascript\';n.async=\'true\';n.onload=n.onreadystatechange=function(){if(top.AKSdk&&top.isInitAKSdk===true)return;var n=this.readyState;if(n&&n!=\'complete\'&&n!=\'loaded\')return;try{top.isInitAKSdk=true;top.AKSdk.init(e,t) }catch(r){}};try{ var i=top.document.getElementsByTagName(\'script\')[0];i.parentNode.insertBefore(n,i); }catch(e){};})({desktop:\'KYvbNsp6ATbQsAUa31pbow==\'});&lt;/sc' + 'ript>&lt;/center>'
                 });
                 (function() {
                     var js = document.createElement('script');

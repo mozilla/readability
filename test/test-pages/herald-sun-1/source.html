@@ -46,7 +46,7 @@
 (function() {
     var useSSL = 'https:' == document.location.protocol;
     var src = (useSSL ? 'https:' : 'http:') + '//tags.news.com.au/prod/utrack/utrack.js?cb='+ (new Date()).getTime();
-    document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+    document.write('&lt;scr' + 'ipt src="' + src + '">&lt;/scr' + 'ipt>');
  })();
 </script><script src="http://tags.news.com.au/prod/utrack/utrack.js?cb=1426898115317"></script>
 
@@ -200,6 +200,7 @@ window.envoy_config.identity = {
 		</script>
 		<script type="text/javascript">
 	                 //<![CDATA[
+                   //]]>
 					</script>
  <style>
   .story .text-g-other-news-stories .story-block:last-child {
