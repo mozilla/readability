@@ -264,9 +264,9 @@
 
 
 
-        if (AB_RND_VAL >= 0 && AB_RND_VAL < 33) {
+        if (AB_RND_VAL >= 0 && AB_RND_VAL &lt; 33) {
             AD_SIDEWIDE_BSU_REDESIGN = 'bsu_a';
-        } else if (AB_RND_VAL > 33 && AB_RND_VAL <= 66) {
+        } else if (AB_RND_VAL > 33 && AB_RND_VAL &lt;= 66) {
             AD_SIDEWIDE_BSU_REDESIGN = 'bsu_b';
         } else {
             AD_SIDEWIDE_BSU_REDESIGN = 'bsu_c'
@@ -281,7 +281,7 @@
         var AD_DESIGN, AD_THUMBNAIL;
         AD_THUMBNAIL = 'thumbnailcontrol';
 
-        if (AB_RND_VAL >= 0 && AB_RND_VAL < 0) {
+        if (AB_RND_VAL >= 0 && AB_RND_VAL &lt; 0) {
             AD_DESIGN = 'script';
         } else {
             AD_DESIGN = 'gpt';
@@ -527,9 +527,9 @@
     };
 
     var cookieBarVerticalBpageMessage = {
-        'fr': "Vous connaissez BuzzFeed France? <a href='" + homePageLink['fr'] + "'>C'est par ici!</a>",
-        'es': "Ya viste BuzzFeed en Espa&ntilde;ol? <a href='" + homePageLink['es'] + "'>&iexcl;Pasa a darle una mirada!</a>",
-        'pt': "J&aacute; viu BuzzFeed Brasil? <a href='" + homePageLink['pt'] + "'>Venha conferir!</a>"
+        'fr': "Vous connaissez BuzzFeed France? &lt;a href='" + homePageLink['fr'] + "'>C'est par ici!&lt;/a>",
+        'es': "Ya viste BuzzFeed en Espa&ntilde;ol? &lt;a href='" + homePageLink['es'] + "'>&iexcl;Pasa a darle una mirada!&lt;/a>",
+        'pt': "J&aacute; viu BuzzFeed Brasil? &lt;a href='" + homePageLink['pt'] + "'>Venha conferir!&lt;/a>"
     };
     </script>
     <script type="text/javascript">
@@ -545,8 +545,8 @@
             var e, n, t, o, a, s, f;
             for (var u in i) {
                 if (e = [], n = i[u], n.name && (e.push(n.name.toLowerCase()), n.options && n.options.aliases && n.options.aliases.length))
-                    for (t = 0; t < n.options.aliases.length; t++) e.push(n.options.aliases[t].toLowerCase());
-                for (o = A(n.fn, "function") ? n.fn() : n.fn, a = 0; a < e.length; a++) s = e[a], f = s.split("."), 1 === f.length ? r[f[0]] = o : 2 === f.length && (!r[f[0]] || r[f[0]] instanceof Boolean || (r[f[0]] = new Boolean(r[f[0]])), r[f[0]][f[1]] = o), l.push((o ? "" : "no-") + f.join("-"))
+                    for (t = 0; t &lt; n.options.aliases.length; t++) e.push(n.options.aliases[t].toLowerCase());
+                for (o = A(n.fn, "function") ? n.fn() : n.fn, a = 0; a &lt; e.length; a++) s = e[a], f = s.split("."), 1 === f.length ? r[f[0]] = o : 2 === f.length && (!r[f[0]] || r[f[0]] instanceof Boolean || (r[f[0]] = new Boolean(r[f[0]])), r[f[0]][f[1]] = o), l.push((o ? "" : "no-") + f.join("-"))
             }
         }
 
@@ -627,7 +627,7 @@
                 var A = this._l[e];
                 setTimeout(function() {
                     var e, t;
-                    for (e = 0; e < A.length; e++)(t = A[e])(n)
+                    for (e = 0; e &lt; A.length; e++)(t = A[e])(n)
                 }, 0), delete this._l[e]
             }
         }, r._q.push(function() {
@@ -658,13 +658,13 @@
                 A = n.shift();
             e(A.name, A.uri, function(A) {
                 if ("load" === A.type)
-                    for (var t = 0; t < n.length; t++) e(n[t].name, n[t].uri)
+                    for (var t = 0; t &lt; n.length; t++) e(n[t].name, n[t].uri)
             })
         }), r.addTest("svg", !!n.createElementNS && !!n.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGRect), r.addTest("inlinesvg", function() {
             var e = u("div");
-            return e.innerHTML = "<svg/>", "http://www.w3.org/2000/svg" == (e.firstChild && e.firstChild.namespaceURI)
+            return e.innerHTML = "&lt;svg/>", "http://www.w3.org/2000/svg" == (e.firstChild && e.firstChild.namespaceURI)
         }), t(), o(l), delete s.addTest, delete s.addAsyncTest;
-        for (var p = 0; p < r._q.length; p++) r._q[p]();
+        for (var p = 0; p &lt; r._q.length; p++) r._q[p]();
         e.Modernizr = r
     }(window, document);
     </script>
@@ -905,7 +905,7 @@
     QuantcastCounter = 0;
 
     function QuantPageLoad() {
-        if (typeof(_qevents) == 'undefined' && QuantcastCounter < 20) {
+        if (typeof(_qevents) == 'undefined' && QuantcastCounter &lt; 20) {
             QuantcastCounter++;
             setTimeout("QuantPageLoad()", 250);
             return false;
@@ -3272,7 +3272,7 @@
                                     })
                                 } else {
                                     if (!BF_STATIC.bf_test_mode || document.cookie.match('sel2_ad') !== null) {
-                                        document.write('<' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '"><\/scr' + 'ipt' + '>');
+                                        document.write('&lt;' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '">&lt;\/scr' + 'ipt' + '>');
                                     } else {
                                         console.info('disable DFP (dfp_tags.tt)');
                                     }
@@ -3843,7 +3843,7 @@
                                         })
                                     } else {
                                         if (!BF_STATIC.bf_test_mode || document.cookie.match('sel2_ad') !== null) {
-                                            document.write('<' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '"><\/scr' + 'ipt' + '>');
+                                            document.write('&lt;' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '">&lt;\/scr' + 'ipt' + '>');
                                         } else {
                                             console.info('disable DFP (dfp_tags.tt)');
                                         }
@@ -4083,7 +4083,7 @@
                         })
                     } else {
                         if (!BF_STATIC.bf_test_mode || document.cookie.match('sel2_ad') !== null) {
-                            document.write('<' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '"><\/scr' + 'ipt' + '>');
+                            document.write('&lt;' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '">&lt;\/scr' + 'ipt' + '>');
                         } else {
                             console.info('disable DFP (dfp_tags.tt)');
                         }
@@ -4336,7 +4336,7 @@
                         "active": "1",
                         "original_image_height": "578",
                         "height": "83",
-                        "description": "<b>In my secular life, I'm a marathoner and stand-up comic.</b> In the eyes of the church, I'm a charity case.",
+                        "description": "&lt;b>In my secular life, I'm a marathoner and stand-up comic.&lt;/b> In the eyes of the church, I'm a charity case.",
                         "image": "/static/2015-04/27/9/campaign_images/webdr02/mormon-childless-and-constantly-condescended-to-2-8804-1430140118-12.jpg",
                         "old": "0",
                         "promotion_medium_id": "1",
@@ -4387,7 +4387,7 @@
                         "active": "1",
                         "original_image_height": "578",
                         "height": "83",
-                        "description": "<b>In my secular life, I'm a marathoner and stand-up comic.</b> In the eyes of the church, I'm a charity case.",
+                        "description": "&lt;b>In my secular life, I'm a marathoner and stand-up comic.&lt;/b> In the eyes of the church, I'm a charity case.",
                         "image": "/static/2015-04/27/9/campaign_images/webdr02/mormon-childless-and-constantly-condescended-to-2-8804-1430140118-12.jpg",
                         "old": "0",
                         "promotion_medium_id": "1",
@@ -4438,7 +4438,7 @@
                         "active": "1",
                         "original_image_height": "578",
                         "height": "83",
-                        "description": "<b>In my secular life, I'm a marathoner and stand-up comic.</b> In the eyes of the church, I'm a charity case.",
+                        "description": "&lt;b>In my secular life, I'm a marathoner and stand-up comic.&lt;/b> In the eyes of the church, I'm a charity case.",
                         "image": "/static/2015-04/27/9/campaign_images/webdr02/mormon-childless-and-constantly-condescended-to-2-8804-1430140118-12.jpg",
                         "old": "0",
                         "promotion_medium_id": "1",
@@ -4489,7 +4489,7 @@
                         "active": "1",
                         "original_image_height": "578",
                         "height": "83",
-                        "description": "<b>In my secular life, I'm a marathoner and stand-up comic.</b> In the eyes of the church, I'm a charity case.",
+                        "description": "&lt;b>In my secular life, I'm a marathoner and stand-up comic.&lt;/b> In the eyes of the church, I'm a charity case.",
                         "image": "/static/2015-04/27/9/campaign_images/webdr02/mormon-childless-and-constantly-condescended-to-2-8804-1430140122-14.jpg",
                         "old": "0",
                         "promotion_medium_id": "1",
@@ -4499,8 +4499,8 @@
                         "original_image": "/static/2015-04/25/20/enhanced/webdr13/original-25550-1430009073-11.jpg"
                     }];
                     var opts = [];
-                    for (var i = 0; i < promotions.length; i++)
-                        for (var j = 0; j < (promotions[i].probability * 100); j++) opts.push(promotions[i]);
+                    for (var i = 0; i &lt; promotions.length; i++)
+                        for (var j = 0; j &lt; (promotions[i].probability * 100); j++) opts.push(promotions[i]);
                     var sel_promo = opts[Math.floor(Math.random() * opts.length)];
                     imp_attr_3762507_13.FLEX_PRO_IMP = sel_promo.id;
                     click_attr_3762507_13.FLEX_PRO_CLICK = sel_promo.id;
@@ -4508,16 +4508,16 @@
                     <li class="post sidebar-post  bf_dom  sidebar-post-wide" rel:bf_bucket="track" track="{&quot;c&quot;:&quot;7FOI7Y7&quot;,&quot;u&quot;:&quot;7C8UNP7&quot;,&quot;buzz&quot;:&quot;mormon-childless-and-constantly-condescended-to&quot;,&quot;user&quot;:&quot;jenniferpurdie&quot;,&quot;types&quot;:[100],&quot;queries&quot;:[]}" id="promoted-mormon-childless-and-constantly-condescended-to">
                         <script type="text/javascript">
                         document.write('\
-                <a href="/jenniferpurdie/mormon-childless-and-constantly-condescended-to" rel:gt_act="buzzing/thumb" rel:buzz_id="3762507">\
-                  <div style="float:left; position:relative;">\
-                    <img src="data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" rel:bf_image_src="http://s3-ak.buzzfeed.com' + sel_promo.image_wide + '" class="bf_dom thumb" rel:bf_bucket="progload" alt="" />\
+                &lt;a href="/jenniferpurdie/mormon-childless-and-constantly-condescended-to" rel:gt_act="buzzing/thumb" rel:buzz_id="3762507">\
+                  &lt;div style="float:left; position:relative;">\
+                    &lt;img src="data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" rel:bf_image_src="http://s3-ak.buzzfeed.com' + sel_promo.image_wide + '" class="bf_dom thumb" rel:bf_bucket="progload" alt="" />\
                     \
-                  </div>\
-                </a>\
-                <a class="qe editor-admin" style="display:none"  rel:data=\'{"buzz_id":"3762507"}\'></a>\
-                <h2>\
-                  <a href="/jenniferpurdie/mormon-childless-and-constantly-condescended-to" rel:gt_act="buzzing/title">' + sel_promo.title + '</a>\
-                </h2>\
+                  &lt;/div>\
+                &lt;/a>\
+                &lt;a class="qe editor-admin" style="display:none"  rel:data=\'{"buzz_id":"3762507"}\'>&lt;/a>\
+                &lt;h2>\
+                  &lt;a href="/jenniferpurdie/mormon-childless-and-constantly-condescended-to" rel:gt_act="buzzing/title">' + sel_promo.title + '&lt;/a>\
+                &lt;/h2>\
                 ');
                         </script>
                         <a href="/jenniferpurdie/mormon-childless-and-constantly-condescended-to" rel:gt_act="buzzing/thumb" rel:buzz_id="3762507">
@@ -4675,7 +4675,7 @@
                                     })
                                 } else {
                                     if (!BF_STATIC.bf_test_mode || document.cookie.match('sel2_ad') !== null) {
-                                        document.write('<' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '"><\/scr' + 'ipt' + '>');
+                                        document.write('&lt;' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '">&lt;\/scr' + 'ipt' + '>');
                                     } else {
                                         console.info('disable DFP (dfp_tags.tt)');
                                     }
@@ -4757,7 +4757,7 @@
                                     })
                                 } else {
                                     if (!BF_STATIC.bf_test_mode || document.cookie.match('sel2_ad') !== null) {
-                                        document.write('<' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '"><\/scr' + 'ipt' + '>');
+                                        document.write('&lt;' + 'scr' + 'ipt type="text/javascr' + 'ipt" src="' + ad_tag + '">&lt;\/scr' + 'ipt' + '>');
                                     } else {
                                         console.info('disable DFP (dfp_tags.tt)');
                                     }

@@ -639,7 +639,7 @@ default="transparent none repeat scroll top left"/>
                 case 1:
                     return b + "?m=1";
                 case 2:
-                    return 0 <= c[1].search("(^|&)m=") ? null : b + "&m=1";
+                    return 0 &lt;= c[1].search("(^|&)m=") ? null : b + "&m=1";
                 default:
                     return null
             }

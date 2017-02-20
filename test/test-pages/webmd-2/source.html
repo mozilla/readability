@@ -617,7 +617,7 @@
                                                 /* Pulls the pub source out of the XML */
                                                 var pubSource = 'WebMD Medical News';
                                                 /* Runs through the different partners and sees if one of them exists in the pub source */
-                                                for (var i = 0; i <= partnerNames.length - 1; i++) {
+                                                for (var i = 0; i &lt;= partnerNames.length - 1; i++) {
                                                     isThere = pubSource.search(partnerNames[i]);
                                                     if (isThere != -1) {
                                                         whichOne = i
@@ -1074,14 +1074,14 @@
                                             module.init({
                                                 selector: "#newsletter-mapping-center",
                                                 template: {
-                                                    successMsg: '<p class="success"><span>{email}</span><br //>You will receive your first newsletter with our next scheduled circulation!</p>',
-                                                    content: '' + '<div class="newsletterFmt"></div>\n' + '<div class="wrapper">\n' + '<div class="nls-header">{header}</div>\n' + '{preContent}' + '<div class="nls-content">\n' + '{preForm}' + '<form class="nls-form" action="#" novalidate="novalidate">\n' + '<div class="validationWrapper"><div class="checkbox-container clearfix">{inputs}</div></div>\n' + '<div class="privacy-disclaimer">' + "<em>By clicking submit I agree to WebMD's <a href='http://www.webmd.com/about-webmd-policies/about-privacy-policy' target='_blank'>Privacy Policy</a></em>" + '</div>' + '<div class="input-container">\n' + '<div class="email-container validationWrapper">\n' + '<input type="email" class="nls-email" name="email" autocapitalize="off" autocorrect="off" placeholder="Enter email address" /> ' + '<button name="nl-submit" formnovalidate class="off {submitClass}" type="submit"><span>Submit</span></button>\n' + '<div class="clearfix"></div>' + '</div>\n' + // .email-container
-                                                        '</div>\n' + // .input-container
-                                                        '</form>\n' + '<a class="nl-link" href="https://member.webmd.com/newsletters/newsletters.aspx" onclick="return sl(this,"nw","nl-multie_s")">Sign up for more topics!</a>' + '{postForm}' + '</div>\n' + // .nls-content
-                                                        '{postContent}' + '</div>',
+                                                    successMsg: '&lt;p class="success">&lt;span>{email}&lt;/span>&lt;br //>You will receive your first newsletter with our next scheduled circulation!&lt;/p>',
+                                                    content: '' + '&lt;div class="newsletterFmt">&lt;/div>\n' + '&lt;div class="wrapper">\n' + '&lt;div class="nls-header">{header}&lt;/div>\n' + '{preContent}' + '&lt;div class="nls-content">\n' + '{preForm}' + '&lt;form class="nls-form" action="#" novalidate="novalidate">\n' + '&lt;div class="validationWrapper">&lt;div class="checkbox-container clearfix">{inputs}&lt;/div>&lt;/div>\n' + '&lt;div class="privacy-disclaimer">' + "&lt;em>By clicking submit I agree to WebMD's &lt;a href='http://www.webmd.com/about-webmd-policies/about-privacy-policy' target='_blank'>Privacy Policy&lt;/a>&lt;/em>" + '&lt;/div>' + '&lt;div class="input-container">\n' + '&lt;div class="email-container validationWrapper">\n' + '&lt;input type="email" class="nls-email" name="email" autocapitalize="off" autocorrect="off" placeholder="Enter email address" /> ' + '&lt;button name="nl-submit" formnovalidate class="off {submitClass}" type="submit">&lt;span>Submit&lt;/span>&lt;/button>\n' + '&lt;div class="clearfix">&lt;/div>' + '&lt;/div>\n' + // .email-container
+                                                        '&lt;/div>\n' + // .input-container
+                                                        '&lt;/form>\n' + '&lt;a class="nl-link" href="https://member.webmd.com/newsletters/newsletters.aspx" onclick="return sl(this,"nw","nl-multie_s")">Sign up for more topics!&lt;/a>' + '{postForm}' + '&lt;/div>\n' + // .nls-content
+                                                        '{postContent}' + '&lt;/div>',
                                                     submitClass: 'webmd-btn webmd-btn-pr webmd-btn-s',
-                                                    successHeader: '<h2>Thank You For Signing Up.</h2>',
-                                                    promo: '<div class="promo"><div class="promo-content clearfix"><img src="{image}" alt="WebMD App" /><div class="promo-description"><p>{text}</p><p class="promoLink"><a href="{url}" class="webmd-btn webmd-btn-pr webmd-btn-m" onclick="wmdPageLink(\'nlupgrd_sub\')">{button}</a></p><div class="clearfix"></div></div></div></div>'
+                                                    successHeader: '&lt;h2>Thank You For Signing Up.&lt;/h2>',
+                                                    promo: '&lt;div class="promo">&lt;div class="promo-content clearfix">&lt;img src="{image}" alt="WebMD App" />&lt;div class="promo-description">&lt;p>{text}&lt;/p>&lt;p class="promoLink">&lt;a href="{url}" class="webmd-btn webmd-btn-pr webmd-btn-m" onclick="wmdPageLink(\'nlupgrd_sub\')">{button}&lt;/a>&lt;/p>&lt;div class="clearfix">&lt;/div>&lt;/div>&lt;/div>&lt;/div>'
                                                 }
                                             });
                                         });
@@ -1203,7 +1203,7 @@
                         </script>
                         <script language="javascript1.2" type="text/javascript">
                             if (document.URL.substring(0, 5).indexOf('http:') >= 0) {
-                                document.write('<img src=//bi.medscape.com/pi/global/webmd-1x1.gif?' + new Date().getTime() + '" alt="" height="1" width="1" border="0" />')
+                                document.write('&lt;img src=//bi.medscape.com/pi/global/webmd-1x1.gif?' + new Date().getTime() + '" alt="" height="1" width="1" border="0" />')
                             }
                         </script>
                         <!--<ul><li>$adsystem = DFP</li><li>$pos = 901</li><li>$print = false</li></ul><ul><li>adtype = JavaScript</li><li>iframeheight = 1</li><li>iframewidth = 1</li><li>adserver = as.webmd.com</li></ul><ul><li>affiliate = 20</li><li>apg = 4286</li><li>artid = 091e9c5e8117ec19</li><li>au1 = </li><li>au2 = </li><li>bc = _cust4_k_</li><li>brand = 0</li><li>cc = 17</li><li>env = </li><li>hcent = </li><li>mcent = </li><li>micro = </li><li>pkg = &amp;leaf=</li><li>pos = 901</li><li>pug = __</li><li>scent = </li><li>sec = </li><li>segval = </li><li>site = 2</li><li>tile = 1390870376</li><li>tmg = </li><li>transactionID = 93834023</li><li>tug = </li><li>uri = %2fnews%2f20150417%2fsuperbugs-what-they-are</li></ul>-->

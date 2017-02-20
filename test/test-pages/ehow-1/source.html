@@ -462,34 +462,34 @@ How to Build a Terrarium	</h1>
                             google_max_num_ads: '1',
                             google_ad_type: 'text',
                             templates: {
-                                text: '<div class="GoogleTextAd GoogleAd300x250 ad-300"> \
-								<p><a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a></p> \
-								<ul> \
-								{! for (var i = 0; i < ads.length; i++) { !} \
-									<li class="Ad"> \
-										<a rel="nofollow" href="{!= ads[i].url !}" target="_blank" title="go to {!= clean(ads[i].visible_url) !}" class="title"> \
+                                text: '&lt;div class="GoogleTextAd GoogleAd300x250 ad-300"> \
+								&lt;p>&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a>&lt;/p> \
+								&lt;ul> \
+								{! for (var i = 0; i &lt; ads.length; i++) { !} \
+									&lt;li class="Ad"> \
+										&lt;a rel="nofollow" href="{!= ads[i].url !}" target="_blank" title="go to {!= clean(ads[i].visible_url) !}" class="title"> \
 											{!= ads[i].line1 !} \
-										</a> \
-										<p class="copy">{!= ads[i].line2 !} {!= ads[i].line3 !}</p> \
-										<a rel="nofollow" href="{!= ads[i].url !}" target="_blank" title="go to {!= clean(ads[i].visible_url) !}" class="baseurl url"> \
+										&lt;/a> \
+										&lt;p class="copy">{!= ads[i].line2 !} {!= ads[i].line3 !}&lt;/p> \
+										&lt;a rel="nofollow" href="{!= ads[i].url !}" target="_blank" title="go to {!= clean(ads[i].visible_url) !}" class="baseurl url"> \
 											{!= ads[i].visible_url !} \
-										</a> \
-									</li> \
+										&lt;/a> \
+									&lt;/li> \
 								{! } !} \
-								</ul> \
-							</div>',
-                                image: '<div class="GoogleImageAd GoogleImageAdNew"> \
-								<a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a> \
-								<a href="{!= ads[0].url !}" title="go to {!= clean(ads[0].visible_url) !}" target="_blank" class="Ad" >\
-									<img src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" border="0" alt="" />\
-								</a> \
-							</div>',
-                                flash: '<div class="GoogleFlashAd GoogleFlashAdNew">\
-								<a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a> \
-								<div class="Ad">\
-									<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}"><param name="movie" value="{!= ads[0].image_url !}"><param name="quality" value="high"><param name="AllowScriptAccess" value="never"><embed src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" type="application/x-shockwave-flash" AllowScriptAccess="never" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed></object>\
-								</div>\
-							</div>'
+								&lt;/ul> \
+							&lt;/div>',
+                                image: '&lt;div class="GoogleImageAd GoogleImageAdNew"> \
+								&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a> \
+								&lt;a href="{!= ads[0].url !}" title="go to {!= clean(ads[0].visible_url) !}" target="_blank" class="Ad" >\
+									&lt;img src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" border="0" alt="" />\
+								&lt;/a> \
+							&lt;/div>',
+                                flash: '&lt;div class="GoogleFlashAd GoogleFlashAdNew">\
+								&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a> \
+								&lt;div class="Ad">\
+									&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}">&lt;param name="movie" value="{!= ads[0].image_url !}">&lt;param name="quality" value="high">&lt;param name="AllowScriptAccess" value="never">&lt;embed src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" type="application/x-shockwave-flash" AllowScriptAccess="never" pluginspage="http://www.macromedia.com/go/getflashplayer">&lt;/embed>&lt;/object>\
+								&lt;/div>\
+							&lt;/div>'
                             },
                             google_image_size: '300x250'
                         });
@@ -592,39 +592,39 @@ How to Build a Terrarium	</h1>
                         google_ad_type: 'text',
                         google_hints: '',
                         templates: {
-                            text: '<div class="GoogleTextAd GoogleTextAdNew">\
-						<a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a>\
-						<ul class="opNew336 evenColorItems">\
-						{! for (var i = 0; i < ads.length; i++) { !}\
-						<li class="item">\
-						<div class="term">\
-							<a rel="nofollow" target="_blank" href="{!= ads[i].url !}" title="go to {!= clean(ads[i].visible_url) !}" class="title">\
-								<span>{!= ads[i].line1 !}</span>\
-							</a>\
-						</div>\
-						<div class="Ad">\
-								<p class="copy">{!= ads[i].line2 !}</p>\
-								<p class="copy">{!= ads[i].line3 !}</p>\
-								<a rel="nofollow" target="_blank" href="{!= ads[i].url !}" title="go to {!= clean(ads[i].visible_url) !}" class="baseurl url">\
+                            text: '&lt;div class="GoogleTextAd GoogleTextAdNew">\
+						&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a>\
+						&lt;ul class="opNew336 evenColorItems">\
+						{! for (var i = 0; i &lt; ads.length; i++) { !}\
+						&lt;li class="item">\
+						&lt;div class="term">\
+							&lt;a rel="nofollow" target="_blank" href="{!= ads[i].url !}" title="go to {!= clean(ads[i].visible_url) !}" class="title">\
+								&lt;span>{!= ads[i].line1 !}&lt;/span>\
+							&lt;/a>\
+						&lt;/div>\
+						&lt;div class="Ad">\
+								&lt;p class="copy">{!= ads[i].line2 !}&lt;/p>\
+								&lt;p class="copy">{!= ads[i].line3 !}&lt;/p>\
+								&lt;a rel="nofollow" target="_blank" href="{!= ads[i].url !}" title="go to {!= clean(ads[i].visible_url) !}" class="baseurl url">\
 									{!= ads[i].visible_url !}\
-								</a>\
-						</div>\
-						</li>\
+								&lt;/a>\
+						&lt;/div>\
+						&lt;/li>\
 						{! } !}\
-						</ul>\
-					</div>',
-                            image: '<div class="GoogleImageAd GoogleImageAdNew"> \
-							<a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a> \
-							<a href="{!= ads[0].url !}" title="go to {!= clean(ads[0].visible_url) !}" target="_blank" class="Ad" >\
-								<img src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" border="0" alt="" />\
-							</a> \
-						</div>',
-                            flash: '<div class="GoogleFlashAd GoogleFlashAdNew">\
-							<a class="header" href="{!= google_info.feedback_url !}">Sponsored Links</a> \
-							<div class="Ad">\
-								<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}"><param name="movie" value="{!= ads[0].image_url !}"><param name="quality" value="high"><param name="AllowScriptAccess" value="never"><embed src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" type="application/x-shockwave-flash" AllowScriptAccess="never" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed></object>\
-							</div>\
-						</div>'
+						&lt;/ul>\
+					&lt;/div>',
+                            image: '&lt;div class="GoogleImageAd GoogleImageAdNew"> \
+							&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a> \
+							&lt;a href="{!= ads[0].url !}" title="go to {!= clean(ads[0].visible_url) !}" target="_blank" class="Ad" >\
+								&lt;img src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" border="0" alt="" />\
+							&lt;/a> \
+						&lt;/div>',
+                            flash: '&lt;div class="GoogleFlashAd GoogleFlashAdNew">\
+							&lt;a class="header" href="{!= google_info.feedback_url !}">Sponsored Links&lt;/a> \
+							&lt;div class="Ad">\
+								&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}">&lt;param name="movie" value="{!= ads[0].image_url !}">&lt;param name="quality" value="high">&lt;param name="AllowScriptAccess" value="never">&lt;embed src="{!= ads[0].image_url !}" width="{!= ads[0].image_width !}" height="{!= ads[0].image_height !}" type="application/x-shockwave-flash" AllowScriptAccess="never" pluginspage="http://www.macromedia.com/go/getflashplayer">&lt;/embed>&lt;/object>\
+							&lt;/div>\
+						&lt;/div>'
                         },
                         google_image_size: '336x280'
                     });

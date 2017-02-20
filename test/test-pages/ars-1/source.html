@@ -655,7 +655,7 @@
                     }
                 });
                 CN.dart.getCommon()["domDelay"]["defaultVal"] = 100;
-                for (var i = 0; i < ars.AD.queue.length; i++) {
+                for (var i = 0; i &lt; ars.AD.queue.length; i++) {
                     var ad = ars.AD.queue[i],
                         id = ad[0],
                         args = ad[1];
@@ -678,10 +678,10 @@
             function program1(depth0, data) {
                 var buffer = "",
                     stack1;
-                buffer += "\n      <span style=\"width:50px; height:50px; overflow:hidden; display:inline-block; float:left; margin:2px 10px 5px 0\">\n        <img src=\"" + escapeExpression(((stack1 = ((stack1 = depth0.image), stack1 == null || stack1 === false ? stack1 : stack1.href)), typeof stack1 === functionType ? stack1.apply(depth0) : stack1)) + "\" style=\"float:none; margin:0; height:50px; width:auto;\" />\n      </span>\n    ";
+                buffer += "\n      &lt;span style=\"width:50px; height:50px; overflow:hidden; display:inline-block; float:left; margin:2px 10px 5px 0\">\n        &lt;img src=\"" + escapeExpression(((stack1 = ((stack1 = depth0.image), stack1 == null || stack1 === false ? stack1 : stack1.href)), typeof stack1 === functionType ? stack1.apply(depth0) : stack1)) + "\" style=\"float:none; margin:0; height:50px; width:auto;\" />\n      &lt;/span>\n    ";
                 return buffer;
             }
-            buffer += "<li>\n  <a href=\"";
+            buffer += "&lt;li>\n  &lt;a href=\"";
             if (stack1 = helpers.link) {
                 stack1 = stack1.call(depth0, {
                     hash: {},
@@ -691,7 +691,7 @@
                 stack1 = depth0.link;
                 stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
             }
-            buffer += escapeExpression(stack1) + "\">\n    <h2 style=\"color:#00A3D3;\">Sponsored by: <span style=\"text-transform:none;\">" + escapeExpression(((stack1 = ((stack1 = depth0.sponsor), stack1 == null || stack1 === false ? stack1 : stack1.name)), typeof stack1 === functionType ? stack1.apply(depth0) : stack1)) + "</span></h2>\n    ";
+            buffer += escapeExpression(stack1) + "\">\n    &lt;h2 style=\"color:#00A3D3;\">Sponsored by: &lt;span style=\"text-transform:none;\">" + escapeExpression(((stack1 = ((stack1 = depth0.sponsor), stack1 == null || stack1 === false ? stack1 : stack1.name)), typeof stack1 === functionType ? stack1.apply(depth0) : stack1)) + "&lt;/span>&lt;/h2>\n    ";
             stack2 = helpers['if'].call(depth0, ((stack1 = depth0.image), stack1 == null || stack1 === false ? stack1 : stack1.href), {
                 hash: {},
                 inverse: self.noop,
@@ -701,7 +701,7 @@
             if (stack2 || stack2 === 0) {
                 buffer += stack2;
             }
-            buffer += "\n    <h1 class=\"heading\">";
+            buffer += "\n    &lt;h1 class=\"heading\">";
             if (stack2 = helpers.title) {
                 stack2 = stack2.call(depth0, {
                     hash: {},
@@ -711,7 +711,7 @@
                 stack2 = depth0.title;
                 stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2;
             }
-            buffer += escapeExpression(stack2) + "</h1>\n  </a>\n</li>";
+            buffer += escapeExpression(stack2) + "&lt;/h1>\n  &lt;/a>\n&lt;/li>";
             return buffer;
         };
     </script>
