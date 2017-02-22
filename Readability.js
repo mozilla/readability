@@ -348,7 +348,7 @@ Readability.prototype = {
     curTitle = curTitle.trim();
     var curTitleLen = curTitle.split(' ').length;
     if (curTitleLen <=4 && ( !origTitle.match(/ [\\\/>»] /)
-        || curTitleLen != origTitle.replace(/[\|\-\\\/>» ]+/g," ").split(' ').length -1))
+        || curTitleLen != origTitle.replace(/[\|\-\\\/>» ]+/g, " ").split(' ').length -1))
       curTitle = origTitle;
 
     return curTitle;
