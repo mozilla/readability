@@ -314,11 +314,11 @@ Readability.prototype = {
         curTitle = origTitle = this._getInnerText(doc.getElementsByTagName('title')[0]);
     } catch (e) {/* ignore exceptions setting the title. */}
 
-    if (curTitle.match(/ [\|\-] /)) {
-      curTitle = origTitle.replace(/(.*)[\|\-] .*/gi, '$1');
+    if (curTitle.match(/ [\|\-\\\/>»] /)) {
+      curTitle = origTitle.replace(/(.*)[\|\-\\\/>»] .*/gi, '$1');
 
       if (curTitle.split(' ').length < 3)
-        curTitle = origTitle.replace(/[^\|\-]*[\|\-](.*)/gi, '$1');
+        curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, '$1');
     } else if (curTitle.indexOf(': ') !== -1) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
@@ -346,8 +346,9 @@ Readability.prototype = {
     }
 
     curTitle = curTitle.trim();
-
-    if (curTitle.split(' ').length <= 4)
+    var curTitleLen = curTitle.split(' ').length;
+    if (curTitleLen <=4 && ( !origTitle.match(/ [\\\/>»] /)
+        || curTitleLen != origTitle.replace(/[\|\-\\\/>» ]+/g," ").split(' ').length -1))
       curTitle = origTitle;
 
     return curTitle;
