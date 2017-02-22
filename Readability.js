@@ -887,7 +887,7 @@ Readability.prototype = {
         // and whose scores are quite closed with current `topCandidate` node.
         var alternativeCandidateAncestors = [];
         for (var i = 1; i < topCandidates.length; i++) {
-          if (topCandidates[i].readability.contentScore / topCandidate.readability.contentScore >= 0.75) {
+          if (topCandidates[i].readability.contentScore / topCandidate.readability.contentScore >= 0.4) {
             alternativeCandidateAncestors.push(this._getNodeAncestors(topCandidates[i]));
           }
         }
