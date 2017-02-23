@@ -346,9 +346,9 @@ Readability.prototype = {
     }
 
     curTitle = curTitle.trim();
-    var curTitleLen = curTitle.split(' ').length;
-    if (curTitleLen <=4 && (!/ [\\\/>»] /.test(origTitle)
-        || curTitleLen != origTitle.replace(/[\|\-\\\/>» ]+/g, " ").split(' ').length -1))
+    var curTitleWordCount = curTitle.split(' ').length;
+    if (curTitleWordCount <= 4 && (!/ [\\\/>»] /.test(origTitle)
+        || curTitleWordCount != origTitle.replace(/[\|\-\\\/>» ]+/g, " ").split(' ').length -1))
       curTitle = origTitle;
 
     return curTitle;
