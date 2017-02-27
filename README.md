@@ -52,6 +52,8 @@ var article = new Readability(uri, documentClone).parse();
 
 ## Tests
 
+Please run [eslint](http://eslint.org/) as a first check that your changes adhere to our style guidelines.
+
 To run the test suite:
 
     $ mocha test/test-*.js
