@@ -314,10 +314,19 @@ Readability.prototype = {
         curTitle = origTitle = this._getInnerText(doc.getElementsByTagName('title')[0]);
     } catch (e) {/* ignore exceptions setting the title. */}
 
-    if (curTitle.match(/ [\|\-\\\/>»] /)) {
+    var titleHadHierarchicalSeparators = false;
+    function wordCount(str) {
+      return str.split(/\s+/).length;
+    }
+
+    // If there's a separator in the title, first remove the final part
+    if ((/ [\|\-\\\/>»] /).test(curTitle)) {
+      titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
       curTitle = origTitle.replace(/(.*)[\|\-\\\/>»] .*/gi, '$1');
 
-      if (curTitle.split(' ').length < 3)
+      // If the resulting title is too short (3 words or fewer), remove
+      // the first part instead:
+      if (wordCount(curTitle) < 3)
         curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, '$1');
     } else if (curTitle.indexOf(': ') !== -1) {
       // Check if we have an heading containing this exact string, so we
@@ -335,7 +344,7 @@ Readability.prototype = {
         curTitle = origTitle.substring(origTitle.lastIndexOf(':') + 1);
 
         // If the title is now too short, try the first colon instead:
-        if (curTitle.split(' ').length < 3)
+        if (wordCount(curTitle) < 3)
           curTitle = origTitle.substring(origTitle.indexOf(':') + 1);
       }
     } else if (curTitle.length > 150 || curTitle.length < 15) {
@@ -346,10 +355,16 @@ Readability.prototype = {
     }
 
     curTitle = curTitle.trim();
-    var curTitleWordCount = curTitle.split(' ').length;
-    if (curTitleWordCount <= 4 && (!/ [\\\/>»] /.test(origTitle)
-        || curTitleWordCount != origTitle.replace(/[\|\-\\\/>» ]+/g, " ").split(' ').length -1))
+    // If we now have 4 words or fewer as our title, and either no
+    // 'hierarchical' separators (\, /, > or ») were found in the original
+    // title or we decreased the number of words by more than 1 word, use
+    // the original title.
+    var curTitleWordCount = wordCount(curTitle);
+    if (curTitleWordCount <= 4 &&
+        (!titleHadHierarchicalSeparators ||
+         curTitleWordCount != wordCount(origTitle.replace(/[\|\-\\\/>»]+/g, "")) - 1)) {
       curTitle = origTitle;
+    }
 
     return curTitle;
   },
