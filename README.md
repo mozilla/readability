@@ -2,13 +2,15 @@
 
 [![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
 
-A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an appropriate Firefox/toolkit peer, such as [@leibovic](https://github.com/leibovic) or [@thebnich](https://github.com/thebnich), since these changes will be automatically merged to mozilla-central.
+A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be automatically merged to mozilla-central.
 
 ## Contributing
 
 For outstanding issues, see the issue list in this repo, as well as this bug list: https://bugzilla.mozilla.org/show_bug.cgi?id=1102450
 
-To test local changes to Readability.js, you can run your own instance of [readable-proxy](https://github.com/n1k0/readable-proxy/) to compare an original test page to its reader-ized content.
+To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to generate new ones.
+
+Please make sure to run [eslint](http://eslint.org/) against any proposed changes when creating a pull request.
 
 ## Usage
 
