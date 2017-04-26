@@ -16,7 +16,7 @@ Please make sure to run [eslint](http://eslint.org/) against any proposed change
 
 ## Usage
 
-To parse a document, you must create a new `Readability` object from a URI object and a document, and then call `parse()`. Here's an example:
+To parse a document, you must create a new `Readability` object from a URI object and a document object, and then call `parse()`. Here's an example:
 
 ```javascript
 var loc = document.location;
@@ -39,6 +39,8 @@ This `article` object will contain the following properties:
 * `excerpt`: article description, or short excerpt from content
 * `byline`: author metadata
 * `dir`: content direction
+
+If you're using Readability on the web, you will likely be able to use a `document` reference from elsewhere (e.g. fetched via XMLHttpRequest, in a same-origin `<iframe>` you have access to, etc.). Otherwise, you would need to construct such an object using a DOM parser such as [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do not recommend it for general use.
 
 ### Optional
 
