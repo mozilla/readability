@@ -6,7 +6,7 @@ A standalone version of the readability library used for Firefox Reader View. An
 
 ## Contributing
 
-For outstanding issues, see the issue list in this repo, as well as this bug list: https://bugzilla.mozilla.org/show_bug.cgi?id=1102450
+For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
 
 To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
 
