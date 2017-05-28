@@ -1956,6 +1956,17 @@ Readability.prototype = {
    */
   isProbablyReaderable: function(helperIsVisible) {
     var nodes = this._getAllNodesWithTag(this._doc, ["p", "pre"]);
+    if (this._doc.querySelectorAll && Array.from) {
+      nodes = Array.from(nodes);
+      var brs = this._doc.querySelectorAll("br:nth-of-type(5)");
+      for (var i = 0; i < brs.length; i++) {
+        var parentNodeName = brs[i].parentNode.nodeName.toLowerCase();
+        if (parentNodeName != "p" && parentNodeName != "pre" &&
+            nodes.indexOf(brs[i].parentNode) == -1) {
+          nodes.push(brs[i].parentNode);
+        }
+      }
+    }
 
     // Get <div> nodes which have <br> node(s) and append them into the `nodes` variable.
     // Some articles' DOM structures might look like
