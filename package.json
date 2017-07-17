@@ -25,7 +25,7 @@
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
     "chai": "^2.1.*",
-    "eslint": ">1.10",
+    "eslint": ">=4.2",
     "js-beautify": "^1.5.5",
     "jsdom": "^7.0",
     "matcha": "^0.6.0",
