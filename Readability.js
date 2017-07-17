@@ -510,10 +510,16 @@ Readability.prototype = {
     var h2 = articleContent.getElementsByTagName('h2');
     if (h2.length === 1) {
       var lengthSimilarRate = (h2[0].textContent.length - this._articleTitle.length) / this._articleTitle.length;
-      if (Math.abs(lengthSimilarRate) < 0.5 &&
-          (lengthSimilarRate > 0 ? h2[0].textContent.includes(this._articleTitle) :
-                                   this._articleTitle.includes(h2[0].textContent))) {
-        this._clean(articleContent, "h2");
+      if (Math.abs(lengthSimilarRate) < 0.5) {
+        var titlesMatch = false;
+        if (lengthSimilarRate > 0) {
+          titlesMatch = h2[0].textContent.includes(this._articleTitle);
+        } else {
+          titlesMatch = this._articleTitle.includes(h2[0].textContent);
+        }
+        if (titlesMatch) {
+          this._clean(articleContent, "h2");
+        }
       }
     }
 
