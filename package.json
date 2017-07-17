@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/mozilla/readability/issues"
   },
+  "engines": {
+    "node" : ">=6.5"
+  },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
     "chai": "^2.1.*",
