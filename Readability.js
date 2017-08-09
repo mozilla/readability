@@ -1267,7 +1267,7 @@ Readability.prototype = {
    * @return void
   **/
   _cleanStyles: function(e) {
-    if (!e || e.tagName === 'svg')
+    if (!e || e.tagName.toLowerCase() === 'svg')
       return;
 
     if (e.className !== 'readability-styled') {
