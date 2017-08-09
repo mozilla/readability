@@ -1271,23 +1271,24 @@ Readability.prototype = {
     if (!e)
       return;
 
-    // Recurse through elements and remove presentational attributes
-    while (e !== null) {
-      if (e.nodeType === e.ELEMENT_NODE &&
-          e.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
-          e.className !== 'readability-styled') {
-        // Remove presentational attribute(s) :
-        for (var i = 0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
-          e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
-
-          if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
-            e.removeAttribute('width');
-            e.removeAttribute('height');
-          }
-        }
+    if (e.nodeType === e.ELEMENT_NODE &&
+        e.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
+        e.className !== 'readability-styled') {
+      // Remove `style` and deprecated presentational attributes
+      for (var i = 0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+        e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
       }
 
-      e = e.nextSibling;
+      if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+        e.removeAttribute('width');
+        e.removeAttribute('height');
+      }
+    }
+
+    var cur = e.firstElementChild;
+    while (cur !== null) {
+      this._cleanStyles(cur);
+      cur = cur.nextElementSibling;
     }
   },
 
