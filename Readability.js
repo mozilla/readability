@@ -1275,7 +1275,7 @@ Readability.prototype = {
         e.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
         e.className !== 'readability-styled') {
       // Remove `style` and deprecated presentational attributes
-      for (var i = 0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+      for (var i = 0; i < this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
         e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
       }
 
