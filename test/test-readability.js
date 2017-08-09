@@ -108,6 +108,12 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
         return genPath(node) + "(in: ``" + node.parentNode.innerHTML + "``)";
       }
 
+      function attributesForNode(node) {
+        return Array.from(node.attributes).map(function(attr) {
+          return attr.name + "=" + attr.value;
+        }).join(",");
+      }
+
       var actualDOM = domGenerationFn(result.content);
       var expectedDOM = domGenerationFn(expectedContent);
       traverseDOM(function(actualNode, expectedNode) {
@@ -129,7 +135,10 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
             }
           // Compare attributes for element nodes:
           } else if (actualNode.nodeType == 1) {
-            expect(actualNode.attributes.length).eql(expectedNode.attributes.length);
+            var actualNodeDesc = attributesForNode(actualNode);
+            var expectedNodeDesc = attributesForNode(expectedNode);
+            var desc = "node " + nodeStr(actualNode) + " attributes (" + actualNodeDesc + ") should match (" + expectedNodeDesc + ") ";
+            expect(actualNode.attributes.length, desc).eql(expectedNode.attributes.length);
             for (var i = 0; i < actualNode.attributes.length; i++) {
               var attr = actualNode.attributes[i].name;
               var actualValue = actualNode.getAttribute(attr);
