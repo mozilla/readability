@@ -132,6 +132,10 @@ Readability.prototype = {
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
 
+  PRESENTATIONAL_ATTRIBUTES: [ "align", "background", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "hspace", "rules", "style", "valign", "vspace" ],
+
+  DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE" ],
+
   /**
    * Run any post-process modifications to article content as necessary.
    *
@@ -1263,26 +1267,25 @@ Readability.prototype = {
    * @return void
   **/
   _cleanStyles: function(e) {
-    e = e || this._doc;
-    if (!e)
+    if (!e || e.tagName.toLowerCase() === 'svg')
       return;
-    var cur = e.firstChild;
 
-    // Remove any root styles, if we're able.
-    if (typeof e.removeAttribute === 'function' && e.className !== 'readability-styled')
-      e.removeAttribute('style');
-
-    // Go until there are no more child nodes
-    while (cur !== null) {
-      if (cur.nodeType === cur.ELEMENT_NODE) {
-        // Remove style attribute(s) :
-        if (cur.className !== "readability-styled")
-          cur.removeAttribute("style");
-
-        this._cleanStyles(cur);
+    if (e.className !== 'readability-styled') {
+      // Remove `style` and deprecated presentational attributes
+      for (var i = 0; i < this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+        e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
       }
 
-      cur = cur.nextSibling;
+      if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+        e.removeAttribute('width');
+        e.removeAttribute('height');
+      }
+    }
+
+    var cur = e.firstElementChild;
+    while (cur !== null) {
+      this._cleanStyles(cur);
+      cur = cur.nextElementSibling;
     }
   },
 

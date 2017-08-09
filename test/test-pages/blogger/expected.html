@@ -12,11 +12,11 @@
         <p> It's actually an interesting architecture - FPGAs (including some devices marketed as CPLDs) are a 2D array of LUTs connected via wires to adjacent cells, and true (product term) CPLDs are a star topology of AND-OR arrays connected by a crossbar. GreenPak, on the other hand, is a star topology of LUTs, flipflops, and analog/digital hard IP connected to a crossbar.</p>
         <p> Without further ado, here's a block diagram showing all the cool stuff you get in the SLG46620V:</p>
         <p>
-            <table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container">
+            <table class="tr-caption-container">
                 <tbody>
                     <tr>
                         <td>
-                            <a href="https://1.bp.blogspot.com/-YIPC5jkXkDE/Vy7YPSqFKWI/AAAAAAAAAxI/a7D6Ji2GxoUvcrwUkI4RLZcr2LFQEJCTACLcB/s1600/block-diagram.png" imageanchor="1"><img border="0" height="512" src="https://1.bp.blogspot.com/-YIPC5jkXkDE/Vy7YPSqFKWI/AAAAAAAAAxI/a7D6Ji2GxoUvcrwUkI4RLZcr2LFQEJCTACLcB/s640/block-diagram.png" width="640" /></a>
+                            <a href="https://1.bp.blogspot.com/-YIPC5jkXkDE/Vy7YPSqFKWI/AAAAAAAAAxI/a7D6Ji2GxoUvcrwUkI4RLZcr2LFQEJCTACLcB/s1600/block-diagram.png" imageanchor="1"><img height="512" src="https://1.bp.blogspot.com/-YIPC5jkXkDE/Vy7YPSqFKWI/AAAAAAAAAxI/a7D6Ji2GxoUvcrwUkI4RLZcr2LFQEJCTACLcB/s640/block-diagram.png" width="640" /></a>
                         </td>
                     </tr>
                     <tr>
@@ -29,11 +29,11 @@
         <p> The best part is that the development software (GreenPak Designer) is free of charge and provided for all major operating systems including Linux! Unfortunately, the only supported design entry method is schematic entry and there's no way to write your design in a HDL.</p>
         <p> While schematics may be fine for quick tinkering on really simple designs, they quickly get unwieldy. The nightmare of a circuit shown below is just a bunch of counters hooked up to LEDs that blink at various rates.</p>
         <p>
-            <table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container">
+            <table class="tr-caption-container">
                 <tbody>
                     <tr>
                         <td>
-                            <a href="https://1.bp.blogspot.com/-k3naUT3uXao/Vy7WFac246I/AAAAAAAAAw8/mePy_ostO8QJra5ZJrbP2WGhTlJ0B_r8gCLcB/s1600/schematic-from-hell.png" imageanchor="1"><img border="0" height="334" src="https://1.bp.blogspot.com/-k3naUT3uXao/Vy7WFac246I/AAAAAAAAAw8/mePy_ostO8QJra5ZJrbP2WGhTlJ0B_r8gCLcB/s640/schematic-from-hell.png" width="640" /></a>
+                            <a href="https://1.bp.blogspot.com/-k3naUT3uXao/Vy7WFac246I/AAAAAAAAAw8/mePy_ostO8QJra5ZJrbP2WGhTlJ0B_r8gCLcB/s1600/schematic-from-hell.png" imageanchor="1"><img height="334" src="https://1.bp.blogspot.com/-k3naUT3uXao/Vy7WFac246I/AAAAAAAAAw8/mePy_ostO8QJra5ZJrbP2WGhTlJ0B_r8gCLcB/s640/schematic-from-hell.png" width="640" /></a>
                         </td>
                     </tr>
                     <tr>
@@ -52,11 +52,11 @@
         <p> Once the design has been synthesized, my tool (named, surprisingly, gp4par) is then launched on the netlist. It begins by parsing the JSON and constructing a directed graph of cell objects in memory. A second graph, containing all of the primitives in the device and the legal connections between them, is then created based on the device specified on the command line. (As of now only the SLG46620V is supported; the SLG46621V can be added fairly easily but the SLG46140V has a slightly different microarchitecture which will require a bit more work to support.)</p>
         <p> After the graphs are generated, each node in the netlist graph is assigned a numeric label identifying the type of cell and each node in the device graph is assigned a list of legal labels: for example, an I/O buffer site is legal for an input buffer, output buffer, or bidirectional buffer.</p>
         <p>
-            <table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container">
+            <table class="tr-caption-container">
                 <tbody>
                     <tr>
                         <td>
-                            <a href="https://2.bp.blogspot.com/-kIekczO693g/Vy7dBqYifXI/AAAAAAAAAxc/hMNJBs5bedIQOrBzzkhq4gbmhR-n58EQwCLcB/s1600/graph-labels.png" imageanchor="1"><img border="0" height="141" src="https://2.bp.blogspot.com/-kIekczO693g/Vy7dBqYifXI/AAAAAAAAAxc/hMNJBs5bedIQOrBzzkhq4gbmhR-n58EQwCLcB/s400/graph-labels.png" width="400" /></a>
+                            <a href="https://2.bp.blogspot.com/-kIekczO693g/Vy7dBqYifXI/AAAAAAAAAxc/hMNJBs5bedIQOrBzzkhq4gbmhR-n58EQwCLcB/s1600/graph-labels.png" imageanchor="1"><img height="141" src="https://2.bp.blogspot.com/-kIekczO693g/Vy7dBqYifXI/AAAAAAAAAxc/hMNJBs5bedIQOrBzzkhq4gbmhR-n58EQwCLcB/s400/graph-labels.png" width="400" /></a>
                         </td>
                     </tr>
                     <tr>
