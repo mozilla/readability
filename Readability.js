@@ -132,7 +132,9 @@ Readability.prototype = {
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
 
-  PRESENTATIONAL_ATTRIBUTES: [ "align", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "rules", "style", "valign", "width" ],
+  PRESENTATIONAL_ATTRIBUTES: [ "align", "background", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "hspace", "rules", "style", "valign", "vspace" ],
+
+  DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE" ],
 
   /**
    * Run any post-process modifications to article content as necessary.
@@ -1277,6 +1279,11 @@ Readability.prototype = {
         e.namespaceURI === 'http://www.w3.org/1999/xhtml') {
       for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
         e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
+
+        if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+          e.removeAttribute('width');
+          e.removeAttribute('height');
+        }
       }
     }
 
@@ -1289,6 +1296,11 @@ Readability.prototype = {
         if (cur.className !== "readability-styled") {
           for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
             e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
+
+            if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+              e.removeAttribute('width');
+              e.removeAttribute('height');
+            }
           }
         }
 
