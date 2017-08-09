@@ -1270,44 +1270,24 @@ Readability.prototype = {
     e = e || this._doc;
     if (!e)
       return;
-    var cur = e.firstChild;
-    var i = 0;
 
-    // Remove any root styles, if we're able.
-    if (typeof e.removeAttribute === 'function' &&
-        e.className !== 'readability-styled' &&
-        e.namespaceURI === 'http://www.w3.org/1999/xhtml') {
-      for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
-        e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
-
-        if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
-          e.removeAttribute('width');
-          e.removeAttribute('height');
-        }
-      }
-    }
-
-
-    // Go until there are no more child nodes
-    while (cur !== null) {
-      if (cur.nodeType === cur.ELEMENT_NODE &&
-          e.namespaceURI === 'http://www.w3.org/1999/xhtml') {
+    // Recurse through elements and remove presentational attributes
+    while (e !== null) {
+      if (e.nodeType === e.ELEMENT_NODE &&
+          e.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
+          e.className !== 'readability-styled') {
         // Remove presentational attribute(s) :
-        if (cur.className !== "readability-styled") {
-          for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
-            e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
+        for (var i = 0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+          e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
 
-            if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
-              e.removeAttribute('width');
-              e.removeAttribute('height');
-            }
+          if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+            e.removeAttribute('width');
+            e.removeAttribute('height');
           }
         }
-
-        this._cleanStyles(cur);
       }
 
-      cur = cur.nextSibling;
+      e = e.nextSibling;
     }
   },
 
