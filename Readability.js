@@ -1267,13 +1267,10 @@ Readability.prototype = {
    * @return void
   **/
   _cleanStyles: function(e) {
-    e = e || this._doc;
-    if (!e)
+    if (!e || e.tagName === 'svg')
       return;
 
-    if (e.nodeType === e.ELEMENT_NODE &&
-        e.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
-        e.className !== 'readability-styled') {
+    if (e.className !== 'readability-styled') {
       // Remove `style` and deprecated presentational attributes
       for (var i = 0; i < this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
         e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
