@@ -132,6 +132,8 @@ Readability.prototype = {
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
 
+  PRESENTATIONAL_ATTRIBUTES: [ "align", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "rules", "style", "valign", "width" ],
+
   /**
    * Run any post-process modifications to article content as necessary.
    *
@@ -1267,17 +1269,28 @@ Readability.prototype = {
     if (!e)
       return;
     var cur = e.firstChild;
+    var i = 0;
 
     // Remove any root styles, if we're able.
-    if (typeof e.removeAttribute === 'function' && e.className !== 'readability-styled')
-      e.removeAttribute('style');
+    if (typeof e.removeAttribute === 'function' &&
+        e.className !== 'readability-styled' &&
+        e.namespaceURI === 'http://www.w3.org/1999/xhtml') {
+      for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+        e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
+      }
+    }
+
 
     // Go until there are no more child nodes
     while (cur !== null) {
-      if (cur.nodeType === cur.ELEMENT_NODE) {
-        // Remove style attribute(s) :
-        if (cur.className !== "readability-styled")
-          cur.removeAttribute("style");
+      if (cur.nodeType === cur.ELEMENT_NODE &&
+          e.namespaceURI === 'http://www.w3.org/1999/xhtml') {
+        // Remove presentational attribute(s) :
+        if (cur.className !== "readability-styled") {
+          for (i=0; i > this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
+            e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
+          }
+        }
 
         this._cleanStyles(cur);
       }
