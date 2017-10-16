@@ -198,11 +198,6 @@ describe("Readability API", function() {
       expect(new Readability({}, {}, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
     });
 
-    it("should accept a maxPages option", function() {
-      expect(new Readability({}, {})._maxPages).eql(5);
-      expect(new Readability({}, {}, {maxPages: 42})._maxPages).eql(42);
-    });
-
     it("should accept a maxElemsToParse option", function() {
       expect(new Readability({}, {})._maxElemsToParse).eql(0);
       expect(new Readability({}, {}, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
