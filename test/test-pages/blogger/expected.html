@@ -1,5 +1,5 @@
 <div id="readability-page-1" class="page">
-    <div class="post-body entry-content" id="post-body-932306423056216142" itemprop="description articleBody">
+    <div itemprop="description articleBody">
         <p style="display: inline;" class="readability-styled"> I've written a couple of posts in the past few months but they were all for </p><a href="http://blog.ioactive.com/search/label/Andrew%20Zonenberg">the blog at work</a>
         <p style="display: inline;" class="readability-styled"> so I figured I'm long overdue for one on Silicon Exposed.</p>
         <p>
@@ -12,7 +12,7 @@
         <p> It's actually an interesting architecture - FPGAs (including some devices marketed as CPLDs) are a 2D array of LUTs connected via wires to adjacent cells, and true (product term) CPLDs are a star topology of AND-OR arrays connected by a crossbar. GreenPak, on the other hand, is a star topology of LUTs, flipflops, and analog/digital hard IP connected to a crossbar.</p>
         <p> Without further ado, here's a block diagram showing all the cool stuff you get in the SLG46620V:</p>
         <p>
-            <table class="tr-caption-container">
+            <table>
                 <tbody>
                     <tr>
                         <td>
@@ -20,7 +20,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="tr-caption">SLG46620V block diagram (from device datasheet)</td>
+                        <td>SLG46620V block diagram (from device datasheet)</td>
                     </tr>
                 </tbody>
             </table> They're also tiny (the SLG46620V is a 20-pin 0.4mm pitch STQFN measuring 2x3 mm, and the lower gate count SLG46140V is a mere 1.6x2 mm) and probably the cheapest programmable logic device on the market - $0.50 in low volume and less than $0.40 in larger quantities.</p>
@@ -29,7 +29,7 @@
         <p> The best part is that the development software (GreenPak Designer) is free of charge and provided for all major operating systems including Linux! Unfortunately, the only supported design entry method is schematic entry and there's no way to write your design in a HDL.</p>
         <p> While schematics may be fine for quick tinkering on really simple designs, they quickly get unwieldy. The nightmare of a circuit shown below is just a bunch of counters hooked up to LEDs that blink at various rates.</p>
         <p>
-            <table class="tr-caption-container">
+            <table>
                 <tbody>
                     <tr>
                         <td>
@@ -37,7 +37,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="tr-caption">Schematic from hell!</td>
+                        <td>Schematic from hell!</td>
                     </tr>
                 </tbody>
             </table> As if this wasn't enough of a problem, the largest GreenPak4 device (the SLG46620V) is split into two halves with limited routing between them, and the GUI doesn't help the user manage this complexity at all - you have to draw your schematic in two halves and add "cross connections" between them.</p>
@@ -52,7 +52,7 @@
         <p> Once the design has been synthesized, my tool (named, surprisingly, gp4par) is then launched on the netlist. It begins by parsing the JSON and constructing a directed graph of cell objects in memory. A second graph, containing all of the primitives in the device and the legal connections between them, is then created based on the device specified on the command line. (As of now only the SLG46620V is supported; the SLG46621V can be added fairly easily but the SLG46140V has a slightly different microarchitecture which will require a bit more work to support.)</p>
         <p> After the graphs are generated, each node in the netlist graph is assigned a numeric label identifying the type of cell and each node in the device graph is assigned a list of legal labels: for example, an I/O buffer site is legal for an input buffer, output buffer, or bidirectional buffer.</p>
         <p>
-            <table class="tr-caption-container">
+            <table>
                 <tbody>
                     <tr>
                         <td>
@@ -60,7 +60,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="tr-caption">Example labeling for a subset of the netlist and device graphs</td>
+                        <td>Example labeling for a subset of the netlist and device graphs</td>
                     </tr>
                 </tbody>
             </table> The labeled nodes now need to be placed. The initial placement uses a simple greedy algorithm to create a valid (although not necessarily optimal or even routable) placement:</p><br/>
