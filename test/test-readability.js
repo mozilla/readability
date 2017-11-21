@@ -58,7 +58,9 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
     before(function() {
       try {
         var doc = domGenerationFn(source);
-        var myReader = new Readability(uri, doc);
+        // Provide one class name to preserve, which we know appears in a few
+        // of the test documents.
+        var myReader = new Readability(uri, doc, { classesToPreserve: ["caption"] });
         // Needs querySelectorAll function to test isProbablyReaderable method.
         // jsdom implements querySelector but JSDOMParser doesn't.
         var readerable = label === "jsdom" ? myReader.isProbablyReaderable() : null;
