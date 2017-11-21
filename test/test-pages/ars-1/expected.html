@@ -1,6 +1,6 @@
 <div id="readability-page-1" class="page">
-    <div itemprop="articleBody" class="article-content clearfix">
-        <figure class="intro-image image center full-width"> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/04/server-crash-640x426.jpg" width="640" height="331"/>
+    <div itemprop="articleBody">
+        <figure> <img src="http://cdn.arstechnica.net/wp-content/uploads/2015/04/server-crash-640x426.jpg" width="640" height="331"/>
             <figcaption class="caption"> </figcaption>
         </figure>
         <p>A flaw in the wildly popular online game <em>Minecraft</em> makes it easy for just about anyone to crash the server hosting the game, according to a computer programmer who has released proof-of-concept code that exploits the vulnerability.</p>
@@ -9,32 +9,32 @@
         <blockquote>
             <p>The vulnerability stems from the fact that the client is allowed to send the server information about certain slots. This, coupled with the NBT format’s nesting allows us to <em>craft</em> a packet that is incredibly complex for the server to deserialize but trivial for us to generate.</p>
             <p>In my case, I chose to create lists within lists, down to five levels. This is a json representation of what it looks like.</p>
-            <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">rekt</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-            <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                    <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                        <span class="p">]</span>
-                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                        <span class="p">]</span>
-                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                        <span class="p">]</span>
-                        <span class="nx">list</span><span class="o">:</span> <span class="p">[</span>
-                        <span class="p">]</span>
-                        <span class="p">...</span>
-                    <span class="p">]</span>
-                    <span class="p">...</span>
-                <span class="p">]</span>
-                <span class="p">...</span>
-            <span class="p">]</span>
-            <span class="p">...</span>
-        <span class="p">]</span>
-        <span class="p">...</span>
-    <span class="p">]</span>
-    <span class="p">...</span>
-<span class="p">}</span></code></pre></div>
+            <div><pre><code data-lang="javascript"><span>rekt</span><span>:</span> <span>{</span>
+    <span>list</span><span>:</span> <span>[</span>
+        <span>list</span><span>:</span> <span>[</span>
+            <span>list</span><span>:</span> <span>[</span>
+                <span>list</span><span>:</span> <span>[</span>
+                    <span>list</span><span>:</span> <span>[</span>
+                        <span>list</span><span>:</span> <span>[</span>
+                        <span>]</span>
+                        <span>list</span><span>:</span> <span>[</span>
+                        <span>]</span>
+                        <span>list</span><span>:</span> <span>[</span>
+                        <span>]</span>
+                        <span>list</span><span>:</span> <span>[</span>
+                        <span>]</span>
+                        <span>...</span>
+                    <span>]</span>
+                    <span>...</span>
+                <span>]</span>
+                <span>...</span>
+            <span>]</span>
+            <span>...</span>
+        <span>]</span>
+        <span>...</span>
+    <span>]</span>
+    <span>...</span>
+<span>}</span></code></pre></div>
             <p>The root of the object, <code>rekt</code>, contains 300 lists. Each list has a list with 10 sublists, and each of those sublists has 10 of their own, up until 5 levels of recursion. That’s a total of <code>10^5 * 300 = 30,000,000</code> lists.</p>
             <p>And this isn’t even the theoretical maximum for this attack. Just the nbt data for this payload is 26.6 megabytes. But luckily Minecraft implements a way to compress large packets, lucky us! zlib shrinks down our evil data to a mere 39 kilobytes.</p>
             <p>Note: in previous versions of Minecraft, there was no protocol wide compression for big packets. Previously, NBT was sent compressed with gzip and prefixed with a signed short of its length, which reduced our maximum payload size to <code>2^15 - 1</code>. Now that the length is a varint capable of storing integers up to <code>2^28</code>, our potential for attack has increased significantly.</p>

@@ -1,6 +1,6 @@
 <div id="readability-page-1" class="page">
-    <div id="content-main" class="hfeed">
-        <article class="post" role="article">
+    <div>
+        <article role="article">
             <p>For more than a decade the Web has used XMLHttpRequest (XHR) to achieve asynchronous requests in JavaScript. While very useful, XHR is not a very nice API. It suffers from lack of separation of concerns. The input, output and state are all managed by interacting with one object, and state is tracked using events. Also, the event-based model doesn’t play well with JavaScript’s recent focus on Promise- and generator-based asynchronous programming.</p>
             <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">Fetch API</a> intends to fix most of these problems. It does this by introducing the same primitives to JS that are used in the HTTP protocol. In addition, it introduces a utility function <code>fetch()</code> that succinctly captures the intention of retrieving a resource from the network.</p>
             <p>The <a href="https://fetch.spec.whatwg.org">Fetch specification</a>, which defines the API, nails down the semantics of a user agent fetching a resource. This, combined with ServiceWorkers, is an attempt to:</p>
@@ -13,11 +13,11 @@
             <p>Fetch API support can be detected by checking for <code>Headers</code>,<code>Request</code>, <code>Response</code> or <code>fetch</code> on the <code>window</code> or <code>worker</code> scope.</p>
             <h2>Simple fetching</h2>
             <p>The most useful, high-level part of the Fetch API is the <code>fetch()</code> function. In its simplest form it takes a URL and returns a promise that resolves to the response. The response is captured as a <code>Response</code> object.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">fetch<span>(</span><span>"/data.json"</span><span>)</span>.<span>then</span><span>(</span><span>function</span><span>(</span>res<span>)</span> <span>{</span>
+                            <td><pre>fetch<span>(</span><span>"/data.json"</span><span>)</span>.<span>then</span><span>(</span><span>function</span><span>(</span>res<span>)</span> <span>{</span>
       <span>// res instanceof Response == true.</span>
       <span>if</span> <span>(</span>res.<span>ok</span><span>)</span> <span>{</span>
         res.<span>json</span><span>(</span><span>)</span>.<span>then</span><span>(</span><span>function</span><span>(</span>data<span>)</span> <span>{</span>
@@ -34,11 +34,11 @@
                 </table>
             </div>
             <p>Submitting some parameters, it would look like this:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">fetch<span>(</span><span>"http://www.example.org/submit.php"</span><span>,</span> <span>{</span>
+                            <td><pre>fetch<span>(</span><span>"http://www.example.org/submit.php"</span><span>,</span> <span>{</span>
       method<span>:</span> <span>"POST"</span><span>,</span>
       headers<span>:</span> <span>{</span>
         <span>"Content-Type"</span><span>:</span> <span>"application/x-www-form-urlencoded"</span>
@@ -65,11 +65,11 @@
             <br/>certain visibility filters in place for privacy and security reasons, such as
             <br/>supporting CORS rules and ensuring cookies aren’t readable by third parties.</p>
             <p>The <a href="https://fetch.spec.whatwg.org/#headers-class">Headers interface</a> is a simple multi-map of names to values:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> content <span>=</span> <span>"Hello World"</span><span>;</span>
+                            <td><pre><span>var</span> content <span>=</span> <span>"Hello World"</span><span>;</span>
     <span>var</span> reqHeaders <span>=</span> <span>new</span> Headers<span>(</span><span>)</span><span>;</span>
     reqHeaders.<span>append</span><span>(</span><span>"Content-Type"</span><span>,</span> <span>"text/plain"</span>
     reqHeaders.<span>append</span><span>(</span><span>"Content-Length"</span><span>,</span> content.<span>length</span>.<span>toString</span><span>(</span><span>)</span><span>)</span><span>;</span>
@@ -80,11 +80,11 @@
             </div>
             <p>The same can be achieved by passing an array of arrays or a JS object literal
             <br/>to the constructor:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">reqHeaders <span>=</span> <span>new</span> Headers<span>(</span><span>{</span>
+                            <td><pre>reqHeaders <span>=</span> <span>new</span> Headers<span>(</span><span>{</span>
       <span>"Content-Type"</span><span>:</span> <span>"text/plain"</span><span>,</span>
       <span>"Content-Length"</span><span>:</span> content.<span>length</span>.<span>toString</span><span>(</span><span>)</span><span>,</span>
       <span>"X-Custom-Header"</span><span>:</span> <span>"ProcessThisImmediately"</span><span>,</span>
@@ -94,11 +94,11 @@
                 </table>
             </div>
             <p>The contents can be queried and retrieved:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">console.<span>log</span><span>(</span>reqHeaders.<span>has</span><span>(</span><span>"Content-Type"</span><span>)</span><span>)</span><span>;</span> <span>// true</span>
+                            <td><pre>console.<span>log</span><span>(</span>reqHeaders.<span>has</span><span>(</span><span>"Content-Type"</span><span>)</span><span>)</span><span>;</span> <span>// true</span>
     console.<span>log</span><span>(</span>reqHeaders.<span>has</span><span>(</span><span>"Set-Cookie"</span><span>)</span><span>)</span><span>;</span> <span>// false</span>
     reqHeaders.<span>set</span><span>(</span><span>"Content-Type"</span><span>,</span> <span>"text/html"</span><span>)</span><span>;</span>
     reqHeaders.<span>append</span><span>(</span><span>"X-Custom-Header"</span><span>,</span> <span>"AnotherValue"</span><span>)</span><span>;</span>
@@ -128,11 +128,11 @@
             <p>The details of how each guard affects the behaviors of the Headers object are
             <br/>in the <a href="https://fetch.spec.whatwg.org">specification</a>. For example, you may not append or set a “request” guarded Headers’ “Content-Length” header. Similarly, inserting “Set-Cookie” into a Response header is not allowed so that ServiceWorkers may not set cookies via synthesized Responses.</p>
             <p>All of the Headers methods throw TypeError if <code>name</code> is not a <a href="https://fetch.spec.whatwg.org/#concept-header-name">valid HTTP Header name</a>. The mutation operations will throw TypeError if there is an immutable guard. Otherwise they fail silently. For example:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> res <span>=</span> Response.<span>error</span><span>(</span><span>)</span><span>;</span>
+                            <td><pre><span>var</span> res <span>=</span> Response.<span>error</span><span>(</span><span>)</span><span>;</span>
     <span>try</span> <span>{</span>
       res.<span>headers</span>.<span>set</span><span>(</span><span>"Origin"</span><span>,</span> <span>"http://mybank.com"</span><span>)</span><span>;</span>
     <span>}</span> <span>catch</span><span>(</span>e<span>)</span> <span>{</span>
@@ -145,11 +145,11 @@
             <h2>Request</h2>
             <p>The Request interface defines a request to fetch a resource over HTTP. URL, method and headers are expected, but the Request also allows specifying a body, a request mode, credentials and cache hints.</p>
             <p>The simplest Request is of course, just a URL, as you may do to GET a resource.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> req <span>=</span> <span>new</span> Request<span>(</span><span>"/index.html"</span><span>)</span><span>;</span>
+                            <td><pre><span>var</span> req <span>=</span> <span>new</span> Request<span>(</span><span>"/index.html"</span><span>)</span><span>;</span>
     console.<span>log</span><span>(</span>req.<span>method</span><span>)</span><span>;</span> <span>// "GET"</span>
     console.<span>log</span><span>(</span>req.<span>url</span><span>)</span><span>;</span> <span>// "http://example.com/index.html"</span></pre> </td>
                         </tr>
@@ -159,11 +159,11 @@
             <p>You may also pass a Request to the <code>Request()</code> constructor to create a copy.
             <br/>(This is not the same as calling the <code>clone()</code> method, which is covered in
             <br/>the “Reading bodies” section.).</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> copy <span>=</span> <span>new</span> Request<span>(</span>req<span>)</span><span>;</span>
+                            <td><pre><span>var</span> copy <span>=</span> <span>new</span> Request<span>(</span>req<span>)</span><span>;</span>
     console.<span>log</span><span>(</span>copy.<span>method</span><span>)</span><span>;</span> <span>// "GET"</span>
     console.<span>log</span><span>(</span>copy.<span>url</span><span>)</span><span>;</span> <span>// "http://example.com/index.html"</span></pre> </td>
                         </tr>
@@ -173,11 +173,11 @@
             <p>Again, this form is probably only useful in ServiceWorkers.</p>
             <p>The non-URL attributes of the <code>Request</code> can only be set by passing initial
             <br/>values as a second argument to the constructor. This argument is a dictionary.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> uploadReq <span>=</span> <span>new</span> Request<span>(</span><span>"/uploadImage"</span><span>,</span> <span>{</span>
+                            <td><pre><span>var</span> uploadReq <span>=</span> <span>new</span> Request<span>(</span><span>"/uploadImage"</span><span>,</span> <span>{</span>
       method<span>:</span> <span>"POST"</span><span>,</span>
       headers<span>:</span> <span>{</span>
         <span>"Content-Type"</span><span>:</span> <span>"image/png"</span><span>,</span>
@@ -191,11 +191,11 @@
             <p>The Request’s mode is used to determine if cross-origin requests lead to valid responses, and which properties on the response are readable. Legal mode values are <code>"same-origin"</code>, <code>"no-cors"</code> (default) and <code>"cors"</code>.</p>
             <p>The <code>"same-origin"</code> mode is simple, if a request is made to another origin with this mode set, the result is simply an error. You could use this to ensure that
             <br/>a request is always being made to your origin.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> arbitraryUrl <span>=</span> document.<span>getElementById</span><span>(</span><span>"url-input"</span><span>)</span>.<span>value</span><span>;</span>
+                            <td><pre><span>var</span> arbitraryUrl <span>=</span> document.<span>getElementById</span><span>(</span><span>"url-input"</span><span>)</span>.<span>value</span><span>;</span>
     fetch<span>(</span>arbitraryUrl<span>,</span> <span>{</span> mode<span>:</span> <span>"same-origin"</span> <span>}</span><span>)</span>.<span>then</span><span>(</span><span>function</span><span>(</span>res<span>)</span> <span>{</span>
       console.<span>log</span><span>(</span><span>"Response succeeded?"</span><span>,</span> res.<span>ok</span><span>)</span><span>;</span>
     <span>}</span><span>,</span> <span>function</span><span>(</span>e<span>)</span> <span>{</span>
@@ -208,11 +208,11 @@
             <p>The <code>"no-cors"</code> mode captures what the web platform does by default for scripts you import from CDNs, images hosted on other domains, and so on. First, it prevents the method from being anything other than “HEAD”, “GET” or “POST”. Second, if any ServiceWorkers intercept these requests, they may not add or override any headers except for <a href="https://fetch.spec.whatwg.org/#simple-header">these</a>. Third, JavaScript may not access any properties of the resulting Response. This ensures that ServiceWorkers do not affect the semantics of the Web and prevents security and privacy issues that could arise from leaking data across domains.</p>
             <p><code>"cors"</code> mode is what you’ll usually use to make known cross-origin requests to access various APIs offered by other vendors. These are expected to adhere to
             <br/>the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS protocol</a>. Only a <a href="https://fetch.spec.whatwg.org/#concept-filtered-response-cors">limited set</a> of headers is exposed in the Response, but the body is readable. For example, you could get a list of Flickr’s <a href="https://www.flickr.com/services/api/flickr.interestingness.getList.html">most interesting</a> photos today like this:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> u <span>=</span> <span>new</span> URLSearchParams<span>(</span><span>)</span><span>;</span>
+                            <td><pre><span>var</span> u <span>=</span> <span>new</span> URLSearchParams<span>(</span><span>)</span><span>;</span>
     u.<span>append</span><span>(</span><span>'method'</span><span>,</span> <span>'flickr.interestingness.getList'</span><span>)</span><span>;</span>
     u.<span>append</span><span>(</span><span>'api_key'</span><span>,</span> <span>'&lt;insert api key here&gt;'</span><span>)</span><span>;</span>
     u.<span>append</span><span>(</span><span>'format'</span><span>,</span> <span>'json'</span><span>)</span><span>;</span>
@@ -236,11 +236,11 @@
             </div>
             <p>You may not read out the “Date” header since Flickr does not allow it via
             <br/> <code>Access-Control-Expose-Headers</code>.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">response.<span>headers</span>.<span>get</span><span>(</span><span>"Date"</span><span>)</span><span>;</span> <span>// null</span></pre> </td>
+                            <td><pre>response.<span>headers</span>.<span>get</span><span>(</span><span>"Date"</span><span>)</span><span>;</span> <span>// null</span></pre> </td>
                         </tr>
                     </tbody>
                 </table>
@@ -270,11 +270,11 @@
             <p>The “error” type results in the <code>fetch()</code> Promise rejecting with TypeError.</p>
             <p>There are certain attributes that are useful only in a ServiceWorker scope. The
             <br/>idiomatic way to return a Response to an intercepted request in ServiceWorkers is:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">addEventListener<span>(</span><span>'fetch'</span><span>,</span> <span>function</span><span>(</span>event<span>)</span> <span>{</span>
+                            <td><pre>addEventListener<span>(</span><span>'fetch'</span><span>,</span> <span>function</span><span>(</span>event<span>)</span> <span>{</span>
       event.<span>respondWith</span><span>(</span><span>new</span> Response<span>(</span><span>"Response body"</span><span>,</span> <span>{</span>
         headers<span>:</span> <span>{</span> <span>"Content-Type"</span> <span>:</span> <span>"text/plain"</span> <span>}</span>
       <span>}</span><span>)</span><span>;</span>
@@ -307,11 +307,11 @@
             </ul>
             <p>This is a significant improvement over XHR in terms of ease of use of non-text data!</p>
             <p>Request bodies can be set by passing <code>body</code> parameters:</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> form <span>=</span> <span>new</span> FormData<span>(</span>document.<span>getElementById</span><span>(</span><span>'login-form'</span><span>)</span><span>)</span><span>;</span>
+                            <td><pre><span>var</span> form <span>=</span> <span>new</span> FormData<span>(</span>document.<span>getElementById</span><span>(</span><span>'login-form'</span><span>)</span><span>)</span><span>;</span>
     fetch<span>(</span><span>"/login"</span><span>,</span> <span>{</span>
       method<span>:</span> <span>"POST"</span><span>,</span>
       body<span>:</span> form
@@ -321,11 +321,11 @@
                 </table>
             </div>
             <p>Responses take the first argument as the body.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> res <span>=</span> <span>new</span> Response<span>(</span><span>new</span> File<span>(</span><span>[</span><span>"chunk"</span><span>,</span> <span>"chunk"</span><span>]</span><span>,</span> <span>"archive.zip"</span><span>,</span>
+                            <td><pre><span>var</span> res <span>=</span> <span>new</span> Response<span>(</span><span>new</span> File<span>(</span><span>[</span><span>"chunk"</span><span>,</span> <span>"chunk"</span><span>]</span><span>,</span> <span>"archive.zip"</span><span>,</span>
                            <span>{</span> type<span>:</span> <span>"application/zip"</span> <span>}</span><span>)</span><span>)</span><span>;</span></pre> </td>
                         </tr>
                     </tbody>
@@ -334,11 +334,11 @@
             <p>Both Request and Response (and by extension the <code>fetch()</code> function), will try to intelligently <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">determine the content type</a>. Request will also automatically set a “Content-Type” header if none is set in the dictionary.</p>
             <h3>Streams and cloning</h3>
             <p>It is important to realise that Request and Response bodies can only be read once! Both interfaces have a boolean attribute <code>bodyUsed</code> to determine if it is safe to read or not.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript"><span>var</span> res <span>=</span> <span>new</span> Response<span>(</span><span>"one time use"</span><span>)</span><span>;</span>
+                            <td><pre><span>var</span> res <span>=</span> <span>new</span> Response<span>(</span><span>"one time use"</span><span>)</span><span>;</span>
     console.<span>log</span><span>(</span>res.<span>bodyUsed</span><span>)</span><span>;</span> <span>// false</span>
     res.<span>text</span><span>(</span><span>)</span>.<span>then</span><span>(</span><span>function</span><span>(</span>v<span>)</span> <span>{</span>
       console.<span>log</span><span>(</span>res.<span>bodyUsed</span><span>)</span><span>;</span> <span>// true</span>
@@ -355,11 +355,11 @@
             <p>This decision allows easing the transition to an eventual <a href="https://streams.spec.whatwg.org/">stream-based</a> Fetch API. The intention is to let applications consume data as it arrives, allowing for JavaScript to deal with larger files like videos, and perform things like compression and editing on the fly.</p>
             <p>Often, you’ll want access to the body multiple times. For example, you can use the upcoming <a href="http://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache-objects">Cache API</a> to store Requests and Responses for offline use, and Cache requires bodies to be available for reading.</p>
             <p>So how do you read out the body multiple times within such constraints? The API provides a <code>clone()</code> method on the two interfaces. This will return a clone of the object, with a ‘new’ body. <code>clone()</code> MUST be called before the body of the corresponding object has been used. That is, <code>clone()</code> first, read later.</p>
-            <div class="wp_syntax">
+            <div>
                 <table>
                     <tbody>
                         <tr>
-                            <td class="code"><pre class="javascript">addEventListener<span>(</span><span>'fetch'</span><span>,</span> <span>function</span><span>(</span>evt<span>)</span> <span>{</span>
+                            <td><pre>addEventListener<span>(</span><span>'fetch'</span><span>,</span> <span>function</span><span>(</span>evt<span>)</span> <span>{</span>
       <span>var</span> sheep <span>=</span> <span>new</span> Response<span>(</span><span>"Dolly"</span><span>)</span><span>;</span>
       console.<span>log</span><span>(</span>sheep.<span>bodyUsed</span><span>)</span><span>;</span> <span>// false</span>
       <span>var</span> clone <span>=</span> sheep.<span>clone</span><span>(</span><span>)</span><span>;</span>
