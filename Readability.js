@@ -797,6 +797,7 @@ Readability.prototype = {
             var newNode = node.children[0];
             node.parentNode.replaceChild(newNode, node);
             node = newNode;
+            elementsToScore.push(node);
           } else if (!this._hasChildBlockElement(node)) {
             node = this._setNodeTag(node, "P");
             elementsToScore.push(node);
