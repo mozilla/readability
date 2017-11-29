@@ -124,8 +124,7 @@ Readability.prototype = {
 
   DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE" ],
 
-  // These are the IDs and classes that readability sets itself.
-  IDS_TO_PRESERVE: [ "readability-content", "readability-page-1" ],
+  // These are the classes that readability sets itself.
   CLASSES_TO_PRESERVE: [ "readability-styled", "page" ],
 
   /**
@@ -138,8 +137,8 @@ Readability.prototype = {
     // Readability cannot open relative uris so we convert them to absolute uris.
     this._fixRelativeUris(articleContent);
 
-    // Remove IDs and classes.
-    this._cleanIDsAndClasses(articleContent);
+    // Remove classes.
+    this._cleanClasses(articleContent);
   },
 
   /**
@@ -234,18 +233,14 @@ Readability.prototype = {
   },
 
   /**
-   * Removes the id="" and class="" attribute from every element in the given
-   * subtree, except those that match IDS_TO_PRESERVE, CLASSES_TO_PRESERVE and
+   * Removes the class="" attribute from every element in the given
+   * subtree, except those that match CLASSES_TO_PRESERVE and
    * the classesToPreserve array from the options object.
    *
    * @param Element
    * @return void
    */
-  _cleanIDsAndClasses: function(node) {
-    if (this.IDS_TO_PRESERVE.indexOf(node.id) == -1) {
-      node.removeAttribute("id");
-    }
-
+  _cleanClasses: function(node) {
     var classesToPreserve = this._classesToPreserve;
     var className = node.className
       .split(/\s+/)
@@ -261,7 +256,7 @@ Readability.prototype = {
     }
 
     for (node = node.firstElementChild; node; node = node.nextElementSibling) {
-      this._cleanIDsAndClasses(node);
+      this._cleanClasses(node);
     }
   },
 
