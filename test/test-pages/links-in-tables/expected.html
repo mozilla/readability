@@ -1,5 +1,5 @@
 <div id="readability-page-1" class="page">
-    <div itemprop="articlesBody">
+    <div id="post-body-2701400044422363572" itemprop="articlesBody">
         <p> <em>Posted by Andrew Hayden, Software Engineer on Google Play</em> </p>
         <p> Android users are downloading tens of billions of apps and games on Google Play. We're also seeing developers update their apps frequently in order to provide users with great content, improve security, and enhance the overall user experience. It takes a lot of data to download these updates and we know users care about how much data their devices are using. Earlier this year, we announced that we started using <a href="https://android-developers.blogspot.com/2016/07/improvements-for-smaller-app-downloads.html">the
 bsdiff algorithm</a> <a href="https://android-developers.blogspot.com/2016/07/improvements-for-smaller-app-downloads.html">(by
@@ -13,9 +13,7 @@ patching</a></strong>. App Updates using File-by-File patching are, <strong>on a
 patching </span></strong> </p>
         <p> Android apps are packaged as APKs, which are ZIP files with special conventions. Most of the content within the ZIP files (and APKs) is compressed using a technology called <a href="https://en.wikipedia.org/w/index.php?title=DEFLATE&amp;oldid=735386036">Deflate</a>. Deflate is really good at compressing data but it has a drawback: it makes identifying changes in the original (uncompressed) content really hard. Even a tiny change to the original content (like changing one word in a book) can make the compressed output of deflate look <em>completely different</em>. Describing the differences between the <em>original</em> content is easy, but describing the differences between the <em>compressed</em> content is so hard that it leads to inefficient patches. </p>
         <p> Watch how much the compressed text on the right side changes from a one-letter change in the uncompressed text on the left: </p>
-        <div>
-            <a href="https://2.bp.blogspot.com/-chCZZinlUTg/WEcxvJo9gdI/AAAAAAAADnk/3ND_BspqN6Y2j5xxkLFW3RyS2Ig0NHZpQCLcB/s1600/ipsum-opsum.gif" imageanchor="1"><img src="https://2.bp.blogspot.com/-chCZZinlUTg/WEcxvJo9gdI/AAAAAAAADnk/3ND_BspqN6Y2j5xxkLFW3RyS2Ig0NHZpQCLcB/s640/ipsum-opsum.gif" width="640" height="105" /></a>
-        </div>
+        <div><a href="https://2.bp.blogspot.com/-chCZZinlUTg/WEcxvJo9gdI/AAAAAAAADnk/3ND_BspqN6Y2j5xxkLFW3RyS2Ig0NHZpQCLcB/s1600/ipsum-opsum.gif" imageanchor="1"><img src="https://2.bp.blogspot.com/-chCZZinlUTg/WEcxvJo9gdI/AAAAAAAADnk/3ND_BspqN6Y2j5xxkLFW3RyS2Ig0NHZpQCLcB/s640/ipsum-opsum.gif" width="640" height="105"/></a></div>
         <p> File-by-File therefore is based on detecting changes in the uncompressed data. To generate a patch, we first decompress both old and new files before computing the delta (we still use bsdiff here). Then to apply the patch, we decompress the old file, apply the delta to the uncompressed content and then recompress the new file. In doing so, we need to make sure that the APK on your device is a perfect match, byte for byte, to the one on the Play Store (see <a href="https://source.android.com/security/apksigning/v2.html">APK Signature
 Schema v2 </a>for why). </p>
         <p> When recompressing the new file, we hit two complications. First, Deflate has a number of settings that affect output; and we don't know which settings were used in the first place. Second, many versions of deflate exist and we need to know whether the version on your device is suitable. </p>
@@ -53,7 +51,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.king.farmheroessupersaga&amp;hl=en"><span>Farm Heroes Super Saga</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.king.farmheroessupersaga&amp;hl=en"><span>Farm Heroes Super Saga</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>71.1 MB</span></p>
@@ -67,7 +65,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.maps"><span>Google Maps</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.maps"><span>Google Maps</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>32.7 MB</span></p>
@@ -81,7 +79,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.google.android.gm"><span>Gmail</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.google.android.gm"><span>Gmail</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>17.8 MB</span></p>
@@ -95,7 +93,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.google.android.tts"><span>Google TTS</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.google.android.tts"><span>Google TTS</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>18.9 MB</span></p>
@@ -109,7 +107,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.amazon.kindle"><span>Kindle</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.amazon.kindle"><span>Kindle</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>52.4 MB</span></p>
@@ -123,7 +121,7 @@ Patching?</span></strong> </p>
                         </tr>
                         <tr>
                             <td>
-                                <div dir="ltr"><a href="https://play.google.com/store/apps/details?id=com.netflix.mediaclient"><span>Netflix</span></a></div>
+                                <div dir="ltr"> <a href="https://play.google.com/store/apps/details?id=com.netflix.mediaclient"><span>Netflix</span></a></div>
                             </td>
                             <td>
                                 <p dir="ltr"> <span>16.2 MB</span></p>
@@ -137,7 +135,7 @@ Patching?</span></strong> </p>
                         </tr>
                     </tbody>
                 </table>
-            </div><span></span><br/></div><em>Disclaimer: if you see different patch sizes when you press "update"
+            </div> <span id="docs-internal-guid-de7f0210-d587-05da-d332-146959aa303f"></span><br/> </div> <em>Disclaimer: if you see different patch sizes when you press "update"
 manually, that is because we are not currently using File-by-file for
 interactive updates, only those done in the background.</em>
         <p> <strong><span>Saving data and making our
@@ -147,9 +145,7 @@ users (&amp; developers!) happy</span></strong> </p>
 project</a> where you can find information, including the source code. Yes, File-by-File patching is completely open-source! </p>
         <p> As a developer if you're interested in reducing your APK size still further, here are some <a href="https://developer.android.com/topic/performance/reduce-apk-size.html?utm_campaign=android_discussion_filebyfile_120616&amp;utm_source=anddev&amp;utm_medium=blog">general
 tips on reducing APK size</a>. </p>
-        <div>
-            <a href="https://2.bp.blogspot.com/-5aRh1dM6Unc/WEcNs55RGhI/AAAAAAAADnI/tzr_oOJjZwgWd9Vu25ydY0UwB3eXKupXwCLcB/s1600/image01.png" imageanchor="1"><img src="https://2.bp.blogspot.com/-5aRh1dM6Unc/WEcNs55RGhI/AAAAAAAADnI/tzr_oOJjZwgWd9Vu25ydY0UwB3eXKupXwCLcB/s200/image01.png" width="191" height="200" /></a>
-        </div><span itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+        <div><a href="https://2.bp.blogspot.com/-5aRh1dM6Unc/WEcNs55RGhI/AAAAAAAADnI/tzr_oOJjZwgWd9Vu25ydY0UwB3eXKupXwCLcB/s1600/image01.png" imageanchor="1"><img src="https://2.bp.blogspot.com/-5aRh1dM6Unc/WEcNs55RGhI/AAAAAAAADnI/tzr_oOJjZwgWd9Vu25ydY0UwB3eXKupXwCLcB/s200/image01.png" width="191" height="200"/></a></div> <span itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
 <meta content="https://plus.google.com/116899029375914044550" itemprop="url"/>
-</span></div>
+</span> </div>
 </div>
