@@ -242,7 +242,7 @@ Readability.prototype = {
    */
   _cleanClasses: function(node) {
     var classesToPreserve = this._classesToPreserve;
-    var className = node.className
+    var className = (node.getAttribute("class") || "")
       .split(/\s+/)
       .filter(function(cls) {
         return classesToPreserve.indexOf(cls) != -1;
@@ -250,7 +250,7 @@ Readability.prototype = {
       .join(" ");
 
     if (className) {
-      node.className = className;
+      node.setAttribute("class", className);
     } else {
       node.removeAttribute("class");
     }
