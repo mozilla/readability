@@ -124,8 +124,7 @@ Readability.prototype = {
 
   DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE" ],
 
-  // These are the IDs and classes that readability sets itself.
-  IDS_TO_PRESERVE: [ "readability-content", "readability-page-1" ],
+  // These are the classes that readability sets itself.
   CLASSES_TO_PRESERVE: [ "readability-styled", "page" ],
 
   /**
@@ -138,8 +137,8 @@ Readability.prototype = {
     // Readability cannot open relative uris so we convert them to absolute uris.
     this._fixRelativeUris(articleContent);
 
-    // Remove IDs and classes.
-    this._cleanIDsAndClasses(articleContent);
+    // Remove classes.
+    this._cleanClasses(articleContent);
   },
 
   /**
@@ -234,20 +233,16 @@ Readability.prototype = {
   },
 
   /**
-   * Removes the id="" and class="" attribute from every element in the given
-   * subtree, except those that match IDS_TO_PRESERVE, CLASSES_TO_PRESERVE and
+   * Removes the class="" attribute from every element in the given
+   * subtree, except those that match CLASSES_TO_PRESERVE and
    * the classesToPreserve array from the options object.
    *
    * @param Element
    * @return void
    */
-  _cleanIDsAndClasses: function(node) {
-    if (this.IDS_TO_PRESERVE.indexOf(node.id) == -1) {
-      node.removeAttribute("id");
-    }
-
+  _cleanClasses: function(node) {
     var classesToPreserve = this._classesToPreserve;
-    var className = node.className
+    var className = (node.getAttribute("class") || "")
       .split(/\s+/)
       .filter(function(cls) {
         return classesToPreserve.indexOf(cls) != -1;
@@ -255,13 +250,13 @@ Readability.prototype = {
       .join(" ");
 
     if (className) {
-      node.className = className;
+      node.setAttribute("class", className);
     } else {
       node.removeAttribute("class");
     }
 
     for (node = node.firstElementChild; node; node = node.nextElementSibling) {
-      this._cleanIDsAndClasses(node);
+      this._cleanClasses(node);
     }
   },
 
@@ -375,8 +370,13 @@ Readability.prototype = {
         curTitle = origTitle.substring(origTitle.lastIndexOf(':') + 1);
 
         // If the title is now too short, try the first colon instead:
-        if (wordCount(curTitle) < 3)
+        if (wordCount(curTitle) < 3) {
           curTitle = origTitle.substring(origTitle.indexOf(':') + 1);
+          // But if we have too many words before the colon there's something weird
+          // with the titles and the H tags so let's just use the original title instead
+        } else if (wordCount(origTitle.substr(0, origTitle.indexOf(':'))) > 5) {
+          curTitle = origTitle;
+        }
       }
     } else if (curTitle.length > 150 || curTitle.length < 15) {
       var hOnes = doc.getElementsByTagName('h1');
