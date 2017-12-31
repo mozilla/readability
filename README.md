@@ -48,7 +48,7 @@ Until [#346](https://github.com/mozilla/readability/issues/346) is fixed, if you
 ...
 var dom = new JSDOM(html, OPTIONS);
 Node = dom.window.Node;
-var article = new Readability(uri, dom).parse();
+var article = new Readability(uri, dom.window.document).parse();
 ```
 
 ### Optional
