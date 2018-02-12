@@ -34,6 +34,7 @@ function Readability(uri, doc, options) {
   this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
+  this._attempts = [];
 
   // Configurable options
   this._debug = !!options.debug;
@@ -1092,12 +1093,23 @@ Readability.prototype = {
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
           this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
+          this._attempts.push(articleContent);
         } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
           this._removeFlag(this.FLAG_WEIGHT_CLASSES);
+          this._attempts.push(articleContent);
         } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
           this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
+          this._attempts.push(articleContent);
         } else {
-          return null;
+          // No luck after removing flags, just return the longest text we found during the different loops
+          that = this;
+          var results = this._attempts.sort(function (a, b) {
+            return that._getInnerText(a, true).length < that._getInnerText(b, true).length;
+          });
+          if (this._getInnerText(results[0], true).length === 0) {
+            return null;
+          }
+          articleContent = results[0];
         }
       } else {
         // Find out text direction from ancestors of final top candidate.
