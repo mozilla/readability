@@ -1083,12 +1083,15 @@ Readability.prototype = {
       if (this._debug)
         this.log("Article content after paging: " + articleContent.innerHTML);
 
+      var parseSuccessful = true;
+
       // Now that we've gone through the full algorithm, check to see if
       // we got any meaningful content. If we didn't, we may need to re-run
       // grabArticle with different flags set. This gives us a higher likelihood of
       // finding the content, and the sieve approach gives us a higher likelihood of
       // finding the -right- content.
       if (this._getInnerText(articleContent, true).length < this._wordThreshold) {
+        parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
@@ -1102,19 +1105,25 @@ Readability.prototype = {
           this._attempts.push(articleContent);
         } else {
           // No luck after removing flags, just return the longest text we found during the different loops
-          that = this;
+          var that = this;
           var results = this._attempts.sort(function (a, b) {
             return that._getInnerText(a, true).length < that._getInnerText(b, true).length;
           });
+
+          // But first check if we actually have something
           if (this._getInnerText(results[0], true).length === 0) {
             return null;
           }
+
           articleContent = results[0];
+          parseSuccessful = true;
         }
-      } else {
+      }
+
+      if (parseSuccessful) {
         // Find out text direction from ancestors of final top candidate.
         var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
-        this._someNode(ancestors, function(ancestor) {
+        this._someNode(ancestors, function (ancestor) {
           if (!ancestor.tagName)
             return false;
           var articleDir = ancestor.getAttribute("dir");
