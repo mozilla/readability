@@ -295,7 +295,7 @@ Readability.prototype = {
 
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".
-      return pathBase + uri;
+      return prePath + "/" + uri;
     }
 
     var links = articleContent.getElementsByTagName("a");
