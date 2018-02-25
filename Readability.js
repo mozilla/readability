@@ -1090,28 +1090,29 @@ Readability.prototype = {
       // grabArticle with different flags set. This gives us a higher likelihood of
       // finding the content, and the sieve approach gives us a higher likelihood of
       // finding the -right- content.
-      if (this._getInnerText(articleContent, true).length < this._wordThreshold) {
+      var textLength = this._getInnerText(articleContent, true).length;
+      if (textLength < this._wordThreshold) {
         parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
           this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
-          this._attempts.push(articleContent);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
           this._removeFlag(this.FLAG_WEIGHT_CLASSES);
-          this._attempts.push(articleContent);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
           this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
-          this._attempts.push(articleContent);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else {
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
           // No luck after removing flags, just return the longest text we found during the different loops
-          var that = this;
-          var results = this._attempts.sort(function (a, b) {
-            return that._getInnerText(a, true).length < that._getInnerText(b, true).length;
+          this._attempts.sort(function (a, b) {
+            return a.textLength < b.textLength;
           });
 
           // But first check if we actually have something
-          if (this._getInnerText(results[0], true).length === 0) {
+          if (this._attempts[0].textLength === 0) {
             return null;
           }
 
