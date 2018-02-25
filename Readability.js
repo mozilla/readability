@@ -134,9 +134,9 @@ Readability.prototype = {
    * @param Element
    * @return void
   **/
-  _postProcessContent: function(articleContent) {
+  _postProcessContent: function(articleContent, baseElementPath) {
     // Readability cannot open relative uris so we convert them to absolute uris.
-    this._fixRelativeUris(articleContent);
+    this._fixRelativeUris(articleContent, baseElementPath);
 
     // Remove classes.
     this._cleanClasses(articleContent);
@@ -268,7 +268,7 @@ Readability.prototype = {
    * @param Element
    * @return void
    */
-  _fixRelativeUris: function(articleContent) {
+  _fixRelativeUris: function(articleContent, baseElementPath) {
     var scheme = this._uri.scheme;
     var prePath = this._uri.prePath;
     var pathBase = this._uri.pathBase;
@@ -296,7 +296,11 @@ Readability.prototype = {
 
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".
-      return prePath + "/" + uri;
+      if(baseElementPath) {
+        return toAbsoluteURI(baseElementPath) + uri;
+      }
+
+      return pathBase + uri;
     }
 
     var links = articleContent.getElementsByTagName("a");
@@ -1742,8 +1746,15 @@ Readability.prototype = {
       return null;
 
     this.log("Grabbed: " + articleContent.innerHTML);
-
-    this._postProcessContent(articleContent);
+    
+    var baseElementPath;
+    // Determine the path base if there is a "base" element
+    var baseElement = this._doc.getElementsByTagName('base');
+    if (baseElement.length > 0) {
+      baseElementPath = baseElement[0].getAttribute("href");
+    }
+    
+    this._postProcessContent(articleContent, baseElementPath);
 
     // If we haven't found an excerpt in the article's metadata, use the article's
     // first paragraph as the excerpt. This is used for displaying a preview of
