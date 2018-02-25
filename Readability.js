@@ -296,9 +296,8 @@ Readability.prototype = {
 
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".
-      if(baseElementPath) {
+      if (baseElementPath)
         return toAbsoluteURI(baseElementPath) + uri;
-      }
 
       return pathBase + uri;
     }
@@ -1746,14 +1745,14 @@ Readability.prototype = {
       return null;
 
     this.log("Grabbed: " + articleContent.innerHTML);
-    
+
     var baseElementPath;
     // Determine the path base if there is a "base" element
     var baseElement = this._doc.getElementsByTagName('base');
     if (baseElement.length > 0) {
       baseElementPath = baseElement[0].getAttribute("href");
     }
-    
+
     this._postProcessContent(articleContent, baseElementPath);
 
     // If we haven't found an excerpt in the article's metadata, use the article's
