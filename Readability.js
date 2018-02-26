@@ -1116,7 +1116,7 @@ Readability.prototype = {
             return null;
           }
 
-          articleContent = results[0];
+          articleContent = this._attempts[0].articleContent;
           parseSuccessful = true;
         }
       }
