@@ -133,9 +133,9 @@ Readability.prototype = {
    * @param Element
    * @return void
   **/
-  _postProcessContent: function(articleContent, baseElementPath) {
+  _postProcessContent: function(articleContent) {
     // Readability cannot open relative uris so we convert them to absolute uris.
-    this._fixRelativeUris(articleContent, baseElementPath);
+    this._fixRelativeUris(articleContent);
 
     // Remove classes.
     this._cleanClasses(articleContent);
@@ -267,10 +267,20 @@ Readability.prototype = {
    * @param Element
    * @return void
    */
-  _fixRelativeUris: function(articleContent, baseElementPath) {
+  _fixRelativeUris: function(articleContent) {
     var scheme = this._uri.scheme;
     var prePath = this._uri.prePath;
     var pathBase = this._uri.pathBase;
+    var baseElementPath = pathBase;
+
+    // See if the document has a base element and determine the uri from that
+    var baseElement = this._doc.getElementsByTagName('base');
+    if (baseElement.length > 0) {
+      baseElementPath = toAbsoluteURI(baseElement[0].getAttribute('href'));
+      if (baseElementPath.slice(-1) !== '/') {
+        baseElementPath += '/';
+      }
+    }
 
     function toAbsoluteURI(uri) {
       // If this is already an absolute URI, return it.
@@ -295,10 +305,7 @@ Readability.prototype = {
 
       // Standard relative URI; add entire path. pathBase already includes a
       // trailing "/".
-      if (baseElementPath)
-        return toAbsoluteURI(baseElementPath) + uri;
-
-      return pathBase + uri;
+      return baseElementPath + uri;
     }
 
     var links = articleContent.getElementsByTagName("a");
@@ -1724,14 +1731,7 @@ Readability.prototype = {
 
     this.log("Grabbed: " + articleContent.innerHTML);
 
-    var baseElementPath;
-    // Determine the path base if there is a "base" element
-    var baseElement = this._doc.getElementsByTagName('base');
-    if (baseElement.length > 0) {
-      baseElementPath = baseElement[0].getAttribute("href");
-    }
-
-    this._postProcessContent(articleContent, baseElementPath);
+    this._postProcessContent(articleContent);
 
     // If we haven't found an excerpt in the article's metadata, use the article's
     // first paragraph as the excerpt. This is used for displaying a preview of

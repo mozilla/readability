@@ -20,7 +20,7 @@
     "url": "https://github.com/mozilla/readability/issues"
   },
   "engines": {
-    "node" : ">=6.5"
+    "node": ">=7.0"
   },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
