@@ -1112,7 +1112,7 @@ Readability.prototype = {
           });
 
           // But first check if we actually have something
-          if (this._attempts[0].textLength === 0) {
+          if (this._attempts[0].textLength) {
             return null;
           }
 
