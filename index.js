@@ -1,5 +1,6 @@
 var path = require("path");
 var fs = require("fs");
+var url = require("url");
 
 // We want to load Readability and JSDOMParser, which aren't set up as commonjs libraries,
 // and so we need to do some hocus-pocus with 'vm' to import them on a separate scope
@@ -14,6 +15,7 @@ var scopeContext = {};
 // in the scope we're using:
 scopeContext.dump = console.log;
 scopeContext.console = console;
+scopeContext.URL = url.URL;
 
 // Actually load files. NB: if either of the files has parse errors,
 // node is dumb and shows you a syntax error *at this callsite* . Don't try to find

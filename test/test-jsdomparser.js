@@ -9,7 +9,7 @@ var BASETESTCASE = '<html><body><p>Some text and <a class="someclass" href="#">a
                    '<div id="foo">With a <script>With &lt; fancy " characters in it because' +
                    '</script> that is fun.<span>And another node to make it harder</span></div><form><input type="text"/><input type="number"/>Here\'s a form</form></body></html>';
 
-var baseDoc = new JSDOMParser().parse(BASETESTCASE);
+var baseDoc = new JSDOMParser().parse(BASETESTCASE, "http://fakehost/");
 
 describe("Test JSDOM functionality", function() {
   function nodeExpect(actual, expected) {
@@ -35,6 +35,11 @@ describe("Test JSDOM functionality", function() {
     expect(generatedHTML).eql('With &lt; fancy " characters in it because');
     expect(scriptNode.textContent).eql('With < fancy " characters in it because');
 
+  });
+
+  it("should have basic URI information", function() {
+    expect(baseDoc.documentURI, "http://fakehost/");
+    expect(baseDoc.baseURI, "http://fakehost/");
   });
 
   it("should deal with script tags", function() {
@@ -298,5 +303,20 @@ describe("Recovery from self-closing tags that have close tags", function() {
     expect(doc.firstChild.firstChild.localName).eql("input");
     expect(doc.firstChild.firstChild.childNodes.length).eql(1);
     expect(doc.firstChild.firstChild.firstChild.localName).eql("p");
+  });
+});
+
+describe("baseURI parsing", function() {
+  it("should handle various types of relative and absolute base URIs", function() {
+    function checkBase(base, expectedResult) {
+      var html = "<html><head><base href='" + base + "'></base></head><body/></html>";
+      var doc = new JSDOMParser().parse(html, "http://fakehost/some/dir/");
+      expect(doc.baseURI).eql(expectedResult);
+    }
+
+    checkBase("relative/path", "http://fakehost/some/dir/relative/path");
+    checkBase("/path", "http://fakehost/path");
+    checkBase("http://absolute/", "http://absolute/");
+    checkBase("//absolute/path", "http://absolute/path");
   });
 });

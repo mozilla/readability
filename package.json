@@ -1,6 +1,6 @@
 {
   "name": "readability",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "Readability.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "url": "https://github.com/mozilla/readability/issues"
   },
   "engines": {
-    "node" : ">=6.5"
+    "node" : ">=7.0"
   },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
