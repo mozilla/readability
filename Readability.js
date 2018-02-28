@@ -34,6 +34,7 @@ function Readability(uri, doc, options) {
   this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
+  this._attempts = [];
 
   // Configurable options
   this._debug = !!options.debug;
@@ -1093,24 +1094,45 @@ Readability.prototype = {
       if (this._debug)
         this.log("Article content after paging: " + articleContent.innerHTML);
 
+      var parseSuccessful = true;
+
       // Now that we've gone through the full algorithm, check to see if
       // we got any meaningful content. If we didn't, we may need to re-run
       // grabArticle with different flags set. This gives us a higher likelihood of
       // finding the content, and the sieve approach gives us a higher likelihood of
       // finding the -right- content.
-      if (this._getInnerText(articleContent, true).length < this._wordThreshold) {
+      var textLength = this._getInnerText(articleContent, true).length;
+      if (textLength < this._wordThreshold) {
+        parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
           this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
           this._removeFlag(this.FLAG_WEIGHT_CLASSES);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
           this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else {
-          return null;
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
+          // No luck after removing flags, just return the longest text we found during the different loops
+          this._attempts.sort(function (a, b) {
+            return a.textLength < b.textLength;
+          });
+
+          // But first check if we actually have something
+          if (!this._attempts[0].textLength) {
+            return null;
+          }
+
+          articleContent = this._attempts[0].articleContent;
+          parseSuccessful = true;
         }
-      } else {
+      }
+
+      if (parseSuccessful) {
         // Find out text direction from ancestors of final top candidate.
         var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
         this._someNode(ancestors, function(ancestor) {

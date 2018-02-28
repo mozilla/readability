@@ -229,6 +229,7 @@ describe("Test pages", function() {
 
       runTestsWithItems("jsdom", function(source) {
         var doc = jsdom(source, {
+          url: uri.spec,
           features: {
             FetchExternalResources: false,
             ProcessExternalResources: false
@@ -240,7 +241,7 @@ describe("Test pages", function() {
 
       runTestsWithItems("JSDOMParser", function(source) {
         var parser = new JSDOMParser();
-        var doc = parser.parse(source);
+        var doc = parser.parse(source, uri.spec);
         if (parser.errorState) {
           console.error("Parsing this DOM caused errors:", parser.errorState);
           return null;
