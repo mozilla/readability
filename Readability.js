@@ -269,8 +269,6 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris: function(articleContent) {
-    var scheme = this._uri.scheme;
-    var prePath = this._uri.prePath;
     var pathBase = this._uri.pathBase;
     var baseURI = this._doc.baseURI;
 
