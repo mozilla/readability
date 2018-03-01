@@ -272,29 +272,12 @@ Readability.prototype = {
     var scheme = this._uri.scheme;
     var prePath = this._uri.prePath;
     var pathBase = this._uri.pathBase;
-    var baseElementPath = pathBase;
-
-    // See if the document has a base element and determine the uri from that
-    var baseElement = this._doc.getElementsByTagName('base');
-    if (baseElement.length > 0) {
-      baseElementPath = toAbsoluteURI(baseElement[0].getAttribute('href'));
-      if (baseElementPath.slice(-1) !== '/') {
-        baseElementPath += '/';
-      }
-    }
+    var baseURI = this._doc.baseURI;
 
     function toAbsoluteURI(uri) {
       // If this is already an absolute URI, return it.
       if (/^[a-zA-Z][a-zA-Z0-9\+\-\.]*:/.test(uri))
         return uri;
-
-      // Scheme-rooted relative URI.
-      if (uri.substr(0, 2) == "//")
-        return scheme + "://" + uri.substr(2);
-
-      // Prepath-rooted relative URI.
-      if (uri[0] == "/")
-        return prePath + uri;
 
       // Dotslash relative URI.
       if (uri.indexOf("./") === 0)
@@ -304,9 +287,8 @@ Readability.prototype = {
       if (uri[0] == "#")
         return uri;
 
-      // Standard relative URI; add entire path. pathBase already includes a
-      // trailing "/".
-      return baseElementPath + uri;
+      // Standard relative URI; use the baseURI and construct the URL
+      return new URL(uri, baseURI).href;
     }
 
     var links = articleContent.getElementsByTagName("a");
