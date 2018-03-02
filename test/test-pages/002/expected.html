@@ -3,7 +3,7 @@
         <article role="article">
             <p>For more than a decade the Web has used XMLHttpRequest (XHR) to achieve asynchronous requests in JavaScript. While very useful, XHR is not a very nice API. It suffers from lack of separation of concerns. The input, output and state are all managed by interacting with one object, and state is tracked using events. Also, the event-based model doesn’t play well with JavaScript’s recent focus on Promise- and generator-based asynchronous programming.</p>
             <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">Fetch API</a> intends to fix most of these problems. It does this by introducing the same primitives to JS that are used in the HTTP protocol. In addition, it introduces a utility function <code>fetch()</code> that succinctly captures the intention of retrieving a resource from the network.</p>
-            <p>The <a href="https://fetch.spec.whatwg.org">Fetch specification</a>, which defines the API, nails down the semantics of a user agent fetching a resource. This, combined with ServiceWorkers, is an attempt to:</p>
+            <p>The <a href="https://fetch.spec.whatwg.org/">Fetch specification</a>, which defines the API, nails down the semantics of a user agent fetching a resource. This, combined with ServiceWorkers, is an attempt to:</p>
             <ol>
                 <li>Improve the offline experience.</li>
                 <li>Expose the building blocks of the Web to the platform as part of the <a href="https://extensiblewebmanifesto.org/">extensible web movement</a>.</li>
@@ -121,7 +121,7 @@ console.<span>log</span><span>(</span>reqHeaders.<span>getAll</span><span>(</spa
                 <li>“response”: naturally, for Headers obtained from Response (<code>Response.headers</code>).</li>
                 <li>“immutable”: Mostly used for ServiceWorkers, renders a Headers object <br/>read-only.</li>
             </ul>
-            <p>The details of how each guard affects the behaviors of the Headers object are <br/>in the <a href="https://fetch.spec.whatwg.org">specification</a>. For example, you may not append or set a “request” guarded Headers’ “Content-Length” header. Similarly, inserting “Set-Cookie” into a Response header is not allowed so that ServiceWorkers may not set cookies via synthesized Responses.</p>
+            <p>The details of how each guard affects the behaviors of the Headers object are <br/>in the <a href="https://fetch.spec.whatwg.org/">specification</a>. For example, you may not append or set a “request” guarded Headers’ “Content-Length” header. Similarly, inserting “Set-Cookie” into a Response header is not allowed so that ServiceWorkers may not set cookies via synthesized Responses.</p>
             <p>All of the Headers methods throw TypeError if <code>name</code> is not a <a href="https://fetch.spec.whatwg.org/#concept-header-name">valid HTTP Header name</a>. The mutation operations will throw TypeError if there is an immutable guard. Otherwise they fail silently. For example:</p>
             <div>
                 <table>

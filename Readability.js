@@ -269,36 +269,6 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris: function(articleContent) {
-    var scheme = this._uri.scheme;
-    var prePath = this._uri.prePath;
-    var pathBase = this._uri.pathBase;
-
-    function toAbsoluteURI(uri) {
-      // If this is already an absolute URI, return it.
-      if (/^[a-zA-Z][a-zA-Z0-9\+\-\.]*:/.test(uri))
-        return uri;
-
-      // Scheme-rooted relative URI.
-      if (uri.substr(0, 2) == "//")
-        return scheme + "://" + uri.substr(2);
-
-      // Prepath-rooted relative URI.
-      if (uri[0] == "/")
-        return prePath + uri;
-
-      // Dotslash relative URI.
-      if (uri.indexOf("./") === 0)
-        return pathBase + uri.slice(2);
-
-      // Ignore hash URIs:
-      if (uri[0] == "#")
-        return uri;
-
-      // Standard relative URI; add entire path. pathBase already includes a
-      // trailing "/".
-      return pathBase + uri;
-    }
-
     var links = articleContent.getElementsByTagName("a");
     this._forEachNode(links, function(link) {
       var href = link.getAttribute("href");
@@ -309,7 +279,7 @@ Readability.prototype = {
           var text = this._doc.createTextNode(link.textContent);
           link.parentNode.replaceChild(text, link);
         } else {
-          link.setAttribute("href", toAbsoluteURI(href));
+          link.setAttribute("href", new URL(href, this._doc.baseURI).href);
         }
       }
     });
@@ -318,7 +288,7 @@ Readability.prototype = {
     this._forEachNode(imgs, function(img) {
       var src = img.getAttribute("src");
       if (src) {
-        img.setAttribute("src", toAbsoluteURI(src));
+        img.setAttribute("src", new URL(src, this._doc.baseURI).href);
       }
     });
   },
