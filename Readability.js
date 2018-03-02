@@ -269,34 +269,20 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris: function(articleContent) {
-    var scheme = this._uri.scheme;
-    var prePath = this._uri.prePath;
-    var pathBase = this._uri.pathBase;
-
+    var baseURI = this._doc.baseURI;
+    var documentURI = this._doc.documentURI;
     function toAbsoluteURI(uri) {
-      // If this is already an absolute URI, return it.
-      if (/^[a-zA-Z][a-zA-Z0-9\+\-\.]*:/.test(uri))
+      // Leave hash links alone if the base URI matches the document URI:
+      if (baseURI == documentURI && uri.charAt(0) == "#") {
         return uri;
-
-      // Scheme-rooted relative URI.
-      if (uri.substr(0, 2) == "//")
-        return scheme + "://" + uri.substr(2);
-
-      // Prepath-rooted relative URI.
-      if (uri[0] == "/")
-        return prePath + uri;
-
-      // Dotslash relative URI.
-      if (uri.indexOf("./") === 0)
-        return pathBase + uri.slice(2);
-
-      // Ignore hash URIs:
-      if (uri[0] == "#")
-        return uri;
-
-      // Standard relative URI; add entire path. pathBase already includes a
-      // trailing "/".
-      return pathBase + uri;
+      }
+      // Otherwise, resolve against base URI:
+      try {
+        return new URL(uri, baseURI).href;
+      } catch (ex) {
+        // Something went wrong, just return the original:
+      }
+      return uri;
     }
 
     var links = articleContent.getElementsByTagName("a");
