@@ -311,6 +311,21 @@
     return elems;
   }
 
+  function getElementsWithAttrEqual(attr, value) {
+    var elems = [];
+    function getElems(node) {
+      var length = node.children.length;
+      for (var i = 0; i < length; i++) {
+        var child = node.children[i];
+        if (child.getAttribute(attr) !== null && child.getAttribute(attr) === value)
+          elems.push(child);
+        getElems(child);
+      }
+    }
+    getElems(this);
+    return elems;
+  }
+
   var Node = function () {};
 
   Node.prototype = {
@@ -568,6 +583,7 @@
     title: "",
 
     getElementsByTagName: getElementsByTagName,
+    getElementsWithAttrEqual: getElementsWithAttrEqual,
 
     getElementById: function (id) {
       function getElem(node) {
@@ -626,6 +642,7 @@
     nodeType: Node.ELEMENT_NODE,
 
     getElementsByTagName: getElementsByTagName,
+    getElementsWithAttrEqual: getElementsWithAttrEqual,
 
     get className() {
       return this.getAttribute("class") || "";

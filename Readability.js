@@ -233,6 +233,13 @@ Readability.prototype = {
     }));
   },
 
+  _getAllNodesWithAttrEqual: function(node, attribute, value) {
+    if (node.querySelectorAll) {
+      return node.querySelectorAll("*[" + attribute + "=" + value + "]");
+    }
+    return node.getElementsWithAttrEqual(attribute, value);
+  },
+
   /**
    * Removes the class="" attribute from every element in the given
    * subtree, except those that match CLASSES_TO_PRESERVE and
@@ -741,7 +748,18 @@ Readability.prototype = {
       var elementsToScore = [];
       var node = this._doc.documentElement;
 
-      while (node) {
+      var itemProp = this._getAllNodesWithAttrEqual(node, 'itemprop', 'articleBody');
+      if (itemProp[0]) {
+        elementsToScore.push(itemProp[0]);
+      }
+
+      itemProp = this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody');
+      if (itemProp[0]) {
+        elementsToScore.push(itemProp[0]);
+      }
+
+      // TODO: Refactor to remove all 'cleanup' items like DIV's to P's so we can still have benifit with the itemprop
+      while (node && itemProp[0] === undefined) {
         var matchString = node.className + " " + node.id;
 
         // Check to see if this node is a byline, and remove it if it is.
@@ -813,6 +831,14 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
+        if (elementToScore.getAttribute('itemprop') === 'articleBody' || elementToScore.getAttribute('itemprop') === 'articlesBody') {
+          if (typeof(elementToScore.readability) === 'undefined') {
+            this._initializeNode(elementToScore);
+          }
+          candidates.push(elementToScore);
+          return;
+        }
+
         if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === 'undefined')
           return;
 
