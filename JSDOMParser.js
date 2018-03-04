@@ -35,6 +35,7 @@
     "amp": "&",
     "quot": '"',
     "apos": "'",
+    "nbsp": " ",
   };
 
   var reverseEntityTable = {
@@ -58,7 +59,7 @@
   }
 
   function decodeHTML(str) {
-    return str.replace(/&(quot|amp|apos|lt|gt);/g, function(match, tag) {
+    return str.replace(/&(quot|amp|apos|lt|gt|nbsp);/g, function(match, tag) {
       return entityTable[tag];
     }).replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(match, hex, numStr) {
       var num = parseInt(hex || numStr, hex ? 16 : 10); // read num

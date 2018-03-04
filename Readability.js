@@ -689,21 +689,33 @@ Readability.prototype = {
     return node && next;
   },
 
-  _checkByline: function(node, matchString) {
+  _getArticleByline: function() {
+    var node = this._doc.documentElement;
     if (this._articleByline) {
-      return false;
+      return this._articleByline;
     }
 
-    if (node.getAttribute !== undefined) {
-      var rel = node.getAttribute("rel");
+    while (node) {
+      var matchString = node.className + " " + node.id;
+
+      if (node.getAttribute !== undefined) {
+        var rel = node.getAttribute("rel");
+      }
+
+      if ((rel === "author" || this.REGEXPS.byline.test(matchString)) && this._isValidByline(node.textContent)) {
+        var byLineText = this._removeWhitespace(node.textContent);
+        this._removeAndGetNext(node);
+        return byLineText;
+      }
+
+      node = this._getNextNode(node);
     }
 
-    if ((rel === "author" || this.REGEXPS.byline.test(matchString)) && this._isValidByline(node.textContent)) {
-      this._articleByline = node.textContent.trim();
-      return true;
-    }
+    return null;
+  },
 
-    return false;
+  _removeWhitespace: function(text) {
+    return text.replace(/[\n\r\t]+/g, ' ').replace(/[\s]+/g, ' ').trim();
   },
 
   _getNodeAncestors: function(node, maxDepth) {
@@ -748,26 +760,16 @@ Readability.prototype = {
       var elementsToScore = [];
       var node = this._doc.documentElement;
 
-      var itemProp = this._getAllNodesWithAttrEqual(node, 'itemprop', 'articleBody');
-      if (itemProp[0]) {
-        elementsToScore.push(itemProp[0]);
-      }
+      var itemPropArticles = [].concat.apply([], this._getAllNodesWithAttrEqual(node, 'itemprop', 'articleBody'),
+          this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody'));
 
-      itemProp = this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody');
-      if (itemProp[0]) {
-        elementsToScore.push(itemProp[0]);
+      if (itemPropArticles.length > 0) {
+        elementsToScore = itemPropArticles;
       }
-
-      // TODO: Refactor to remove all 'cleanup' items like DIV's to P's so we can still have benifit with the itemprop
-      while (node && itemProp[0] === undefined) {
+      
+      while (node) {
         var matchString = node.className + " " + node.id;
-
-        // Check to see if this node is a byline, and remove it if it is.
-        if (this._checkByline(node, matchString)) {
-          node = this._removeAndGetNext(node);
-          continue;
-        }
-
+        
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
           if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
@@ -789,7 +791,7 @@ Readability.prototype = {
           continue;
         }
 
-        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1) {
+        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1 && itemPropArticles.length === 0) {
           elementsToScore.push(node);
         }
 
@@ -803,10 +805,12 @@ Readability.prototype = {
             var newNode = node.children[0];
             node.parentNode.replaceChild(newNode, node);
             node = newNode;
-            elementsToScore.push(node);
+            if (itemPropArticles.length === 0)
+              elementsToScore.push(node);
           } else if (!this._hasChildBlockElement(node)) {
             node = this._setNodeTag(node, "P");
-            elementsToScore.push(node);
+            if (itemPropArticles.length === 0)
+              elementsToScore.push(node);
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
@@ -1190,8 +1194,8 @@ Readability.prototype = {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
 
-      if ([elementName, elementProperty].indexOf("author") !== -1) {
-        metadata.byline = element.getAttribute("content");
+      if ([elementName, elementProperty].indexOf("author") !== -1 && this._isValidByline(element.getAttribute("content"))) {
+        metadata.byline = this._removeWhitespace(element.getAttribute("content"));
         return;
       }
 
@@ -1748,6 +1752,7 @@ Readability.prototype = {
 
     var metadata = this._getArticleMetadata();
     this._articleTitle = metadata.title;
+    this._articleByline = this._getArticleByline();
 
     var articleContent = this._grabArticle();
     if (!articleContent)

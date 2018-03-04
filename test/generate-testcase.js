@@ -1,4 +1,4 @@
-var debug = false;
+var debug = true;
 
 var path = require("path");
 var fs = require("fs");
@@ -112,7 +112,7 @@ function runReadability(source, destPath, metadataDestPath) {
   try {
     // We pass `caption` as a class to check that passing in extra classes works,
     // given that it appears in some of the test documents.
-    myReader = new Readability(uri, doc, { classesToPreserve: ["caption"] });
+    myReader = new Readability(uri, doc, { classesToPreserve: ["caption"], debug: debug });
     result = myReader.parse();
   } catch (ex) {
     console.error(ex);
