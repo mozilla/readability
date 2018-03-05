@@ -761,15 +761,15 @@ Readability.prototype = {
       var node = this._doc.documentElement;
 
       var itemPropArticles = [].concat.apply([], this._getAllNodesWithAttrEqual(node, 'itemprop', 'articleBody'),
-          this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody'));
+        this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody'));
 
       if (itemPropArticles.length > 0) {
         elementsToScore = itemPropArticles;
       }
-      
+
       while (node) {
         var matchString = node.className + " " + node.id;
-        
+
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
           if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
@@ -1612,7 +1612,7 @@ Readability.prototype = {
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
           (!isList && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
+          (!isList && weight < 25 && linkDensity > 0.2) && !this._hasAncestorTag(node, "section") ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         return haveToRemove;

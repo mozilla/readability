@@ -1118,10 +1118,20 @@
       // If this isn't a void Element, read its child nodes
       if (!closed) {
         this.readChildren(node);
-        var closingTag = "</" + localName + ">";
-        if (!this.match(closingTag)) {
-          this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
-          return null;
+        var closingTag = "</" + localName.trim() + ">";
+        if (!this.match(closingTag) && !(localName in voidElems)) {
+          var closestMatchingEndTag = this.html.indexOf(closingTag, this.currentChar);
+          if (closestMatchingEndTag === -1) {
+            this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
+            return null;
+          }
+
+          // Attempt to recover broken nodes because of < characters in content, for example a script tag with a < symbol
+          var recoveryNode = new Text();
+          recoveryNode.innerHTML = this.html.substring(this.currentChar-2, closestMatchingEndTag);
+          node.appendChild(recoveryNode);
+          this.currentChar = closestMatchingEndTag + closingTag.length;
+
         }
       }
 

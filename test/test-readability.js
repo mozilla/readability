@@ -217,7 +217,15 @@ describe("Readability API", function() {
 });
 
 describe("Test pages", function() {
-  testPages.forEach(function(testPage) {
+  var testsToRun = process.env.READABILITY_TESTS || testPages.map(function (testPage) {
+    return testPage.dir;
+  }).join(',');
+  var tests = testsToRun.split(',');
+  var testPagesToRun = testPages.filter(function(testPage) {
+    return tests.includes(testPage.dir);
+  });
+  
+  testPagesToRun.forEach(function(testPage) {
     describe(testPage.dir, function() {
       var uri = {
         spec: "http://fakehost/test/page.html",

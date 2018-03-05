@@ -1,4 +1,4 @@
-var debug = true;
+var debug = false;
 
 var path = require("path");
 var fs = require("fs");
