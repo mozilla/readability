@@ -1131,7 +1131,6 @@
           recoveryNode.innerHTML = this.html.substring(this.currentChar-2, closestMatchingEndTag);
           node.appendChild(recoveryNode);
           this.currentChar = closestMatchingEndTag + closingTag.length;
-
         }
       }
 
