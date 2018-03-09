@@ -766,7 +766,7 @@ Readability.prototype = {
         this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody'));
 
       if (itemPropArticles.length > 0) {
-        elementsToScore = itemPropArticles
+        elementsToScore = itemPropArticles;
         node = itemPropArticles[0]; // Only inspect to cleanup the articleBody and its siblings
       }
 
@@ -805,22 +805,22 @@ Readability.prototype = {
           // safely converted into plain P elements to avoid confusing the scoring
           // algorithm with DIVs with are, in practice, paragraphs.
           if (this._hasSinglePInsideElement(node)) {
-            var newNode = node.children[0];
-            node.parentNode.replaceChild(newNode, node);
+            var newChildNode = node.children[0];
+            node.parentNode.replaceChild(newChildNode, node);
             if (elementsToScore.includes(node) && itemPropArticles.length > 0) {
-              elementsToScore.splice(elementsToScore.indexOf(node), 1, newNode);
+              elementsToScore.splice(elementsToScore.indexOf(node), 1, newChildNode);
             } else if (itemPropArticles.length === 0) {
-              elementsToScore.push(newNode);
+              elementsToScore.push(newChildNode);
             }
-            node = newNode;
+            node = newChildNode;
           } else if (!this._hasChildBlockElement(node)) {
-            var newNode = this._setNodeTag(node, "P");
+            var pNode = this._setNodeTag(node, "P");
             if (elementsToScore.includes(node) && itemPropArticles.length > 0) {
-              elementsToScore.splice(elementsToScore.indexOf(node), 1, newNode);
+              elementsToScore.splice(elementsToScore.indexOf(node), 1, pNode);
             } else if (itemPropArticles.length === 0) {
-              elementsToScore.push(newNode);
+              elementsToScore.push(pNode);
             }
-            node = newNode;
+            node = pNode;
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
@@ -1258,12 +1258,6 @@ Readability.prototype = {
   **/
   _removeScripts: function(doc) {
     this._removeNodes(doc.getElementsByTagName('script'), function(scriptNode) {
-      if (scriptNode.getAttribute('type') && scriptNode.getAttribute('type').includes('template')) {
-        this._setNodeTag(scriptNode, 'DIV');
-        scriptNode.removeAttribute('type');
-        return false;
-      }
-
       scriptNode.nodeValue = "";
       scriptNode.removeAttribute('src');
       return true;
@@ -1304,7 +1298,7 @@ Readability.prototype = {
    * @param Element
    */
   _hasChildBlockElement: function (element) {
-    if(!element.__JSDOMParser__) {
+    if (!element.__JSDOMParser__) {
       return element.querySelectorAll(this.DIV_TO_P_ELEMS.join(',')).length > 0;
     }
 
