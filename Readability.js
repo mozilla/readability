@@ -34,6 +34,7 @@ function Readability(uri, doc, options) {
   this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
+  this._attempts = [];
 
   // Configurable options
   this._debug = !!options.debug;
@@ -268,34 +269,20 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris: function(articleContent) {
-    var scheme = this._uri.scheme;
-    var prePath = this._uri.prePath;
-    var pathBase = this._uri.pathBase;
-
+    var baseURI = this._doc.baseURI;
+    var documentURI = this._doc.documentURI;
     function toAbsoluteURI(uri) {
-      // If this is already an absolute URI, return it.
-      if (/^[a-zA-Z][a-zA-Z0-9\+\-\.]*:/.test(uri))
+      // Leave hash links alone if the base URI matches the document URI:
+      if (baseURI == documentURI && uri.charAt(0) == "#") {
         return uri;
-
-      // Scheme-rooted relative URI.
-      if (uri.substr(0, 2) == "//")
-        return scheme + "://" + uri.substr(2);
-
-      // Prepath-rooted relative URI.
-      if (uri[0] == "/")
-        return prePath + uri;
-
-      // Dotslash relative URI.
-      if (uri.indexOf("./") === 0)
-        return pathBase + uri.slice(2);
-
-      // Ignore hash URIs:
-      if (uri[0] == "#")
-        return uri;
-
-      // Standard relative URI; add entire path. pathBase already includes a
-      // trailing "/".
-      return pathBase + uri;
+      }
+      // Otherwise, resolve against base URI:
+      try {
+        return new URL(uri, baseURI).href;
+      } catch (ex) {
+        // Something went wrong, just return the original:
+      }
+      return uri;
     }
 
     var links = articleContent.getElementsByTagName("a");
@@ -528,6 +515,7 @@ Readability.prototype = {
     this._clean(articleContent, "embed");
     this._clean(articleContent, "h1");
     this._clean(articleContent, "footer");
+    this._clean(articleContent, "link");
 
     // Clean out elements have "share" in their id/class combinations from final top candidates,
     // which means we don't remove the top candidates even they have "share".
@@ -1082,24 +1070,45 @@ Readability.prototype = {
       if (this._debug)
         this.log("Article content after paging: " + articleContent.innerHTML);
 
+      var parseSuccessful = true;
+
       // Now that we've gone through the full algorithm, check to see if
       // we got any meaningful content. If we didn't, we may need to re-run
       // grabArticle with different flags set. This gives us a higher likelihood of
       // finding the content, and the sieve approach gives us a higher likelihood of
       // finding the -right- content.
-      if (this._getInnerText(articleContent, true).length < this._wordThreshold) {
+      var textLength = this._getInnerText(articleContent, true).length;
+      if (textLength < this._wordThreshold) {
+        parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
           this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
           this._removeFlag(this.FLAG_WEIGHT_CLASSES);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
           this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
         } else {
-          return null;
+          this._attempts.push({articleContent: articleContent, textLength: textLength});
+          // No luck after removing flags, just return the longest text we found during the different loops
+          this._attempts.sort(function (a, b) {
+            return a.textLength < b.textLength;
+          });
+
+          // But first check if we actually have something
+          if (!this._attempts[0].textLength) {
+            return null;
+          }
+
+          articleContent = this._attempts[0].articleContent;
+          parseSuccessful = true;
         }
-      } else {
+      }
+
+      if (parseSuccessful) {
         // Find out text direction from ancestors of final top candidate.
         var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
         this._someNode(ancestors, function(ancestor) {

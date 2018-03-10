@@ -1,4 +1,4 @@
-<div id="readability-page-1" class="page"> <span>[<a href="http://fakehost/test/../html/" title="Document search and retrieval page">Docs</a>] [<a href="https://tools.ietf.org/id/draft-dejong-remotestorage-04.txt" title="Plaintext version of this document">txt</a>|<a href="http://fakehost/pdf/draft-dejong-remotestorage-04.txt" title="PDF version of this document">pdf</a>] [<a href="https://datatracker.ietf.org/doc/draft-dejong-remotestorage" title="IESG Datatracker information for this document">Tracker</a>] [<a href="mailto:draft-dejong-remotestorage@tools.ietf.org?subject=draft-dejong-remotestorage%20" title="Send email to the document authors">Email</a>] [<a href="http://fakehost/rfcdiff?difftype=--hwdiff&amp;url2=draft-dejong-remotestorage-04.txt" title="Inline diff (wdiff)">Diff1</a>] [<a href="http://fakehost/rfcdiff?url2=draft-dejong-remotestorage-04.txt" title="Side-by-side diff">Diff2</a>] [<a href="http://fakehost/idnits?url=https://tools.ietf.org/id/draft-dejong-remotestorage-04.txt" title="Run an idnits check of this document">Nits</a>]               </span><br/> <span>                                                                        </span><br/> <span>Versions: <a href="http://fakehost/test/draft-dejong-remotestorage-00">00</a> <a href="http://fakehost/test/draft-dejong-remotestorage-01">01</a> <a href="http://fakehost/test/draft-dejong-remotestorage-02">02</a> <a href="http://fakehost/test/draft-dejong-remotestorage-03">03</a> <a href="http://fakehost/test/draft-dejong-remotestorage-04">04</a>                                                </span><br/> <span>                                                                        </span><br/>
+<div id="readability-page-1" class="page"> <span>[<a href="http://fakehost/html/" title="Document search and retrieval page">Docs</a>] [<a href="https://tools.ietf.org/id/draft-dejong-remotestorage-04.txt" title="Plaintext version of this document">txt</a>|<a href="http://fakehost/pdf/draft-dejong-remotestorage-04.txt" title="PDF version of this document">pdf</a>] [<a href="https://datatracker.ietf.org/doc/draft-dejong-remotestorage" title="IESG Datatracker information for this document">Tracker</a>] [<a href="mailto:draft-dejong-remotestorage@tools.ietf.org?subject=draft-dejong-remotestorage%20" title="Send email to the document authors">Email</a>] [<a href="http://fakehost/rfcdiff?difftype=--hwdiff&amp;url2=draft-dejong-remotestorage-04.txt" title="Inline diff (wdiff)">Diff1</a>] [<a href="http://fakehost/rfcdiff?url2=draft-dejong-remotestorage-04.txt" title="Side-by-side diff">Diff2</a>] [<a href="http://fakehost/idnits?url=https://tools.ietf.org/id/draft-dejong-remotestorage-04.txt" title="Run an idnits check of this document">Nits</a>]               </span><br/> <span>                                                                        </span><br/> <span>Versions: <a href="http://fakehost/test/draft-dejong-remotestorage-00">00</a> <a href="http://fakehost/test/draft-dejong-remotestorage-01">01</a> <a href="http://fakehost/test/draft-dejong-remotestorage-02">02</a> <a href="http://fakehost/test/draft-dejong-remotestorage-03">03</a> <a href="http://fakehost/test/draft-dejong-remotestorage-04">04</a>                                                </span><br/> <span>                                                                        </span><br/>
     <pre>INTERNET DRAFT                                      Michiel B. de Jong
 Document: <a href="http://fakehost/test/draft-dejong-remotestorage-04">draft-dejong-remotestorage-04</a>                   IndieHosters
                                                              F. Kooman
@@ -692,9 +692,9 @@ unhosted.5apps.com&amp;response_type=token HTTP/1.1
 
         POST /oauth HTTP/1.1
         Host: 3pp.io:4439
-        Origin: <a href="https://3pp.io:4439">https://3pp.io:4439</a>
+        Origin: <a href="https://3pp.io:4439/">https://3pp.io:4439</a>
         Content-Type: application/x-www-form-urlencoded
-        Referer: <a href="https://3pp">https://3pp</a>.io:4439/oauth/michiel?redirect_uri=https%3\
+        Referer: <a href="https://3pp/">https://3pp</a>.io:4439/oauth/michiel?redirect_uri=https%3\
 A%2F%2Fdrinks-unhosted.5apps.com%2F&amp;scope=myfavoritedrinks%3Arw&amp;client_\
 id=https%3A%2F%2Fdrinks-unhosted.5apps.com&amp;response_type=token
 
@@ -727,14 +727,14 @@ XjzzzHNjkd1CJxoQubA1o%3D&amp;token_type=bearer&amp;state=
         OPTIONS /storage/michiel/myfavoritedrinks/ HTTP/1.1
         Host: 3pp.io:4439
         Access-Control-Request-Method: GET
-        Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Access-Control-Request-Headers: Authorization
         Referer: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com/</a>
 
     To which the server can for instance respond:
 
         HTTP/1.1 200 OK
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Access-Control-Allow-Methods: GET, PUT, DELETE
         Access-Control-Allow-Headers: Authorization, Content-Length, Co\
 ntent-Type, Origin, X-Requested-With, If-Match, If-None-Match
@@ -746,20 +746,20 @@ ntent-Type, Origin, X-Requested-With, If-Match, If-None-Match
         PUT /storage/michiel/myfavoritedrinks/test HTTP/1.1
         Host: 3pp.io:4439
         Content-Length: 91
-        Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Authorization: Bearer j2YnGtXjzzzHNjkd1CJxoQubA1o=
         Content-Type: application/json; charset=UTF-8
         Referer: <a href="https://drinks-unhosted.5apps.com/?">https://drinks-unhosted.5apps.com/?</a>
         If-None-Match: *
 
-        {"name":"test","@context":"<a href="http://remotestorage">http://remotestorage</a>.io/spec/modules\
+        {"name":"test","@context":"<a href="http://remotestorage/">http://remotestorage</a>.io/spec/modules\
 /myfavoritedrinks/drink"}
 
     And the server may respond with either a 201 Created or a 200 OK
     status:
 
         HTTP/1.1 201 Created
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694045000"
 
 <span><a name="section-12.6" href="#section-12.6">12.6</a>. Subsequent PUT</span>
@@ -778,7 +778,7 @@ ntent-Type, Origin, X-Requested-With, If-Match, If-None-Match
         PUT /storage/michiel/myfavoritedrinks/test HTTP/1.1
         Host: 3pp.io:4439
         Content-Length: 91
-        Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Authorization: Bearer j2YnGtXjzzzHNjkd1CJxoQubA1o=
         Content-Type: application/json; charset=UTF-8
         Referer: <a href="https://drinks-unhosted.5apps.com/?">https://drinks-unhosted.5apps.com/?</a>
@@ -790,7 +790,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
     And the server may respond with a 412 Conflict or a 200 OK status:
 
         HTTP/1.1 200 OK
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694048000"
 
 <span><a name="section-12.7" href="#section-12.7">12.7</a>. GET</span>
@@ -800,7 +800,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
 
         GET /storage/michiel/myfavoritedrinks/test HTTP/1.1
         Host: 3pp.io:4439
-        Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Authorization: Bearer j2YnGtXjzzzHNjkd1CJxoQubA1o=
         Referer: <a href="https://drinks-unhosted.5apps.com/?">https://drinks-unhosted.5apps.com/?</a>
         If-None-Match: "1382694045000", "1382694048000"
@@ -808,7 +808,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
     And the server may respond with a 304 Not Modified status:
 
         HTTP/1.1 304 Not Modified
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694048000"
 
     Or a 200 OK status, plus a response body:
@@ -822,7 +822,7 @@ e.io/spec/modules/myfavoritedrinks/drink"}
 <span>Internet-Draft              remoteStorage                  December 2014</span>
 
 
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Content-Type: application/json; charset=UTF-8
         Content-Length: 106
         ETag: "1382694048000"
@@ -836,7 +836,7 @@ ge.io/spec/modules/myfavoritedrinks/drink"}
     body:
 
         HTTP/1.1 200 OK
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Content-Type: application/ld+json
         Content-Length: 171
         ETag: "1382694048000"
@@ -851,7 +851,7 @@ charset=UTF-8","Content-Length":106}}}
     Not Found status, and no ETag header:
 
         HTTP/1.1 404 Not Found
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
 
 <span><a name="section-12.8" href="#section-12.8">12.8</a>. DELETE</span>
 
@@ -859,7 +859,7 @@ charset=UTF-8","Content-Length":106}}}
 
         DELETE /storage/michiel/myfavoritedrinks/test HTTP/1.1
         Host: 3pp.io:4439
-        Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         Authorization: Bearer j2YnGtXjzzzHNjkd1CJxoQubA1o=
         Content-Type: application/json; charset=UTF-8
         Referer: <a href="https://drinks-unhosted.5apps.com/?">https://drinks-unhosted.5apps.com/?</a>
@@ -876,7 +876,7 @@ charset=UTF-8","Content-Length":106}}}
     And the server may respond with a 412 Conflict or a 200 OK status:
 
         HTTP/1.1 412 Conflict
-        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com">https://drinks-unhosted.5apps.com</a>
+        Access-Control-Allow-Origin: <a href="https://drinks-unhosted.5apps.com/">https://drinks-unhosted.5apps.com</a>
         ETag: "1382694048000"
 
 <span><a name="section-13" href="#section-13">13</a>. Distributed versioning</span>

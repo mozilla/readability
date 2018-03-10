@@ -100,7 +100,6 @@ function onResponseReceived(source) {
 }
 
 function runReadability(source, destPath, metadataDestPath) {
-  var doc = new JSDOMParser().parse(source);
   var uri = {
     spec: "http://fakehost/test/page.html",
     host: "fakehost",
@@ -108,6 +107,7 @@ function runReadability(source, destPath, metadataDestPath) {
     scheme: "http",
     pathBase: "http://fakehost/test/"
   };
+  var doc = new JSDOMParser().parse(source, uri.spec);
   var myReader, result, readerable;
   try {
     // We pass `caption` as a class to check that passing in extra classes works,
