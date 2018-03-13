@@ -40,7 +40,7 @@ function Readability(uri, doc, options) {
   this._debug = !!options.debug;
   this._maxElemsToParse = options.maxElemsToParse || this.DEFAULT_MAX_ELEMS_TO_PARSE;
   this._nbTopCandidates = options.nbTopCandidates || this.DEFAULT_N_TOP_CANDIDATES;
-  this._wordThreshold = options.wordThreshold || this.DEFAULT_WORD_THRESHOLD;
+  this._charThreshold = options.charThreshold || this.DEFAULT_CHAR_THRESHOLD;
   this._classesToPreserve = this.CLASSES_TO_PRESERVE.concat(options.classesToPreserve || []);
 
   // Start with all flags set
@@ -96,8 +96,8 @@ Readability.prototype = {
   // Element tags to score by default.
   DEFAULT_TAGS_TO_SCORE: "section,h2,h3,h4,h5,h6,p,td,pre".toUpperCase().split(","),
 
-  // The default number of words an article must have in order to return a result
-  DEFAULT_WORD_THRESHOLD: 500,
+  // The default number of chars an article must have in order to return a result
+  DEFAULT_CHAR_THRESHOLD: 500,
 
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
@@ -1078,7 +1078,7 @@ Readability.prototype = {
       // finding the content, and the sieve approach gives us a higher likelihood of
       // finding the -right- content.
       var textLength = this._getInnerText(articleContent, true).length;
-      if (textLength < this._wordThreshold) {
+      if (textLength < this._charThreshold) {
         parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
