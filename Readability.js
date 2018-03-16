@@ -457,7 +457,7 @@ Readability.prototype = {
         while (next) {
           // If we've hit another <br><br>, we're done adding children to this <p>.
           if (next.tagName == "BR") {
-            var nextElem = this._nextElement(next);
+            var nextElem = this._nextElement(next.nextSibling);
             if (nextElem && nextElem.tagName == "BR")
               break;
           }
