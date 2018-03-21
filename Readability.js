@@ -516,6 +516,7 @@ Readability.prototype = {
     this._clean(articleContent, "h1");
     this._clean(articleContent, "footer");
     this._clean(articleContent, "link");
+    this._clean(articleContent, "aside");
 
     // Clean out elements have "share" in their id/class combinations from final top candidates,
     // which means we don't remove the top candidates even they have "share".
