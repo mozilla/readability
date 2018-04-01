@@ -224,7 +224,7 @@ describe("Test pages", function() {
   var testPagesToRun = testPages.filter(function(testPage) {
     return tests.includes(testPage.dir);
   });
-  
+
   testPagesToRun.forEach(function(testPage) {
     describe(testPage.dir, function() {
       var uri = {
