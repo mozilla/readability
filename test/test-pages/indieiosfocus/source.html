@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class=" no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Indie iOS Focus Weekly - Issue 162</title>
+    <meta name="description" content="Xcode's unofficial performance tests, raising your rates, Googles new mobile framework, &amp; more">
+    <style>
+        body {
+            font-family: Tahoma, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .issue__heading,
+        .page__header,
+        .category__title,
+        .issue__pager__text time {
+            font-family: Georgia, Garamond, 'Times New Roman', Times, serif;
+        }
+    </style>
+    <link rel="stylesheet" media="all" href="/assets/publication/themes/public_1/application-11602dfd4dfc08c02a817ba86b45347160b800034a0b7acd1cf3f53ff392ce6c.css">
+    <link rel="stylesheet" media="all" href="/publication_stylesheet/83f41f7e54aa2724a78d8c4217085f4c73442f0a/stylesheet.css">
+    <script>
+        //<![CDATA[
+        window.publication_domain = 'indieiosfocus.curated.co';
+        window.publication_key = 'indieiosfocus';
+        window.google_ua_code = 'UA-360862-25';
+        window.safari_website_push_id = 'web.com.cozyapps.push'
+        window.safari_push_webservices_url = 'https://push.curated.co/safari_push';
+        window.subscriber_sid = '';
+        window.subscriber_fid = '';
+        window.short_url_prefix = 'https://cur.at';
+        window.utm_source = '';
+        window.utm_medium = '';
+        window.utm_term = '';
+        window.utm_content = '';
+        window.utm_campaign = '';
+        window.utm_from = '';
+        window.utm_lp = '';
+        window.utm_time = '';
+        window.google_analytics_conversion_tracking_category = 'Subscribers';
+        window.google_analytics_conversion_tracking_event = 'Subscribed';
+        window.facebook_conversion_tracking_id = '552994554871636';
+        window.twitter_conversion_signup_tracking_id = 'l6q2l';
+        //]]>
+    </script>
+    <script src="/assets/publication/themes/public_1/application-3fcd9734ac20b57701570a1217c415df4200f450f354a03e9f7aa0d68d7e3cfc.js"></script>
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/issues.rss">
+    <meta name="csrf-param" content="authenticity_token">
+    <meta name="csrf-token" content="ESe0Wn1P2FXmPTpLYQaadqMUHtYG3wUbRyMVUeNfozWmK5z6vNSZBGgE1/84mNtgBEu04W8Urpohf+4Nj5bBug==">
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-45854640-2', 'auto', {
+            'name': 'userTracker'
+        });
+        ga('userTracker.send', 'pageview');
+    </script>
+    <script>
+        (function() {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+    </script>
+    <script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        twttr.conversion.trackPid('l6q2k');
+    </script> <noscript>
+  <img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?txn_id=l6q2k&p_id=Twitter" />
+  <img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?txn_id=l6q2k&p_id=Twitter" /></noscript>
+    <script src="/assets/publication/analytics-880166fabc8cbbddcf20e860f1f4b73c09682303faa924d60fda5bf29d5370a4.js"></script>
+    <meta property="og:title" content="Xcode's unofficial performance tests, raising your rates, Googles new mobile framework, &amp; more">
+    <meta property="og:image" content="https://dxj7eshgz03ln.cloudfront.net/production/publication/logo/1927/composited_09221269-6a47-425b-a50a-5ca411a7b896.png">
+    <meta property="og:image:width" content="1108">
+    <meta property="og:image:height" content="400">
+    <script type="text/javascript">
+        var grecaptchaOnLoadCallback = function() {};
+        var grecaptchaVerifyCallback = function(response) {
+            $("#" + recaptcha_form_dom_id + " .grecaptcha-response").val(response);
+            $("#" + recaptcha_form_dom_id).submit();
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=grecaptchaOnLoadCallback&amp;render=explicit" async="" defer="">
+    </script>
+</head>
+
+<body>
+    <header class="header" role="banner">
+        <div class="navbar" role="navigation">
+            <div class="i">
+                <div class="navbar-collapse"> <a class="navbar-a navbar-menu-item" href="/issues/162#start">Latest Issue</a> <a class="navbar-a" href="/issues">Archives</a> <a class="navbar-a" href="/sponsorship">Sponsorship</a> </div> <a class="navbar-a navbar-brand" href="/">
+        <img alt="Indie iOS Focus Weekly" src="https://dxj7eshgz03ln.cloudfront.net/production/publication/logo/1927/09221269-6a47-425b-a50a-5ca411a7b896.png">
+      </a>
+                <div class="navbar-search">
+                    <form class="search__form" action="/search" accept-charset="UTF-8" method="get"> <label for="qnav">Search</label> <input type="text" name="q" id="qnav" size="50" class="form-control search__form__input" placeholder="Type to Search"> <button class="btn"><span class="icon icon-search"></span><span class="sr-only"> Search</span></button> </form>
+                </div> <a class="navbar-a navbar-a-search" href="/search"><span class="icon icon-search"></span><span class="icon icon-cross"></span><span class="sr-only"> Search</span></a> <button class="navbar-a navbar-toggle"><span class="sr-only">Toggle Menu</span><span class="navbar-toggle-bar"></span><span class="navbar-toggle-bar"></span><span class="icon icon-cross"></span></button> </div>
+        </div>
+        <div class="intro intro--description intro--description--md">
+            <div class="i">
+                <p>The best iOS dev links, marketing, tutorials, &amp; tips beyond the usual news. Curated by Chris Beshore. Published every Thursday. <em><a href="http://bit.ly/2cpkOB4">Click here</a></em> to support on Patreon and help keep the newsletter going!</p>
+            </div>
+        </div>
+        <div class="cta cta--header" data-active=".cta-newsletter">
+            <div class="i">
+                <div class="cta-tabs">
+                    <h2 class="cta-tabs-title hidden-xs">Subscribe with</h2> <button data-target=".cta-newsletter">Email</button> <button data-target=".cta-push">Safari</button> </div>
+                <div class="cta-panes">
+                    <div class="cta-pane cta-newsletter ">
+                        <form id="subscribe-form-calltoaction" class="new_publication_email_subscriber" action="/email_subscribers" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="jj5DAo7j9tLUCrTUHvtNI+/3DD4LH84WvBnVBEQCar45MmuiT3i3g1ozWWBHZQw1SKimCWLUZZfaRS5YKMsIMQ==">
+                            <div class="form_elements"> <label class="control-label" for="subscribe-form-calltoaction_publication_email_subscriber_email">Email</label> <input class="form-control" placeholder="Your email address" type="email" name="publication_email_subscriber[email]" id="subscribe-form-calltoaction_publication_email_subscriber_email"> <input type="hidden" name="form_dom_id" id="subscribe-form-calltoaction-hidden-field" value="subscribe-form-calltoaction"> <input type="hidden" name="publication_site" id="publication_site" value="1"> <button class="btn" data-disable-with="Subscribing...">Subscribe</button> </div> <input type="hidden" name="grecaptcha-response" id="grecaptcha-response" class="grecaptcha-response">
+                            <div class="grecaptcha"></div>
+                        </form>
+                        <p><strong>No spam, ever.</strong> <span class="hidden-xs">We'll never share your email&nbsp;address and you can opt&nbsp;out at any&nbsp;time.</span></p>
+                    </div>
+                    <div class="cta-pane cta-push">
+                        <p>Subscribe with Safari to receive a push notification when new issues are published.</p> <a class="btn cta-push-btn disabled" data-denied="Notifications have been denied. They can be enabled again in Safari preferences" data-default="Subscribe with Safari" data-granted="Subscribed! Enjoy">Visit this page in Safari on Mac OS X Mavericks or above to enable push notifications</a> </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <article class="issue" id="start">
+        <header class="issue__heading">
+            <div class="i">
+                <h1><a href="/issues/162#start">
+        Issue 162 &nbsp;<i><time class="published" datetime="2018-03-01">March 1st 2018</time></i>
+      </a></h1>
+            </div>
+        </header>
+        <div class="issue__body">
+            <section class="category cc-comment">
+                <div class="i" id="comment">
+                    <h2 class="category__title"><img alt="Comment" width="100" src="https://dxj7eshgz03ln.cloudfront.net/production/category/header_icon/8155/524e2da4-be97-4c27-b4c0-a6a9e07019e4.png"><span class="category__title__text">Comment</span></h2>
+                    <div class="item item--issue"> <a name="t-356346"></a>
+                        <p>Welcome! There's quite a bit going on in the iOS community and I've found a few great links this week. I try to mix it up, so I have some marketing and career stuff in there for you too, including how to increase your freelance rate to make more money.💰</p>
+                        <p>I have big plans for a reader survey next week. I'm planning on giving away two $25 Amazon gift certificates to two lucky entries. I want to get some good feedback from all of you, so try to take time next week to answer a few questions about Indie iOS Focus Weekly. Hey, you might win $25 too. I'm announcing it today to hold my feet to the fire and finish the survey for next weeks issue. It's a good motivation tool. 💪</p>
+                        <p>Also, thanks to everyone who replied to the newsletter last week. I appreciate the feedback and look forward to getting more next week. On to the links!</p> <span class="item__footer"><a href="https://cur.at/TOIWqZR?m=web">@cdbeshore</a> | <a href="https://cur.at/fLzBVf3?m=web">Support on Patreon</a></span> </div>
+                </div>
+            </section>
+            <section class="category cc-news">
+                <div class="i" id="news">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">News</span></h2>
+                    <div class="item item--issue item--link"> <a name="39A0HaU"></a>
+                        <h3 class="item__title"><a href="https://cur.at/39A0HaU?m=web">Release for both iOS and Android with the Flutter framework</a></h3>
+                        <p>Google has released an interesting new mobile UI framework that allows you to release for both iOS and Android with one codebase. It's in beta, but looks very slick and has been in alpha for a while. I think it's worth playing around with. Sometimes a framework just fits how you think and if Flutter does that for you, it could be an incredible value. Maintaining two code bases sucks.</p>
+                        <p><a href="https://cur.at/yobNYQh?m=web">Announcing Flutter beta 1: Build beautiful native apps</a> by <a href="https://cur.at/ojmmh7W?m=web">Seth Ladd</a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-swift">
+                <div class="i" id="swift">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Swift</span></h2>
+                    <div class="item item--issue item--link"> <a name="w94dEfy"></a>
+                        <h3 class="item__title"><a href="https://cur.at/w94dEfy?m=web">When you should encapsulate in Swift</a></h3>
+                        <p>John explains why encapsulation matters and the drawbacks of ignoring encapsulation. He illustrates how this works by giving an example of a user upgrading to the pro version of your app. By encapsulating, you can protect your app from bugs when you make UI changes, among other things.</p>
+                        <p><a href="https://cur.at/XcL4QIp?m=web">Code encapsulation in Swift</a> by <a href="https://cur.at/1etFYon?m=web">John Sundell</a></p>
+                    </div>
+                    <hr class="item__line">
+                    <div class="item item--issue item--link"> <a name="jerEDZ3"></a>
+                        <h3 class="item__title"><a href="https://cur.at/jerEDZ3?m=web">When a few milliseconds can mean a lot more</a></h3>
+                        <p>This is a great post to help you fully understand DispatchQueues, how they work, and how to use them in your app. Bruno's post will also help you visualize what's happening when there is a large task on the main and other types of threads.</p>
+                        <blockquote>
+                            <p>understanding how the CPU deals with concurrency is the key to writing good, fast code that does what you expected it to do</p>
+                        </blockquote>
+                        <p><a href="https://cur.at/S7hQzfR?m=web">Understanding DispatchQueues</a> by <a href="https://cur.at/CPER7m3?m=web">Bruno Rocha </a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-spn">
+                <div class="i" id="sponsored">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Sponsored</span></h2>
+                    <div class="item item--issue item--link"> <a name="1iMLImu"></a>
+                        <h3 class="item__title"><a rel="nofollow" href="https://cur.at/1iMLImu?m=web">Can your crash reporting tool do this?</a></h3>
+                        <p>With a few free solutions out there (Crashlytics comes to mind), you might be wondering why you should pay for a bug reporting service.</p>
+                        <p>Here's why you may want to try Instabug:</p>
+                        <ul>
+                            <li>allow users to draw on screenshots, blur sensitive data, and magnify</li>
+                            <li>give you a screen recording of user's steps until the bug was reported</li>
+                            <li>let you have a real-time conversation with users inside your app</li>
+                        </ul>
+                        <p>Does what your using now do any of this? Sign up for a free Instabug account today and, if you love it, get an exclusive 15% discount for Indie iOS Focus Weekly readers by using this link and the code <em>InstabugLovesFocus</em></p>
+                    </div>
+                </div>
+            </section>
+            <aside class="category__footer cc-spn">
+                <div class="i">
+                    <h2><a href="https://indieiosfocus.curated.co/sponsorship">Reach an engaged group of 3,213 iOS developers by sponsoring Indie iOS Focus Weekly.</a></h2>
+                </div>
+            </aside>
+            <section class="category cc-marketing">
+                <div class="i" id="marketing">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Marketing</span></h2>
+                    <div class="item item--issue item--link"> <a name="jtlBGE6"></a>
+                        <h3 class="item__title"><a href="https://cur.at/jtlBGE6?m=web">The top ad platforms for your app in 2018</a></h3>
+                        <p>I've been working with a client on app install campaigns the last couple weeks and have found out a lot of interesting info. It's still crazy high to buy app installs and your monetization strategy needs to be laser focused in order to get an acceptable return on investment. If you don't have good data on your free to paid subscription conversion rate, you need to get it! I've also learned just how important it is to know your user demographics so you can choose which platforms will give you the best results.</p>
+                        <p>PS: Ignore the title saying it's for 2017. The post was updated just this week but the title was not updated. Here's a tip for the bloggers out there. Don't put a date in the title of posts! Update them each year and they will always be evergreen.</p>
+                        <p><a href="https://cur.at/8tRj37R?m=web">Top App Install Ad Platforms 2017</a> by <a href="https://cur.at/uCHWcQS?m=web">Artyom Dogtiev</a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-tutorials">
+                <div class="i" id="tutorials">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Tutorials</span></h2>
+                    <div class="item item--issue item--link"> <a name="pSh8lna"></a>
+                        <h3 class="item__title"><a href="https://cur.at/pSh8lna?m=web">How to remind users your app is still on their phone</a></h3>
+                        <p>Nice tutorial on implementing remote push notifications. This post will take you through all the steps necessary to set these up and <del>spam your users all day</del> give your users the updates they want. As Deyan says, “This is how you remind users about the fact that they have your app installed on their phones”.</p>
+                        <p><a href="https://cur.at/ZjoakeP?m=web">iOS remote push notifications in a nutshell</a> by <a href="https://cur.at/3baUtzu?m=web">Deyan Aleksandrov</a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-xcode">
+                <div class="i" id="xcode">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Xcode</span></h2>
+                    <div class="item item--issue item--link"> <a name="YefY92T"></a>
+                        <h3 class="item__title"><a href="https://cur.at/YefY92T?m=web">Demystifying the "Debug Executable" checkbox in the scheme editor</a></h3>
+                        <p>Besides getting to the bottom of what the "Debug executable" checkbox in the scheme editor actually does, this post shows some good debugging techniques in general. This "feature" is not well documented and I would propose that the link to it in Apple documents just forwards to this post. 😆</p>
+                        <p><a href="https://cur.at/83c8CsA?m=web">Xcode: using the “Debug executable” checkbox to step through app release versions</a> by <a href="https://cur.at/xjbK6Qn?m=web">Andrew Jaffee</a></p>
+                    </div>
+                    <hr class="item__line">
+                    <div class="item item--issue item--link"> <a name="CHfb54O"></a>
+                        <h3 class="item__title"><a href="https://cur.at/CHfb54O?m=web">How to access Xcode's unofficial performance tests</a></h3>
+                        <p>If you thought Xcode's performance tests were lacking, check out this post from Daniel Jalkut where he dives deep and finds out there's actually more you can do. Though they are private and Apple officially wouldn't say you could use them, I would agree with Daniel and give this a try.</p>
+                        <p><a href="https://cur.at/gnqjQzp?m=web">Xcode’s Secret Performance Tests</a> by <a href="https://cur.at/cntXomW?m=web">Daniel Jalkut</a></p>
+                    </div>
+                    <hr class="item__line">
+                    <div class="item item--issue item--link"> <a name="3pahsXN"></a>
+                        <h3 class="item__title"><a href="https://cur.at/3pahsXN?m=web">Don't let merge conflicts keep your from trying storyboards</a></h3>
+                        <p>If merge conflicts or fear of them has kept your team from using storyboards, take a look at this post from Joe Keeley, CTO at <a href="https://cur.at/oHxPdqv?m=web">MartianCraft</a>. Even if you don't end up using storyboards, it's good to know that the conflicts can be minimized when you get on a project that uses them.</p>
+                        <p><a href="https://cur.at/59S9JiT?m=web">Handling Storyboard Merge Conflicts</a> by <a href="https://cur.at/JM5u2SU?m=web">Joe Keeley</a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-thirdpartylibraries">
+                <div class="i" id="thirdpartylibraries">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Third-Party Libraries</span></h2>
+                    <div class="item item--issue item--link"> <a name="bttbkyi"></a>
+                        <h3 class="item__title"><a href="https://cur.at/bttbkyi?m=web">Enjoy automatic sync between state and UI with this approach</a></h3>
+                        <p>Bending Spoons developed Tempura to make over twenty apps. They have over 10 million active users and they've decided to share their approach to app building with everyone. Definitely worth a look!</p>
+                        <p><a href="https://cur.at/85R92Fz?m=web">Tempura</a> from <a href="https://cur.at/qD9j3ZU?m=web">Bending Spoons</a></p>
+                    </div>
+                </div>
+            </section>
+            <section class="category cc-jobs">
+                <div class="i" id="jobs">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Jobs</span></h2>
+                    <div class="item item--issue item--link"> <a name="TkBfckN"></a>
+                        <h3 class="item__title"><a rel="nofollow" href="https://cur.at/TkBfckN?m=web">Don't let the Monster eat you, the best iOS jobs are on Hired</a></h3>
+                        <p>Hired is the place where companies look for iOS developers. Find 3500+ great tech companies on Hired who will compete to hire you. It's free. Try it out today!</p>
+                    </div>
+                    <hr class="item__line">
+                    <div class="item item--issue item--link"> <a name="cmsWhku"></a>
+                        <h3 class="item__title"><a rel="nofollow" href="https://cur.at/cmsWhku?m=web">Muru Inc is hiring an iOS Mobile Application Developer</a></h3>
+                        <p>With your technical expertise, you will build the first ever mobile software to deliver the full suite of medical information needed by paramedics in the field.</p>
+                    </div>
+                </div>
+            </section>
+            <aside class="category__footer cc-jobs">
+                <div class="i">
+                    <h2><a href="https://indieiosfocus.curated.co/sponsorship">Hiring an iOS developer? Reach 3,213 devs by posting your job here.</a></h2>
+                </div>
+            </aside>
+            <section class="category cc-career">
+                <div class="i" id="career">
+                    <h2 class="category__title category__title--lozenge"><span class="category__title__text">Career</span></h2>
+                    <div class="item item--issue item--link"> <a name="gBSCzM1"></a>
+                        <h3 class="item__title"><a href="https://cur.at/gBSCzM1?m=web">How to effectively raise your freelance rate</a></h3>
+                        <p>Raising rates is a common thing freelance developers stress over. The longer you put it off, the more money you lose and the harder it is to get your rate to where it should be. Plus, there's uncertainty over how to approach current or long-time clients. Can they get a different rate? Should they? Graeme gives a few tips along with some key advice on why it's not so bad to lose clients.</p>
+                        <p>The main thing I took away from this post was that if you consistently raise your rates, it keeps you where you should be and minimizes the effect on current clients.</p>
+                        <p><a href="https://cur.at/tPJvPGe?m=web">How to raise your prices</a> by Graeme Caldwell of <a href="https://cur.at/avEBTqr?m=web">CreativeBloq</a></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </article>
+    <div class="issue__pager">
+        <ul class="i">
+            <li class="previous"> <a href="/issues/161#start">
+        <span class="icon icon-angle-left"></span>
+        <span class="issue__pager__text">
+          <span class="issue__pager__label">Previous issue</span>
+          <time class="published" datetime="2018-02-22">February 22nd 2018</time>
+        </span>
+</a> </li>
+            <li class="issue__pager__summary"><span>133 of 133</span></li>
+        </ul>
+    </div>
+    <div class="cta cta--footer" data-active=".cta-newsletter">
+        <div class="i">
+            <div class="cta-tabs">
+                <h2 class="cta-tabs-title hidden-xs">Subscribe with</h2> <button data-target=".cta-newsletter">Email</button> <button data-target=".cta-push">Safari</button> </div>
+            <div class="cta-panes">
+                <div class="cta-pane cta-newsletter ">
+                    <form id="subscribe-form-footer" class="new_publication_email_subscriber" action="/email_subscribers" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="4r8LvO3N+8UaMhODJKGOSKL0kbb7GoKgt3ptAyHRV0FVsyMcLFa6lJQL/jd9P89eBas7gZLRKSHRJpZfTRg1zg==">
+                        <div class="form_elements"> <label class="control-label" for="subscribe-form-footer_publication_email_subscriber_email">Email</label> <input class="form-control" placeholder="Your email address" type="email" name="publication_email_subscriber[email]" id="subscribe-form-footer_publication_email_subscriber_email"> <input type="hidden" name="form_dom_id" id="subscribe-form-footer-hidden-field" value="subscribe-form-footer"> <input type="hidden" name="publication_site" id="publication_site" value="1"> <button class="btn" data-disable-with="Subscribing...">Subscribe</button> </div> <input type="hidden" name="grecaptcha-response" id="grecaptcha-response" class="grecaptcha-response">
+                        <div class="grecaptcha"></div>
+                    </form>
+                    <p><strong>No spam, ever.</strong> <span class="hidden-xs">We'll never share your email&nbsp;address and you can opt&nbsp;out at any&nbsp;time.</span></p>
+                </div>
+                <div class="cta-pane cta-push">
+                    <p>Subscribe with Safari to receive a push notification when new issues are published.</p> <a class="btn cta-push-btn disabled" data-denied="Notifications have been denied. They can be enabled again in Safari preferences" data-default="Subscribe with Safari" data-granted="Subscribed! Enjoy">Visit this page in Safari on Mac OS X Mavericks or above to enable push notifications</a> </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="i">
+            <p> ©2015-2018 Indie iOS Focus Weekly | <a href="/terms/">Terms of Use</a> | <a href="/privacy/">Privacy Policy</a> | <a href="/sponsorship">Sponsorship</a> | Curated by Chris Beshore | <a href="https://www.twitter.com/cdbeshore">@cdbeshore on Twitter</a> | <a href="http://chrisbeshore.com">chrisbeshore.com</a> | <a href="http://bit.ly/2cpkOB4">Support me on Patreon to help keep the newsletter going</a> | Some sponsor links may be affiliate links, which means I may get a commission if you purchase </p>
+            <p><a href="https://curated.co/?utm_campaign=Footer&amp;utm_medium=web&amp;utm_source=Indie%20iOS%20Focus%20Weekly"><img alt="Published with Curated" src="https://d1b3tz62q8x6bi.cloudfront.net/emails/themes/public_1/v1/curated-footer-logo-dark.png" width="159" height="27"></a></p>
+        </div>
+    </footer>
+</body>
+
+</html>

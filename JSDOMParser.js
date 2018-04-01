@@ -35,6 +35,7 @@
     "amp": "&",
     "quot": '"',
     "apos": "'",
+    "nbsp": " ",
   };
 
   var reverseEntityTable = {
@@ -58,7 +59,7 @@
   }
 
   function decodeHTML(str) {
-    return str.replace(/&(quot|amp|apos|lt|gt);/g, function(match, tag) {
+    return str.replace(/&(quot|amp|apos|lt|gt|nbsp);/g, function(match, tag) {
       return entityTable[tag];
     }).replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(match, hex, numStr) {
       var num = parseInt(hex || numStr, hex ? 16 : 10); // read num
@@ -303,6 +304,21 @@
       for (var i = 0; i < length; i++) {
         var child = node.children[i];
         if (allTags || (child.tagName === tag))
+          elems.push(child);
+        getElems(child);
+      }
+    }
+    getElems(this);
+    return elems;
+  }
+
+  function getElementsWithAttrEqual(attr, value) {
+    var elems = [];
+    function getElems(node) {
+      var length = node.children.length;
+      for (var i = 0; i < length; i++) {
+        var child = node.children[i];
+        if (child.getAttribute(attr) !== null && child.getAttribute(attr) === value)
           elems.push(child);
         getElems(child);
       }
@@ -568,6 +584,7 @@
     title: "",
 
     getElementsByTagName: getElementsByTagName,
+    getElementsWithAttrEqual: getElementsWithAttrEqual,
 
     getElementById: function (id) {
       function getElem(node) {
@@ -626,6 +643,7 @@
     nodeType: Node.ELEMENT_NODE,
 
     getElementsByTagName: getElementsByTagName,
+    getElementsWithAttrEqual: getElementsWithAttrEqual,
 
     get className() {
       return this.getAttribute("class") || "";
@@ -1100,10 +1118,19 @@
       // If this isn't a void Element, read its child nodes
       if (!closed) {
         this.readChildren(node);
-        var closingTag = "</" + localName + ">";
-        if (!this.match(closingTag)) {
-          this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
-          return null;
+        var closingTag = "</" + localName.trim() + ">";
+        if (!this.match(closingTag) && !(localName in voidElems)) {
+          var closestMatchingEndTag = this.html.indexOf(closingTag, this.currentChar);
+          if (closestMatchingEndTag === -1) {
+            this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
+            return null;
+          }
+
+          // Attempt to recover broken nodes because of < characters in content, for example a script tag with a < symbol
+          var recoveryNode = new Text();
+          recoveryNode.innerHTML = this.html.substring(this.currentChar-2, closestMatchingEndTag);
+          node.appendChild(recoveryNode);
+          this.currentChar = closestMatchingEndTag + closingTag.length;
         }
       }
 

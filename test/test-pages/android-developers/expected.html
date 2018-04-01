@@ -1,0 +1,32 @@
+<div id="readability-page-1" class="page">
+    <div>
+        <div itemprop="articleBody"> <em>Posted by <a href="https://google.com/+DaveSmithDev">Dave Smith</a>, Developer Advocate for IoT</em>
+            <p> Today we're releasing Developer Preview 7 (DP7) of Android Things, Google's platform that enables Android developers to create Internet of Things (IoT) devices. The platform also supports powerful applications such as video and audio processing and on-board machine learning with TensorFlow. </p>
+            <p> The latest preview is based on Android 8.1 and is updated to support <a href="https://developers.google.com/android/guides/releases#december_18_2017_-_version_1180">version 11.8.0</a> of Google Play Services. For all the details of what's included in DP7, see the <a href="https://developer.android.com/things/preview/releases.html">release notes</a>. Here are some of the highlights: </p>
+            <h3>Console enhancements and device updates</h3>
+            <p> New features are also available in the <a href="https://partner.android.com/things/console">Android Things Console</a> to enhance product management from prototype to production: </p>
+            <ul>
+                <li><strong>Product Models.</strong> Create multiple software variations of the same hardware product, and manage the builds and updates for each independently. </li>
+                <li><strong>Product Sharing.</strong> Grant additional user accounts access to view and manage the models, builds, and updates for a given product. </li>
+                <li><strong>Analytics.</strong> View metrics on device activations and update statistics for your products. </li>
+                <li><strong>Update Channels.</strong> Deploy software builds to groups of devices for development or beta testing, without disrupting production devices in the field.</li>
+            </ul>
+            <p> Devices can subscribe to different update channels using new APIs added to <code>UpdateManager</code>. See the updated <a href="https://developer.android.com/things/sdk/apis/update.html">Device Updates API guide</a> and <a href="https://developer.android.com/things/console/update.html">console documentation</a> to learn more about configuring update channel subscriptions. </p>
+            <h3>Addressing developer feedback</h3>
+            <p> We've received tons of amazing feedback from developers so far, and focused heavily on addressing many of the top reported issues in this release: </p>
+            <ul>
+                <li><strong>Improved camera resolution support.</strong> Apps can now capture image data up to the full native resolution of the camera hardware. </li>
+                <li><strong>Support for MIDI.</strong> Use the <a href="https://developer.android.com/reference/android/media/midi/MidiManager.html">MidiManager</a> API to build a virtual MIDI device in your app or interface with external MIDI controllers. </li>
+                <li><strong>Better testability of Android Things apps.</strong> The <a href="https://developer.android.com/things/sdk/pio/index.html">Peripheral I/O</a> API now exposes interfaces instead of abstract classes, allowing local unit tests to replace these objects with mocks and stubs more easily. </li>
+                <li><strong>Consistent API naming.</strong> This release renames many of the existing Android Things API classes to provide a more consistent developer experience across the entire surface. See the updated <a href="https://developer.android.com/things/reference/index.html">API reference</a> to review how package and class names have changed.</li>
+            </ul>
+            <h3>New Bluetooth APIs</h3>
+            <p> Android mobile devices expose controls to users for pairing with and connecting to Bluetooth devices through the Settings app. IoT devices running Android Things need to programmatically perform these same operations. The new <code>BluetoothConnectionManager</code> API enables apps to take control of the pairing and connection process. See the new <a href="https://developer.android.com/things/sdk/apis/bluetooth.html">Bluetooth API guide</a> for more details. </p>
+            <h3>Sample updates</h3>
+            <p> Last year at Google I/O, we demonstrated <a href="https://www.youtube.com/watch?v=v3Dm5aeuQKE">building an app using Kotlin</a> on Android Things. For developers using Kotlin, we have started publishing Kotlin versions of the Android Things samples. Today you can download the <a href="https://github.com/androidthings/sample-button">Button and LED sample</a> in both Kotlin and Java, with more samples to follow very soon. </p>
+            <p> We have also migrated the <a href="https://github.com/androidthings/sample-tensorflow-imageclassifier">TensorFlow Image Classifier</a> sample app to use the <a href="https://www.tensorflow.org/mobile/tflite/">TensorFlow Lite</a> library, reducing the size of the pre-trained TensorFlow model by over 90% and the time required to classify the images by approximately 50%. </p>
+            <h3>Feedback</h3>
+            <p> Please send us your feedback by filing <a href="https://issuetracker.google.com/issues/new?component=192720&amp;template=847005">bug reports</a> and <a href="https://issuetracker.google.com/issues/new?component=192720&amp;template=848805">feature requests</a>, as well as asking any questions on <a href="https://stackoverflow.com/questions/tagged/android-things">Stack Overflow</a>. You can also join <a href="https://g.co/iotdev">Google's IoT Developers Community</a> on Google+, a great resource to get updates and discuss ideas. We look forward to seeing what you build with Android Things! </p>
+        </div>
+    </div>
+</div>

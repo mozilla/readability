@@ -1,0 +1,2983 @@
+<!DOCTYPE html><html class="v2 detail-page" dir="ltr" itemscope="" itemtype="http://schema.org/Blog" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://www.google.com/2005/gml/b" xmlns:data="http://www.google.com/2005/gml/data" xmlns:expr="http://www.google.com/2005/gml/expr"><head>
+<link href="https://www.blogger.com/static/v1/widgets/2437439463-css_bundle_v2.css" rel="stylesheet" type="text/css">
+<title>
+Android Developers Blog: Android Things Developer Preview 7
+</title>
+<meta content="width=device-width, height=device-height, minimum-scale=1.0, initial-scale=1.0, user-scalable=0" name="viewport">
+<meta content="IE=Edge" http-equiv="X-UA-Compatible">
+<meta content="article" property="og:type">
+<meta content="Android Things Developer Preview 7" property="og:title">
+<meta content="en_US" property="og:locale">
+<meta content="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" property="og:url">
+<meta content="Android Developers Blog" property="og:site_name">
+<!--START Twitter Card -->
+<meta content="summary_large_image" name="twitter:card">
+<meta content="@AndroidDev" name="twitter:site">
+<meta content="@AndroidDev" name="twitter:creator">
+<meta content="https://android-developers.googleblog.com/" name="twitter:domain">
+<meta content="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" name="twitter:url">
+<meta content="Android Things Developer Preview 7" name="twitter:title">
+<meta content="https://2.bp.blogspot.com/-SyYsE6lCBK4/WpbnmkKnvjI/AAAAAAAAFG4/iALBir1-WU0NzVTf-83eo3MB0kvaHZliQCLcBGAs/s1600/ad_logo_twitter_card.png" name="twitter:image">
+<!--END Twitter Card -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400italic,400,500,500italic,700,700italic" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script async="" src="https://www.google-analytics.com/analytics.js"></script><script async="" src="//www.google-analytics.com/analytics.js"></script><script src="https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.en_US.FpAS4ByFIqg.O/m=plusone/rt=j/sv=1/d=1/ed=1/am=AQE/rs=AGLTcCM0MhnI49VLX_XM3yKHvTnvUQ1pAA/cb=gapi.loaded_0" async=""></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/google/code-prettify/master/loader/prettify.css">
+<script src="https://www.google.com/js/gweb/analytics/autotrack.js" type="text/javascript"></script>
+<script src="https://apis.google.com/js/plusone.js" type="text/javascript" gapi_processed="true"></script>
+<script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-961555-37', 'auto');
+    ga('send', 'pageview');
+    </script>
+<!-- End -->
+<style id="page-skin-1" type="text/css"><!--
+
+--></style>
+<style id="template-skin-1" type="text/css"><!--
+
+--></style>
+<!-- start all head -->
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta content="blogger" name="generator">
+<link href="https://android-developers.googleblog.com/favicon.ico" rel="icon" type="image/x-icon">
+<link href="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" rel="canonical">
+<link rel="alternate" type="application/atom+xml" title="Android Developers Blog - Atom" href="https://android-developers.googleblog.com/feeds/posts/default">
+<link rel="alternate" type="application/rss+xml" title="Android Developers Blog - RSS" href="https://android-developers.googleblog.com/feeds/posts/default?alt=rss">
+<link rel="service.post" type="application/atom+xml" title="Android Developers Blog - Atom" href="https://www.blogger.com/feeds/6755709643044947179/posts/default">
+
+<link rel="alternate" type="application/atom+xml" title="Android Developers Blog - Atom" href="https://android-developers.googleblog.com/feeds/33458597185895777/comments/default">
+<!--[if IE]><script type="text/javascript" src="https://www.blogger.com/static/v1/jsbin/3061962209-ieretrofit.js"></script>
+<![endif]-->
+<meta content="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" property="og:url">
+<meta content="Android Things Developer Preview 7" property="og:title">
+<meta content="The latest Android and Google Play news and tips for app and game developers." property="og:description">
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {} })(); </script> <![endif]-->
+<!-- end all head -->
+<base target="_self">
+<style>
+    /** Blogger default styles **/
+    html, .Label h2, #sidebar .rss a, .BlogArchive h2, .FollowByEmail h2.title, .widget .post h2 {
+      font-family: Roboto, sans-serif;
+    }
+
+    .plusfollowers h2.title, .post h2.title, .widget h2.title {
+      font-family: Roboto, sans-serif;
+    }
+
+    .widget-item-control {
+      height: 100%;
+    }
+
+    .widget.Header, #header {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    .widget.Header .header-logo1 {
+      float: left;
+      margin-right: 15px;
+      padding-right: 15px;
+      border-right: 1px solid #ddd;
+    }
+
+    .widget.Header .header-title h2 {
+      font-size: 24px;
+      font-family: Roboto, sans-serif;
+      font-weight: normal;
+      line-height: 32px;
+      margin-bottom: 7px;
+    }
+
+    .header-inner {
+      background-repeat: no-repeat;
+      background-position: right 0px;
+    }
+
+    .post-author, .byline-author {
+      font-size: 14px;
+      font-weight: normal;
+      color: #757575;
+      color: rgba(0, 0, 0, .54);
+    }
+
+    .post-content .img-border {
+      border: 1px solid rgb(235, 235, 235);
+      padding: 4px;
+    }
+
+    .header-title a {
+      text-decoration: none !important;
+    }
+
+    pre, .post-content pre.prettyprint {
+      background-color: #f7f7f7;
+      border: 1px solid #ddd;
+      margin: 0 0 1em 0;
+      padding: 1em;
+      overflow: auto;
+    }
+
+    pre, code {
+      font-size: 9pt;
+      line-height: 125%;
+      font-family: monospace;
+    }
+
+    pre, code {
+      color: #060;
+      font: 13px/18px Consolas, "Liberation Mono", Menlo, Monaco, Courier, monospace;
+      -webkit-font-smoothing: subpixel-antialiased;
+      -moz-osx-font-smoothing: auto;
+    }
+
+    /* Styles for https://github.com/google/code-prettify */
+    .str { color: #800; }
+    .com { color: #060; }
+    .kwd { color: #008; }
+    .typ { color: #606; }
+    .lit { color: #066; }
+    .pun { color: #660; }
+    .pln { color: #000; }
+    .tag { color: #008; }
+    .atn { color: #828; }
+    .atv { color: #800; }
+    .dec { color: #606; }
+
+    .header-left .header-logo1 {
+      width: 128px !important;
+    }
+
+    .header-desc {
+      line-height: 20px;
+      margin-bottom: 4px;
+      max-width: 260px;
+    }
+
+    .fb-custom img, .twitter-custom img, .gplus-share img, .email-custom img {
+      cursor: pointer;
+      opacity: 0.54;
+    }
+
+    .fb-custom img:hover, .twitter-custom img:hover, .gplus-share img:hover,  .email-custom img:hover {
+      opacity: 0.87;
+    }
+
+    .fb-like {
+      width: 80px;
+    }
+
+    #twitter-share {
+      border: #CCC solid 1px;
+      border-radius: 3px;
+      background-image: -webkit-linear-gradient(top, #ffffff, #dedede);
+    }
+
+    .twitter-follow {
+      background: url(//4.bp.blogspot.com/-8O7VcmcY32o/VSYkC2vUj7I/AAAAAAAAHeU/7mzo-JFgTgk/s1600/twitter-bird.png) no-repeat left center;
+      padding-left: 18px;
+      font: normal normal normal 11px/18px 'Helvetica Neue', Arial, sans-serif;
+      font-weight: bold;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .twitter-fb {
+      padding-top: 2px;
+    }
+
+    .fb-follow-button {
+      background: -webkit-linear-gradient(#4c69ba, #3b55a0);
+      background: -moz-linear-gradient(#4c69ba, #3b55a0);
+      background: linear-gradient(#4c69ba, #3b55a0);
+      border-radius: 2px;
+      height: 18px;
+      padding: 4px 0 0 3px;
+      width: 57px;
+      border: #4c69ba solid 1px;
+    }
+
+    .fb-follow-button a {
+      text-decoration: none !important;
+      text-shadow: 0 -1px 0 #354c8c;
+      text-align: center;
+      white-space: nowrap;
+      font-size: 11px;
+      color: white;
+      vertical-align: top;
+    }
+
+    .fb-follow-button a:visited {
+      color: white;
+    }
+
+    .fb-follow {
+      padding: 0px 5px 3px 0px;
+      width: 14px;
+      vertical-align: bottom;
+    }
+
+    .gplus-wrapper {
+      margin-top: 3px;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .twitter-custom, .gplus-share, .fb-custom {
+      margin-right: 12px;
+    }
+
+    .fb-follow-button {
+      margin: 10px auto;
+    }
+
+    /** Blogger theme styles **/
+
+    .header-outer {
+      clear: both;
+    }
+
+    .header-inner {
+      margin: auto;
+      padding: 0px;
+    }
+
+    .cols-wrapper, .header-inner {
+      max-width: 978px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cols-wrapper {
+      margin: auto;
+      clear: both;
+      margin-top: 60px;
+      margin-bottom: 60px;
+      overflow: hidden;
+    }
+
+    .col-main-wrapper {
+      float: left;
+      width: 100%;
+    }
+
+    .col-main {
+      margin-right: 278px;
+      max-width: 660px;
+    }
+
+    .col-right {
+      float: right;
+      width: 248px;
+      margin-left: -278px;
+    }
+
+
+    /* Tweaks for layout mode. */
+
+    body#layout .header-outer {
+      background: none;
+    }
+
+    body#layout .header-inner {
+      height: initial;
+    }
+
+    body#layout .cols-wrapper {
+      margin-top: initial;
+      margin-bottom: initial;
+    }
+
+
+    /** Blogger custom theme **/
+
+    .adb-header,
+    .searchBox input {
+        box-sizing: border-box;
+    }
+
+    html {
+      background-color: #fff;
+      font-family: Roboto, sans-serif;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      padding: 0;
+      /* This ensures that the scroll bar is always present, which is needed */
+      /* because content render happens after page load; otherwise the header */
+      /* would "bounce" in-between states. */
+      min-height: 150%;
+    }
+
+    h2 {
+      font-size: 16px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      line-height: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    html, h4, h5, h6 {
+      font-size: 14px;
+    }
+
+    a, a:visited {
+      color: #039be5;
+      text-decoration: none;
+    }
+
+    a:focus, a:hover, a:active {
+      color: rgba(3, 155, 229, .7);
+    }
+
+    pre code {
+      display: block;
+    }
+
+    blockquote {
+      border-left: .2em solid #4eb9ed;
+      margin-left: .2em;
+      padding-left: 1em;
+    }
+
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      border: 0;
+      width: 100%;
+    }
+
+    th, td {
+      vertical-align: top;
+      text-align: left;
+    }
+
+    td {
+      background-color: inherit;
+    }
+
+    th {
+      font-weight: normal;
+    }
+
+    tr:first-of-type th:first-of-type:empty {
+      visibility: hidden;
+    }
+
+    .Header {
+      margin-top: 15px;
+    }
+
+    .Header h1 {
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 32px;
+      height: 42px;
+    }
+
+    .header-inner .Header .titlewrapper {
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    .header-inner .Header .descriptionwrapper {
+      padding: 0;
+      margin: 0;
+    }
+
+    .cols-wrapper {
+      margin-top: 56px;
+    }
+
+    .header-outer, .cols-wrapper {
+      padding: 0 60px;
+    }
+
+    .header-inner {
+      height: 256px;
+      position: relative;
+    }
+
+    html, .header-inner a {
+      color: #212121;
+      color: rgba(0, 0, 0, .87);
+    }
+
+    .header-inner .google-logo {
+      position: absolute;
+      background-size: contain;
+      z-index: 1;
+    }
+
+    .header-left {
+      position: absolute;
+      left: 330px;
+      top: 92px;
+    }
+
+    .google-logo {
+      top: 94px;
+    }
+
+
+    /** Archive widget. **/
+
+    .BlogArchive {
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .BlogArchive .widget-content {
+      display: none;
+    }
+
+    .BlogArchive h2, .Label h2 {
+      color: #039be5;
+      text-decoration: none;
+    }
+
+    .BlogArchive h2:hover, .Label h2:hover {
+      color: #039be5;
+    }
+
+    .BlogArchive .hierarchy li {
+      display: inline-block;
+    }
+
+
+    /* Specificity needed here to override widget CSS defaults. */
+
+    .BlogArchive #ArchiveList ul {
+      float: none;
+      height: auto;
+      width: auto;
+    }
+
+    .BlogArchive #ArchiveList ul li, .BlogArchive #ArchiveList ul ul li {
+      margin: 0;
+      text-indent: 0;
+    }
+
+    .BlogArchive .intervalToggle {
+      cursor: pointer;
+    }
+
+    .BlogArchive .expanded .intervalToggle .new-toggle {
+      -ms-transform: rotate(180deg);
+      transform: rotate(180deg);
+    }
+
+    .BlogArchive .new-toggle {
+      float: right;
+      padding-top: 3px;
+      opacity: 0.87;
+    }
+
+    #ArchiveList {
+      text-transform: uppercase;
+    }
+
+    #ArchiveList .expanded > ul:last-child {
+      margin-bottom: 16px;
+    }
+
+    #ArchiveList .archivedate {
+      width: 100%;
+    }
+
+
+    /* Months */
+
+    .BlogArchive .items {
+      max-width: 150px;
+      margin-left: -4px;
+    }
+
+    .BlogArchive .expanded .items {
+      margin: 0;
+      max-width: none;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .BlogArchive .items > ul {
+      float: left;
+      height: 32px;
+    }
+
+    .BlogArchive .items a {
+      padding: 0;
+    }
+
+    .Label {
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .sidebar-icon {
+      display: inline-block;
+      width: auto;
+      height: 24px;
+      vertical-align: middle;
+      margin-right: 12px;
+      margin-top: -1px
+    }
+
+	.sidebar-social-links .sidebar-icon {
+      margin-right: 32px;
+    }
+
+    .sidebar-social-links a:last-child img {
+        margin-right: 0;
+    }
+
+    .Label a {
+      margin-right: 4px;
+    }
+
+    .Label .widget-content {
+      display: none;
+    }
+
+    .FollowByEmail {
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .FollowByEmail h2 {
+      background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAALCAYAAACZIGYHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUBJREFUeNrMkSGLAlEUhb+ZB4JFi8mx2cz+ApvhRUGTcUCrNqNJDYIi+DO0GUwmQXDK2DSIoGgZcSaIjDrzwrK4ssvChj1w0733O+fdp+m6PozH4yQSCfb7Pa7r8pOi0SjJZBLP8zgej4gAIMvlMuPxmADIYrHger1+C6lUKmo+NJ/NZojb7SZDWiwWo1qtks1msW2bw+HwZdkwDHq9HvV6nel0SqvVYrvdIh6Ph3Qch+VyqRYLhQJSSjRNw7IsfN9XgGKxSLfbJZfL0e/3aTabrFYr7vc7IujLcOh8PqunrNdr0uk0pVKJVCpFJBJRgEajweVyod1uMxgM2O12BAGUgRbU8DV2JpOhVquRz+cRQii3+XxOp9NRN3jVR5LPOp1OjEYjlSL8hclkgmmabDabt4d+m+S30vkD/R/IU4ABAPTZgnZdmG/PAAAAAElFTkSuQmCC");
+      background-repeat: no-repeat;
+      background-position: 0 50%;
+      text-indent: 30px;
+    }
+
+    .FollowByEmail .widget-content {
+      display: none;
+    }
+
+    .searchBox input {
+      border: 1px solid #eee;
+      color: #212121;
+      color: rgba(0, 0, 0, .87);
+      font-size: 14px;
+      padding: 8px 8px 8px 40px;
+      width: 100%;
+      font-family: Roboto, sans-serif;
+      background: url("https://www.gstatic.com/images/icons/material/system/1x/search_grey600_24dp.png") 8px center no-repeat;
+    }
+
+    .searchBox ::-webkit-input-placeholder {
+      /* WebKit, Blink, Edge */
+      color: rgba(0, 0, 0, .54);
+    }
+
+    .searchBox :-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      color: #000;
+      opacity: 0.54;
+    }
+
+    .searchBox ::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      color: #000;
+      opacity: 0.54;
+    }
+
+    .searchBox :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #757575;
+    }
+
+    .widget-item-control {
+      margin-top: 0px;
+    }
+
+    .section {
+      margin: 0;
+      padding: 0;
+    }
+
+    #sidebar-top {
+      border: 1px solid #eee;
+    }
+
+    #sidebar-top > div {
+      margin: 16px 0;
+    }
+
+    .widget ul {
+      line-height: 1.6;
+    }
+
+
+    /*main post*/
+
+    .post {
+      margin-bottom: 30px;
+    }
+
+    #main .post .title {
+      margin: 0;
+    }
+
+    #main .post .title a {
+      color: #212121;
+      color: rgba(0, 0, 0, .87);
+      font-weight: normal;
+      font-size: 24px;
+    }
+
+    #main .post .title a:hover {
+      text-decoration: none;
+      color: #039BE5;
+    }
+
+    .message, #main .post .post-header {
+      margin: 0;
+      padding: 0;
+    }
+
+    #main .post .post-header .caption, #main .post .post-header .labels-caption, #main .post .post-footer .caption, #main .post .post-footer .labels-caption {
+      color: #444;
+      font-weight: 500;
+    }
+
+    #main .post .tr-caption {
+      color: #757575;
+      color: rgba(0, 0, 0, .54);
+      display: block;
+      max-width: 560px;
+      padding-bottom: 20px;
+    }
+
+    #main .post .tr-caption-container {
+      line-height: 24px;
+      margin: -1px 0 0 0 !important;
+      padding: 4px 0;
+    }
+
+    #main .post .post-header .published {
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .post-header .publishdate {
+      font-size: 16px;
+      font-weight: normal;
+      color: #757575;
+      color: rgba(0, 0, 0, .54);
+    }
+
+    #main .post .post-footer {
+      font-size: 12px;
+      padding-bottom: 21px;
+    }
+
+    .label-footer {
+      margin-bottom: 12px;
+      margin-top: 12px;
+    }
+
+    .comment-img {
+      margin-right: 16px;
+      opacity: 0.54;
+      vertical-align: middle;
+    }
+
+    #main .post .post-header .published {
+      margin-bottom: 16px;
+    }
+
+    .post .post-content {
+      color: #545454;
+      color: rgba(0, 0, 0, .67);
+      font-size: 16px;
+      margin: 16px 0 36px 0;
+      line-height: 24px;
+      word-wrap: break-word;
+    }
+
+    .post .post-content > em:first-child {
+      color: #757575;
+      font-size: 14px;
+    }
+
+    .post-body .post-content ul, .post-body .post-content ol {
+      margin: 16px 0;
+      padding: 0 0 0 24px;
+    }
+
+    .post-summary {
+      display: none;
+    }
+
+
+    /* Another old-style caption (with link) */
+
+    .post-content a > i {
+      color: #039BE5 !important;
+    }
+
+
+    /* Old-style captions for images. */
+
+    .post-content .separator+div:not(.separator) {
+      margin-top: -16px;
+    }
+
+    .post-content li {
+      margin: .5em 0;
+    }
+
+
+    /* Override all post images/videos to left align. */
+
+    @media (max-width: 712px) {
+      .post-content img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
+      }
+    }
+
+    .post-content .tr-caption-container img {
+      margin-bottom: 12px;
+    }
+
+    .post-content iframe, .post-content embed {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      max-width: 100%;
+    }
+
+    .post-content .carousel-container {
+      margin-bottom: 48px;
+    }
+
+    #main .post-content b {
+      font-weight: 500;
+    }
+
+
+    /* These are the main paragraph spacing tweaks. */
+
+    #main .post-content br {
+      content: '';
+      display: block;
+      padding: 4px;
+    }
+
+    .post-content .space {
+      display: block;
+      height: 8px;
+    }
+
+    .post-content iframe+.space, .post-content iframe+br {
+      padding: 0 !important;
+    }
+
+    #main .post .jump-link {
+      margin-bottom: 10px;
+    }
+
+    .post-content img, .post-content iframe {
+      margin: 30px 0 20px 0;
+    }
+
+    .post-content > img:first-child, .post-content > iframe:first-child {
+      margin-top: 0;
+    }
+
+    .col-right .section {
+      padding: 0 16px;
+    }
+
+    #aside {
+      background: #fff;
+      border: 1px solid #eee;
+      border-top: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    #aside .widget {
+      margin: 0;
+    }
+
+    #aside .widget h2, #ArchiveList .toggle+a.post-count-link {
+      color: #212121;
+      color: rgba(0, 0, 0, .87);
+      font-weight: 400 !important;
+      margin: 0;
+    }
+
+    #ArchiveList .toggle {
+      float: right;
+    }
+
+    #ArchiveList .toggle .material-icons {
+      padding-top: 4px;
+    }
+
+    #sidebar-top,
+    #sidebar {
+      background: #fff;
+    }
+
+    #sidebar .tab {
+      cursor: pointer;
+    }
+
+    #sidebar .tab .arrow {
+      display: inline-block;
+      float: right;
+    }
+
+    #sidebar .tab .icon {
+      display: inline-block;
+      vertical-align: top;
+      height: 24px;
+      width: 24px;
+      margin-right: 13px;
+      margin-left: -1px;
+      margin-top: 1px;
+      color: #757575;
+      color: rgba(0, 0, 0, .54);
+    }
+
+    #sidebar .widget-content > :first-child {
+      padding-top: 8px;
+    }
+
+    #sidebar .active .tab .arrow {
+      -ms-transform: rotate(180deg);
+      transform: rotate(180deg);
+    }
+
+    #sidebar .arrow {
+      color: #757575;
+      color: rgba(0, 0, 0, .54);
+    }
+
+    #sidebar .widget h2 {
+      font-size: 14px;
+      line-height: 24px;
+      display: inline-block;
+    }
+
+    #sidebar .widget .BlogArchive {
+      padding-bottom: 8px;
+    }
+
+    #sidebar .widget {
+      border-bottom: 1px solid #eee;
+      box-shadow: 0px 1px 0 white;
+      margin-bottom: 0;
+      padding: 14px 0;
+      min-height: 20px;
+    }
+
+    #sidebar .widget:last-child {
+      border-bottom: none;
+      box-shadow: none;
+      margin-bottom: 0;
+    }
+
+    #sidebar ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    #sidebar ul li {
+      list-style: none;
+      padding: 0;
+    }
+
+    #sidebar ul li a {
+      line-height: 32px;
+    }
+
+    #sidebar ul ul ul li a {
+      line-height: 24px;
+    }
+
+    #sidebar .archive {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE1JREFUeNpiNDY23s9AAWBioBCwYBM8c+YMVsUmJibEGYBNMS5DaeMFfDYSZQA2v9I3FrB5AZeriI4FmnrBccCT8mhmGs1MwyAzAQQYAKEWG9zm9QFEAAAAAElFTkSuQmCC");
+      height: 24px;
+      line-height: 24px;
+      padding-left: 30px;
+    }
+
+    #sidebar .labels {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUxJREFUeNpiNDY23s9AAMycOfM7UF05kHkZmzwTMkdSUhKrIcXFxZy3bt3qBjIN8RrS09PDsHnzZjCNDr58+cKQlpbGDjSoHcg1w2oIyAUODg5gARCNzUVIBrUCuVYYhjx//pzhwIEDYAEQDeJjA1CDWIAGNQK59jBxRuSABbkAlwHIgIeHh2HWrFn/1NTU2oDcvSgBS4wBSC5iArqoCsj1YGIgEyAZVMoEchqlBjEB/cZAiUHg2AEGznpKDAImxOeM////B4VLKtBvEUCngZ1ILKivr3/u6+ubBzJAGZQ9gC5aQoqLgAY8BhkAZL4BuQQkxgXE34A4BuiiZEIuAhrwEGhAEZD5DpzYoIaA2UAM4kQADUrHZRDUgAIg8wO2XAwzbQXQa5OweQ1owB10AyA6gS7BgX1u3ry5397eHow3bdo0EyjGi00tQIABANPgyAH1q1eaAAAAAElFTkSuQmCC");
+      height: 20px;
+      line-height: 20px;
+      padding-left: 30px;
+    }
+
+    #sidebar .rss a {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAX5JREFUeNqsVDGSgkAQHL2rIiIikohIc/EBRkbwAIwuwgfwAXiAD9AHSI7kEkECRCb6AIyINDLx7K0aa6kT7uq0q7YYtnZ7umdnt7darXbr9Zpegeu61DNNc0dvwCcH4/GYJpMJnc9nOhwOVJbl/4hAAokMECZJQtvt9k+kH7qufyEYDAakqqqYxFdRFBqNRmTbNg2HQ0rTlK7XayvR0xqBdDqdkuM4dE/0ULhYLOh4PHYrknG5XGi/31MYhuL/nkwonM1mlGUZ1XXdrsiyLGEDhY7juJEZ1u5tIixDGdYhmYw+B7CAzPP5nDabjdgIAgCksMX1832/3drtdqPT6SQWapomiGEFNkDEdpDMMAzK81ys/7XYy+XyoQgq2WoURSIJ2iIIgp/WZCCTvFm2wgeAU31aI3Q2GhIDMeB53qPYPIcm5VrxXIOIOxsDMStjVawAc1VViRgN22lNBiuQN3GR+SY07hpOoStmFQAKXRRFY93bnpG+fONfedi+BRgAbkS8Fxp7QQIAAAAASUVORK5CYII=");
+    }
+
+    #sidebar .subscription a {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAALCAYAAACZIGYHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUBJREFUeNrMkSGLAlEUhb+ZB4JFi8mx2cz+ApvhRUGTcUCrNqNJDYIi+DO0GUwmQXDK2DSIoGgZcSaIjDrzwrK4ssvChj1w0733O+fdp+m6PozH4yQSCfb7Pa7r8pOi0SjJZBLP8zgej4gAIMvlMuPxmADIYrHger1+C6lUKmo+NJ/NZojb7SZDWiwWo1qtks1msW2bw+HwZdkwDHq9HvV6nel0SqvVYrvdIh6Ph3Qch+VyqRYLhQJSSjRNw7IsfN9XgGKxSLfbJZfL0e/3aTabrFYr7vc7IujLcOh8PqunrNdr0uk0pVKJVCpFJBJRgEajweVyod1uMxgM2O12BAGUgRbU8DV2JpOhVquRz+cRQii3+XxOp9NRN3jVR5LPOp1OjEYjlSL8hclkgmmabDabt4d+m+S30vkD/R/IU4ABAPTZgnZdmG/PAAAAAElFTkSuQmCC");
+    }
+
+    #sidebar-bottom {
+      background: #f5f5f5;
+      border-top: 1px solid #eee;
+    }
+
+    #sidebar-bottom .widget {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 0;
+      text-align: center;
+    }
+
+    #sidebar-bottom > div:last-child {
+      border-bottom: 0;
+    }
+
+    #sidebar-bottom .text {
+      line-height: 20px;
+    }
+
+
+    /* Home, forward, and backward pagination. */
+
+    .blog-pager {
+      border-top: 1px #e0e0e0 solid;
+      padding-top: 10px;
+      margin-top: 15px;
+      text-align: right !important;
+    }
+
+    #blog-pager {
+      margin-botom: 0;
+      margin-top: -14px;
+      padding: 16px 0 0 0;
+    }
+
+    #blog-pager a {
+      display: inline-block;
+    }
+
+    .blog-pager i.disabled {
+      opacity: 0.2 !important;
+    }
+
+    .blog-pager i {
+      color: black;
+      margin-left: 16px;
+      opacity: 0.54;
+    }
+
+    .blog-pager i:hover, .blog-pager i:active {
+      opacity: 0.87;
+    }
+
+    #blog-pager-older-link, #blog-pager-newer-link {
+      float: none;
+    }
+
+    .gplus-profile {
+      background-color: #fafafa;
+      border: 1px solid #eee;
+      overflow: hidden;
+      width: 212px;
+    }
+
+    .gplus-profile-inner {
+      margin-left: -1px;
+      margin-top: -1px;
+    }
+
+
+    /* Sidebar follow buttons. */
+
+    .followgooglewrapper {
+      padding: 12px 0 0 0;
+    }
+
+    .loading {
+      visibility: hidden;
+    }
+
+    .detail-page .post-footer .cmt_iframe_holder {
+      padding-top: 40px !important;
+    }
+
+
+    /* ADB */
+
+    .adb-header {
+      background-color: #6ab344;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .07);
+      color: #fff;
+      height: 64px;
+      left: 0;
+      overflow: hidden;
+      padding: 12px 12px 12px 24px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: 3;
+    }
+
+    .adb-header-logo {
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: -11px;
+    }
+
+    .adb-header-title {
+      color: #fff;
+      display: inline-block;
+      font-size: 20px;
+      font-weight: normal;
+    }
+
+    .adb-header-links {
+      border-left: 1px solid rgba(0, 0, 0, .1);
+      display: block;
+      left: 250px;
+      list-style: none;
+      margin: 0;
+      padding: 12px 0 12px 18px;
+      position: absolute;
+      top: 0;
+    }
+
+    .adb-header-link-item {
+      display: inline-block;
+    }
+
+    .adb-header-link, .adb-header-link:visited {
+      color: #fff;
+      display: inline-block;
+      font-weight: 500;
+      opacity: .7;
+      padding: 12px 9px;
+      text-transform: uppercase;
+      vertical-align: 2px;
+    }
+
+    .adb-header-link:hover, .adb-header-link:focus {
+      color: #fff;
+      opacity: 1;
+    }
+
+    .adb-header-console, .adb-header-console:visited {
+      border-radius: 3px;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+      color: #fff;
+      float: right;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 28px;
+      padding: 4px 10px;
+      position: relative;
+      text-transform: uppercase;
+      transition: box-shadow .2s;
+      z-index: 60;
+    }
+
+    .adb-header-console:hover {
+      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .3);
+      color: #fff;
+    }
+
+    .adb-header-console:focus {
+      background-color: rgba(63, 81, 181, .1);
+      color: #fff;
+    }
+
+    .adb-header-console-image {
+      vertical-align: -5px;
+    }
+
+    .adb-hero {
+      background-color: #dcedc8;
+      margin-top: 64px;
+    }
+
+    .adb-hero-back, .adb-hero-back:link, .adb-hero-back:visited {
+      color: #414141;
+      display: inline-block;
+      font-weight: 500;
+      margin: 25px 25px 0;
+    }
+
+    .adb-hero-inner {
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAc4AAADZCAMAAACenCAVAAAAvVBMVEXc7cjY68PT6bvR57fQ57bY6sPZ68TU6bvR6LfP5rTQ57XR57jW6r7b7cfa7MbS6LnS6Lrb7cbQ6Lfb7MbX6r/Z68PY6sLV6b7U6b3U6r3T6LnX68Da7MXP57Tb7Mfc7cfW6b/P57XS57nY68LY68HU6L3W6r/W6b7T6brX6sDV6rzQ57fa7MTV6b3T6Lra68TR57bX68HW6sDS57jU6bzO5rTP5rXZ7MXR6LbZ68XX6sHT6LvV6bzS6LjZ7MILrTuqAAAIyklEQVR4AezXhXEkUQwE0B6+Xhg8MzND/smZ4UsLBSb9Kr0UhI1vl6RZnqUFlnBl9Y+j8WQK4+qGr9oOi7iKr0YFTOt6vhsPmM81/FDAspafUszl/vNTXsOuFYZWMYfrRgyswa51hjLM4TYYGsOuTQpbgNO2dyjAroxCvgunpZT2YFZDaQKnlFRg1z6lgxpOOqS0CbtqKutwwhGVYxh2QqWGC/WUMlhWH1BK4QKnVFZh2hmVEh/cXk7pHLbt5pQafHCT6Jr9gsoR3riayiXMyyhd4Y27jDDHJVQu8MJdU7lBBBpKoz08c7eU8gERuKNyhiduhcopolBRqeGAMaV7xKE7eGzvThQTVZooAJdC1AM2qGg0BhdCrpnciVE0i9dZ3v+t/n2ZMBtJGpsu6nuCrNJddar4/gAnMmuP/GPk3JFwrL2QKw3FD26GyGmQNXbIGVHNKdfmYraDl/ZUcxO8NNtIW888bafDC7tP5R2qtQfL724N5AypxjbIGdseWHMV1VfP+rrnZvbTerMEhHb2Py4eA7KX9AwD5LSppi5ZdPTHEhv6cd5mSjZaeMW/Dc66TEpkO+Q0qIbUE5es6ke85FMN/YGXZs9yQLdXYGVASGJDBaMZXsQouzau/fzfitNsKvpUL1O8dFBksb+Q80C1coaco7RtLeYzO9tHCV7qUY0ckXPGribSoNpQB3Z1MbWtby1hiZwWw35CRjUReRx7Sg5ecqgmJiyHOxrIWVEtPDPNY/TMx4bmczq5T3jpSRELm1NWodVmlGY364tP4ZXvdw5u8jjDf8yQJJ7j+2HYfBh3d+l5HFB5RmyzjM3yh8iDUbb6M9y7j3idgxM+3BzTuPzyXmdOTARJaUc8tUmX7ekB7+aF7dV1a0G6pIx3CkxKmBBUreMfvS0086aTnZZf6kfG53mlN/0UnS2bW5Socz9OA737eM6JkZWu4uUiXfVcnIT34eZM6Yq9hcRKR0OpL7i9cHBi/udjrCOUuiFWsnc2/oKsfYAhXvM2lsj4S/7b2/L9y4cODDu0j8HbBzqSPvutOksqpDH+gorw1+dvHLcaEzv3r4+0BdmnBJXi9bL+G6qaEbFz98rF4sEwnKGKrrrxK3sOuzoMlM9i+ql47KPC/HX8inTxljgKUHBYI1g6qDx/HBct76XETfHF4v3hHpZwVgH9APc0TfFSyTwLZ7DJ9FYxmZvTv1h89DmBdbyHEX0rcuuTRB38fNuQ2vmw1GAYMSjv6ZwQbD0ksFlz9LPW7gMxNv3RBVtlDqz3cbWo32rmEXLGFExcsJBMnilGzk29pleT5gx8fLiq2XzyM2rllpiboEYGxF2UoD6+EntL1Ma+TkOP/LVqNJLM3yeqgayDmnjqKmIu3aNGDhlx1pqiZvyUuAqaqKGwRRwt1gnqqR0QO5ce6ms5J1ZGIWqtkxIf0QNqb7ohJjIXgFjPiYF4j38R2wbZTk1m+C/xqU9WSzv4hkgyVkcg0QvIUg0XEHleRjaK/gQb8g/a2EL8hHcky6zxC+JTQBa5c/BL4nBO1lgl+B2xJjv0QxQgnA1ZoOGhGHFNldedoShxMadKU/d4BeEEVGF3Ll5FJF+psm7Bh5xwHyDeoKeogvp7iDfpbKhyWgeIN/JSqpjbBOLtlqwq7qJNFdKGeKdQUUUEIcS7Df6iSngeQAPhtqgCWi60EElKxjUSsCFriK5nYEMuLDtoJSZk0BiaiaYsZGPlXnEqHoipIhOaKIW4WnD63xThgtP/pthHdFqfUCIRRvK/KZ+3VX1uiulc7puc3EstSOpD9d7+LYGTFfiQenyKkxE3VLLGI9iQkcH4CackzqlEwRYnJbwNlUb5ODHhBVSWHk5O+JFMLkh5qFYxLxnoPZ9BmJGRdrELNuTddNEAwhg34NSvFnvSqgth1ANpNEIZkhkYSg4dt9rHocCFXvvxWUD/ELR2TQ98hMOWon+Ks7YLrZI70iWETu6yT99Qt3uw4A4j+lY6hU4dVcloUFdR3tkA1kt29J1zHxr1SIsGNAoDnvGjMCj/CLmr3INzQj9x5sFm41Ns933c0PtNoc+O0bJNA9+Xryp14+zSL9x5PH6beS2vQrfP0exkQcMG08BdCn1SepeFc8KPijWs5MxPdzN4CipzR2nQb8wdnu0O5UKbkN7h/LQZ/a9Ms+pZNYp9kQt9Yvo9H3Yx8H15QSXm/qZUQMY0ybOCPtNKlIMuqYAogW1SKkBBoxW9SXSARoqKCGGbBRVxBY0C85V3h2mb/MrASGxIb3BnYlaxwXRmLwUMFxMc6NSlQvpM6nt5MXTylOl00JGKYTqxp6DVBb1SkECrlOmvs0HFGA7efjA0dwrLfKVC5tDLp1dpGHrGKFjm0tCZYEWvMTA0NrOBZVZUSMtoLn4I3T5RISnTZTGXJrea9BPotmU6QrqlQi6gXWx05V5MRTiwTaD/4aW5FN8y9pCJYZ2usSPBNRUzNfapNIZ1fGM7KQdUSMNYJyl6Ajh2yAKTBUYHpfCZruJ0jB3wCpVur1GSIf3G8yOPlG1ePDN46d2iJEmLR+86L4lNBRQTZXK/6UAxunMWDxC3Da6omXsoz5XiOa8/NfV9JYHRXVBXiudG8r0y9Jmzpl87oFSDFv3Qog2rDTb0Q6qJckX0K7coWTKkHxh1YLmkSz/Q6JjNKnVQOj+lnM0nMPDxmnLuPhjej5rhFLbjmP4nOF6BCXfdov8JLkPj+xcdnMjh03p3nWXLBwesuB/+GGbHXbc5wIkkSt7CwEmXU1lGbPX3OYVBt5y2Yoov9EN/QVhpJK9xZL/7P4Kw1LO8iIH7qxx8CEu5zG8pcldpQ1hrSjnBI4S9YnrpBsJiEzkIcfIkByFWUqkIcdKjb7kQdos49a3Fjv7vE4TlfPoflYAPuXoeIaw3pv+6h7CeQ/8RPYIP6XpegwGxknMtwxcqK7AgAqkhcDKkf3oAI9LE9sCDWGhf4S8M70peggnxQERTMCFcIjUDF+KOUrAhhvQANkT4dwEsPvJYWz4QAAAAAElFTkSuQmCC);
+      background-position: bottom right 70px;
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+      margin: 0 auto;
+      max-width: 980px;
+      padding: 0 60px;
+      position: relative;
+    }
+
+    .adb-hero-back-icon {
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .adb-hero-title {
+      font-size: 44px;
+      font-weight: 300;
+      line-height: inherit;
+      margin: 16px 0;
+    }
+
+    .adb-hero-description {
+      color: #6f7172;
+      font-size: 16px;
+      margin: 0;
+      max-width: 440px;
+      padding-bottom: 32px;
+    }
+
+    .adb-hero-subscribe, .adb-hero-subscribe:visited {
+      background-color: #90c653;
+      color: #fff;
+      display: inline-block;
+      border-radius: 3px;
+      margin: 25px 0 60px;
+      padding: 13px 32px;
+      text-transform: uppercase;
+    }
+
+    .adb-hero-subscribe:hover, .adb-hero-subscribe:focus {
+      background-color: #333;
+    }
+
+    .adb-footer {
+      margin: 32px auto 64px;
+    }
+
+    .adb-footer-more {
+      border-bottom: 1px solid #f0f0f0;
+      border-top: 1px solid #f0f0f0;
+      padding: 30px 0;
+    }
+
+    .adb-footer-more a {
+      color: #000;
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 300;
+      margin-right: 16px;
+    }
+
+    .adb-footer-social {
+      float: right;
+      margin-top: -62px;
+    }
+
+    .adb-footer-social a {
+      background-color: #ccc;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto 16px;
+      border-radius: 50%;
+      display: inline-block;
+      height: 36px;
+      margin-left: 16px;
+      transition: background-color .1s;
+      width: 36px;
+    }
+
+    .adb-footer-social-youtube {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAQAAAAxWje/AAABLUlEQVQ4y6WUvUoDYRBFr42gCdhK8AV8BwsVC0FQfIQUgr5DIKJoGy1CfAaDq1hIGn8K2xDSaBc1wUJJEYmbkDXssdi1Mrvfst9tZ+bAzNwZSZLEAmvsUKTCBQ80eaWLyxiAMS5dXmhyT5UyBfIsM68/McM1aXRDJgCUSKsTSWQZpAa4ZMUmNtoSRxGhbd4TAI7F1eSIxBwVfAPgUtSjAJLEEk+xgLroxAEkpikyigS0RS8eIEks8hgB6ImhGSAxxS5fE9JGwksCkCRyOP/SfPFjC0jawl5UC9ZDbBvXuB+zxjezkZ5NRnJirHxmtLIjDq2O6UBsWJ3zut1D+WZWEqepAaVg0hlqqcpr4VMNbbpKngJlqtzRoMUnfTx8fDz6fNCiwS3n4VtfIRdU/gLTrSb7DGWLcQAAAABJRU5ErkJggg');
+    }
+
+    .adb-footer-social-youtube:hover {
+      background-color: #f44336;
+    }
+
+    .adb-footer-social-gplus {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAUCAQAAACpWpz6AAABJUlEQVQ4EZXBTUoCYQDH4X9hTS3Cja0Kyb2X6BCJoLlr1aKwK1QHCMMzWLiqTcuWXaAWQWIlU1DQh4QJ+Wt4X95x0hGn55FCeGzSpMUXXW45ocSC/oMiHUZ1KCgZZqkzyZaSoM7QgCd8BlgXLGo6ijgv7JJRgAxV3jjDUwwMOXh0sK5ZUQRZ5hQLQw4VrA/WlBCGHJpY+0oMQw5trLxCjNtTgFiij5VSiHFHChBL9LFSCjGurgCxRBsrrxA+Pj4+Pl2sQ0VgyKGJdaAYNLAqisCQQxnrk5xGkKOHlVUEhhw8HrFuWFUEaa6wLvUHhoYo4LxSZVkBlihzh7OuaagR9YzPD0PHmo5ZakzSIKVk2OCBUe/sMKPkmKfEKS16fHPPOduklcAvR50zMVwhTI4AAAAASUVORK5CYII=');
+    }
+
+    .adb-footer-social-gplus:hover {
+      background-color: #f44336;
+    }
+
+    .adb-footer-social-twitter {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAQAAAB0gUQ+AAABI0lEQVQ4EY3BQShDAQDH4f+zTSyJuLgoLlwclYOTHCwHu9ouiLRScpUmNwduDkpCSTs4LAeJhINoOTo4ctHkskyJtf20vWbe3tvb+z7JFUGibLHPMj0qoYEWSYzRKkdMkKbsm3m6WSRFuyQeuKNNNoTJU61ABL8kssAjvbKgiTR2V+ywJol3ijJMY+gP4zhLEpDEGWUpwvhUQgwnh/hURIT/3thjjmGWcBKViSCXeBWSiWdO+MGbPpm4watPfDIRxasLVXCANwuqwCDGK/V80akKGjnmmgLutmXFOvV80CUrAiRxNys7DCY5J4OzXdVCP7c4OcIvO5oJkSCHXZ5VDFkxwilP5HB2z6Cc0EGcF6plSTAqNxgMMEWcTTZYYYYhAqrpF0uh1zgYi1hVAAAAAElFTkSuQmCC');
+    }
+
+    .adb-footer-social-twitter:hover {
+      background-color: #55acee;
+    }
+
+    .adb-footer-social span {
+      display: none;
+    }
+
+    .adb-footer-related {
+      padding-top: 8px;
+    }
+
+    .adb-footer-related a {
+      color: #999;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .adb-footer-related a:not(:last-child)::after {
+      content: '|';
+      cursor: default;
+      margin: 0 7px 0 10px;
+    }
+
+    .adb-other-blogs-title {
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .adb-other-blogs-title img {
+      margin-right: 8px;
+      vertical-align: -12px;
+    }
+
+    .adb-other-blogs-list {
+      columns: 2;
+    }
+
+    .adb-other-blogs-list a {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAUUlEQVR4Ae3Nuw2AQBDE0GmLT2NIBMuVDAUM4WVkg7SSXwG2AKCRS6WgIcu5xSnLycWimwULFn8v1uwgnN+a55/G+Z38lyOVn2rmc4tSWwDwAg8dd8M/SQZ2AAAAAElFTkSuQmCC');
+      background-position: -8px 4px;
+      background-repeat: no-repeat;
+      background-size: auto 24px;
+      color: #000;
+      font-size: 15px;
+      font-weight: 500;
+      opacity: .7;
+      padding: .5em 0 .5em 2em;
+      transition: opacity .1s;
+      /* Prevent column elements from breaking */
+      -webkit-column-break-inside: avoid;
+      break-inside: avoid-column;
+      display: table;
+      margin: 0;
+      page-break-inside: avoid;
+    }
+
+    .adb-other-blogs-list a:hover {
+      opacity: 1;
+    }
+
+    .adb-label-view-more-toggle {
+      cursor: pointer;
+    }
+
+    .adb-label-view-more-toggle::after {
+      content: '\00e5c5';
+      float: right;
+      font: 2em / .7 Material Icons;
+      opacity: .6;
+    }
+
+    .adb-label-view-more-toggle.active::after {
+      transform: rotate(180deg);
+    }
+
+
+    /** Desktop **/
+
+    @media (max-width: 900px) {
+      .col-right {
+        display: none;
+      }
+      .col-main {
+        margin-right: 0;
+        min-width: initial;
+      }
+      .cols-wrapper {
+        min-width: initial;
+      }
+      .adb-hero-inner {
+        background-image: none;
+      }
+    }
+
+
+    /** ADB header breakpoint **/
+
+    @media (max-width: 768px) {
+      .adb-header-links {
+        display: none;
+      }
+      .adb-header {
+        padding: 12px;
+        text-align: center;
+      }
+    }
+
+
+    /** Tablet **/
+
+    @media (max-width: 712px) {
+      .header-outer, .cols-wrapper {
+        padding: 0 40px;
+      }
+      /* ADB */
+      .adb-hero-inner {
+        padding: 0 40px;
+      }
+      .adb-hero-back, .adb-hero-back:link, .adb-hero-back:visited {
+        margin-left: 36px;
+      }
+      .adb-other-blogs-list {
+        columns: auto;
+      }
+      .adb-other-blogs-title {
+        font-size: 20px;
+      }
+      .adb-other-blogs-title img {
+        height: auto;
+        vertical-align: -6px;
+        width: 32px;
+      }
+      .adb-footer-more {
+        padding-bottom: 75px;
+      }
+      .adb-footer-social {
+        float: none;
+        margin-bottom: 35px
+      }
+      .adb-footer-social .adb-footer-social-youtube {
+        margin-left: 0;
+      }
+    }
+
+
+    /** Small tablet **/
+
+    @media (max-width: 600px) {
+      .header-inner .google-logo {
+        top: 32px;
+        margin-top: 0;
+      }
+      .header-inner .google-logo img {
+        height: 56px;
+        width: auto;
+        /*
+        height: auto;
+        width: 188px;
+        */
+        /* Override any optical adjustments at desktop size. */
+        top: 0 !important;
+      }
+      .header-left {
+        left: 0;
+        top: inherit;
+        bottom: 24px;
+      }
+      .adb-hero-title {
+        font-size: 32px;
+        font-weight: 400;
+      }
+    }
+
+
+    /** Mobile **/
+
+    @media (max-width: 480px) {
+      .header-outer, .cols-wrapper {
+        padding: 0 16px;
+      }
+      .adb-hero-back, .adb-hero-back:link, .adb-hero-back:visited {
+        margin-left: 16px;
+      }
+      .cols-wrapper {
+        margin-top: 0;
+        overflow-x: auto;
+      }
+      .post-header .publishdate, .post .post-content {
+        font-size: 16px;
+      }
+      .post .post-content {
+        line-height: 28px;
+        margin-bottom: 30px;
+      }
+      .post {
+        margin-top: 30px;
+      }
+      .byline-author {
+        display: block;
+        font-size: 12px;
+        line-height: 24px;
+        margin-top: 6px;
+      }
+      #main .post .title a {
+        font-weight: 500;
+        color: #4c4c4c;
+        color: rgba(0, 0, 0, .70);
+      }
+      #main .post .post-header {
+        padding-bottom: 12px;
+      }
+      #main .post .post-header .published {
+        margin-bottom: -8px;
+        margin-top: 3px;
+      }
+      .post .read-more {
+        display: block;
+        margin-top: 14px;
+      }
+      .post .tr-caption {
+        font-size: 12px;
+      }
+      #main .post .title a {
+        font-size: 20px;
+        line-height: 30px;
+      }
+      .post-content iframe {
+        /* iframe won't keep aspect ratio when scaled down. */
+        max-height: 240px;
+      }
+      .post-content .separator img, .post-content .tr-caption-container img {
+        margin-left: -16px;
+        max-width: 100%;
+      }
+      .post-content table {
+        table-layout: fixed;
+        width: 100%;
+      }
+      #blog-pager {
+        margin: 0;
+        padding: 16px 0;
+      }
+      /** List page tweaks. **/
+      .list-page .post-original {
+        display: none;
+      }
+      .list-page .post-summary {
+        display: block;
+      }
+      .list-page .comment-container {
+        display: none;
+      }
+      .list-page #blog-pager {
+        padding-top: 0;
+        border: 0;
+        margin-top: -8px;
+      }
+      .list-page .label-footer {
+        display: none;
+      }
+      .list-page #main .post .post-footer {
+        border-bottom: 1px solid #eee;
+        margin: -16px 0 0 0;
+        padding: 0 0 20px 0;
+      }
+      .list-page .post .share {
+        display: none;
+      }
+      /** Detail page tweaks. **/
+      .detail-page .post-footer .cmt_iframe_holder {
+        padding-top: 32px !important;
+      }
+      .detail-page .label-footer {
+        margin-bottom: 0;
+      }
+      .detail-page #main .post .post-footer {
+        padding-bottom: 0;
+      }
+      .detail-page #comments {
+        display: none;
+      }
+      /* ADB */
+      .adb-header-console {
+        display: none;
+      }
+      .adb-hero-inner {
+        padding: 0 16px;
+      }
+      .adb-hero-title {
+        color: #4c4c4c;
+        color: rgba(0, 0, 0, .70);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 30px;
+      }
+    }
+
+    /* Fixed-position sidebar for larger screens */
+    @media screen and (min-height: 700px) and (min-width: 1100px) {
+      .col-right .section {
+        max-height: calc(100vh - 197px);
+        overflow: auto;
+      }
+
+      .col-right.scroll-start {
+        left: 50%;
+        margin-left: 241px;
+        position: fixed;
+        top: 96px;
+      }
+
+      .col-right.scroll-end {
+        bottom: 485px;
+        position: absolute;
+        top: auto;
+      }
+    }
+
+    [data-about-pullquote], [data-is-preview], [data-about-syndication] {
+      display: none;
+    }
+
+    </style>
+<noscript>
+&lt;style&gt;
+        .loading { visibility: visible }&lt;/style&gt;
+</noscript>
+<script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-5831155-1', 'auto', 'blogger');
+        ga('blogger.send', 'pageview');
+      </script>
+<link href="https://www.blogger.com/dyn-css/authorization.css?targetBlogID=6755709643044947179&amp;zx=35c1d5e2-371e-4bab-a4be-a24653cde8a8" media="all" onload="if(media!='all')media='all'" rel="stylesheet"><noscript>&lt;link href='https://www.blogger.com/dyn-css/authorization.css?targetBlogID=6755709643044947179&amp;amp;zx=35c1d5e2-371e-4bab-a4be-a24653cde8a8' rel='stylesheet'/&gt;</noscript>
+</head>
+<body>
+<script type="text/javascript">
+      //<![CDATA[
+      var axel = Math.random() + "";
+      var a = axel * 10000000000000;
+      document.write('<iframe src="https://2542116.fls.doubleclick.net/activityi;src=2542116;type=gblog;cat=googl0;ord=ord=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
+      //]]>
+    </script><iframe src="https://2542116.fls.doubleclick.net/activityi;src=2542116;type=gblog;cat=googl0;ord=ord=5840636753325.363?" width="1" height="1" frameborder="0" style="display:none"></iframe>
+<noscript>
+&lt;img alt='' height='1' src='https://ad.doubleclick.net/ddm/activity/src=2542116;type=gblog;cat=googl0;ord=1?' width='1'/&gt;
+</noscript>
+<div class="adb-header">
+<div class="adb-header-inner">
+<a href="https://android-developers.googleblog.com/">
+<img alt="Android" class="adb-header-logo" height="36" src="https://developer.android.com/static/images/android_logo.png" srcset="https://developer.android.com/static/images/android_logo_2x.png 2x" width="32">
+<h1 class="adb-header-title">Developers Blog</h1>
+</a>
+<ul class="adb-header-links">
+<li class="adb-header-link-item">
+<a class="adb-header-link" href="https://developer.android.com/design/index.html">Design</a>
+</li>
+<li class="adb-header-link-item">
+<a class="adb-header-link" href="https://developer.android.com/develop/index.html">Develop</a>
+</li>
+<li class="adb-header-link-item">
+<a class="adb-header-link" href="https://developer.android.com/distribute/index.html">Distribute</a>
+</li>
+</ul>
+<a class="adb-header-console" href="https://play.google.com/apps/publish/">
+<img alt="" class="adb-header-console-image" height="19" src="https://developer.android.com/static/images/developer-console-icon.svg" width="18">
+          Play Console
+        </a>
+</div>
+</div>
+<div class="adb-hero">
+<a class="adb-hero-back" href="https://developer.android.com/">
+<i class="adb-hero-back-icon material-icons"></i>
+        developer.android.com
+      </a>
+<div class="adb-hero-inner">
+<h2 class="adb-hero-title">
+          Android Developers Blog
+        </h2>
+<p class="adb-hero-description">
+          The latest Android and Google Play news for app and game&nbsp;developers.
+        </p>
+</div>
+</div>
+<!-- all content wrapper start -->
+<div class="cols-wrapper">
+<div class="col-main-wrapper">
+<div class="col-main">
+<div class="section" id="main"><div class="widget Blog" data-version="1" id="Blog1">
+<div class="post" data-id="33458597185895777" itemscope="" itemtype="http://schema.org/BlogPosting">
+<h2 class="title" itemprop="name">
+<a href="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" itemprop="url" title="Android Things Developer Preview 7">
+Android Things Developer Preview 7
+</a>
+</h2>
+<div class="post-header">
+<div class="published">
+<span class="publishdate" itemprop="datePublished">
+06 March 2018
+</span>
+</div>
+</div>
+<div class="post-body">
+<div class="post-content post-original" itemprop="articleBody">
+                          <em>Posted by <a href="https://google.com/+DaveSmithDev">Dave Smith</a>, Developer Advocate for IoT</em>
+
+<p>
+Today we're releasing Developer Preview 7 (DP7) of Android Things, Google's platform that enables Android developers to create Internet of Things (IoT) devices. The platform also supports powerful applications such as video and audio processing and on-board machine learning with TensorFlow.
+</p>
+<p>
+The latest preview is based on Android 8.1 and is updated to support <a href="https://developers.google.com/android/guides/releases#december_18_2017_-_version_1180">version 11.8.0</a> of Google Play Services. For all the details of what's included in DP7, see the <a href="https://developer.android.com/things/preview/releases.html">release notes</a>. Here are some of the highlights:
+</p>
+<h3>Console enhancements and device updates</h3>
+
+
+<p>
+New features are also available in the <a href="https://partner.android.com/things/console">Android Things Console</a> to enhance product management from prototype to production:
+</p><ul>
+
+<li><strong>Product Models.</strong> Create multiple software variations of the same hardware product, and manage the builds and updates for each independently.
+</li><li><strong>Product Sharing.</strong> Grant additional user accounts access to view and manage the models, builds, and updates for a given product.
+</li><li><strong>Analytics.</strong> View metrics on device activations and update statistics for your products.
+</li><li><strong>Update Channels.</strong> Deploy software builds to groups of devices for development or beta testing, without disrupting production devices in the field.</li></ul>
+
+<p>
+Devices can subscribe to different update channels using new APIs added to <code>UpdateManager</code>. See the updated <a href="https://developer.android.com/things/sdk/apis/update.html">Device Updates API guide</a> and <a href="https://developer.android.com/things/console/update.html">console documentation</a> to learn more about configuring update channel subscriptions.
+</p>
+<h3>Addressing developer feedback</h3>
+
+
+<p>
+We've received tons of amazing feedback from developers so far, and focused heavily on addressing many of the top reported issues in this release:
+</p><ul>
+
+<li><strong>Improved camera resolution support.</strong> Apps can now capture image data up to the full native resolution of the camera hardware.
+</li><li><strong>Support for MIDI.</strong> Use the <a href="https://developer.android.com/reference/android/media/midi/MidiManager.html">MidiManager</a> API to build a virtual MIDI device in your app or interface with external MIDI controllers.
+</li><li><strong>Better testability of Android Things apps.</strong> The <a href="https://developer.android.com/things/sdk/pio/index.html">Peripheral I/O</a> API now exposes interfaces instead of abstract classes, allowing local unit tests to replace these objects with mocks and stubs more easily.
+</li><li><strong>Consistent API naming.</strong> This release renames many of the existing Android Things API classes to provide a more consistent developer experience across the entire surface. See the updated <a href="https://developer.android.com/things/reference/index.html">API reference</a> to review how package and class names have changed.</li></ul>
+
+<h3>New Bluetooth APIs</h3>
+
+
+<p>
+Android mobile devices expose controls to users for pairing with and connecting to Bluetooth devices through the Settings app. IoT devices running Android Things need to programmatically perform these same operations. The new <code>BluetoothConnectionManager</code> API enables apps to take control of the pairing and connection process. See the new <a href="https://developer.android.com/things/sdk/apis/bluetooth.html">Bluetooth API guide</a> for more details.
+</p>
+<h3>Sample updates</h3>
+
+
+<p>
+Last year at Google I/O, we demonstrated <a href="https://www.youtube.com/watch?v=v3Dm5aeuQKE">building an app using Kotlin</a> on Android Things. For developers using Kotlin, we have started publishing Kotlin versions of the Android Things samples. Today you can download the <a href="https://github.com/androidthings/sample-button">Button and LED sample</a> in both Kotlin and Java, with more samples to follow very soon.
+</p>
+<p>
+We have also migrated the <a href="https://github.com/androidthings/sample-tensorflow-imageclassifier">TensorFlow Image Classifier</a> sample app to use the <a href="https://www.tensorflow.org/mobile/tflite/">TensorFlow Lite</a> library, reducing the size of the pre-trained TensorFlow model by over 90% and the time required to classify the images by approximately 50%.
+</p>
+<h3>Feedback</h3>
+
+
+<p>
+Please send us your feedback by filing <a href="https://issuetracker.google.com/issues/new?component=192720&amp;template=847005">bug reports</a> and <a href="https://issuetracker.google.com/issues/new?component=192720&amp;template=848805">feature requests</a>, as well as asking any questions on <a href="https://stackoverflow.com/questions/tagged/android-things">Stack Overflow</a>. You can also join <a href="https://g.co/iotdev">Google's IoT Developers Community</a> on Google+, a great resource to get updates and discuss ideas. We look forward to seeing what you build with Android Things!
+</p>
+                        </div>
+</div>
+<div class="share">
+<span class="gplus-share social-wrapper" data-href="https://plus.google.com/share?url=https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html">
+<img alt="Share on Google+" height="24" src="https://www.gstatic.com/images/branding/google_plus/2x/ic_w_post_gplus_black_24dp.png" width="24">
+</span>
+<span class="twitter-custom social-wrapper" data-href="http://twitter.com/share?text=Android Developers Blog:Android Things Developer Preview 7&amp;url=https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html&amp;via=google">
+<img alt="Share on Twitter" height="24" src="https://www.gstatic.com/images/icons/material/system/2x/post_twitter_black_24dp.png" width="24">
+</span>
+<span class="fb-custom social-wrapper" data-href="https://www.facebook.com/sharer.php?u=https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html">
+<img alt="Share on Facebook" height="24" src="https://www.gstatic.com/images/icons/material/system/2x/post_facebook_black_24dp.png" width="24">
+</span>
+<span class="email-custom social-wrapper" data-href="mailto:?body=https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html">
+<img alt="Share by email" height="24" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAMFBMVEVMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACbsZG/AAAAEHRSTlMAILDy/y78bg9wzE/jjwyQQ3EYrQAAAMpJREFUeAHN0yHIwmAQxvHng2/IypDZw9AOyuziDiemgb2tCgsGO4LY7cneg73Yl+0dsy8PcuzdsTaGf7D4e3cbbIdh+ptKq0VBmIhpSZhZWBNSCxmhFFv/sDmh0aVUyOF1VNj6cFZYIYEW478BWYVvYaogDmRXgAV38eAhhxdc0VueHkS1+wPggSZwRALEHOkBRmlWhe6HFvA0rzLg5vM+FqKaT2YBQQEL2u+DebUKuQ83Bf/zuZYKtn6he3G6V21vYU4I7DqPMUgfpvKO2fcD4TMAAAAASUVORK5CYII=" target="_blank" width="24">
+</span>
+</div>
+<div class="post-footer">
+<div class="cmt_iframe_holder" data-href="https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html" data-viewtype="FILTERED_POSTMOD" id="undefined"></div>
+<a href="https://plus.google.com/112374322230920073195" rel="author" style="display:none;">
+                        Google
+                      </a>
+<div class="label-footer">
+</div>
+</div>
+<div class="comments" id="comments">
+<a name="comments"></a>
+</div>
+</div>
+<div class="blog-pager" id="blog-pager">
+<a class="home-link" href="https://android-developers.googleblog.com/">
+<i class="material-icons">
+                      
+                    </i>
+</a>
+<span id="blog-pager-newer-link">
+<a class="blog-pager-newer-link" href="https://android-developers.googleblog.com/2018/03/previewing-android-p.html" id="Blog1_blog-pager-newer-link" title="Newer Post">
+<i class="material-icons">
+                          
+                        </i>
+</a>
+</span>
+<span id="blog-pager-older-link">
+<a class="blog-pager-older-link" href="https://android-developers.googleblog.com/2018/02/improving-stability-by-reducing-usage.html" id="Blog1_blog-pager-older-link" title="Older Post">
+<i class="material-icons">
+                          
+                        </i>
+</a>
+</span>
+</div>
+<div class="clear"></div>
+</div></div>
+</div>
+</div>
+<div class="col-right">
+<div class="section" id="sidebar-top"><div class="widget BlogSearch" data-version="1" id="BlogSearch1">
+<div class="widget-content">
+<div id="BlogSearch1_form">
+<div class="searchBox">
+<input autocomplete="off" placeholder="Search blog…" title="Search blog…" type="text" value="">
+</div>
+</div>
+</div>
+</div></div>
+<div id="aside">
+<div class="section" id="sidebar"><div class="widget Label" data-version="1" id="Label1">
+<div class="tab">
+<img class="sidebar-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYpJREFUeNrs2aFuwzAQBmAvKRkMKRjZA4QMDJaWFgyMjuzFRg37DIUlA3uFkoGQSaWzJU+tpri5O9+l/zSfdFJlpe59yTmyVedq1PjfcZMZ70NuQnaF8w8htyE/rABtpviXkLcK88c5HhLkMBfgVan43zfFBNGMjHVGT/s55KP2pAvidbGHd+nzKt1RKSLG3rKF1iPFv6UWiPke8i7kEqGdGsI1O+LYVdqJAjgirwkKYD0ytkJBUNbAMvX8V3q9PhUsYvU1sWD8SO/sQvx2ahxOiNoJCSBCoAHYCEQAC4EKICOQASQEOmAS8RcAFxFN5hiIiugpgC3wk9hQAHH/70EBHXUN7IER5EWMiBgo2+nzOKQv9SCAeEM/OQAkhE/ncccFICB87qzQMia5FsJfOui0zMnmRvipU1ormHQuxGTxUsAcCFLxJQBLBLn4UoAFglW8BkATwS5eC6CBEBWvCShBiIvXBkgQRcVbADiI4uKtABSESvGWgB9EzHt3+tNwyO0qa9SoIYtvAQYAqDJhaWWeMecAAAAASUVORK5CYII=">
+<h2>
+Labels
+</h2>
+<i class="material-icons arrow">
+                      
+                    </i>
+</div>
+<div class="widget-content list-label-widget-content">
+<ul>
+<li>
+<a dir="ltr" href="https://android-developers.googleblog.com/search/label/Android%20O">
+Android O
+</a>
+</li>
+<li>
+<a dir="ltr" href="https://android-developers.googleblog.com/search/label/Android%20Studio">
+Android Studio
+</a>
+</li>
+<li>
+<a dir="ltr" href="https://android-developers.googleblog.com/search/label/Design">
+Design
+</a>
+</li>
+<li>
+<a dir="ltr" href="https://android-developers.googleblog.com/search/label/Develop">
+Develop
+</a>
+</li>
+<li>
+<a dir="ltr" href="https://android-developers.googleblog.com/search/label/Google%20Play">
+Google Play
+</a>
+</li>
+</ul>
+<p class="adb-label-view-more-toggle" data-closed="Show more" data-open="Hide more">Show more</p>
+<div class="adb-label-view-more-content" style="display: none;">
+<ul><li><a href="/search/label/Featured">Featured</a></li><li><a href="/search/label/Google Play">Google Play</a></li><li><a href="/search/label/Android">Android</a></li><li><a href="/search/label/Develop">Develop</a></li><li><a href="/search/label/Android Developer">Android Developer</a></li><li><a href="/search/label/Games">Games</a></li><li><a href="/search/label/archive">archive</a></li><li><a href="/search/label/Announcements">Announcements</a></li><li><a href="/search/label/Apps">Apps</a></li><li><a href="/search/label/Google Play services">Google Play services</a></li><li><a href="/search/label/Android Wear">Android Wear</a></li><li><a href="/search/label/Android Studio">Android Studio</a></li><li><a href="/search/label/Security">Security</a></li><li><a href="/search/label/Distribute">Distribute</a></li><li><a href="/search/label/Google Services">Google Services</a></li><li><a href="/search/label/User Interface">User Interface</a></li><li><a href="/search/label/NDK">NDK</a></li><li><a href="/search/label/Android N">Android N</a></li><li><a href="/search/label/Design">Design</a></li><li><a href="/search/label/SDK updates">SDK updates</a></li><li><a href="/search/label/Developer Console">Developer Console</a></li><li><a href="/search/label/Google Play game services">Google Play game services</a></li><li><a href="/search/label/android developers">android developers</a></li><li><a href="/search/label/Developer Preview">Developer Preview</a></li><li><a href="/search/label/How-to">How-to</a></li><li><a href="/search/label/Android Developer Challenge">Android Developer Challenge</a></li><li><a href="/search/label/Google Play Games">Google Play Games</a></li><li><a href="/search/label/Android Market">Android Market</a></li><li><a href="/search/label/GooglePlay">GooglePlay</a></li><li><a href="/search/label/Android TV">Android TV</a></li><li><a href="/search/label/AndroidDevStory">AndroidDevStory</a></li><li><a href="/search/label/Material Design">Material Design</a></li><li><a href="/search/label/Game">Game</a></li><li><a href="/search/label/Play Console">Play Console</a></li><li><a href="/search/label/Tools">Tools</a></li><li><a href="/search/label/Android 1.5">Android 1.5</a></li><li><a href="/search/label/App">App</a></li><li><a href="/search/label/Story">Story</a></li><li><a href="/search/label/Google I/O">Google I/O</a></li><li><a href="/search/label/Google Play Console">Google Play Console</a></li><li><a href="/search/label/developers">developers</a></li><li><a href="/search/label/Android Design">Android Design</a></li><li><a href="/search/label/Best Practices">Best Practices</a></li><li><a href="/search/label/Android O">Android O</a></li><li><a href="/search/label/Marshmallow">Marshmallow</a></li><li><a href="/search/label/Optimization">Optimization</a></li><li><a href="/search/label/Performance">Performance</a></li><li><a href="/search/label/Support Library">Support Library</a></li><li><a href="/search/label/UI">UI</a></li><li><a href="/search/label/developer">developer</a></li><li><a href="/search/label/wear">wear</a></li><li><a href="/search/label/Android 1.6">Android 1.6</a></li><li><a href="/search/label/Android Auto">Android Auto</a></li><li><a href="/search/label/Google Analytics">Google Analytics</a></li><li><a href="/search/label/Udacity">Udacity</a></li><li><a href="/search/label/Android Things">Android Things</a></li><li><a href="/search/label/Android 5.0">Android 5.0</a></li><li><a href="/search/label/AndroidO">AndroidO</a></li><li><a href="/search/label/Location">Location</a></li><li><a href="/search/label/appstory">appstory</a></li><li><a href="/search/label/engagement">engagement</a></li><li><a href="/search/label/Android Instant Apps">Android Instant Apps</a></li><li><a href="/search/label/Google">Google</a></li><li><a href="/search/label/Google Cloud Messaging">Google Cloud Messaging</a></li><li><a href="/search/label/Google Cloud Platform">Google Cloud Platform</a></li><li><a href="/search/label/IoT">IoT</a></li><li><a href="/search/label/Layout">Layout</a></li><li><a href="/search/label/Localization">Localization</a></li><li><a href="/search/label/London">London</a></li><li><a href="/search/label/Tablets">Tablets</a></li><li><a href="/search/label/UI toolkit">UI toolkit</a></li><li><a href="/search/label/admob">admob</a></li><li><a href="/search/label/analytics">analytics</a></li><li><a href="/search/label/developerstory">developerstory</a></li><li><a href="/search/label/permissions">permissions</a></li><li><a href="/search/label/API">API</a></li><li><a href="/search/label/Android M">Android M</a></li><li><a href="/search/label/App quality">App quality</a></li><li><a href="/search/label/C++">C++</a></li><li><a href="/search/label/Google Cast">Google Cast</a></li><li><a href="/search/label/Graphics">Graphics</a></li><li><a href="/search/label/IO2013">IO2013</a></li><li><a href="/search/label/Renderscript">Renderscript</a></li><li><a href="/search/label/Testing">Testing</a></li><li><a href="/search/label/compatibility">compatibility</a></li><li><a href="/search/label/notifications">notifications</a></li><li><a href="/search/label/‘Google Play">‘Google Play</a></li><li><a href="/search/label/Android 2.0">Android 2.0</a></li><li><a href="/search/label/App Resources">App Resources</a></li><li><a href="/search/label/Europe">Europe</a></li><li><a href="/search/label/Google Fit">Google Fit</a></li><li><a href="/search/label/Google Play games services">Google Play games services</a></li><li><a href="/search/label/Media and Camera">Media and Camera</a></li><li><a href="/search/label/Open source">Open source</a></li><li><a href="/search/label/OpenGL ES">OpenGL ES</a></li><li><a href="/search/label/Quality">Quality</a></li><li><a href="/search/label/androidn">androidn</a></li><li><a href="/search/label/business">business</a></li><li><a href="/search/label/competition">competition</a></li><li><a href="/search/label/contest">contest</a></li><li><a href="/search/label/gamestory">gamestory</a></li><li><a href="/search/label/grow">grow</a></li><li><a href="/search/label/io15">io15</a></li><li><a href="/search/label/monetization">monetization</a></li><li><a href="/search/label/prizes">prizes</a></li><li><a href="/search/label/users">users</a></li><li><a href="/search/label/win">win</a></li><li><a href="/search/label/Android 4.2">Android 4.2</a></li><li><a href="/search/label/Android 6.0">Android 6.0</a></li><li><a href="/search/label/Android Vitals">Android Vitals</a></li><li><a href="/search/label/Android for Work">Android for Work</a></li><li><a href="/search/label/AndroidWear">AndroidWear</a></li><li><a href="/search/label/App Components">App Components</a></li><li><a href="/search/label/Audio">Audio</a></li><li><a href="/search/label/Code Day">Code Day</a></li><li><a href="/search/label/Courses">Courses</a></li><li><a href="/search/label/Developer profiles">Developer profiles</a></li><li><a href="/search/label/Education">Education</a></li><li><a href="/search/label/GDC">GDC</a></li><li><a href="/search/label/Google Drive">Google Drive</a></li><li><a href="/search/label/Google Mobile Ads">Google Mobile Ads</a></li><li><a href="/search/label/IO2014">IO2014</a></li><li><a href="/search/label/In-app Billing">In-app Billing</a></li><li><a href="/search/label/Intents">Intents</a></li><li><a href="/search/label/Kotlin">Kotlin</a></li><li><a href="/search/label/Launch">Launch</a></li><li><a href="/search/label/Licensing">Licensing</a></li><li><a href="/search/label/Pixel">Pixel</a></li><li><a href="/search/label/Saatchi">Saatchi</a></li><li><a href="/search/label/Sample code">Sample code</a></li><li><a href="/search/label/Samples">Samples</a></li><li><a href="/search/label/indie">indie</a></li><li><a href="/search/label/indies">indies</a></li><li><a href="/search/label/showcase">showcase</a></li><li><a href="/search/label/signing">signing</a></li><li><a href="/search/label/wifi">wifi</a></li><li><a href="/search/label/#io17">#io17</a></li><li><a href="/search/label/APIs">APIs</a></li><li><a href="/search/label/Ads">Ads</a></li><li><a href="/search/label/Android 3.0">Android 3.0</a></li><li><a href="/search/label/Android 3.2">Android 3.2</a></li><li><a href="/search/label/Android 4.4">Android 4.4</a></li><li><a href="/search/label/Android SDK">Android SDK</a></li><li><a href="/search/label/Animation">Animation</a></li><li><a href="/search/label/App Indexing">App Indexing</a></li><li><a href="/search/label/Authentication">Authentication</a></li><li><a href="/search/label/Bluetooth">Bluetooth</a></li><li><a href="/search/label/Developer Labs">Developer Labs</a></li><li><a href="/search/label/Development Tools">Development Tools</a></li><li><a href="/search/label/Early Access">Early Access</a></li><li><a href="/search/label/Firebase">Firebase</a></li><li><a href="/search/label/Fragments">Fragments</a></li><li><a href="/search/label/GCM">GCM</a></li><li><a href="/search/label/Google Assistant">Google Assistant</a></li><li><a href="/search/label/Google Maps">Google Maps</a></li><li><a href="/search/label/Google Play for Work">Google Play for Work</a></li><li><a href="/search/label/Google client API">Google client API</a></li><li><a href="/search/label/Google+">Google+</a></li><li><a href="/search/label/Indie Contest">Indie Contest</a></li><li><a href="/search/label/Indie games contest">Indie games contest</a></li><li><a href="/search/label/Input methods">Input methods</a></li><li><a href="/search/label/LiquidFun">LiquidFun</a></li><li><a href="/search/label/Maps">Maps</a></li><li><a href="/search/label/Maps API">Maps API</a></li><li><a href="/search/label/MaterialDesign">MaterialDesign</a></li><li><a href="/search/label/Privacy">Privacy</a></li><li><a href="/search/label/Project Treble">Project Treble</a></li><li><a href="/search/label/SDK Tools">SDK Tools</a></li><li><a href="/search/label/Subscription">Subscription</a></li><li><a href="/search/label/Text and Input">Text and Input</a></li><li><a href="/search/label/VR">VR</a></li><li><a href="/search/label/Virtual Reality">Virtual Reality</a></li><li><a href="/search/label/WebView">WebView</a></li><li><a href="/search/label/android oreo">android oreo</a></li><li><a href="/search/label/apk">apk</a></li><li><a href="/search/label/developergamestory">developergamestory</a></li><li><a href="/search/label/events">events</a></li><li><a href="/search/label/google play for families">google play for families</a></li><li><a href="/search/label/growth">growth</a></li><li><a href="/search/label/mobile vision APIs">mobile vision APIs</a></li><li><a href="/search/label/nearby">nearby</a></li><li><a href="/search/label/oreo">oreo</a></li><li><a href="/search/label/ubicomp">ubicomp</a></li><li><a href="/search/label/Action Bar">Action Bar</a></li><li><a href="/search/label/Actions">Actions</a></li><li><a href="/search/label/Activity Recognition">Activity Recognition</a></li><li><a href="/search/label/Android 2.1">Android 2.1</a></li><li><a href="/search/label/Android 2.2">Android 2.2</a></li><li><a href="/search/label/Android 2.3">Android 2.3</a></li><li><a href="/search/label/Android 7.0">Android 7.0</a></li><li><a href="/search/label/Android 71">Android 71</a></li><li><a href="/search/label/Android Developer Phone">Android Developer Phone</a></li><li><a href="/search/label/Android Go">Android Go</a></li><li><a href="/search/label/Android Pay API">Android Pay API</a></li><li><a href="/search/label/Android Studio 3.0">Android Studio 3.0</a></li><li><a href="/search/label/Android Wear 2.0">Android Wear 2.0</a></li><li><a href="/search/label/Animation and Graphics">Animation and Graphics</a></li><li><a href="/search/label/AppCompat">AppCompat</a></li><li><a href="/search/label/BLE">BLE</a></li><li><a href="/search/label/Beta">Beta</a></li><li><a href="/search/label/Boston">Boston</a></li><li><a href="/search/label/Canary">Canary</a></li><li><a href="/search/label/Connectivity">Connectivity</a></li><li><a href="/search/label/Dashboard">Dashboard</a></li><li><a href="/search/label/Daydream">Daydream</a></li><li><a href="/search/label/Developer Console Store Listing Experiments">Developer Console Store Listing Experiments</a></li><li><a href="/search/label/Efficient Apps">Efficient Apps</a></li><li><a href="/search/label/GLSL">GLSL</a></li><li><a href="/search/label/Global">Global</a></li><li><a href="/search/label/Google Play Billing">Google Play Billing</a></li><li><a href="/search/label/Google Wallet">Google Wallet</a></li><li><a href="/search/label/GoogleAPIClient">GoogleAPIClient</a></li><li><a href="/search/label/Guidelines">Guidelines</a></li><li><a href="/search/label/HTTPS">HTTPS</a></li><li><a href="/search/label/I/O2014">I/O2014</a></li><li><a href="/search/label/IME">IME</a></li><li><a href="/search/label/Identity">Identity</a></li><li><a href="/search/label/Indie Games">Indie Games</a></li><li><a href="/search/label/Internet of Things">Internet of Things</a></li><li><a href="/search/label/JNI">JNI</a></li><li><a href="/search/label/Java">Java</a></li><li><a href="/search/label/Java 8">Java 8</a></li><li><a href="/search/label/LVL">LVL</a></li><li><a href="/search/label/LondonEng">LondonEng</a></li><li><a href="/search/label/Memory Management">Memory Management</a></li><li><a href="/search/label/Nougat">Nougat</a></li><li><a href="/search/label/OpenGL">OpenGL</a></li><li><a href="/search/label/Places">Places</a></li><li><a href="/search/label/Play Store">Play Store</a></li><li><a href="/search/label/PlayStore">PlayStore</a></li><li><a href="/search/label/Preview">Preview</a></li><li><a href="/search/label/Profiling">Profiling</a></li><li><a href="/search/label/Pure">Pure</a></li><li><a href="/search/label/SEA">SEA</a></li><li><a href="/search/label/SafetyNet">SafetyNet</a></li><li><a href="/search/label/Screens">Screens</a></li><li><a href="/search/label/Southeast Asia">Southeast Asia</a></li><li><a href="/search/label/TV">TV</a></li><li><a href="/search/label/TensorFlow">TensorFlow</a></li><li><a href="/search/label/Text-to-Speech">Text-to-Speech</a></li><li><a href="/search/label/Treble">Treble</a></li><li><a href="/search/label/UX">UX</a></li><li><a href="/search/label/Unity">Unity</a></li><li><a href="/search/label/User Support">User Support</a></li><li><a href="/search/label/Web">Web</a></li><li><a href="/search/label/Widgets">Widgets</a></li><li><a href="/search/label/beacons">beacons</a></li><li><a href="/search/label/buildingforbillions">buildingforbillions</a></li><li><a href="/search/label/chrome">chrome</a></li><li><a href="/search/label/conversions">conversions</a></li><li><a href="/search/label/documentation">documentation</a></li><li><a href="/search/label/game design">game design</a></li><li><a href="/search/label/google computer science">google computer science</a></li><li><a href="/search/label/hackster">hackster</a></li><li><a href="/search/label/iOS">iOS</a></li><li><a href="/search/label/in-app purchase">in-app purchase</a></li><li><a href="/search/label/infinite deviation: games">infinite deviation: games</a></li><li><a href="/search/label/io2010">io2010</a></li><li><a href="/search/label/social impact">social impact</a></li><li><a href="/search/label/store listing experiments">store listing experiments</a></li><li><a href="/search/label/subscriptions">subscriptions</a></li><li><a href="/search/label/things">things</a></li><li><a href="/search/label/update">update</a></li><li><a href="/search/label/user data">user data</a></li><li><a href="/search/label/watch face API">watch face API</a></li><li><a href="/search/label/#Android #Android development # advanced Android #learn Android #build Android apps #Udacity">#Android #Android development # advanced Android #learn Android #build Android apps #Udacity</a></li><li><a href="/search/label/#AndroidTV #Google Cast #Udacity">#AndroidTV #Google Cast #Udacity</a></li><li><a href="/search/label/#GDC17 #GoogleDeveloperDay #GooglePlay #Games #VR #Daydream #Developers #Android #Google Play">#GDC17 #GoogleDeveloperDay #GooglePlay #Games #VR #Daydream #Developers #Android #Google Play</a></li><li><a href="/search/label/#GPA2017 #GooglePlayAwards #GooglePlay #Games #VR #AR #AndroidWear #Indies #Startup #Apps #Developers #Android #Google Play">#GPA2017 #GooglePlayAwards #GooglePlay #Games #VR #AR #AndroidWear #Indies #Startup #Apps #Developers #Android #Google Play</a></li><li><a href="/search/label/#io16">#io16</a></li><li><a href="/search/label/'Google Play">'Google Play</a></li><li><a href="/search/label/3d">3d</a></li><li><a href="/search/label/505 Games">505 Games</a></li><li><a href="/search/label/8.1">8.1</a></li><li><a href="/search/label/AIY">AIY</a></li><li><a href="/search/label/AIY Projects">AIY Projects</a></li><li><a href="/search/label/AMP">AMP</a></li><li><a href="/search/label/APK Expansion Files">APK Expansion Files</a></li><li><a href="/search/label/ARPU">ARPU</a></li><li><a href="/search/label/ATSL">ATSL</a></li><li><a href="/search/label/About Fun">About Fun</a></li><li><a href="/search/label/Actions on Google">Actions on Google</a></li><li><a href="/search/label/Administration">Administration</a></li><li><a href="/search/label/Advanced Android course">Advanced Android course</a></li><li><a href="/search/label/Advanced Android training">Advanced Android training</a></li><li><a href="/search/label/Agus Gomez">Agus Gomez</a></li><li><a href="/search/label/Android 2.3.3">Android 2.3.3</a></li><li><a href="/search/label/Android 4.0">Android 4.0</a></li><li><a href="/search/label/Android 4.3">Android 4.3</a></li><li><a href="/search/label/Android 5.1">Android 5.1</a></li><li><a href="/search/label/Android 7.1">Android 7.1</a></li><li><a href="/search/label/Android 8.1">Android 8.1</a></li><li><a href="/search/label/Android C++">Android C++</a></li><li><a href="/search/label/Android Emulator">Android Emulator</a></li><li><a href="/search/label/Android Excellence">Android Excellence</a></li><li><a href="/search/label/Android IDE">Android IDE</a></li><li><a href="/search/label/Android O Developer Preview">Android O Developer Preview</a></li><li><a href="/search/label/Android One">Android One</a></li><li><a href="/search/label/Android Pay">Android Pay</a></li><li><a href="/search/label/Android Security Rewards">Android Security Rewards</a></li><li><a href="/search/label/Android Testing Support Library">Android Testing Support Library</a></li><li><a href="/search/label/AndroidThings">AndroidThings</a></li><li><a href="/search/label/AnswerLab">AnswerLab</a></li><li><a href="/search/label/Architecture">Architecture</a></li><li><a href="/search/label/Architecture Components">Architecture Components</a></li><li><a href="/search/label/Assistant">Assistant</a></li><li><a href="/search/label/Assistant SDK">Assistant SDK</a></li><li><a href="/search/label/Auto Backup">Auto Backup</a></li><li><a href="/search/label/Autofill Framework">Autofill Framework</a></li><li><a href="/search/label/BABBQ">BABBQ</a></li><li><a href="/search/label/Betatesting">Betatesting</a></li><li><a href="/search/label/Billions">Billions</a></li><li><a href="/search/label/Budge Studios">Budge Studios</a></li><li><a href="/search/label/C">C</a></li><li><a href="/search/label/Certificates">Certificates</a></li><li><a href="/search/label/Certification">Certification</a></li><li><a href="/search/label/Channels">Channels</a></li><li><a href="/search/label/Chromebooks">Chromebooks</a></li><li><a href="/search/label/Cloud Speech API">Cloud Speech API</a></li><li><a href="/search/label/Commerce">Commerce</a></li><li><a href="/search/label/Complications">Complications</a></li><li><a href="/search/label/Contacts">Contacts</a></li><li><a href="/search/label/Content Provider">Content Provider</a></li><li><a href="/search/label/Cool Stuff">Cool Stuff</a></li><li><a href="/search/label/CultureAlley">CultureAlley</a></li><li><a href="/search/label/DAC/Design">DAC/Design</a></li><li><a href="/search/label/DAC/Develop">DAC/Develop</a></li><li><a href="/search/label/DP3">DP3</a></li><li><a href="/search/label/Debugging">Debugging</a></li><li><a href="/search/label/Demographics">Demographics</a></li><li><a href="/search/label/Developer Days">Developer Days</a></li><li><a href="/search/label/DialogFragment">DialogFragment</a></li><li><a href="/search/label/Disruptor Beam">Disruptor Beam</a></li><li><a href="/search/label/Doze">Doze</a></li><li><a href="/search/label/Driving Do Not Disturb">Driving Do Not Disturb</a></li><li><a href="/search/label/EA">EA</a></li><li><a href="/search/label/Editors’ Choice">Editors’ Choice</a></li><li><a href="/search/label/Electronic Arts">Electronic Arts</a></li><li><a href="/search/label/Engage">Engage</a></li><li><a href="/search/label/Enterprise">Enterprise</a></li><li><a href="/search/label/Fast Pair">Fast Pair</a></li><li><a href="/search/label/Finance">Finance</a></li><li><a href="/search/label/Fortify">Fortify</a></li><li><a href="/search/label/Fundamentals">Fundamentals</a></li><li><a href="/search/label/GDC17">GDC17</a></li><li><a href="/search/label/GNSS">GNSS</a></li><li><a href="/search/label/GPGS">GPGS</a></li><li><a href="/search/label/GPS">GPS</a></li><li><a href="/search/label/Gareth Jones">Gareth Jones</a></li><li><a href="/search/label/Gboard">Gboard</a></li><li><a href="/search/label/Gestures">Gestures</a></li><li><a href="/search/label/Gmail">Gmail</a></li><li><a href="/search/label/Golf Clash">Golf Clash</a></li><li><a href="/search/label/Google APIs">Google APIs</a></li><li><a href="/search/label/Google Apps">Google Apps</a></li><li><a href="/search/label/Google Awareness API">Google Awareness API</a></li><li><a href="/search/label/Google Now">Google Now</a></li><li><a href="/search/label/Google Sign-In">Google Sign-In</a></li><li><a href="/search/label/GoogleDeveloperDay">GoogleDeveloperDay</a></li><li><a href="/search/label/Gpfe">Gpfe</a></li><li><a href="/search/label/GridLayout">GridLayout</a></li><li><a href="/search/label/HAL">HAL</a></li><li><a href="/search/label/HelloEnglish">HelloEnglish</a></li><li><a href="/search/label/Holo">Holo</a></li><li><a href="/search/label/HttpsURLConnection">HttpsURLConnection</a></li><li><a href="/search/label/Hutch">Hutch</a></li><li><a href="/search/label/Hutch Games">Hutch Games</a></li><li><a href="/search/label/Image Processing">Image Processing</a></li><li><a href="/search/label/Indie games developers">Indie games developers</a></li><li><a href="/search/label/Indonesia">Indonesia</a></li><li><a href="/search/label/Indonesia Games Contest">Indonesia Games Contest</a></li><li><a href="/search/label/Instant Apps">Instant Apps</a></li><li><a href="/search/label/Inzen studio">Inzen studio</a></li><li><a href="/search/label/Issue Tracker">Issue Tracker</a></li><li><a href="/search/label/Job Scheduler">Job Scheduler</a></li><li><a href="/search/label/Job Service">Job Service</a></li><li><a href="/search/label/KNOX">KNOX</a></li><li><a href="/search/label/Keyboard">Keyboard</a></li><li><a href="/search/label/Klei Entertainment">Klei Entertainment</a></li><li><a href="/search/label/LTV">LTV</a></li><li><a href="/search/label/LaMatinale">LaMatinale</a></li><li><a href="/search/label/LeMonde">LeMonde</a></li><li><a href="/search/label/Life of a Bug">Life of a Bug</a></li><li><a href="/search/label/Lollipop">Lollipop</a></li><li><a href="/search/label/MENA">MENA</a></li><li><a href="/search/label/Marta Gui">Marta Gui</a></li><li><a href="/search/label/Mountain View">Mountain View</a></li><li><a href="/search/label/Multiwindow">Multiwindow</a></li><li><a href="/search/label/Munich">Munich</a></li><li><a href="/search/label/NBU">NBU</a></li><li><a href="/search/label/NFC">NFC</a></li><li><a href="/search/label/Niji Games">Niji Games</a></li><li><a href="/search/label/Nix Hydra">Nix Hydra</a></li><li><a href="/search/label/Now in Arabic">Now in Arabic</a></li><li><a href="/search/label/OAuth">OAuth</a></li><li><a href="/search/label/Omnidrone">Omnidrone</a></li><li><a href="/search/label/On-Device Machine Learning">On-Device Machine Learning</a></li><li><a href="/search/label/Onboarding">Onboarding</a></li><li><a href="/search/label/P2P">P2P</a></li><li><a href="/search/label/PWA">PWA</a></li><li><a href="/search/label/Paul Gouge">Paul Gouge</a></li><li><a href="/search/label/Photo Sphere">Photo Sphere</a></li><li><a href="/search/label/Physics">Physics</a></li><li><a href="/search/label/Pico">Pico</a></li><li><a href="/search/label/Playdemic">Playdemic</a></li><li><a href="/search/label/Playtime 2016">Playtime 2016</a></li><li><a href="/search/label/Pocket Gems">Pocket Gems</a></li><li><a href="/search/label/Policy">Policy</a></li><li><a href="/search/label/Promo Graphics">Promo Graphics</a></li><li><a href="/search/label/Public Tracker">Public Tracker</a></li><li><a href="/search/label/Quick Search Box">Quick Search Box</a></li><li><a href="/search/label/RTL">RTL</a></li><li><a href="/search/label/Resources">Resources</a></li><li><a href="/search/label/Robinhood">Robinhood</a></li><li><a href="/search/label/Safe Browsing">Safe Browsing</a></li><li><a href="/search/label/Schell Games">Schell Games</a></li><li><a href="/search/label/ScreenCapture">ScreenCapture</a></li><li><a href="/search/label/Sensors">Sensors</a></li><li><a href="/search/label/Seriously">Seriously</a></li><li><a href="/search/label/ShareActionProvider">ShareActionProvider</a></li><li><a href="/search/label/Shared Elements">Shared Elements</a></li><li><a href="/search/label/Sharing">Sharing</a></li><li><a href="/search/label/Shortcuts">Shortcuts</a></li><li><a href="/search/label/Skyscanner">Skyscanner</a></li><li><a href="/search/label/Smartlock">Smartlock</a></li><li><a href="/search/label/Social Point">Social Point</a></li><li><a href="/search/label/Space">Space</a></li><li><a href="/search/label/Space Ape Games">Space Ape Games</a></li><li><a href="/search/label/Speech Input">Speech Input</a></li><li><a href="/search/label/Stencils">Stencils</a></li><li><a href="/search/label/Stickers">Stickers</a></li><li><a href="/search/label/Storage">Storage</a></li><li><a href="/search/label/Storytoys">Storytoys</a></li><li><a href="/search/label/Studio">Studio</a></li><li><a href="/search/label/Super Evil MegaCorp">Super Evil MegaCorp</a></li><li><a href="/search/label/Survey">Survey</a></li><li><a href="/search/label/TAGS: Google Play">TAGS: Google Play</a></li><li><a href="/search/label/TLS">TLS</a></li><li><a href="/search/label/Tel Aviv">Tel Aviv</a></li><li><a href="/search/label/Telephony">Telephony</a></li><li><a href="/search/label/Tips">Tips</a></li><li><a href="/search/label/Titan Brawl">Titan Brawl</a></li><li><a href="/search/label/Touch">Touch</a></li><li><a href="/search/label/Translation">Translation</a></li><li><a href="/search/label/User Feedback">User Feedback</a></li><li><a href="/search/label/VGames">VGames</a></li><li><a href="/search/label/Visibility">Visibility</a></li><li><a href="/search/label/Vitals">Vitals</a></li><li><a href="/search/label/Voice">Voice</a></li><li><a href="/search/label/Voice Kit">Voice Kit</a></li><li><a href="/search/label/Wear UI Library">Wear UI Library</a></li><li><a href="/search/label/Webdriver">Webdriver</a></li><li><a href="/search/label/World Food Day">World Food Day</a></li><li><a href="/search/label/XmlPullParser">XmlPullParser</a></li><li><a href="/search/label/YouTube">YouTube</a></li><li><a href="/search/label/accessibility">accessibility</a></li><li><a href="/search/label/android 8.0">android 8.0</a></li><li><a href="/search/label/android c++ games linux open source release osx serialization windows">android c++ games linux open source release osx serialization windows</a></li><li><a href="/search/label/android extension pack">android extension pack</a></li><li><a href="/search/label/android o apis">android o apis</a></li><li><a href="/search/label/android p">android p</a></li><li><a href="/search/label/android sanitizer">android sanitizer</a></li><li><a href="/search/label/android wear 1.0">android wear 1.0</a></li><li><a href="/search/label/android71">android71</a></li><li><a href="/search/label/android81">android81</a></li><li><a href="/search/label/androidoreo">androidoreo</a></li><li><a href="/search/label/androidp">androidp</a></li><li><a href="/search/label/app attribution">app attribution</a></li><li><a href="/search/label/app id">app id</a></li><li><a href="/search/label/app install">app install</a></li><li><a href="/search/label/app updates">app updates</a></li><li><a href="/search/label/ar">ar</a></li><li><a href="/search/label/arch">arch</a></li><li><a href="/search/label/arcore">arcore</a></li><li><a href="/search/label/attestation">attestation</a></li><li><a href="/search/label/augmented reality">augmented reality</a></li><li><a href="/search/label/autofill">autofill</a></li><li><a href="/search/label/awareness">awareness</a></li><li><a href="/search/label/bar code">bar code</a></li><li><a href="/search/label/beacon">beacon</a></li><li><a href="/search/label/beta testing">beta testing</a></li><li><a href="/search/label/betatesting GooglePlayforFamilies">betatesting GooglePlayforFamilies</a></li><li><a href="/search/label/big data">big data</a></li><li><a href="/search/label/billing">billing</a></li><li><a href="/search/label/blackhat">blackhat</a></li><li><a href="/search/label/bug swatting">bug swatting</a></li><li><a href="/search/label/clang">clang</a></li><li><a href="/search/label/class loading">class loading</a></li><li><a href="/search/label/constraintlayout">constraintlayout</a></li><li><a href="/search/label/context">context</a></li><li><a href="/search/label/cross-platform">cross-platform</a></li><li><a href="/search/label/dalvik">dalvik</a></li><li><a href="/search/label/data storage">data storage</a></li><li><a href="/search/label/ddms">ddms</a></li><li><a href="/search/label/deeplocal">deeplocal</a></li><li><a href="/search/label/developer story">developer story</a></li><li><a href="/search/label/developerappstory">developerappstory</a></li><li><a href="/search/label/developerstory developerconsole">developerstory developerconsole</a></li><li><a href="/search/label/device id">device id</a></li><li><a href="/search/label/eBook">eBook</a></li><li><a href="/search/label/emulator">emulator</a></li><li><a href="/search/label/face detection">face detection</a></li><li><a href="/search/label/families">families</a></li><li><a href="/search/label/fitness">fitness</a></li><li><a href="/search/label/free trial">free trial</a></li><li><a href="/search/label/game-as-a-service">game-as-a-service</a></li><li><a href="/search/label/gapid">gapid</a></li><li><a href="/search/label/go edition">go edition</a></li><li><a href="/search/label/gold">gold</a></li><li><a href="/search/label/golf games">golf games</a></li><li><a href="/search/label/google play protect">google play protect</a></li><li><a href="/search/label/googleservices">googleservices</a></li><li><a href="/search/label/guide">guide</a></li><li><a href="/search/label/http">http</a></li><li><a href="/search/label/install referrer">install referrer</a></li><li><a href="/search/label/install track">install track</a></li><li><a href="/search/label/installs">installs</a></li><li><a href="/search/label/internet">internet</a></li><li><a href="/search/label/io16">io16</a></li><li><a href="/search/label/kernel">kernel</a></li><li><a href="/search/label/keys">keys</a></li><li><a href="/search/label/kids app developers">kids app developers</a></li><li><a href="/search/label/kids apps">kids apps</a></li><li><a href="/search/label/ktx">ktx</a></li><li><a href="/search/label/leanback">leanback</a></li><li><a href="/search/label/learning">learning</a></li><li><a href="/search/label/library">library</a></li><li><a href="/search/label/listing">listing</a></li><li><a href="/search/label/liveops">liveops</a></li><li><a href="/search/label/long aspect ratio">long aspect ratio</a></li><li><a href="/search/label/machine">machine</a></li><li><a href="/search/label/malware">malware</a></li><li><a href="/search/label/memory">memory</a></li><li><a href="/search/label/messaging api">messaging api</a></li><li><a href="/search/label/mobile ads">mobile ads</a></li><li><a href="/search/label/mobile search">mobile search</a></li><li><a href="/search/label/motion.">motion.</a></li><li><a href="/search/label/multiplayer">multiplayer</a></li><li><a href="/search/label/network">network</a></li><li><a href="/search/label/of">of</a></li><li><a href="/search/label/official launch">official launch</a></li><li><a href="/search/label/offline">offline</a></li><li><a href="/search/label/ordered broadcast">ordered broadcast</a></li><li><a href="/search/label/packaging">packaging</a></li><li><a href="/search/label/peer group">peer group</a></li><li><a href="/search/label/people">people</a></li><li><a href="/search/label/phone">phone</a></li><li><a href="/search/label/play">play</a></li><li><a href="/search/label/play billing">play billing</a></li><li><a href="/search/label/play billing library">play billing library</a></li><li><a href="/search/label/playbook app">playbook app</a></li><li><a href="/search/label/protection">protection</a></li><li><a href="/search/label/publishing">publishing</a></li><li><a href="/search/label/pwn">pwn</a></li><li><a href="/search/label/ratings">ratings</a></li><li><a href="/search/label/recaptcha">recaptcha</a></li><li><a href="/search/label/revenue">revenue</a></li><li><a href="/search/label/reviews">reviews</a></li><li><a href="/search/label/robotics">robotics</a></li><li><a href="/search/label/runtime permissions">runtime permissions</a></li><li><a href="/search/label/sandbox">sandbox</a></li><li><a href="/search/label/sanitizer">sanitizer</a></li><li><a href="/search/label/sdk">sdk</a></li><li><a href="/search/label/security infrastructure">security infrastructure</a></li><li><a href="/search/label/selinux">selinux</a></li><li><a href="/search/label/source code">source code</a></li><li><a href="/search/label/spam">spam</a></li><li><a href="/search/label/spyware">spyware</a></li><li><a href="/search/label/stability">stability</a></li><li><a href="/search/label/storelistingexperime">storelistingexperime</a></li><li><a href="/search/label/strictmode">strictmode</a></li><li><a href="/search/label/success stories">success stories</a></li><li><a href="/search/label/targeted spyware">targeted spyware</a></li><li><a href="/search/label/threading">threading</a></li><li><a href="/search/label/traceview">traceview</a></li><li><a href="/search/label/transitions">transitions</a></li><li><a href="/search/label/trial period">trial period</a></li><li><a href="/search/label/user experience">user experience</a></li><li><a href="/search/label/viewpager">viewpager</a></li><li><a href="/search/label/vulkan">vulkan</a></li><li><a href="/search/label/watch faces">watch faces</a></li></ul>
+</div>
+</div>
+</div><div class="widget BlogArchive" data-version="1" id="BlogArchive1">
+<div class="tab">
+<i class="material-icons icon">
+                      
+                    </i>
+<h2>
+Archive
+</h2>
+<i class="material-icons arrow">
+                      
+                    </i>
+</div>
+<div class="widget-content">
+<div id="ArchiveList">
+<div id="BlogArchive1_ArchiveList">
+<ul class="flat">
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2018/03/">
+March 2018
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2018/02/">
+February 2018
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2018/01/">
+January 2018
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/12/">
+December 2017
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/11/">
+November 2017
+</a>
+                      (13)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/10/">
+October 2017
+</a>
+                      (14)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/09/">
+September 2017
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/08/">
+August 2017
+</a>
+                      (19)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/07/">
+July 2017
+</a>
+                      (11)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/06/">
+June 2017
+</a>
+                      (13)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/05/">
+May 2017
+</a>
+                      (21)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/04/">
+April 2017
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/03/">
+March 2017
+</a>
+                      (14)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/02/">
+February 2017
+</a>
+                      (11)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2017/01/">
+January 2017
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/12/">
+December 2016
+</a>
+                      (17)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/11/">
+November 2016
+</a>
+                      (16)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/10/">
+October 2016
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/09/">
+September 2016
+</a>
+                      (6)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/08/">
+August 2016
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/07/">
+July 2016
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/06/">
+June 2016
+</a>
+                      (14)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/05/">
+May 2016
+</a>
+                      (16)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/04/">
+April 2016
+</a>
+                      (14)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/03/">
+March 2016
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/02/">
+February 2016
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2016/01/">
+January 2016
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/12/">
+December 2015
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/11/">
+November 2015
+</a>
+                      (13)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/10/">
+October 2015
+</a>
+                      (20)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/09/">
+September 2015
+</a>
+                      (15)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/08/">
+August 2015
+</a>
+                      (13)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/07/">
+July 2015
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/06/">
+June 2015
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/05/">
+May 2015
+</a>
+                      (10)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/04/">
+April 2015
+</a>
+                      (10)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/03/">
+March 2015
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/02/">
+February 2015
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2015/01/">
+January 2015
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/12/">
+December 2014
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/11/">
+November 2014
+</a>
+                      (13)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/10/">
+October 2014
+</a>
+                      (11)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/09/">
+September 2014
+</a>
+                      (6)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/08/">
+August 2014
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/07/">
+July 2014
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/06/">
+June 2014
+</a>
+                      (10)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/05/">
+May 2014
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/03/">
+March 2014
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/02/">
+February 2014
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2014/01/">
+January 2014
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/12/">
+December 2013
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/11/">
+November 2013
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/10/">
+October 2013
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/09/">
+September 2013
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/08/">
+August 2013
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/07/">
+July 2013
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/06/">
+June 2013
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/05/">
+May 2013
+</a>
+                      (9)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/04/">
+April 2013
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/03/">
+March 2013
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/02/">
+February 2013
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2013/01/">
+January 2013
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/12/">
+December 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/11/">
+November 2012
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/10/">
+October 2012
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/09/">
+September 2012
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/08/">
+August 2012
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/07/">
+July 2012
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/06/">
+June 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/05/">
+May 2012
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/04/">
+April 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/03/">
+March 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/02/">
+February 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2012/01/">
+January 2012
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/12/">
+December 2011
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/11/">
+November 2011
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/10/">
+October 2011
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/09/">
+September 2011
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/08/">
+August 2011
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/07/">
+July 2011
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/06/">
+June 2011
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/05/">
+May 2011
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/04/">
+April 2011
+</a>
+                      (6)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/03/">
+March 2011
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/02/">
+February 2011
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2011/01/">
+January 2011
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/12/">
+December 2010
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/11/">
+November 2010
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/10/">
+October 2010
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/09/">
+September 2010
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/08/">
+August 2010
+</a>
+                      (6)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/07/">
+July 2010
+</a>
+                      (10)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/06/">
+June 2010
+</a>
+                      (11)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/05/">
+May 2010
+</a>
+                      (11)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/04/">
+April 2010
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/03/">
+March 2010
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/02/">
+February 2010
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2010/01/">
+January 2010
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/12/">
+December 2009
+</a>
+                      (7)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/11/">
+November 2009
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/10/">
+October 2009
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/09/">
+September 2009
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/08/">
+August 2009
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/07/">
+July 2009
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/06/">
+June 2009
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/05/">
+May 2009
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/04/">
+April 2009
+</a>
+                      (12)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/03/">
+March 2009
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/02/">
+February 2009
+</a>
+                      (8)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2009/01/">
+January 2009
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/12/">
+December 2008
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/11/">
+November 2008
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/10/">
+October 2008
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/09/">
+September 2008
+</a>
+                      (6)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/08/">
+August 2008
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/06/">
+June 2008
+</a>
+                      (1)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/05/">
+May 2008
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/04/">
+April 2008
+</a>
+                      (4)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/03/">
+March 2008
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/02/">
+February 2008
+</a>
+                      (2)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2008/01/">
+January 2008
+</a>
+                      (5)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2007/12/">
+December 2007
+</a>
+                      (3)
+                    </li>
+<li class="archivedate">
+<a href="https://android-developers.googleblog.com/2007/11/">
+November 2007
+</a>
+                      (5)
+                    </li>
+</ul>
+</div>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="//www.blogger.com/rearrange?blogID=6755709643044947179&amp;widgetType=BlogArchive&amp;widgetId=BlogArchive1&amp;action=editWidget&amp;sectionId=sidebar" onclick="return _WidgetManager._PopupConfig(document.getElementById(&quot;BlogArchive1&quot;));" target="configBlogArchive1" title="Edit">
+<img alt="" height="18" src="https://resources.blogblog.com/img/icon18_wrench_allbkg.png" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div>
+</div><div class="widget HTML" data-version="1" id="HTML1">
+<a href="https://android-developers.blogspot.com/atom.xml">
+<div class="tab">
+<img alt="" class="sidebar-icon" src="https://www.gstatic.com/images/icons/material/system/1x/rss_feed_grey600_24dp.png">
+<h2>Feed</h2>
+</div>
+</a>
+</div><div class="widget HTML" data-version="1" id="HTML2">
+<a href="https://developer.android.com/newsletter/index.html">
+<div class="tab">
+<img alt="" class="sidebar-icon" src="https://www.gstatic.com/images/icons/material/system/2x/news_grey600_24dp.png">
+<h2>Newsletter</h2>
+</div>
+</a>
+</div><div class="widget HTML" data-version="1" id="HTML3">
+<span class="sidebar-social-label" style="display: block; padding: 0 4px 8px 4px; text-align: center;">Android Developers</span>
+<div class="sidebar-social-links" style="display: flex; justify-content: center; padding: 0 4px">
+<a href="https://plus.google.com/+AndroidDevelopers" title="Android Developers on Google+">
+<img alt="Android Developers on Google+" class="sidebar-icon" src="https://www.gstatic.com/images/icons/material/system/2x/google_plus_grey600_24dp.png">
+</a>
+<a href="https://www.youtube.com/user/androiddevelopers" title="Android Developers on YouTube">
+<img alt="Android Developers on YouTube" class="sidebar-icon" src="https://www.gstatic.com/images/icons/material/system/2x/video_youtube_grey600_24dp.png">
+</a>
+<a href="https://twitter.com/AndroidDev" title="Android Developers on Twitter">
+<img alt="Android Developers on Twitter" class="sidebar-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURUxpcWdnZ2ZmZmNjY2dnZ2ZmZmZmZmdnZ2dnZ2ZmZmZmZmZmZmZmZmZmZmdnZ2VlZWdnZ2ZmZmdnZ2ZmZmdnZ2ZmZmdnZ2dnZ2dnZ2ZmZmZmZmZmZmdnZ2dnZ2dnZ2dnZ/SZ370AAAAfdFJOUwCRmwjzDdwc+rM+LaykVRXqZsVfhs8mc9RLvIA1i0NM81npAAABVklEQVRIx+1VyZaDIBAEBBXjEnVwQ9P//5ejGNQgKLnOm7ooUAXd1SwI/XlEfSvrMfClJxUoxBNbO8pcferIzs9gA03mdi5gXPoZVFZ+BQfQKaUAcl0HIL2eXyNDaEmHzL/Did+f+RIxXs9D6dLozDzEiR9OFYSBFgCUH/wH2KD4KqQFojkIahtfrO62WwffJT8WPtHVjPe+KmdOQRxZDYy5TALl9QmbIKLGCA0HYVmhePMDhyUmKNMRYTRSD0GnI5rrMHQegvTKQRva66KekW9F4l78vQyo8RLw6618kYI6vLF/Fd5owxsB+dz9L5Z3vilrZ6+jwsaBxDcBPQvzzN+kUJ4uiYb61kCDVd8EpOD0KX44b9/Gmkrivq7xV/yCWON3xNPU3NOfggwEZ8KRbm2Z++WuGXa8VRF+2i5eydzuBL2hCeXr/sFMyinjPCUyHyP0jyN+Abu6gf9XJNj2AAAAAElFTkSuQmCC">
+</a>
+</div>
+</div><div class="widget HTML" data-version="1" id="HTML4">
+<span class="sidebar-social-label" style="display: block; padding: 0 4px 8px 4px; text-align: center;">Google Play</span>
+<div class="sidebar-social-links" style="display: flex; justify-content: center; padding: 0 4px">
+<a href="https://www.linkedin.com/company/googleplaydev/" title="Google Play Apps &amp; Games on LinkedIn">
+<img alt="Google Play Apps &amp; Games on LinkedIn" class="sidebar-icon" src="data:image/png;base64,R0lGODlhOwAwAMQAANDQ0PPz87u7u8PDw4eHh6Kiou3t7ZmZmYaGhry8vLOzs+jo6Nzc3NXV1czMzPz8/NTU1JCQkKurq/Dw8OXl5ZGRkf///35+fgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMTEgNzkuMTU4MzI1LCAyMDE1LzA5LzEwLTAxOjEwOjIwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCQzNFMDRFNjlEMzgxMUU3OTk1N0ZEREQyNENCOTcxNCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCQzNFMDRFNTlEMzgxMUU3OTk1N0ZEREQyNENCOTcxNCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDk5QTcwMTUxQzdDMTFFMkI5MTRGN0VDRDJGNTg0QUQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDk5QTcwMTYxQzdDMTFFMkI5MTRGN0VDRDJGNTg0QUQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4B//79/Pv6+fj39vX08/Lx8O/u7ezr6uno5+bl5OPi4eDf3t3c29rZ2NfW1dTT0tHQz87NzMvKycjHxsXEw8LBwL++vby7urm4t7a1tLOysbCvrq2sq6qpqKempaSjoqGgn56dnJuamZiXlpWUk5KRkI+OjYyLiomIh4aFhIOCgYB/fn18e3p5eHd2dXRzcnFwb25tbGtqaWhnZmVkY2JhYF9eXVxbWllYV1ZVVFNSUVBPTk1MS0pJSEdGRURDQkFAPz49PDs6OTg3NjU0MzIxMC8uLSwrKikoJyYlJCMiISAfHh0cGxoZGBcWFRQTEhEQDw4NDAsKCQgHBgUEAwIBAAAh+QQAAAAAACwAAAAAOwAwAAAF/6AlXGRpnmiqqoLlvrA7rnRtl20c33yP6jufkAeEDY+14gvJTCldKcIgYAkMEE3b04IiGGIGQpa2RQ2Ag/GqfKLqAmoV26SMO58odwxuP81LZzppfXR4J15gYoQlfyUIU1VXi4V1kz6NlkmGdgQFngUHN5gXQJRLFwQJXzEPEBFkm6anJDoXCQ9bCmuxjLW9MBBbLxJyvLS+x8JAfD/GpMjPykC6zZV+0NJFDHfWslC/Og4VJAere9xF6LPRMQknCHpG1enz60AUKQ6l9dDg9jrUThTYd62bv2/JYBRIMbBfQoLeuBy0EArFAYgT5RXUyG7dRo8PHXZEOFKiOpIZQWyWjLgryEeREDGy5OdyZkiTNE/WnGgzJ02OPIPq1An0Zs+XOHsBWGoBAJUAAIYK9VkQgAsADQI0iEp1ZbGdyaw2XcBgAVekR9NGE2u1baYeo94SVSn3J926JiY4wxsRxgy+KHI8+QuYhGAlIQAAOw==">
+</a>
+<a href="https://medium.com/googleplaydev" title="Google Play Apps &amp; Games on Medium">
+<img alt="Google Play Apps &amp; Games on Medium" class="sidebar-icon" src="data:image/png;base64,R0lGODlhMAAwAPcAAHJxcHFwb4iGhYODgre2tnNxcLi4t+jo6LCvr3BubW1ram5tbLOzsm1sa3BvbmtqaWppaG5ta2poZ2dmZoB/fmhnZ3Jxb3Jwb5CPjqqpqWtram9ubWxras7OzmloaGpoaHh3d8XExPj4+GhnZmhoZ/39/fv7+2pqaWtqaObm5r69vK2trIWEg+np6X59fIOCgYiHhoaFg93d3ba1tJKRj66trdDQz2lnZrm5uIKCge7t7WpqarW1tKampW1ra9ra2t3d3PPy8uvr67W1s8LCwZ2cm5WUk2ppafX19auqqpKRkff393RzcXRycbSzso+OjbW0s8vLyqalpODf3/f39srKymdnZ+Xl5IKCgLa2tXRzcnZ0c/7+/ru7upuamrS0s7y8u5GPjpuamNPS0nZ1dJqZmLu6ufHx8X18e+zs7O7u7fDw8Obl5dXU1JaVlLSzs52dm9DOzpOSkWtoZ2dnZoCAf+jn525sa9bW1r28vOfn556enbKysamop9nZ2Hl3dnFvbuXl5cTEw399fMHAv6Cenb6+vayrqsrKya+urdHR0fr5+W1tbHp5eNfW1uno6ODg4OLi4qqpqPr6+omIhn59fXh3dmZmZv///3FwbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMTEgNzkuMTU4MzI1LCAyMDE1LzA5LzEwLTAxOjEwOjIwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNSAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCQzNFMDRFOTlEMzgxMUU3OTk1N0ZEREQyNENCOTcxNCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCQzNFMDRFQTlEMzgxMUU3OTk1N0ZEREQyNENCOTcxNCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkJDM0UwNEU3OUQzODExRTc5OTU3RkRERDI0Q0I5NzE0IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkJDM0UwNEU4OUQzODExRTc5OTU3RkRERDI0Q0I5NzE0Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAADAAMAAACP8AKVgaSLCgwYMIEyq0RCGTw4cQI0qcSLHiQ0sWM2rcOHCjx48QO4IcqVEkyZMTTaJc6VAlS5QuX5J0CcDBpZs4cY4AYBFAgpxAM/EMiRHiAiYYBChdqrRJg6ETN6BgwXQphgILIrp80EANpq9gv465FIFigEsCwoYNBOGB1qIPz7JQG/bFJagQAV0KQRdTGhAeArydeElOX0xVLiWYWCHAJLoyGF0qIDFmgJ+HDlu6JBgigEtS+rqYnBIuxAANLnXoa+iSg4gcLl0RfYliTIefV/TlssVK50wXLj05PKB26YqXCBwmYNzhz9V9i9s2HTE5JjYl1C5p4OEhHTKYRAj/oSv9OEXrPWzQ7XPJQiYLlxJh6hKFfPPB55UboURXxwS3D1yyBiaDtGHfdMgpl8ElSNAlxmSXYIAJEJekcKB5hCnHwyVD0BXJJRpcoggmZVzSwoWVUQeRdW9c0khfYVzyByYmQDDBASjilyEmDNwEXVh+XOIEJipcwgGOapWXYoI83hQDXSWAcGIdlzSAZFhK6iiRdT1GcMkPdD2CCSSXjKDAlWBlSRSTPX5Gw2GFXDLHmTmumV+TmcRmoVpULECCBHQmeZ+dhGWBCR+1fbYHXYTUBiiaX6l5kYoOFXCJbgtSdgIJZ6gVA2eP1jnpRAB8cIkjmOBxyQcAwCdJWFNc06JAJhI8oAddWAw6akSoXSIIWCGQBQAEEAQBFhx3BXDDJXbQpcVdGDp02SVJqLWgA8Eh8JUIC1RwwQaXeGECXVCAiFdL1J2lRF92FdDYIpjEoZhNRRzW5ALnujRBDvZWUkEmlxCBiRuuXfKFvV8hQpaWmZwAAw4IRCwxAmDAcEQAGqBRQwI+bLDDDCoYIPLII5uRxwKzElopBEDlhAJlBUxwyR0FBGBpyy0DkC+lMn10W88e/Qx0STwPnZHQRleEdNLRMk200z5DDZJAC1VttdUUBAQAOw==">
+</a>
+<a href="https://twitter.com/GooglePlayDev" title="Follow GooglePlayDev on Twitter">
+<img alt="Follow GooglePlayDev on Twitter" class="sidebar-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURUxpcWdnZ2ZmZmNjY2dnZ2ZmZmZmZmdnZ2dnZ2ZmZmZmZmZmZmZmZmZmZmdnZ2VlZWdnZ2ZmZmdnZ2ZmZmdnZ2ZmZmdnZ2dnZ2dnZ2ZmZmZmZmZmZmdnZ2dnZ2dnZ2dnZ/SZ370AAAAfdFJOUwCRmwjzDdwc+rM+LaykVRXqZsVfhs8mc9RLvIA1i0NM81npAAABVklEQVRIx+1VyZaDIBAEBBXjEnVwQ9P//5ejGNQgKLnOm7ooUAXd1SwI/XlEfSvrMfClJxUoxBNbO8pcferIzs9gA03mdi5gXPoZVFZ+BQfQKaUAcl0HIL2eXyNDaEmHzL/Did+f+RIxXs9D6dLozDzEiR9OFYSBFgCUH/wH2KD4KqQFojkIahtfrO62WwffJT8WPtHVjPe+KmdOQRxZDYy5TALl9QmbIKLGCA0HYVmhePMDhyUmKNMRYTRSD0GnI5rrMHQegvTKQRva66KekW9F4l78vQyo8RLw6618kYI6vLF/Fd5owxsB+dz9L5Z3vilrZ6+jwsaBxDcBPQvzzN+kUJ4uiYb61kCDVd8EpOD0KX44b9/Gmkrivq7xV/yCWON3xNPU3NOfggwEZ8KRbm2Z++WuGXa8VRF+2i5eydzuBL2hCeXr/sFMyinjPCUyHyP0jyN+Abu6gf9XJNj2AAAAAElFTkSuQmCC">
+</a>
+</div>
+</div></div>
+<div class="no-items section" id="sidebar-bottom"></div>
+</div>
+</div>
+<div style="clear:both;"></div>
+</div>
+<!-- Other blogs -->
+<aside class="adb-other-blogs cols-wrapper">
+<h2 class="adb-other-blogs-title">
+<img alt="" height="48" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAABfVBMVEVMaXHbXVHiZVveWk/lk0hXhm4wqm4zrHAomFrUamLfVUneVEjeU0fPVEgollobomEaomAZoV8YoV8WoF1FkVitpXXbV03UT0QZnl0emVzcY1nNWlE0jFhHkl7OT0Qfl1qHhIThZ1zcUkbjiUpEiXg1mmDSUUd4h1DRTkMXnFoll1g1ll0enV0lnF/QVUhgkurKTUMUllYUn1tejNhQjvWKcp3WUERTje1TjvGwVlpYi+R3gcDCTEJkhcuiX2/eUkZmitm5TkcamV5djtxXje0Tn1tbieFPjfUSnlpOjfVXkPHKSz4QnllNjPVPietIifBMjPX3tiU2lEr7vxK+pxn6vB/8vA1ZljxFg+n6wRXmsQ5KivRMi/X+xyX6uQyBmzBIgOP4whL0twodlVL9yCH/wgz5swmpoyIPl1ZJgu1Li/X+vgrRohFejNtJifRQheP8vBb/wgv0rAr9xx3/wgpJivT/wQhRgdtHifNBhO1HifT/yilGiPT3sQdCfOZzgwraAAAAf3RSTlMAq//1CQz//5kr////a23//////ysC1errzFRAPUfCwQaB/xUcg5MZ//mqXNq3fqH/7P81/9H/5PjqadH/Ed//2fn+JMD/Qv///83l//+v+P8i0MTeRP/Ky+Dz//9h/82c9/Xckv//1vjk///pTv9/df//qv///1b/7/8x/5368tsOrQAABFJJREFUeAHs1dWO6zAQxvEpMwXKzMzcLvO+/wOdSauQx9lY5zq/68p/Of6kgseRx+PxeHx+KhAEQygc0YUNURAWi5sSKKlJgUU6o8tms7lcTpIkOauAIDVvDyQ1BdX2kyINyCUVxJTjnEAFbKqcgFwDIcEA5wvVgdHgBIpNENHiXKDdAUaXBFAPBHTinAv0gYjq51sCuYHIRDnnD4NAhEb6BfQAGv/nRMvAMTEDkh6QFPGJ4vF6IK9yfzplnwBNVbeJJmySNzHgqrJPoJm4TZRzvg8czNgnQMXQ3xNNkuPNiRJd9gnIVOlEk8h6OpqDox75Qi5TXSzb7XbSrtAER80VDaxn4Giz3e1JoQx/mNzOtwfkquNED9vjaWgrkImSqZILrNeOUz1vt9vL1X6HNp2ojUICyGGqD0cMHB+vezPw9OQDF+OcRAIj/lQXW83zi154QsMOuAi9suejKHC8be921yUWnu5S4CrNCUhdoN63d4cXs1BQwVWzKMls4KMBxOdWd7kusfCkqYCAGnsBDKxrdKJfeuB4ui6Ht0IdhJRo4IP8e56/0PbuGa8wxAB/opRCzkdpdqJfSG88YgALfRAUpYFvZqqLn58v0+GKgf0+CIJCI/sTo+/vqH2iP8gs7LRACoSlyQW+v9cKGNTfH40ZOb4sh//aLYs1t4EgDE7omluYmZkZlsHMzMxexmdPK5/W4+lua0Z31QNUGf5PrbUL5oELl1W/FVi/IgWLPp9vReHb68cwUXOuM4F1OVW/z4cSn7/oJoq4Rf3r8h3mM+hR47duooj7TOCyOCEQDNqFSef9nLtAKKz6rcAb+RMFAZ/KvLtAJPrEDth+5SdatAI4sujGH4vHE+oPBEydzqRlR5VPt13MNBWPp9+gL3BFSOYy2SDhq3kgF4/n8wX0BZTX1GIWQJHPP0z9Z0tWoFyR/zCgXrUfASugVrKvTAPVWg0C9cbylL+J7vLXLMU3ZzjRGgCBengqcB4fvla7TQqrhhO1Ah0IdJ9M/G8ukJOZaQNqpN0zmmjtP516vZ5YJhOVJNsUk6neTtUmhfQbO3BLUOb6TGGgDwxt/2jUqY8L9he4LxiKmUwG+TMB7VTvlWw/0BmPK+tyophzgQzFrwtsSP/mZmcclROlfM1Q2u+0E5V+qxCGwDPBc6FF/FtbnzQPIem32I53m+uVmcf2XX+LsqOfqPRvb8cT8iFE8TOBz7edHkLID5SfOh2+Xazv9/sDp4kS/3bH8Y1/0Kdk78+cKPEDQ+HE7b0+Zd5hoiPsL2veB3ewfX9/vz9jqgfED8SEhuQ+5dNtfqKMP3JBF3i3yxS+sndyRP2dkNBSRPJDIHCOmyjWA0dCz4/ARCwpMneS8eeZiVIGh5StOfoQAj3yMxPlp8oUyFQjjJ+fKKV3yLCIH0JEz0+UJckEWrfViVI/P1GWuUOGr8pEiR4ICWOKxwznpiZarlOOhIeHh4eHxyz+AY8wwSc2ZI4mAAAAAElFTkSuQmCC" width="48">
+        Global Google developer blogs
+      </h2>
+<div class="adb-other-blogs-list">
+<a href="https://developers.googleblog.com" target="_blank">Google Developers Blog</a>
+<a href="https://desarrolladores.googleblog.com" target="_blank">Programa con Google (Spanish LATAM)</a>
+<a href="https://desenvolvedores.googleblog.com" target="_blank">Codigo (Portuguese LATAM)</a>
+<a href="https://developers-it.googleblog.com" target="_blank">Developers Italia</a>
+<a href="http://developers.googleblog.cn/" target="_blank">Google Developers China Blog</a>
+<a href="https://googledevid.blogspot.com" target="_blank">Google Developers Indonesia Blog</a>
+<a href="https://developers-kr.googleblog.com" target="_blank">Google Developers Korea</a>
+<a href="https://developers-jp.googleblog.com" target="_blank">Google Developers Japan</a>
+</div>
+</aside>
+<!-- Footer -->
+<footer class="adb-footer cols-wrapper">
+<div class="adb-footer-more">
+<a href="https://developer.android.com/newsletter/index.html" target="_blank" title="Newsletter">Newsletter</a>
+<a href="https://android-developers.blogspot.com/" title="Blog">Blog</a>
+<a href="https://developer.android.com/support.html" target="_blank" title="Support">Support</a>
+</div>
+<div class="adb-footer-social">
+<a class="adb-footer-social-youtube" href="https://www.youtube.com/user/androiddevelopers" target="_blank" title="Android Developers on YouTube">
+<span>Android Developers on YouTube</span>
+</a>
+<a class="adb-footer-social-gplus" href="https://plus.google.com/+AndroidDevelopers" target="_blank" title="Android Developers on Google+">
+<span>Android Developers on Google+</span>
+</a>
+<a class="adb-footer-social-twitter" href="https://twitter.com/AndroidDev" target="_blank" title="Android Developers on Twitter">
+<span>Android Developers on Twitter</span>
+</a>
+</div>
+<div class="adb-footer-related">
+<a href="https://www.android.com" target="_blank" title="Android.com">Android.com</a>
+<a href="https://developer.android.com/" target="_blank" title="Android Developers">Android Developers</a>
+<a href="https://developer.android.com/studio/index.html" target="_blank" title="Android Studio">Android Studio</a>
+<a href="https://developer.android.com/distribute/console/index.html" target="_blank" title="Google Play Console">Google Play Console</a>
+<a href="https://developer.android.com/legal.html" target="_blank" title="Legal Notice">Legal Notice</a>
+</div>
+</footer>
+<script type="text/javascript">
+    //<![CDATA[
+    (function() {
+      'use strict';
+
+      // Social sharing popups.
+      var postEl = document.getElementsByClassName('social-wrapper');
+      var postCount = postEl.length;
+      for (var i = 0; i < postCount; i++){
+        postEl[i].addEventListener('click', function(event) {
+          var postUrl = this.getAttribute('data-href');
+          window.open(postUrl, 'popUpWindow',
+              'height=500,width=500,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes'
+          );
+        });
+      }
+      var BreakpointHandler = function() {
+        this.initted = false;
+        this.isHomePage = false;
+        this.isMobile = false;
+      };
+      BreakpointHandler.prototype.finalizeSummary = function(summaryHtml, lastNode) {
+        // Use $.trim for IE8 compatibility
+        summaryHtml = $.trim(summaryHtml).replace(/(<br>|\s+)*$/,'');
+        if (lastNode.nodeType == 3) {
+          var lastChar = summaryHtml.slice(-1);
+          if (!lastChar.match(/[.”"?]/)) {
+            if (!lastChar.match(/[A-Za-z]/)) {
+              summaryHtml = summaryHtml.slice(0, -1);
+            }
+            summaryHtml += ' ...';
+          }
+        } else if (lastNode.nodeType == 1 && (lastNode.nodeName == 'I' || lastNode.nodeName == 'A')) {
+          summaryHtml += ' ...';
+        }
+        return summaryHtml;
+      };
+      BreakpointHandler.prototype.generateSummaryFromContent = function(content, numWords) {
+        var seenWords = 0;
+        var summaryHtml = '';
+        for (var i=0; i < content.childNodes.length; i++) {
+          var node = content.childNodes[i];
+          var nodeText;
+          if (node.nodeType == 1) {
+            if (node.hasAttribute('data-about-pullquote')) {
+              continue;
+            }
+            nodeText = node.textContent;
+            if (nodeText === undefined) {
+              // innerText for IE8
+              nodeText = node.innerText;
+            }
+            if (node.nodeName == 'DIV' || node.nodeName == 'B') {
+              // Don't end early if we haven't seen enough words.
+              if (seenWords < 10) {
+                continue;
+              }
+              if (i > 0) {
+                summaryHtml = this.finalizeSummary(summaryHtml, content.childNodes[i-1]);
+              }
+              break;
+            }
+            summaryHtml += node.outerHTML;
+          } else if (node.nodeType == 3) {
+            nodeText = node.nodeValue;
+            summaryHtml += nodeText + ' ';
+          }
+          var words = nodeText.match(/\S+\s*/g);
+          if (!words) {
+            continue;
+          }
+          var remain = numWords - seenWords;
+          if (words.length >= remain) {
+            summaryHtml = this.finalizeSummary(summaryHtml, node);
+            break;
+          }
+          seenWords += words.length;
+        }
+        return summaryHtml;
+      };
+      BreakpointHandler.prototype.detect = function() {
+        var match,
+            pl     = /\+/g,
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+            query  = window.location.search.substring(1);
+        var urlParams = {};
+        while (match = search.exec(query))
+          urlParams[decode(match[1])] = decode(match[2]);
+        this.isListPage = $('html').hasClass('list-page');
+        this.isMobile = urlParams['m'] === '1';
+        this.isHomePage = window.location.pathname == '/';
+      };
+      BreakpointHandler.prototype.initContent = function() {
+        var self = this;
+        $('.post').each(function(index) {
+          var body = $(this).children('.post-body')[0];
+          var content = $(body).children('.post-content')[0];
+          $(content).addClass('post-original');
+
+          var data = $(content).children('script').html();
+          data = self.rewriteForSSL(data);
+
+          // If exists, extract specified editor's preview.
+          var match = data.match(/([\s\S]+?)<div data-is-preview.+?>([\s\S]+)<\/div>/m);
+
+          if (match) {
+            data = match[1];
+          }
+
+          // Prevent big images from loading when they aren't needed.
+          // This must be done as a pre-injection step, since image loading can't be
+          // canceled once embedded into the DOM.
+          if (self.isListPage && self.isMobile) {
+            data = data.replace(/<(img|iframe) .+?>/g, '');
+          }
+
+          // Insert template to be rendered as nodes.
+          content.innerHTML = data;
+
+          if (self.isListPage) {
+            var summary = document.createElement('div');
+            $(summary).addClass('post-content');
+            $(summary).addClass('post-summary');
+            body.insertBefore(summary, content);
+            if (match) {
+              // Use provided summary.
+              summary.innerHTML = match[2];
+            } else {
+              // Generate a summary.
+              // Summary generation relies on DOM, so it must occur after content is
+              // inserted into the page.
+              summary.innerHTML = self.generateSummaryFromContent(content, 30);
+            }
+
+            // Add read more link to summary.
+            var titleAnchor = $(this).find('.title a')[0];
+            var link = titleAnchor.cloneNode(true);
+            link.innerHTML = 'Read More';
+            $(link).addClass('read-more');
+            summary.appendChild(link);
+          }
+        });
+        // Firefox does not allow for proper styling of BR.
+        if (navigator.userAgent.indexOf('Firefox') > -1) {
+          $('.post-content br').replaceWith('<span class="space"></span>');
+        }
+        $('.loading').removeClass('loading');
+      };
+      BreakpointHandler.prototype.process = function() {
+        if (!this.initted) {
+          var makeInsecureImageRegex = function(hosts) {
+            var whitelist = hosts.join('|').replace(/\./g,'\\.');
+            // Normal image tags, plus input images (yes, this is possible!)
+            return new RegExp('(<(img|input)[^>]+?src=("|\'))http:\/\/(' + whitelist +')', 'g');
+          };
+          this.sslImageRegex = makeInsecureImageRegex(BreakpointHandler.KNOWN_HTTPS_HOSTS);
+          this.sslImageCurrentDomainRegex = makeInsecureImageRegex([window.location.hostname]);
+          this.detect();
+          this.initContent();
+          this.initted = true;
+        }
+      };
+      BreakpointHandler.KNOWN_HTTPS_HOSTS = [
+        "www.google.org",
+        "www.google.com",
+        "services.google.com",
+
+        "blogger.com",
+        "draft.blogger.com",
+        "www.blogger.com",
+        "photos1.blogger.com",
+        "photos2.blogger.com",
+        "photos3.blogger.com",
+
+        "blogblog.com",
+        "img1.blogblog.com",
+        "img2.blogblog.com",
+        "www.blogblog.com",
+        "www1.blogblog.com",
+        "www2.blogblog.com",
+
+        "0.bp.blogspot.com",
+        "1.bp.blogspot.com",
+        "2.bp.blogspot.com",
+        "3.bp.blogspot.com",
+        "4.bp.blogspot.com",
+
+        "lh3.googleusercontent.com",
+        "lh4.googleusercontent.com",
+        "lh5.googleusercontent.com",
+        "lh6.googleusercontent.com",
+        "themes.googleusercontent.com",
+      ];
+      BreakpointHandler.prototype.rewriteForSSL = function(html) {
+        // Handle HTTP -> HTTPS source replacement of images, movies, and other embedded content.
+        return html.replace(this.sslImageRegex, '$1https://$4')
+            .replace(this.sslImageCurrentDomainRegex, '$1//$4')
+            .replace(/(<(embed|iframe)[^>]+?src=("|'))http:\/\/([^"']*?(youtube|picasaweb\.google)\.com)/g, '$1https://$4')
+            // Slideshow SWF takes a image host, so we need to rewrite that parameter.
+            .replace(/(<embed[^>]+?feed=http(?=[^s]))/g, '$1s');
+      };
+      $(document).ready(function() {
+        var handler = new BreakpointHandler();
+        handler.process();
+        // Top-level navigation.
+        $(".BlogArchive .tab").click(function(ev) {
+          ev.preventDefault();
+          $(this).parent().toggleClass('active');
+          $(this).siblings().slideToggle(300);
+        });
+        $(".Label .tab").click(function(ev) {
+          ev.preventDefault();
+          $(this).parent().toggleClass('active');
+          $(this).siblings().slideToggle(300);
+        });
+        // Blog archive year expansion.
+        $('.BlogArchive .intervalToggle').click(function(ev) {
+          ev.preventDefault();
+          if ($(this).parent().hasClass('collapsed')) {
+            $(this).parent().removeClass('collapsed');
+            $(this).parent().addClass('expanded');
+          } else {
+            $(this).parent().removeClass('expanded');
+            $(this).parent().addClass('collapsed');
+          }
+        });
+        // Reverse order of months.
+        $('.BlogArchive .intervalToggle + div').each(function(_, items) {
+          var year = $(this);
+          year.children().each(function(_, month) {
+            year.prepend(month);
+          });
+        });
+        // Set anchors to open in new tab.
+        $('.post-content img').parent().each(function(_, node) {
+          if (node.nodeName == 'A') {
+            $(this).attr('target', '_blank');
+          }
+        });
+        // Process search requests.
+        $('.searchBox input').on("keypress", function(ev) {
+          if (ev.which == 13) {
+            window.location.href = 'https://www.google.com/search?q=site%3A' + window.location.hostname + '%20' + encodeURIComponent ($(this).val());
+          }
+        });
+      });
+
+      $.fn.labelWidgetShowMore = function() {
+        if (!this.length) return;
+        // Fetch feed containing labels
+        var promise = $.getJSON('/feeds/posts/summary?alt=json&max-results=0');
+        // For each label widget
+        this.each(function() {
+          var $widget = $(this);
+          var open = false;
+          var $viewMoreContent = $widget.find('.adb-label-view-more-content');
+          var $viewMoreToggle = $widget.find('.adb-label-view-more-toggle');
+          var $list = $viewMoreContent.find('ul');
+          // Function to set new open/closed state
+          function setOpenClosed(_open) {
+            open = _open;
+            var text = $viewMoreToggle.data(open ? 'open' : 'closed');
+            $viewMoreContent.toggle(open);
+            $viewMoreToggle.text(text).toggleClass('active', open);
+          }
+          // Toggle handler
+          $viewMoreToggle.on('click', function() {
+            setOpenClosed(!open);
+          });
+          // Load data
+          promise.then(function(data) {
+            $.each(data.feed.category, function(index, category) {
+              $('<li><a href="/search/label/' + category.term + '">' + category.term + '</a></li>').appendTo($list);
+            });
+            // Set toggle text
+            setOpenClosed(false);
+          });
+        });
+      };
+
+      $.fn.fixedScroll = function(scrollBounds) {
+        if (!this.length) return;
+
+        var $elements = this;
+
+        $(window).on('scroll', function() {
+          var page = document.documentElement;
+          var body = document.body;
+          // How much the page or body can scroll
+          var scrollHeight = page.scrollHeight || body.scrollHeight;
+          // How much the page or body has scrolled
+          var scrollTop = page.scrollTop || body.scrollTop;
+          // Whether the page has scrolled past the top bound
+          var scrollStart = scrollTop > scrollBounds.top;
+
+          $elements.each(function() {
+            var $element = $(this);
+            var elementHeight = $element.height();
+            // Whether the fixed element has scrolled past the bottom bound
+            var scrollEnd = scrollHeight - scrollTop < scrollBounds.bottom + elementHeight;
+            $element.toggleClass('scroll-start', scrollStart);
+            $element.toggleClass('scroll-end', scrollEnd);
+          });
+        });
+      };
+
+      $(function() {
+        // Enable show more link for Labels widget
+        $('.widget.Label').labelWidgetShowMore();
+        // Enable fixed sidebar
+        $('.col-right').fixedScroll({ top: 227, bottom: 643 });
+        // Enable pretty printed code snippets
+        $('pre:not(.no-pretty-print)').addClass('prettyprint');
+        PR.prettyPrint();
+      });
+
+    })();
+    //]]>
+    </script>
+<script src="https://apis.google.com/js/plusone.js" type="text/javascript" gapi_processed="true"></script>
+
+<script type="text/javascript" src="https://www.blogger.com/static/v1/widgets/167593556-widgets.js"></script>
+<script type="text/javascript">
+window['__wavt'] = 'AOuZoY76_nPOkFp-XkEZZQE3iLK4x_V1Eg:1520554801491';_WidgetManager._Init('//www.blogger.com/rearrange?blogID\x3d6755709643044947179','//android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html','6755709643044947179');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'blogId': '6755709643044947179', 'title': 'Android Developers Blog', 'url': 'https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html', 'canonicalUrl': 'https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html', 'homepageUrl': 'https://android-developers.googleblog.com/', 'searchUrl': 'https://android-developers.googleblog.com/search', 'canonicalHomepageUrl': 'https://android-developers.googleblog.com/', 'blogspotFaviconUrl': 'https://android-developers.googleblog.com/favicon.ico', 'bloggerUrl': 'https://www.blogger.com', 'hasCustomDomain': true, 'httpsEnabled': true, 'enabledCommentProfileImages': true, 'gPlusViewType': 'FILTERED_POSTMOD', 'adultContent': false, 'analyticsAccountNumber': 'UA-5831155-1', 'encoding': 'UTF-8', 'locale': 'en', 'localeUnderscoreDelimited': 'en', 'languageDirection': 'ltr', 'isPrivate': false, 'isMobile': false, 'isMobileRequest': false, 'mobileClass': '', 'isPrivateBlog': false, 'feedLinks': '\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22Android Developers Blog - Atom\x22 href\x3d\x22https://android-developers.googleblog.com/feeds/posts/default\x22 /\x3e\n\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/rss+xml\x22 title\x3d\x22Android Developers Blog - RSS\x22 href\x3d\x22https://android-developers.googleblog.com/feeds/posts/default?alt\x3drss\x22 /\x3e\n\x3clink rel\x3d\x22service.post\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22Android Developers Blog - Atom\x22 href\x3d\x22https://www.blogger.com/feeds/6755709643044947179/posts/default\x22 /\x3e\n\n\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22Android Developers Blog - Atom\x22 href\x3d\x22https://android-developers.googleblog.com/feeds/33458597185895777/comments/default\x22 /\x3e\n', 'meTag': '', 'openIdOpTag': '', 'adsenseHostId': 'ca-host-pub-1556223355139109', 'adsenseHasAds': false, 'ieCssRetrofitLinks': '\x3c!--[if IE]\x3e\x3cscript type\x3d\x22text/javascript\x22 src\x3d\x22https://www.blogger.com/static/v1/jsbin/3061962209-ieretrofit.js\x22\x3e\x3c/script\x3e\n\x3c![endif]--\x3e', 'view': '', 'dynamicViewsCommentsSrc': '//www.blogblog.com/dynamicviews/4224c15c4e7c9321/js/comments.js', 'dynamicViewsScriptSrc': '//www.blogblog.com/dynamicviews/eb64ec4eb42dbc14', 'plusOneApiSrc': 'https://apis.google.com/js/plusone.js', 'sharing': {'platforms': [{'name': 'Get link', 'key': 'link', 'shareMessage': 'Get link', 'target': ''}, {'name': 'Facebook', 'key': 'facebook', 'shareMessage': 'Share to Facebook', 'target': 'facebook'}, {'name': 'BlogThis!', 'key': 'blogThis', 'shareMessage': 'BlogThis!', 'target': 'blog'}, {'name': 'Twitter', 'key': 'twitter', 'shareMessage': 'Share to Twitter', 'target': 'twitter'}, {'name': 'Pinterest', 'key': 'pinterest', 'shareMessage': 'Share to Pinterest', 'target': 'pinterest'}, {'name': 'Google+', 'key': 'googlePlus', 'shareMessage': 'Share to Google+', 'target': 'googleplus'}, {'name': 'Email', 'key': 'email', 'shareMessage': 'Email', 'target': 'email'}], 'googlePlusShareButtonWidth': 300, 'googlePlusBootstrap': '\x3cscript type\x3d\x22text/javascript\x22\x3ewindow.___gcfg \x3d {\x27lang\x27: \x27en\x27};\x3c/script\x3e'}, 'hasCustomJumpLinkMessage': false, 'jumpLinkMessage': 'Read more', 'pageType': 'item', 'postId': '33458597185895777', 'pageName': 'Android Things Developer Preview 7', 'pageTitle': 'Android Developers Blog: Android Things Developer Preview 7', 'metaDescription': ''}}, {'name': 'features', 'data': {'lazy_images': 'false', 'unsupported_browser_message': 'false', 'sharing_get_link_dialog': 'true', 'sharing_native': 'false'}}, {'name': 'messages', 'data': {'edit': 'Edit', 'linkCopiedToClipboard': 'Link copied to clipboard!', 'ok': 'Ok', 'postLink': 'Post Link'}}, {'name': 'template', 'data': {'name': 'custom', 'localizedName': 'Custom', 'isResponsive': false, 'isAlternateRendering': false, 'isCustom': true}}, {'name': 'view', 'data': {'classic': {'name': 'classic', 'url': '?view\x3dclassic'}, 'flipcard': {'name': 'flipcard', 'url': '?view\x3dflipcard'}, 'magazine': {'name': 'magazine', 'url': '?view\x3dmagazine'}, 'mosaic': {'name': 'mosaic', 'url': '?view\x3dmosaic'}, 'sidebar': {'name': 'sidebar', 'url': '?view\x3dsidebar'}, 'snapshot': {'name': 'snapshot', 'url': '?view\x3dsnapshot'}, 'timeslide': {'name': 'timeslide', 'url': '?view\x3dtimeslide'}, 'isMobile': false, 'title': 'Android Things Developer Preview 7', 'description': 'The latest Android and Google Play news and tips for app and game developers.', 'url': 'https://android-developers.googleblog.com/2018/03/android-things-developer-preview-7.html', 'type': 'item', 'isSingleItem': true, 'isMultipleItems': false, 'isError': false, 'isPage': false, 'isPost': true, 'isHomepage': false, 'isArchive': false, 'isLabelSearch': false, 'postId': 33458597185895777}}]);
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'showBacklinks': true, 'postId': '33458597185895777', 'useNgc': false, 'lightboxEnabled': true, 'lightboxModuleUrl': 'https://www.blogger.com/static/v1/jsbin/42145176-lbx.js', 'lightboxCssUrl': 'https://www.blogger.com/static/v1/v-css/368954415-lightbox_bundle.css'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogSearchView', new _WidgetInfo('BlogSearch1', 'sidebar-top', null, document.getElementById('BlogSearch1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label1', 'sidebar', null, document.getElementById('Label1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr', 'loadingMessage': 'Loading\x26hellip;'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML1', 'sidebar', null, document.getElementById('HTML1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML2', 'sidebar', null, document.getElementById('HTML2'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar', null, document.getElementById('HTML3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML4', 'sidebar', null, document.getElementById('HTML4'), {}, 'displayModeFull'));
+</script>
+
+</body></html>

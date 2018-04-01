@@ -233,6 +233,13 @@ Readability.prototype = {
     }));
   },
 
+  _getAllNodesWithAttrEqual: function(node, attribute, value) {
+    if (node.querySelectorAll) {
+      return node.querySelectorAll("*[" + attribute + "=" + value + "]");
+    }
+    return node.getElementsWithAttrEqual(attribute, value);
+  },
+
   /**
    * Removes the class="" attribute from every element in the given
    * subtree, except those that match CLASSES_TO_PRESERVE and
@@ -683,21 +690,33 @@ Readability.prototype = {
     return node && next;
   },
 
-  _checkByline: function(node, matchString) {
+  _getArticleByline: function() {
+    var node = this._doc.documentElement;
     if (this._articleByline) {
-      return false;
+      return this._articleByline;
     }
 
-    if (node.getAttribute !== undefined) {
-      var rel = node.getAttribute("rel");
+    while (node) {
+      var matchString = node.className + " " + node.id;
+
+      if (node.getAttribute !== undefined) {
+        var rel = node.getAttribute("rel");
+      }
+
+      if ((rel === "author" || this.REGEXPS.byline.test(matchString)) && this._isValidByline(node.textContent)) {
+        var byLineText = this._removeWhitespace(node.textContent);
+        this._removeAndGetNext(node);
+        return byLineText;
+      }
+
+      node = this._getNextNode(node);
     }
 
-    if ((rel === "author" || this.REGEXPS.byline.test(matchString)) && this._isValidByline(node.textContent)) {
-      this._articleByline = node.textContent.trim();
-      return true;
-    }
+    return null;
+  },
 
-    return false;
+  _removeWhitespace: function(text) {
+    return text.replace(/[\n\r\t]+/g, ' ').replace(/[\s]+/g, ' ').trim();
   },
 
   _getNodeAncestors: function(node, maxDepth) {
@@ -742,14 +761,18 @@ Readability.prototype = {
       var elementsToScore = [];
       var node = this._doc.documentElement;
 
+      // Check if there is an element identified as the main article content. itemprop=articleBody or articlesBody
+      // specifies content that should be read as the main content of the page
+      var itemPropArticles = [].concat.apply([], this._getAllNodesWithAttrEqual(node, 'itemprop', 'articleBody'),
+        this._getAllNodesWithAttrEqual(node, 'itemprop', 'articlesBody'));
+
+      if (itemPropArticles.length > 0) {
+        elementsToScore = itemPropArticles;
+        node = itemPropArticles[0]; // Only inspect to cleanup the articleBody and its siblings
+      }
+
       while (node) {
         var matchString = node.className + " " + node.id;
-
-        // Check to see if this node is a byline, and remove it if it is.
-        if (this._checkByline(node, matchString)) {
-          node = this._removeAndGetNext(node);
-          continue;
-        }
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
@@ -772,7 +795,7 @@ Readability.prototype = {
           continue;
         }
 
-        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1) {
+        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1 && itemPropArticles.length === 0) {
           elementsToScore.push(node);
         }
 
@@ -783,13 +806,22 @@ Readability.prototype = {
           // safely converted into plain P elements to avoid confusing the scoring
           // algorithm with DIVs with are, in practice, paragraphs.
           if (this._hasSinglePInsideElement(node)) {
-            var newNode = node.children[0];
-            node.parentNode.replaceChild(newNode, node);
-            node = newNode;
-            elementsToScore.push(node);
+            var newChildNode = node.children[0];
+            node.parentNode.replaceChild(newChildNode, node);
+            if (elementsToScore.includes(node) && itemPropArticles.length > 0) {
+              elementsToScore.splice(elementsToScore.indexOf(node), 1, newChildNode);
+            } else if (itemPropArticles.length === 0) {
+              elementsToScore.push(newChildNode);
+            }
+            node = newChildNode;
           } else if (!this._hasChildBlockElement(node)) {
-            node = this._setNodeTag(node, "P");
-            elementsToScore.push(node);
+            var pNode = this._setNodeTag(node, "P");
+            if (elementsToScore.includes(node) && itemPropArticles.length > 0) {
+              elementsToScore.splice(elementsToScore.indexOf(node), 1, pNode);
+            } else if (itemPropArticles.length === 0) {
+              elementsToScore.push(pNode);
+            }
+            node = pNode;
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
@@ -814,6 +846,14 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
+        if (elementToScore.getAttribute('itemprop') === 'articleBody' || elementToScore.getAttribute('itemprop') === 'articlesBody') {
+          if (typeof(elementToScore.readability) === 'undefined') {
+            this._initializeNode(elementToScore);
+          }
+          candidates.push(elementToScore);
+          return;
+        }
+
         if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === 'undefined')
           return;
 
@@ -1165,8 +1205,8 @@ Readability.prototype = {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
 
-      if ([elementName, elementProperty].indexOf("author") !== -1) {
-        metadata.byline = element.getAttribute("content");
+      if ([elementName, elementProperty].indexOf("author") !== -1 && this._isValidByline(element.getAttribute("content"))) {
+        metadata.byline = this._removeWhitespace(element.getAttribute("content"));
         return;
       }
 
@@ -1259,8 +1299,12 @@ Readability.prototype = {
    * @param Element
    */
   _hasChildBlockElement: function (element) {
+    if (!element.__JSDOMParser__) {
+      return element.querySelectorAll(this.DIV_TO_P_ELEMS.join(',')).length > 0;
+    }
+
     return this._someNode(element.childNodes, function(node) {
-      return this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
+      return node.tagName !== undefined && this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
              this._hasChildBlockElement(node);
     });
   },
@@ -1583,7 +1627,7 @@ Readability.prototype = {
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
           (!isList && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
+          (!isList && weight < 25 && linkDensity > 0.2) && !this._hasAncestorTag(node, "section") ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         return haveToRemove;
@@ -1723,6 +1767,7 @@ Readability.prototype = {
 
     var metadata = this._getArticleMetadata();
     this._articleTitle = metadata.title;
+    this._articleByline = this._getArticleByline();
 
     var articleContent = this._grabArticle();
     if (!articleContent)

@@ -279,6 +279,18 @@ describe("Script parsing", function() {
     expect(doc.firstChild.children.length).eql(0);
     expect(doc.firstChild.childNodes.length).eql(1);
   });
+
+  it("should not be confused by < or > symbols in scripts", function() {
+    var html = "<div>with some text just in case <script>if (somval < 5 && someval > 0) { return; }</script></div>";
+    var doc = new JSDOMParser().parse(html);
+    expect(doc.firstChild.tagName).eql("DIV");
+    expect(doc.firstChild.textContent).eql("with some text just in case if (somval < 5 && someval > 0) { return; }");
+    expect(doc.firstChild.firstChild.textContent).eql("with some text just in case ");
+    expect(doc.firstChild.firstElementChild.tagName).eql("SCRIPT");
+    expect(doc.firstChild.firstElementChild.textContent).eql("if (somval < 5 && someval > 0) { return; }");
+    expect(doc.firstChild.children.length).eql(1);
+    expect(doc.firstChild.childNodes.length).eql(2);
+  });
 });
 
 describe("Tag local name case handling", function() {
