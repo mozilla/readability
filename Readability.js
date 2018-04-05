@@ -273,11 +273,11 @@ Readability.prototype = {
     var documentURI = this._doc.documentURI;
     function toAbsoluteURI(uri) {
       // Leave as is if absolute
-      if (uri.match(/^https?:\/\//i)){
+      if (uri.match(/^https?:\/\//i)) {
         return uri;
       }
       // Leave as is if inline image
-      if (uri.match(/^data:image\//i)){
+      if (uri.match(/^data:image\//i)) {
         return uri;
       }
       // Leave hash links alone if the base URI matches the document URI:
