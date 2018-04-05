@@ -272,6 +272,14 @@ Readability.prototype = {
     var baseURI = this._doc.baseURI;
     var documentURI = this._doc.documentURI;
     function toAbsoluteURI(uri) {
+      // Leave as is if absolute
+      if (uri.match(/^https?:\/\//i)) {
+        return uri;
+      }
+      // Leave as is if inline image
+      if (uri.match(/^data:image\//i)) {
+        return uri;
+      }
       // Leave hash links alone if the base URI matches the document URI:
       if (baseURI == documentURI && uri.charAt(0) == "#") {
         return uri;
@@ -302,9 +310,12 @@ Readability.prototype = {
 
     var imgs = articleContent.getElementsByTagName("img");
     this._forEachNode(imgs, function(img) {
-      var src = img.getAttribute("src");
-      if (src) {
-        img.setAttribute("src", toAbsoluteURI(src));
+      var attrs = ["src", "data-lazy-src"];
+      for (var i in attrs) {
+        var src = img.getAttribute(attrs[i]);
+        if (src) {
+          img.setAttribute("src", toAbsoluteURI(src));
+        }
       }
     });
   },
