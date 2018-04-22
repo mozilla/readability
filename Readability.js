@@ -86,6 +86,10 @@ Readability.prototype = {
   FLAG_WEIGHT_CLASSES: 0x2,
   FLAG_CLEAN_CONDITIONALLY: 0x4,
 
+  // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+  ELEMENT_NODE: 1,
+  TEXT_NODE: 3,
+
   // Max number of nodes supported by this parser. Default: 0 (no limit)
   DEFAULT_MAX_ELEMS_TO_PARSE: 0,
 
@@ -414,7 +418,7 @@ Readability.prototype = {
   _nextElement: function (node) {
     var next = node;
     while (next
-        && (next.nodeType != Node.ELEMENT_NODE)
+        && (next.nodeType != this.ELEMENT_NODE)
         && this.REGEXPS.whitespace.test(next.textContent)) {
       next = next.nextSibling;
     }
@@ -793,7 +797,7 @@ Readability.prototype = {
           } else {
             // EXPERIMENTAL
             this._forEachNode(node.childNodes, function(childNode) {
-              if (childNode.nodeType === Node.TEXT_NODE && childNode.textContent.trim().length > 0) {
+              if (childNode.nodeType === this.TEXT_NODE && childNode.textContent.trim().length > 0) {
                 var p = doc.createElement('p');
                 p.textContent = childNode.textContent;
                 p.style.display = 'inline';
@@ -1241,13 +1245,13 @@ Readability.prototype = {
 
     // And there should be no text nodes with real content
     return !this._someNode(element.childNodes, function(node) {
-      return node.nodeType === Node.TEXT_NODE &&
+      return node.nodeType === this.TEXT_NODE &&
              this.REGEXPS.hasContent.test(node.textContent);
     });
   },
 
   _isElementWithoutContent: function(node) {
-    return node.nodeType === Node.ELEMENT_NODE &&
+    return node.nodeType === this.ELEMENT_NODE &&
       node.textContent.trim().length == 0 &&
       (node.children.length == 0 ||
        node.children.length == node.getElementsByTagName("br").length + node.getElementsByTagName("hr").length);
