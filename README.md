@@ -16,23 +16,14 @@ Please make sure to run [eslint](http://eslint.org/) against any proposed change
 
 ## Usage
 
-To parse a document, you must create a new `Readability` object from a URI object and a document object, and then call `parse()`. Here's an example:
+To parse a document, you must create a new `Readability` object from a document object, and then call `parse()`. Here's an example:
 
 ```javascript
-var loc = document.location;
-var uri = {
-  spec: loc.href,
-  host: loc.host,
-  prePath: loc.protocol + "//" + loc.host,
-  scheme: loc.protocol.substr(0, loc.protocol.indexOf(":")),
-  pathBase: loc.protocol + "//" + loc.host + loc.pathname.substr(0, loc.pathname.lastIndexOf("/") + 1)
-};
-var article = new Readability(uri, document).parse();
+var article = new Readability(document).parse();
 ```
 
 This `article` object will contain the following properties:
 
-* `uri`: original `uri` object that was passed to constructor
 * `title`: article title
 * `content`: HTML string of processed article content
 * `length`: length of article, in characters
@@ -42,15 +33,6 @@ This `article` object will contain the following properties:
 
 If you're using Readability on the web, you will likely be able to use a `document` reference from elsewhere (e.g. fetched via XMLHttpRequest, in a same-origin `<iframe>` you have access to, etc.). Otherwise, you would need to construct such an object using a DOM parser such as [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do not recommend it for general use.
 
-Until [#346](https://github.com/mozilla/readability/issues/346) is fixed, if you're using `jsdom` and `node` (rather than running in a browser), you will need to also ensure a global `Node` object is available for `Readability` to use, e.g. like so:
-
-```javascript
-...
-var dom = new JSDOM(html, OPTIONS);
-Node = dom.window.Node;
-var article = new Readability(uri, dom.window.document).parse();
-```
-
 ### Optional
 
 Readability's `parse()` works by modifying the DOM. This removes some elements in the web page. You could avoid this by passing the clone of the `document` object while creating a `Readability` object.
@@ -58,7 +40,7 @@ Readability's `parse()` works by modifying the DOM. This removes some elements i
 
 ```
 var documentClone = document.cloneNode(true); 
-var article = new Readability(uri, documentClone).parse();   
+var article = new Readability(documentClone).parse();
 ```
 
 ## Tests

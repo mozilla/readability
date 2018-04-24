@@ -22,14 +22,17 @@
 
 /**
  * Public constructor.
- * @param {Object}       uri     The URI descriptor object.
  * @param {HTMLDocument} doc     The document to parse.
  * @param {Object}       options The options object.
  */
-function Readability(uri, doc, options) {
+function Readability(doc, options) {
+  // In some older versions, people passed a URI object as the first argument. Cope:
+  if (doc && !doc.documentElement && doc.spec) {
+    doc = options;
+    options = arguments[2];
+  }
   options = options || {};
 
-  this._uri = uri;
   this._doc = doc;
   this._articleTitle = null;
   this._articleByline = null;
@@ -1748,7 +1751,6 @@ Readability.prototype = {
 
     var textContent = articleContent.textContent;
     return {
-      uri: this._uri,
       title: this._articleTitle,
       byline: metadata.byline || this._articleByline,
       dir: this._articleDir,

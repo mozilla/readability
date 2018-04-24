@@ -100,19 +100,13 @@ function onResponseReceived(source) {
 }
 
 function runReadability(source, destPath, metadataDestPath) {
-  var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
-    scheme: "http",
-    pathBase: "http://fakehost/test/"
-  };
-  var doc = new JSDOMParser().parse(source, uri.spec);
+  var uri = "http://fakehost/test/page.html";
+  var doc = new JSDOMParser().parse(source, uri);
   var myReader, result, readerable;
   try {
     // We pass `caption` as a class to check that passing in extra classes works,
     // given that it appears in some of the test documents.
-    myReader = new Readability(uri, doc, { classesToPreserve: ["caption"] });
+    myReader = new Readability(doc, { classesToPreserve: ["caption"] });
     result = myReader.parse();
   } catch (ex) {
     console.error(ex);
@@ -126,7 +120,7 @@ function runReadability(source, destPath, metadataDestPath) {
         ProcessExternalResources: false
       }
     });
-    myReader = new Readability(uri, jsdomDoc);
+    myReader = new Readability(jsdomDoc);
     readerable = myReader.isProbablyReaderable();
   } catch (ex) {
     console.error(ex);
@@ -144,7 +138,6 @@ function runReadability(source, destPath, metadataDestPath) {
     }
 
     // Delete the result data we don't care about checking.
-    delete result.uri;
     delete result.content;
     delete result.textContent;
     delete result.length;
