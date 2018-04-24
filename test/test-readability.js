@@ -49,7 +49,7 @@ function htmlTransform(str) {
   return str.replace(/\s+/g, " ");
 }
 
-function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent, expectedMetadata) {
+function runTestsWithItems(label, domGenerationFn, source, expectedContent, expectedMetadata) {
   describe(label, function() {
     this.timeout(10000);
 
@@ -60,7 +60,7 @@ function runTestsWithItems(label, domGenerationFn, uri, source, expectedContent,
         var doc = domGenerationFn(source);
         // Provide one class name to preserve, which we know appears in a few
         // of the test documents.
-        var myReader = new Readability(uri, doc, { classesToPreserve: ["caption"] });
+        var myReader = new Readability(doc, { classesToPreserve: ["caption"] });
         // Needs querySelectorAll function to test isProbablyReaderable method.
         // jsdom implements querySelector but JSDOMParser doesn't.
         var readerable = label === "jsdom" ? myReader.isProbablyReaderable() : null;
@@ -191,18 +191,18 @@ function removeCommentNodesRecursively(node) {
 describe("Readability API", function() {
   describe("#constructor", function() {
     it("should accept a debug option", function() {
-      expect(new Readability({}, {})._debug).eql(false);
-      expect(new Readability({}, {}, {debug: true})._debug).eql(true);
+      expect(new Readability({})._debug).eql(false);
+      expect(new Readability({}, {debug: true})._debug).eql(true);
     });
 
     it("should accept a nbTopCandidates option", function() {
-      expect(new Readability({}, {})._nbTopCandidates).eql(5);
-      expect(new Readability({}, {}, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
+      expect(new Readability({})._nbTopCandidates).eql(5);
+      expect(new Readability({}, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
     });
 
     it("should accept a maxElemsToParse option", function() {
-      expect(new Readability({}, {})._maxElemsToParse).eql(0);
-      expect(new Readability({}, {}, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
+      expect(new Readability({})._maxElemsToParse).eql(0);
+      expect(new Readability({}, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
     });
   });
 
@@ -210,7 +210,7 @@ describe("Readability API", function() {
     it("shouldn't parse oversized documents as per configuration", function() {
       var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
       expect(function() {
-        new Readability({}, doc, {maxElemsToParse: 1}).parse();
+        new Readability(doc, {maxElemsToParse: 1}).parse();
       }).to.Throw("Aborting parsing document; 2 elements found");
     });
   });
@@ -219,17 +219,11 @@ describe("Readability API", function() {
 describe("Test pages", function() {
   testPages.forEach(function(testPage) {
     describe(testPage.dir, function() {
-      var uri = {
-        spec: "http://fakehost/test/page.html",
-        host: "fakehost",
-        prePath: "http://fakehost",
-        scheme: "http",
-        pathBase: "http://fakehost/test/"
-      };
+      var uri = "http://fakehost/test/page.html";
 
       runTestsWithItems("jsdom", function(source) {
         var doc = jsdom(source, {
-          url: uri.spec,
+          url: uri,
           features: {
             FetchExternalResources: false,
             ProcessExternalResources: false
@@ -237,17 +231,17 @@ describe("Test pages", function() {
         });
         removeCommentNodesRecursively(doc);
         return doc;
-      }, uri, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
+      }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
 
       runTestsWithItems("JSDOMParser", function(source) {
         var parser = new JSDOMParser();
-        var doc = parser.parse(source, uri.spec);
+        var doc = parser.parse(source, uri);
         if (parser.errorState) {
           console.error("Parsing this DOM caused errors:", parser.errorState);
           return null;
         }
         return doc;
-      }, uri, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
+      }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
     });
   });
 });

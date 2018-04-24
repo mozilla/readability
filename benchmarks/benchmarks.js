@@ -42,17 +42,10 @@ suite("Readability test page perf", function () {
   set("iterations", 1);
   set("type", "static");
 
-  var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
-    scheme: "http",
-    pathBase: "http://fakehost/test"
-  };
   testPages.forEach(function(testPage) {
     var doc = new JSDOMParser().parse(testPage.source);
     bench(testPage.dir + " readability perf", function() {
-      new Readability(uri, doc).parse();
+      new Readability(doc).parse();
     });
   });
 });
@@ -61,17 +54,10 @@ suite("isProbablyReaderable perf", function () {
   set("iterations", 1);
   set("type", "static");
 
-  var uri = {
-    spec: "http://fakehost/test/page.html",
-    host: "fakehost",
-    prePath: "http://fakehost",
-    scheme: "http",
-    pathBase: "http://fakehost/test"
-  };
   testPages.forEach(function(testPage) {
     var doc = new JSDOMParser().parse(testPage.source);
     bench(testPage.dir + " readability perf", function() {
-      new Readability(uri, doc).isProbablyReaderable();
+      new Readability(doc).isProbablyReaderable();
     });
   });
 });
