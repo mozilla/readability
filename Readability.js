@@ -1078,8 +1078,6 @@ Readability.prototype = {
       if (this._debug)
         this.log("Article content after paging: " + articleContent.innerHTML);
 
-      var parseSuccessful = true;
-
       // Now that we've gone through the full algorithm, check to see if
       // we got any meaningful content. If we didn't, we may need to re-run
       // grabArticle with different flags set. This gives us a higher likelihood of
@@ -1087,7 +1085,6 @@ Readability.prototype = {
       // finding the -right- content.
       var textLength = this._getInnerText(articleContent, true).length;
       if (textLength < this._charThreshold) {
-        parseSuccessful = false;
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
@@ -1112,25 +1109,22 @@ Readability.prototype = {
           }
 
           articleContent = this._attempts[0].articleContent;
-          parseSuccessful = true;
         }
       }
 
-      if (parseSuccessful) {
-        // Find out text direction from ancestors of final top candidate.
-        var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
-        this._someNode(ancestors, function(ancestor) {
-          if (!ancestor.tagName)
-            return false;
-          var articleDir = ancestor.getAttribute("dir");
-          if (articleDir) {
-            this._articleDir = articleDir;
-            return true;
-          }
+      // Find out text direction from ancestors of final top candidate.
+      var ancestors = [parentOfTopCandidate, topCandidate].concat(this._getNodeAncestors(parentOfTopCandidate));
+      this._someNode(ancestors, function(ancestor) {
+        if (!ancestor.tagName)
           return false;
-        });
-        return articleContent;
-      }
+        var articleDir = ancestor.getAttribute("dir");
+        if (articleDir) {
+          this._articleDir = articleDir;
+          return true;
+        }
+        return false;
+      });
+      return articleContent;
     }
   },
 
