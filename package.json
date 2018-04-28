@@ -20,12 +20,13 @@
     "url": "https://github.com/mozilla/readability/issues"
   },
   "engines": {
-    "node" : ">=7.0"
+    "node": ">=7.0"
   },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
     "chai": "^2.1.*",
     "eslint": ">=4.2",
+    "htmltidy2": "^0.3.0",
     "js-beautify": "^1.5.5",
     "jsdom": "^7.0",
     "matcha": "^0.6.0",
