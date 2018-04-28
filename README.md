@@ -10,8 +10,6 @@ For outstanding issues, see the issue list in this repo, as well as this [bug li
 
 To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
 
-Note that because `JSDOMParser` is restricted to parsing XHTML-compatible input, you will likely need to tweak any input you fetch directly from the internet (e.g. to close `<meta>` tags). Even if creating a 'readable' version fails, the script will leave the input for you to change. You can then re-run the `generate-testcase.js` script passing only the test page slug, and it will reuse the altered input. Ideally we should fix the `generate-testcase.js` script to no longer need this manual pre/post-processing. If you have time to help with this, a pull request would be very welcome!
-
 Please make sure to run [eslint](http://eslint.org/) against any proposed changes when creating a pull request.
 
 ## Usage
