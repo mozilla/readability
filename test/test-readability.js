@@ -190,19 +190,20 @@ function removeCommentNodesRecursively(node) {
 
 describe("Readability API", function() {
   describe("#constructor", function() {
+    var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
     it("should accept a debug option", function() {
-      expect(new Readability({})._debug).eql(false);
-      expect(new Readability({}, {debug: true})._debug).eql(true);
+      expect(new Readability(doc)._debug).eql(false);
+      expect(new Readability(doc, {debug: true})._debug).eql(true);
     });
 
     it("should accept a nbTopCandidates option", function() {
-      expect(new Readability({})._nbTopCandidates).eql(5);
-      expect(new Readability({}, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
+      expect(new Readability(doc)._nbTopCandidates).eql(5);
+      expect(new Readability(doc, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
     });
 
     it("should accept a maxElemsToParse option", function() {
-      expect(new Readability({})._maxElemsToParse).eql(0);
-      expect(new Readability({}, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
+      expect(new Readability(doc)._maxElemsToParse).eql(0);
+      expect(new Readability(doc, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
     });
   });
 

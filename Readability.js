@@ -26,10 +26,12 @@
  * @param {Object}       options The options object.
  */
 function Readability(doc, options) {
-  // In some older versions, people passed a URI object as the first argument. Cope:
-  if (doc && !doc.documentElement && doc.spec) {
+  // In some older versions, people passed a URI as the first argument. Cope:
+  if (options && options.documentElement) {
     doc = options;
     options = arguments[2];
+  } else if (!doc || !doc.documentElement) {
+    throw new Error("First argument to Readability constructor should be a document object.");
   }
   options = options || {};
 
