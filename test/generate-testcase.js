@@ -7,6 +7,7 @@ var prettyPrint = require("./utils").prettyPrint;
 var serializeDocument = require("jsdom").serializeDocument;
 var http = require("http");
 var urlparse = require("url").parse;
+var htmltidy = require("htmltidy2").tidy;
 
 var readability = require("../index");
 var Readability = readability.Readability;
@@ -75,13 +76,22 @@ function fetchSource(url, callbackFn) {
         console.log("End received");
       }
       // Sanitize:
-      rv = prettyPrint(serializeDocument(jsdom(rv)));
-      callbackFn(rv);
+      htmltidy(serializeDocument(jsdom(rv)), {
+        "indent": true,
+        "indent-spaces": 4,
+        "output-xhtml": true,
+        "wrap": 0
+      }, callbackFn);
     });
   });
 }
 
-function onResponseReceived(source) {
+function onResponseReceived(error, source) {
+  if (error) {
+    console.error("Couldn't tidy source html!");
+    console.error(error);
+    return;
+  }
   if (debug) {
     console.log("writing");
   }

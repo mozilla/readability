@@ -847,7 +847,7 @@ Readability.prototype = {
 
         // Initialize and score ancestors.
         this._forEachNode(ancestors, function(ancestor, level) {
-          if (!ancestor.tagName)
+          if (!ancestor.tagName || !ancestor.parentNode || typeof(ancestor.parentNode.tagName) === 'undefined')
             return;
 
           if (typeof(ancestor.readability) === 'undefined') {
