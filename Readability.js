@@ -130,7 +130,7 @@ Readability.prototype = {
 
   PRESENTATIONAL_ATTRIBUTES: [ "align", "background", "bgcolor", "border", "cellpadding", "cellspacing", "frame", "hspace", "rules", "style", "valign", "vspace" ],
 
-  DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE" ],
+  DEPRECATED_SIZE_ATTRIBUTE_ELEMS: [ "TABLE", "TH", "TD", "HR", "PRE", "IFRAME", "IMG", "VIDEO" ],
 
   // These are the classes that readability sets itself.
   CLASSES_TO_PRESERVE: [ "readability-styled", "page" ],
