@@ -754,6 +754,12 @@ Readability.prototype = {
       while (node) {
         var matchString = node.className + " " + node.id;
 
+        // Remove hidden nodes
+        if (node.style.display === "none" || node.hasAttribute("hidden")) {
+          node = this._removeAndGetNext(node);
+          continue;
+        }
+
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
           node = this._removeAndGetNext(node);
