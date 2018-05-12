@@ -37,7 +37,7 @@ fs.mkdir(destRoot, function(err) {
             process.exit(1);
             return;
           }
-          onResponseReceived(data);
+          onResponseReceived(null, data);
         });
       } else {
         fetchSource(argURL, onResponseReceived);
