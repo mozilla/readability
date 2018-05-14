@@ -778,7 +778,13 @@
           break;
         }
       }
-    }
+    },
+
+    hasAttribute: function (name) {
+      return this.attributes.some(function (attr) {
+        return attr.name == name;
+      });
+    },
   };
 
   var Style = function (node) {
