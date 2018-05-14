@@ -691,37 +691,6 @@ Readability.prototype = {
     return node && node.nextElementSibling;
   },
 
-  /**
-   * Like _getNextNode, but for DOM implementations with no
-   * firstElementChild/nextElementSibling functionality...
-   */
-  _getNextNodeNoElementProperties: function(node, ignoreSelfAndKids) {
-    function nextSiblingEl(n) {
-      do {
-        n = n.nextSibling;
-      } while (n && n.nodeType !== n.ELEMENT_NODE);
-      return n;
-    }
-    // First check for kids if those aren't being ignored
-    if (!ignoreSelfAndKids && node.children[0]) {
-      return node.children[0];
-    }
-    // Then for siblings...
-    var next = nextSiblingEl(node);
-    if (next) {
-      return next;
-    }
-    // And finally, move up the parent chain *and* find a sibling
-    // (because this is depth-first traversal, we will have already
-    // seen the parent nodes themselves).
-    do {
-      node = node.parentNode;
-      if (node)
-        next = nextSiblingEl(node);
-    } while (node && !next);
-    return node && next;
-  },
-
   _checkByline: function(node, matchString) {
     if (this._articleByline) {
       return false;
@@ -783,6 +752,12 @@ Readability.prototype = {
 
       while (node) {
         var matchString = node.className + " " + node.id;
+
+        if (!this._isProbablyVisible(node)) {
+          this.log("Removing hidden node - " + matchString);
+          node = this._removeAndGetNext(node);
+          continue;
+        }
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
@@ -1694,6 +1669,10 @@ Readability.prototype = {
     this._flags = this._flags & ~flag;
   },
 
+  _isProbablyVisible: function(node) {
+    return node.style.display != "none" && !node.hasAttribute("hidden");
+  },
+
   /**
    * Decides whether or not the document is reader-able without parsing the whole thing.
    *
@@ -1718,9 +1697,9 @@ Readability.prototype = {
       nodes = [].concat.apply(Array.from(set), nodes);
     }
 
-    // FIXME we should have a fallback for helperIsVisible, but this is
-    // problematic because of jsdom's elem.style handling - see
-    // https://github.com/mozilla/readability/pull/186 for context.
+    if (!helperIsVisible) {
+      helperIsVisible = this._isProbablyVisible;
+    }
 
     var score = 0;
     // This is a little cheeky, we use the accumulator 'score' to decide what to return from
@@ -1774,9 +1753,6 @@ Readability.prototype = {
       }
     }
 
-    if (typeof this._doc.documentElement.firstElementChild === "undefined") {
-      this._getNextNode = this._getNextNodeNoElementProperties;
-    }
     // Remove script tags from the document.
     this._removeScripts(this._doc);
 
