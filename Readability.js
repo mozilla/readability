@@ -837,7 +837,7 @@ Readability.prototype = {
           // element. DIVs with only a P element inside and no text content can be
           // safely converted into plain P elements to avoid confusing the scoring
           // algorithm with DIVs with are, in practice, paragraphs.
-          if (this._hasSinglePInsideElement(node)) {
+          if (this._hasSinglePInsideElement(node) && this._getLinkDensity(node) < 0.25) {
             var newNode = node.children[0];
             node.parentNode.replaceChild(newNode, node);
             node = newNode;
