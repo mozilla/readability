@@ -355,7 +355,7 @@ Readability.prototype = {
     var origTitle = "";
 
     try {
-      curTitle = origTitle = doc.title;
+      curTitle = origTitle = doc.title.trim();
 
       // If they had an element with id "title" in their HTML
       if (typeof curTitle !== "string")
