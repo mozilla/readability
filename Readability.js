@@ -383,8 +383,9 @@ Readability.prototype = {
         doc.getElementsByTagName('h1'),
         doc.getElementsByTagName('h2')
       );
+      var trimmedTitle = curTitle.trim();
       var match = this._someNode(headings, function(heading) {
-        return heading.textContent === curTitle;
+        return heading.textContent.trim() === trimmedTitle;
       });
 
       // If we don't, let's extract the title out of the original title string.
