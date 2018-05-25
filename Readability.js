@@ -506,6 +506,8 @@ Readability.prototype = {
         }
 
         while (p.lastChild && this._isWhitespace(p.lastChild)) p.removeChild(p.lastChild);
+
+        if (p.parentNode.tagName === "P") this._setNodeTag(p.parentNode, "DIV");
       }
     });
   },
