@@ -75,15 +75,19 @@ function fetchSource(url, callbackFn) {
       if (debug) {
         console.log("End received");
       }
-      // Sanitize:
-      htmltidy(serializeDocument(jsdom(rv)), {
-        "indent": true,
-        "indent-spaces": 4,
-        "output-xhtml": true,
-        "wrap": 0
-      }, callbackFn);
+      sanitizeSource(rv, callbackFn);
     });
   });
+}
+
+function sanitizeSource(html, callbackFn) {
+  htmltidy(serializeDocument(jsdom(html)), {
+    "indent": true,
+    "indent-spaces": 4,
+    "numeric-entities": true,
+    "output-xhtml": true,
+    "wrap": 0
+  }, callbackFn);
 }
 
 function onResponseReceived(error, source) {
