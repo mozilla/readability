@@ -1075,6 +1075,18 @@
         return textNode;
       }
 
+      if (this.match("![CDATA[")) {
+        var endChar = this.html.indexOf("]]>", this.currentChar);
+        if (endChar === -1) {
+          this.error("unclosed CDATA section");
+          return null;
+        }
+        var text = new Text();
+        text.textContent = this.html.substring(this.currentChar, endChar);
+        this.currentChar = endChar + ("]]>").length;
+        return text;
+      }
+
       c = this.peekNext();
 
       // Read Comment node. Normally, Comment nodes know their inner
