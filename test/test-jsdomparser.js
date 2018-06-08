@@ -320,3 +320,19 @@ describe("baseURI parsing", function() {
     checkBase("//absolute/path", "http://absolute/path");
   });
 });
+
+describe("namespace workarounds", function() {
+  it("should handle random namespace information in the serialized DOM", function() {
+    var html = "<a0:html><a0:body><a0:DIV><a0:svG><a0:clippath/></a0:svG></a0:DIV></a0:body></a0:html>";
+    var doc = new JSDOMParser().parse(html);
+    var div = doc.getElementsByTagName("div")[0];
+    expect(div.tagName).eql("DIV");
+    expect(div.localName).eql("div");
+    expect(div.firstChild.tagName).eql("SVG");
+    expect(div.firstChild.localName).eql("svg");
+    expect(div.firstChild.firstChild.tagName).eql("CLIPPATH");
+    expect(div.firstChild.firstChild.localName).eql("clippath");
+    expect(doc.documentElement).eql(doc.firstChild);
+    expect(doc.body).eql(doc.documentElement.firstChild);
+  });
+});

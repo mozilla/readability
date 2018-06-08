@@ -611,6 +611,13 @@
   };
 
   var Element = function (tag) {
+    // We use this to find the closing tag.
+    this._matchingTag = tag;
+    // We're explicitly a non-namespace aware parser, we just pretend it's all HTML.
+    var lastColonIndex = tag.lastIndexOf(":");
+    if (lastColonIndex != -1) {
+      tag = tag.substring(lastColonIndex + 1);
+    }
     this.attributes = [];
     this.childNodes = [];
     this.children = [];
@@ -1119,7 +1126,7 @@
       // If this isn't a void Element, read its child nodes
       if (!closed) {
         this.readChildren(node);
-        var closingTag = "</" + localName + ">";
+        var closingTag = "</" + node._matchingTag + ">";
         if (!this.match(closingTag)) {
           this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
           return null;
