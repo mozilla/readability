@@ -1061,9 +1061,10 @@
         return null;
 
       // Read any text as Text node
+      var textNode;
       if (c !== "<") {
         --this.currentChar;
-        var textNode = new Text();
+        textNode = new Text();
         var n = this.html.indexOf("<", this.currentChar);
         if (n === -1) {
           textNode.innerHTML = this.html.substring(this.currentChar, this.html.length);
@@ -1081,10 +1082,10 @@
           this.error("unclosed CDATA section");
           return null;
         }
-        var text = new Text();
-        text.textContent = this.html.substring(this.currentChar, endChar);
+        textNode = new Text();
+        textNode.textContent = this.html.substring(this.currentChar, endChar);
         this.currentChar = endChar + ("]]>").length;
-        return text;
+        return textNode;
       }
 
       c = this.peekNext();
