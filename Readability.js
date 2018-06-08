@@ -615,6 +615,19 @@ Readability.prototype = {
       if (next && next.tagName == "P")
         br.parentNode.removeChild(br);
     });
+
+    // Remove single-cell tables
+    this._forEachNode(this._getAllNodesWithTag(articleContent, ["table"]), function(table) {
+      var tbody = this._hasSingleTagInsideElement(table, "TBODY") ? table.firstElementChild : table;
+      if (this._hasSingleTagInsideElement(tbody, "TR")) {
+        var row = tbody.firstElementChild;
+        if (this._hasSingleTagInsideElement(row, "TD")) {
+          var cell = row.firstElementChild;
+          cell = this._setNodeTag(cell, this._everyNode(cell.childNodes, this._isPhrasingContent) ? "P" : "DIV");
+          table.parentNode.replaceChild(cell, table);
+        }
+      }
+    });
   },
 
   /**
@@ -819,7 +832,7 @@ Readability.prototype = {
           // element. DIVs with only a P element inside and no text content can be
           // safely converted into plain P elements to avoid confusing the scoring
           // algorithm with DIVs with are, in practice, paragraphs.
-          if (this._hasSinglePInsideElement(node) && this._getLinkDensity(node) < 0.25) {
+          if (this._hasSingleTagInsideElement(node, "P") && this._getLinkDensity(node) < 0.25) {
             var newNode = node.children[0];
             node.parentNode.replaceChild(newNode, node);
             node = newNode;
@@ -1253,15 +1266,16 @@ Readability.prototype = {
   },
 
   /**
-   * Check if this node has only whitespace and a single P element
+   * Check if this node has only whitespace and a single element with given tag
    * Returns false if the DIV node contains non-empty text nodes
-   * or if it contains no P or more than 1 element.
+   * or if it contains no element with given tag or more than 1 element.
    *
    * @param Element
+   * @param string tag of child element
   **/
-  _hasSinglePInsideElement: function(element) {
-    // There should be exactly 1 element child which is a P:
-    if (element.children.length != 1 || element.children[0].tagName !== "P") {
+  _hasSingleTagInsideElement: function(element, tag) {
+    // There should be exactly 1 element child with given tag
+    if (element.children.length != 1 || element.children[0].tagName !== tag) {
       return false;
     }
 
