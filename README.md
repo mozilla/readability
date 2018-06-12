@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
 
-A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be automatically merged to mozilla-central.
+A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk) since these changes will be automatically merged to Mozilla-central.
 
 ## Contributing
 
@@ -24,8 +24,8 @@ This `article` object will contain the following properties:
 
 * `title`: article title
 * `content`: HTML string of processed article content
-* `length`: length of article, in characters
-* `excerpt`: article description, or short excerpt from content
+* `length`: length of an article, in characters
+* `excerpt`: article description, or short excerpt from the content
 * `byline`: author metadata
 * `dir`: content direction
 
