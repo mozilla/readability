@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
 
-A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk) since these changes will be automatically merged to mozilla-central.
+A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be automatically merged to mozilla-central.
 
 ## Contributing
 
