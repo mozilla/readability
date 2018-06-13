@@ -368,14 +368,14 @@ Readability.prototype = {
     }
 
     // If there's a separator in the title, first remove the final part
-    if ((/ [\|\-\\\/>»] /).test(curTitle)) {
-      titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
-      curTitle = origTitle.replace(/(.*)[\|\-\\\/>»] .*/gi, '$1');
+    if ((/ [\|\-\\\/>»«<] /).test(curTitle)) {
+      titleHadHierarchicalSeparators = / [\\\/>»«<] /.test(curTitle);
+      curTitle = origTitle.replace(/(.*)[\|\-\\\/>»«<] .*/gi, '$1');
 
       // If the resulting title is too short (3 words or fewer), remove
       // the first part instead:
       if (wordCount(curTitle) < 3)
-        curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, '$1');
+        curTitle = origTitle.replace(/[^\|\-\\\/>»«<]*[\|\-\\\/>»«<](.*)/gi, '$1');
     } else if (curTitle.indexOf(': ') !== -1) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
@@ -416,7 +416,7 @@ Readability.prototype = {
     var curTitleWordCount = wordCount(curTitle);
     if (curTitleWordCount <= 4 &&
         (!titleHadHierarchicalSeparators ||
-         curTitleWordCount != wordCount(origTitle.replace(/[\|\-\\\/>»]+/g, "")) - 1)) {
+         curTitleWordCount != wordCount(origTitle.replace(/[\|\-\\\/>»«<]+/g, "")) - 1)) {
       curTitle = origTitle;
     }
 
