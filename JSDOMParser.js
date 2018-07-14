@@ -684,7 +684,7 @@
               // the attribute value will be HTML escaped.
               var val = attr.value;
               var quote = (val.indexOf('"') === -1 ? '"' : "'");
-              arr.push(" " + attr.name + '=' + quote + val + quote);
+              arr.push(" " + attr.name + "=" + quote + val + quote);
             }
 
             if (child.localName in voidElems && !child.childNodes.length) {
@@ -963,7 +963,7 @@
         strBuf.push(c);
         c = this.nextChar();
       }
-      var tag = strBuf.join('');
+      var tag = strBuf.join("");
 
       if (!tag)
         return false;
