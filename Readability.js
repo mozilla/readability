@@ -498,7 +498,8 @@ Readability.prototype = {
               break;
           }
 
-          if (!this._isPhrasingContent(next)) break;
+          if (!this._isPhrasingContent(next))
+            break;
 
           // Otherwise, make this node a child of the new <p>.
           var sibling = next.nextSibling;
@@ -506,9 +507,12 @@ Readability.prototype = {
           next = sibling;
         }
 
-        while (p.lastChild && this._isWhitespace(p.lastChild)) p.removeChild(p.lastChild);
+        while (p.lastChild && this._isWhitespace(p.lastChild)) {
+          p.removeChild(p.lastChild);
+        }
 
-        if (p.parentNode.tagName === "P") this._setNodeTag(p.parentNode, "DIV");
+        if (p.parentNode.tagName === "P")
+          this._setNodeTag(p.parentNode, "DIV");
       }
     });
   },
@@ -822,7 +826,9 @@ Readability.prototype = {
                 p.appendChild(childNode);
               }
             } else if (p !== null) {
-              while (p.lastChild && this._isWhitespace(p.lastChild)) p.removeChild(p.lastChild);
+              while (p.lastChild && this._isWhitespace(p.lastChild)) {
+                p.removeChild(p.lastChild);
+              }
               p = null;
             }
             childNode = nextSibling;

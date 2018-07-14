@@ -974,7 +974,9 @@
       while (c !== "/" && c !== ">") {
         if (c === undefined)
           return false;
-        while (whitespace.indexOf(this.html[this.currentChar++]) != -1);
+        while (whitespace.indexOf(this.html[this.currentChar++]) != -1) {
+          // Advance cursor to first non-whitespace char.
+        }
         this.currentChar--;
         c = this.nextChar();
         if (c !== "/" && c !== ">") {
