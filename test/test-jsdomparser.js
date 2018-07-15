@@ -115,7 +115,7 @@ describe("Test JSDOM functionality", function() {
   });
 
   it("should have a working replaceChild", function() {
-    var parent = baseDoc.getElementsByTagName('div')[0];
+    var parent = baseDoc.getElementsByTagName("div")[0];
     var p = baseDoc.createElement("p");
     p.setAttribute("id", "my-replaced-kid");
     var childCount = parent.childNodes.length;

@@ -1,4 +1,4 @@
-var clean = require('matcha/lib/matcha/reporters/clean');
+var clean = require("matcha/lib/matcha/reporters/clean");
 
 function average(list) {
   if (!list.length)
@@ -18,20 +18,20 @@ module.exports = function(runner, utils) {
   var color = utils.color;
   var results = {};
   var currentResults = [];
-  runner.on('bench end', function(benchResults) {
+  runner.on("bench end", function(benchResults) {
     currentResults.push(benchResults.ops);
   });
-  runner.on('suite end', function(suite) {
+  runner.on("suite end", function(suite) {
     var avg = humanize(average(currentResults));
-    console.log(padBefore(avg + ' op/s', 22) + ' » ' + suite.title);
+    console.log(padBefore(avg + " op/s", 22) + " » " + suite.title);
     console.log();
     results[suite.title] = avg;
     currentResults = [];
   });
 
-  runner.on('end', function() {
+  runner.on("end", function() {
     for (var k in results) {
-      console.log(color(padBefore(k, 30) + ':  ', 'gray') + results[k] + ' op/s');
+      console.log(color(padBefore(k, 30) + ":  ", "gray") + results[k] + " op/s");
     }
     console.log();
   });
