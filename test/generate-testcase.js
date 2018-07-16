@@ -59,7 +59,7 @@ function fetchSource(url, callbackFn) {
     client = require("https");
   }
   var options = urlparse(url);
-  options.headers = {'User-Agent': FFX_UA};
+  options.headers = {"User-Agent": FFX_UA};
 
   client.get(options, function(response) {
     if (debug) {

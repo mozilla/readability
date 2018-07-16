@@ -260,7 +260,7 @@ Readability.prototype = {
 
   _getAllNodesWithTag: function(node, tagNames) {
     if (node.querySelectorAll) {
-      return node.querySelectorAll(tagNames.join(','));
+      return node.querySelectorAll(tagNames.join(","));
     }
     return [].concat.apply([], tagNames.map(function(tag) {
       var collection = node.getElementsByTagName(tag);
@@ -359,7 +359,7 @@ Readability.prototype = {
 
       // If they had an element with id "title" in their HTML
       if (typeof curTitle !== "string")
-        curTitle = origTitle = this._getInnerText(doc.getElementsByTagName('title')[0]);
+        curTitle = origTitle = this._getInnerText(doc.getElementsByTagName("title")[0]);
     } catch (e) {/* ignore exceptions setting the title. */}
 
     var titleHadHierarchicalSeparators = false;
@@ -370,18 +370,18 @@ Readability.prototype = {
     // If there's a separator in the title, first remove the final part
     if ((/ [\|\-\\\/>»] /).test(curTitle)) {
       titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
-      curTitle = origTitle.replace(/(.*)[\|\-\\\/>»] .*/gi, '$1');
+      curTitle = origTitle.replace(/(.*)[\|\-\\\/>»] .*/gi, "$1");
 
       // If the resulting title is too short (3 words or fewer), remove
       // the first part instead:
       if (wordCount(curTitle) < 3)
-        curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, '$1');
-    } else if (curTitle.indexOf(': ') !== -1) {
+        curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, "$1");
+    } else if (curTitle.indexOf(": ") !== -1) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
       var headings = this._concatNodeLists(
-        doc.getElementsByTagName('h1'),
-        doc.getElementsByTagName('h2')
+        doc.getElementsByTagName("h1"),
+        doc.getElementsByTagName("h2")
       );
       var trimmedTitle = curTitle.trim();
       var match = this._someNode(headings, function(heading) {
@@ -390,19 +390,19 @@ Readability.prototype = {
 
       // If we don't, let's extract the title out of the original title string.
       if (!match) {
-        curTitle = origTitle.substring(origTitle.lastIndexOf(':') + 1);
+        curTitle = origTitle.substring(origTitle.lastIndexOf(":") + 1);
 
         // If the title is now too short, try the first colon instead:
         if (wordCount(curTitle) < 3) {
-          curTitle = origTitle.substring(origTitle.indexOf(':') + 1);
+          curTitle = origTitle.substring(origTitle.indexOf(":") + 1);
           // But if we have too many words before the colon there's something weird
           // with the titles and the H tags so let's just use the original title instead
-        } else if (wordCount(origTitle.substr(0, origTitle.indexOf(':'))) > 5) {
+        } else if (wordCount(origTitle.substr(0, origTitle.indexOf(":"))) > 5) {
           curTitle = origTitle;
         }
       }
     } else if (curTitle.length > 150 || curTitle.length < 15) {
-      var hOnes = doc.getElementsByTagName('h1');
+      var hOnes = doc.getElementsByTagName("h1");
 
       if (hOnes.length === 1)
         curTitle = this._getInnerText(hOnes[0]);
@@ -498,7 +498,8 @@ Readability.prototype = {
               break;
           }
 
-          if (!this._isPhrasingContent(next)) break;
+          if (!this._isPhrasingContent(next))
+            break;
 
           // Otherwise, make this node a child of the new <p>.
           var sibling = next.nextSibling;
@@ -506,9 +507,12 @@ Readability.prototype = {
           next = sibling;
         }
 
-        while (p.lastChild && this._isWhitespace(p.lastChild)) p.removeChild(p.lastChild);
+        while (p.lastChild && this._isWhitespace(p.lastChild)) {
+          p.removeChild(p.lastChild);
+        }
 
-        if (p.parentNode.tagName === "P") this._setNodeTag(p.parentNode, "DIV");
+        if (p.parentNode.tagName === "P")
+          this._setNodeTag(p.parentNode, "DIV");
       }
     });
   },
@@ -569,7 +573,7 @@ Readability.prototype = {
     // If there is only one h2 and its text content substantially equals article title,
     // they are probably using it as a header and not a subheader,
     // so remove it since we already extract the title separately.
-    var h2 = articleContent.getElementsByTagName('h2');
+    var h2 = articleContent.getElementsByTagName("h2");
     if (h2.length === 1) {
       var lengthSimilarRate = (h2[0].textContent.length - this._articleTitle.length) / this._articleTitle.length;
       if (Math.abs(lengthSimilarRate) < 0.5) {
@@ -599,12 +603,12 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "div");
 
     // Remove extra paragraphs
-    this._removeNodes(articleContent.getElementsByTagName('p'), function (paragraph) {
-      var imgCount = paragraph.getElementsByTagName('img').length;
-      var embedCount = paragraph.getElementsByTagName('embed').length;
-      var objectCount = paragraph.getElementsByTagName('object').length;
+    this._removeNodes(articleContent.getElementsByTagName("p"), function (paragraph) {
+      var imgCount = paragraph.getElementsByTagName("img").length;
+      var embedCount = paragraph.getElementsByTagName("embed").length;
+      var objectCount = paragraph.getElementsByTagName("object").length;
       // At this point, nasty iframes have been removed, only remain embedded video ones.
-      var iframeCount = paragraph.getElementsByTagName('iframe').length;
+      var iframeCount = paragraph.getElementsByTagName("iframe").length;
       var totalCount = imgCount + embedCount + objectCount + iframeCount;
 
       return totalCount === 0 && !this._getInnerText(paragraph, false);
@@ -641,34 +645,34 @@ Readability.prototype = {
     node.readability = {"contentScore": 0};
 
     switch (node.tagName) {
-      case 'DIV':
+      case "DIV":
         node.readability.contentScore += 5;
         break;
 
-      case 'PRE':
-      case 'TD':
-      case 'BLOCKQUOTE':
+      case "PRE":
+      case "TD":
+      case "BLOCKQUOTE":
         node.readability.contentScore += 3;
         break;
 
-      case 'ADDRESS':
-      case 'OL':
-      case 'UL':
-      case 'DL':
-      case 'DD':
-      case 'DT':
-      case 'LI':
-      case 'FORM':
+      case "ADDRESS":
+      case "OL":
+      case "UL":
+      case "DL":
+      case "DD":
+      case "DT":
+      case "LI":
+      case "FORM":
         node.readability.contentScore -= 3;
         break;
 
-      case 'H1':
-      case 'H2':
-      case 'H3':
-      case 'H4':
-      case 'H5':
-      case 'H6':
-      case 'TH':
+      case "H1":
+      case "H2":
+      case "H3":
+      case "H4":
+      case "H5":
+      case "H6":
+      case "TH":
         node.readability.contentScore -= 5;
         break;
     }
@@ -817,12 +821,14 @@ Readability.prototype = {
               if (p !== null) {
                 p.appendChild(childNode);
               } else if (!this._isWhitespace(childNode)) {
-                p = doc.createElement('p');
+                p = doc.createElement("p");
                 node.replaceChild(p, childNode);
                 p.appendChild(childNode);
               }
             } else if (p !== null) {
-              while (p.lastChild && this._isWhitespace(p.lastChild)) p.removeChild(p.lastChild);
+              while (p.lastChild && this._isWhitespace(p.lastChild)) {
+                p.removeChild(p.lastChild);
+              }
               p = null;
             }
             childNode = nextSibling;
@@ -853,7 +859,7 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
-        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === 'undefined')
+        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined")
           return;
 
         // If this paragraph is less than 25 characters, don't even count it.
@@ -872,17 +878,17 @@ Readability.prototype = {
         contentScore += 1;
 
         // Add points for any commas within this paragraph.
-        contentScore += innerText.split(',').length;
+        contentScore += innerText.split(",").length;
 
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
 
         // Initialize and score ancestors.
         this._forEachNode(ancestors, function(ancestor, level) {
-          if (!ancestor.tagName || !ancestor.parentNode || typeof(ancestor.parentNode.tagName) === 'undefined')
+          if (!ancestor.tagName || !ancestor.parentNode || typeof(ancestor.parentNode.tagName) === "undefined")
             return;
 
-          if (typeof(ancestor.readability) === 'undefined') {
+          if (typeof(ancestor.readability) === "undefined") {
             this._initializeNode(ancestor);
             candidates.push(ancestor);
           }
@@ -913,7 +919,7 @@ Readability.prototype = {
         var candidateScore = candidate.readability.contentScore * (1 - this._getLinkDensity(candidate));
         candidate.readability.contentScore = candidateScore;
 
-        this.log('Candidate:', candidate, "with score " + candidateScore);
+        this.log("Candidate:", candidate, "with score " + candidateScore);
 
         for (var t = 0; t < this._nbTopCandidates; t++) {
           var aTopCandidate = topCandidates[t];
@@ -1032,8 +1038,8 @@ Readability.prototype = {
         var sibling = siblings[s];
         var append = false;
 
-        this.log("Looking at sibling node:", sibling, sibling.readability ? ("with score " + sibling.readability.contentScore) : '');
-        this.log("Sibling has score", sibling.readability ? sibling.readability.contentScore : 'Unknown');
+        this.log("Looking at sibling node:", sibling, sibling.readability ? ("with score " + sibling.readability.contentScore) : "");
+        this.log("Sibling has score", sibling.readability ? sibling.readability.contentScore : "Unknown");
 
         if (sibling === topCandidate) {
           append = true;
@@ -1067,7 +1073,7 @@ Readability.prototype = {
           if (this.ALTER_TO_DIV_EXCEPTIONS.indexOf(sibling.nodeName) === -1) {
             // We have a node that isn't a common block level element, like a form or td tag.
             // Turn it into a div so it doesn't get filtered out later by accident.
-            this.log("Altering sibling:", sibling, 'to div.');
+            this.log("Altering sibling:", sibling, "to div.");
 
             sibling = this._setNodeTag(sibling, "DIV");
           }
@@ -1175,7 +1181,7 @@ Readability.prototype = {
    * @return Boolean - whether the input string is a byline.
    */
   _isValidByline: function(byline) {
-    if (typeof byline == 'string' || byline instanceof String) {
+    if (typeof byline == "string" || byline instanceof String) {
       byline = byline.trim();
       return (byline.length > 0) && (byline.length < 100);
     }
@@ -1221,7 +1227,7 @@ Readability.prototype = {
         if (content) {
           // Convert to lowercase and remove any whitespace
           // so we can match below.
-          name = name.toLowerCase().replace(/\s/g, '');
+          name = name.toLowerCase().replace(/\s/g, "");
           values[name] = content.trim();
         }
       }
@@ -1257,12 +1263,12 @@ Readability.prototype = {
    * @param Element
   **/
   _removeScripts: function(doc) {
-    this._removeNodes(doc.getElementsByTagName('script'), function(scriptNode) {
+    this._removeNodes(doc.getElementsByTagName("script"), function(scriptNode) {
       scriptNode.nodeValue = "";
-      scriptNode.removeAttribute('src');
+      scriptNode.removeAttribute("src");
       return true;
     });
-    this._removeNodes(doc.getElementsByTagName('noscript'));
+    this._removeNodes(doc.getElementsByTagName("noscript"));
   },
 
   /**
@@ -1329,7 +1335,7 @@ Readability.prototype = {
    * @return string
   **/
   _getInnerText: function(e, normalizeSpaces) {
-    normalizeSpaces = (typeof normalizeSpaces === 'undefined') ? true : normalizeSpaces;
+    normalizeSpaces = (typeof normalizeSpaces === "undefined") ? true : normalizeSpaces;
     var textContent = e.textContent.trim();
 
     if (normalizeSpaces) {
@@ -1358,7 +1364,7 @@ Readability.prototype = {
    * @return void
   **/
   _cleanStyles: function(e) {
-    if (!e || e.tagName.toLowerCase() === 'svg')
+    if (!e || e.tagName.toLowerCase() === "svg")
       return;
 
     // Remove `style` and deprecated presentational attributes
@@ -1367,8 +1373,8 @@ Readability.prototype = {
     }
 
     if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
-      e.removeAttribute('width');
-      e.removeAttribute('height');
+      e.removeAttribute("width");
+      e.removeAttribute("height");
     }
 
     var cur = e.firstElementChild;
@@ -1414,7 +1420,7 @@ Readability.prototype = {
     var weight = 0;
 
     // Look for a special classname
-    if (typeof(e.className) === 'string' && e.className !== '') {
+    if (typeof(e.className) === "string" && e.className !== "") {
       if (this.REGEXPS.negative.test(e.className))
         weight -= 25;
 
@@ -1423,7 +1429,7 @@ Readability.prototype = {
     }
 
     // Look for a special ID
-    if (typeof(e.id) === 'string' && e.id !== '') {
+    if (typeof(e.id) === "string" && e.id !== "") {
       if (this.REGEXPS.negative.test(e.id))
         weight -= 25;
 
@@ -1612,7 +1618,7 @@ Readability.prototype = {
         return true;
       }
 
-      if (this._getCharCount(node, ',') < 10) {
+      if (this._getCharCount(node, ",") < 10) {
         // If there are not very many commas, and the number of
         // non-paragraph elements is more than paragraphs or other
         // ominous signs, remove the element.
@@ -1672,7 +1678,7 @@ Readability.prototype = {
   **/
   _cleanHeaders: function(e) {
     for (var headerIndex = 1; headerIndex < 3; headerIndex += 1) {
-      this._removeNodes(e.getElementsByTagName('h' + headerIndex), function (header) {
+      this._removeNodes(e.getElementsByTagName("h" + headerIndex), function (header) {
         return this._getClassWeight(header) < 0;
       });
     }
