@@ -1198,7 +1198,7 @@ Readability.prototype = {
     var values = {};
     var metaElements = this._doc.getElementsByTagName("meta");
 
-		// property is a space-separated list of values
+    // property is a space-separated list of values
     var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title)\s*/gi;
 
     // name is a single value
@@ -1218,15 +1218,14 @@ Readability.prototype = {
           for (var i = matches.length - 1; i >= 0; i--) {
             // Convert to lowercase, and remove any whitespace
             // so we can match below.
-            name = matches[i].toLowerCase().replace(/\s/g, "")
+            name = matches[i].toLowerCase().replace(/\s/g, "");
             // multiple authors
             values[name] = content.trim();
-		  		}
+          }
         }
       }
-			if (!matches && namePattern.test(elementName)) {
+      if (!matches && namePattern.test(elementName)) {
         name = elementName;
-        var content = element.getAttribute("content");
         if (content) {
           // Convert to lowercase, remove any whitespace, and convert dots
           // to colons so we can match below.
@@ -1243,7 +1242,7 @@ Readability.prototype = {
                      values["title"] ||
                      values["twitter:title"];
 
-		if (!metadata.title) {
+    if (!metadata.title) {
       metadata.title = this._getArticleTitle();
     }
 
