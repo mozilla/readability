@@ -1202,7 +1202,7 @@ Readability.prototype = {
     var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title)\s*/gi;
 
     // name is a single value
-    var namePattern = /^\s*(?:(dc|dcterm|og|twitter)\s*[\.:]\s*)?(author|creator|description|title)\s*$/gi;
+    var namePattern = /^\s*(?:(dc|dcterm|og|twitter)\s*[\.:]\s*)?(author|creator|description|title)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
@@ -1224,7 +1224,7 @@ Readability.prototype = {
           }
         }
       }
-      if (!matches && namePattern.test(elementName)) {
+      if (!matches && elementName && namePattern.test(elementName)) {
         name = elementName;
         if (content) {
           // Convert to lowercase, remove any whitespace, and convert dots
