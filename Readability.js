@@ -1198,61 +1198,65 @@ Readability.prototype = {
     var values = {};
     var metaElements = this._doc.getElementsByTagName("meta");
 
-    // Match "description", or Twitter's "twitter:description" (Cards)
-    // in name attribute.
-    var namePattern = /^\s*((twitter)\s*:\s*)?(description|title)\s*$/i;
+    // property is a space-separated list of values
+    var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title)\s*/gi;
 
-    // Match Facebook's Open Graph title & description properties.
-    var propertyPattern = /^\s*og\s*:\s*(description|title)\s*$/i;
+    // name is a single value
+    var namePattern = /^\s*(?:(dc|dcterm|og|twitter)\s*[\.:]\s*)?(author|creator|description|title)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
-
-      if ([elementName, elementProperty].indexOf("author") !== -1) {
-        metadata.byline = element.getAttribute("content");
-        return;
-      }
-
+      var content = element.getAttribute("content");
+      var matches = null;
       var name = null;
-      if (namePattern.test(elementName)) {
-        name = elementName;
-      } else if (propertyPattern.test(elementProperty)) {
-        name = elementProperty;
-      }
 
-      if (name) {
-        var content = element.getAttribute("content");
+      if (elementProperty) {
+        matches = elementProperty.match(propertyPattern);
+        if (matches) {
+          for (var i = matches.length - 1; i >= 0; i--) {
+            // Convert to lowercase, and remove any whitespace
+            // so we can match below.
+            name = matches[i].toLowerCase().replace(/\s/g, "");
+            // multiple authors
+            values[name] = content.trim();
+          }
+        }
+      }
+      if (!matches && elementName && namePattern.test(elementName)) {
+        name = elementName;
         if (content) {
-          // Convert to lowercase and remove any whitespace
-          // so we can match below.
-          name = name.toLowerCase().replace(/\s/g, "");
+          // Convert to lowercase, remove any whitespace, and convert dots
+          // to colons so we can match below.
+          name = name.toLowerCase().replace(/\s/g, "").replace(/\./g, ":");
           values[name] = content.trim();
         }
       }
     });
 
-    if ("description" in values) {
-      metadata.excerpt = values["description"];
-    } else if ("og:description" in values) {
-      // Use facebook open graph description.
-      metadata.excerpt = values["og:description"];
-    } else if ("twitter:description" in values) {
-      // Use twitter cards description.
-      metadata.excerpt = values["twitter:description"];
+    // get title
+    metadata.title = values["dc:title"] ||
+                     values["dcterm:title"] ||
+                     values["og:title"] ||
+                     values["title"] ||
+                     values["twitter:title"];
+
+    if (!metadata.title) {
+      metadata.title = this._getArticleTitle();
     }
 
-    metadata.title = this._getArticleTitle();
-    if (!metadata.title) {
-      if ("og:title" in values) {
-        // Use facebook open graph title.
-        metadata.title = values["og:title"];
-      } else if ("twitter:title" in values) {
-        // Use twitter cards title.
-        metadata.title = values["twitter:title"];
-      }
-    }
+    // get author
+    metadata.byline = values["dc:creator"] ||
+                      values["dcterm:creator"] ||
+                      values["author"];
+
+    // get description
+    metadata.excerpt = values["dc:description"] ||
+                       values["dcterm:description"] ||
+                       values["og:description"] ||
+                       values["description"] ||
+                       values["twitter:description"];
 
     return metadata;
   },
