@@ -1202,7 +1202,7 @@ Readability.prototype = {
     var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title)\s*/gi;
 
     // name is a single value
-    var namePattern = /^\s*(?:(dc|dcterm|og|twitter)\s*[\.:]\s*)?(author|creator|description|title)\s*$/i;
+    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
@@ -1239,6 +1239,8 @@ Readability.prototype = {
     metadata.title = values["dc:title"] ||
                      values["dcterm:title"] ||
                      values["og:title"] ||
+                     values["weibo:article:title"] ||
+                     values["weibo:webpage:title"] ||
                      values["title"] ||
                      values["twitter:title"];
 
@@ -1255,6 +1257,8 @@ Readability.prototype = {
     metadata.excerpt = values["dc:description"] ||
                        values["dcterm:description"] ||
                        values["og:description"] ||
+                       values["weibo:article:description"] ||
+                       values["weibo:webpage:description"] ||
                        values["description"] ||
                        values["twitter:description"];
 
