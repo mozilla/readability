@@ -1701,7 +1701,7 @@ Readability.prototype = {
   },
 
   _isProbablyVisible: function(node) {
-    return node.style.display != "none" && !node.hasAttribute("hidden");
+    return (!node.style || node.style.display != "none") && !node.hasAttribute("hidden");
   },
 
   /**
