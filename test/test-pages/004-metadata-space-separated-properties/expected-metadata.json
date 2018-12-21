@@ -3,5 +3,6 @@
   "byline": "Creator Name",
   "dir": null,
   "excerpt": "Preferred description",
-  "readerable": true
+  "readerable": true,
+  "siteName": null
 }

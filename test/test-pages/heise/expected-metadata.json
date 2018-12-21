@@ -2,5 +2,6 @@
   "title": "1Password für Mac generiert Einmal-Passwörter",
   "byline": "Mac & i",
   "excerpt": "Das in der iOS-Version bereits enthaltene TOTP-Feature ist nun auch für OS X 10.10 verfügbar. Zudem gibt es neue Zusatzfelder in der Datenbank und weitere Verbesserungen.",
-  "readerable": true
+  "readerable": true,
+  "siteName": "Mac & i"
 }

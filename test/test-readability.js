@@ -167,6 +167,10 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       expect(expectedMetadata.excerpt).eql(result.excerpt);
     });
 
+    it("should extract expected site name", function() {
+      expect(expectedMetadata.siteName).eql(result.siteName);
+    });
+
     expectedMetadata.dir && it("should extract expected direction", function() {
       expect(expectedMetadata.dir).eql(result.dir);
     });
