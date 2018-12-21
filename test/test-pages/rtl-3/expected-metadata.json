@@ -3,5 +3,6 @@
   "byline": null,
   "excerpt": "Lorem ipsum dolor sit amet.",
   "dir": "rtl",
-  "readerable": true
+  "readerable": true,
+  "siteName": null
 }
