@@ -32,6 +32,7 @@ This `article` object will contain the following properties:
 If you're using Readability on the web, you will likely be able to use a `document` reference from elsewhere (e.g. fetched via XMLHttpRequest, in a same-origin `<iframe>` you have access to, etc.).
 
 Otherwise, you would need to construct such an object using a DOM parser such as [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do not recommend it for general use.
+An example using this repository's `JSDOMParser` is included in `example.js`.
 
 If you're using `jsdom` to create a DOM object, you should ensure that the page doesn't run (page) scripts (avoid fetching remote resources etc.) as well as passing it the page's URI as the `url` property of the `options` object you pass the `JSDOM` constructor.
 
@@ -41,7 +42,7 @@ Readability's `parse()` works by modifying the DOM. This removes some elements i
 
 
 ```
-var documentClone = document.cloneNode(true); 
+var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 ```
 
