@@ -1,4 +1,4 @@
-var jsdom = require("jsdom").jsdom;
+var JSDOM = require("jsdom").JSDOM;
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -219,13 +219,9 @@ describe("Test pages", function() {
       var uri = "http://fakehost/test/page.html";
 
       runTestsWithItems("jsdom", function(source) {
-        var doc = jsdom(source, {
+        var doc = new JSDOM(source, {
           url: uri,
-          features: {
-            FetchExternalResources: false,
-            ProcessExternalResources: false
-          }
-        });
+        }).window.document;
         removeCommentNodesRecursively(doc);
         return doc;
       }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);

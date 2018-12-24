@@ -28,7 +28,7 @@
     "eslint": ">=4.2",
     "htmltidy2": "^0.3.0",
     "js-beautify": "^1.5.5",
-    "jsdom": "^7.0",
+    "jsdom": "^13.1",
     "matcha": "^0.6.0",
     "mocha": "^2.2.*"
   }
