@@ -1709,65 +1709,6 @@ Readability.prototype = {
   },
 
   /**
-   * Decides whether or not the document is reader-able without parsing the whole thing.
-   *
-   * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
-   */
-  isProbablyReaderable: function(helperIsVisible) {
-    var nodes = this._getAllNodesWithTag(this._doc, ["p", "pre"]);
-
-    // Get <div> nodes which have <br> node(s) and append them into the `nodes` variable.
-    // Some articles' DOM structures might look like
-    // <div>
-    //   Sentences<br>
-    //   <br>
-    //   Sentences<br>
-    // </div>
-    var brNodes = this._getAllNodesWithTag(this._doc, ["div > br"]);
-    if (brNodes.length) {
-      var set = new Set();
-      [].forEach.call(brNodes, function(node) {
-        set.add(node.parentNode);
-      });
-      nodes = [].concat.apply(Array.from(set), nodes);
-    }
-
-    if (!helperIsVisible) {
-      helperIsVisible = this._isProbablyVisible;
-    }
-
-    var score = 0;
-    // This is a little cheeky, we use the accumulator 'score' to decide what to return from
-    // this callback:
-    return this._someNode(nodes, function(node) {
-      if (helperIsVisible && !helperIsVisible(node))
-        return false;
-      var matchString = node.className + " " + node.id;
-
-      if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
-          !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
-        return false;
-      }
-
-      if (node.matches && node.matches("li p")) {
-        return false;
-      }
-
-      var textContentLength = node.textContent.trim().length;
-      if (textContentLength < 140) {
-        return false;
-      }
-
-      score += Math.sqrt(textContentLength - 140);
-
-      if (score > 20) {
-        return true;
-      }
-      return false;
-    });
-  },
-
-  /**
    * Runs readability.
    *
    * Workflow:
