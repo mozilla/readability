@@ -409,7 +409,7 @@ Readability.prototype = {
         curTitle = this._getInnerText(hOnes[0]);
     }
 
-    curTitle = curTitle.trim();
+    curTitle = curTitle.trim().replace(this.REGEXPS.normalize, " ");
     // If we now have 4 words or fewer as our title, and either no
     // 'hierarchical' separators (\, /, > or ») were found in the original
     // title or we decreased the number of words by more than 1 word, use
