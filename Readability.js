@@ -321,7 +321,7 @@ Readability.prototype = {
       return uri;
     }
 
-    var links = articleContent.getElementsByTagName("a");
+    var links = this._getAllNodesWithTag(articleContent, ["a"]);
     this._forEachNode(links, function(link) {
       var href = link.getAttribute("href");
       if (href) {
@@ -336,7 +336,7 @@ Readability.prototype = {
       }
     });
 
-    var imgs = articleContent.getElementsByTagName("img");
+    var imgs = this._getAllNodesWithTag(articleContent, ["img"]);
     this._forEachNode(imgs, function(img) {
       var src = img.getAttribute("src");
       if (src) {
