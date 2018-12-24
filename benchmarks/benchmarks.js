@@ -1,6 +1,8 @@
 var getTestPages = require("../test/utils").getTestPages;
 
 var readability = require("../index.js");
+var readabilityCheck = require("../Readability-readerable.js");
+var JSDOM = require("jsdom").JSDOM;
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
 
@@ -55,9 +57,12 @@ suite("isProbablyReaderable perf", function () {
   set("type", "static");
 
   testPages.forEach(function(testPage) {
-    var doc = new JSDOMParser().parse(testPage.source);
+    var uri = "http://fakehost/test/page.html";
+    var doc = new JSDOM(testPage.source, {
+      url: uri,
+    }).window.document;
     bench(testPage.dir + " readability perf", function() {
-      new Readability(doc).isProbablyReaderable();
+      readabilityCheck.isProbablyReaderable(doc);
     });
   });
 });
