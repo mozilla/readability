@@ -2,7 +2,7 @@ var debug = false;
 
 var path = require("path");
 var fs = require("fs");
-var jsdom = require("jsdom").jsdom;
+var JSDOM = require("jsdom").JSDOM;
 var prettyPrint = require("./utils").prettyPrint;
 var serializeDocument = require("jsdom").serializeDocument;
 var http = require("http");
@@ -81,7 +81,7 @@ function fetchSource(url, callbackFn) {
 }
 
 function sanitizeSource(html, callbackFn) {
-  htmltidy(serializeDocument(jsdom(html)), {
+  htmltidy(serializeDocument(new JSDOM(html)), {
     "indent": true,
     "indent-spaces": 4,
     "numeric-entities": true,
@@ -128,11 +128,8 @@ function runReadability(source, destPath, metadataDestPath) {
   }
   // Use jsdom for isProbablyReaderable because it supports querySelectorAll
   try {
-    var jsdomDoc = jsdom(source, {
-      features: {
-        FetchExternalResources: false,
-        ProcessExternalResources: false
-      }
+    var jsdomDoc = new JSDOM(source, {
+      url: uri,
     });
     myReader = new Readability(jsdomDoc);
     readerable = myReader.isProbablyReaderable();
