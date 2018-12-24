@@ -61,11 +61,7 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
         // Provide one class name to preserve, which we know appears in a few
         // of the test documents.
         var myReader = new Readability(doc, { classesToPreserve: ["caption"] });
-        // Needs querySelectorAll function to test isProbablyReaderable method.
-        // jsdom implements querySelector but JSDOMParser doesn't.
-        var readerable = label === "jsdom" ? myReader.isProbablyReaderable() : null;
         result = myReader.parse();
-        result.readerable = readerable;
       } catch (err) {
         throw reformatError(err);
       }
@@ -173,10 +169,6 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
 
     expectedMetadata.dir && it("should extract expected direction", function() {
       expect(expectedMetadata.dir).eql(result.dir);
-    });
-
-    label === "jsdom" && it("should probably be readerable", function() {
-      expect(expectedMetadata.readerable).eql(result.readerable);
     });
   });
 }

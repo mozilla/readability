@@ -45,6 +45,15 @@ var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 ```
 
+## What's Readability-readerable?
+
+It's a quick-and-dirty way of figuring out if it's plausible that the contents of a given
+document are suitable for processing with Readability. It is likely to produce both false
+positives and false negatives. The reason it exists is to avoid bogging down a time-sensitive
+process (like loading and showing the user a webpage) with the complex logic in the core of
+Readability. Improvements to its logic (while not deteriorating its performance) are very
+welcome.
+
 ## Tests
 
 Please run [eslint](http://eslint.org/) as a first check that your changes adhere to our style guidelines.
