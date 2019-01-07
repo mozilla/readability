@@ -1,16 +1,6 @@
 # Readability.js
 
-[![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
-
-A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be automatically merged to mozilla-central.
-
-## Contributing
-
-For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
-
-To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
-
-Please make sure to run [eslint](http://eslint.org/) against any proposed changes when creating a pull request.
+A standalone version of the readability library used for Firefox Reader View.
 
 ## Usage on the web.
 
@@ -73,9 +63,19 @@ process (like loading and showing the user a webpage) with the complex logic in 
 Readability. Improvements to its logic (while not deteriorating its performance) are very
 welcome.
 
+## Contributing
+
+[![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
+
+For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
+
+Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be merged to mozilla-central and shipped in Firefox.
+
+To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
+
 ## Tests
 
-Please run [eslint](http://eslint.org/) as a first check that your changes adhere to our style guidelines.
+Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines.
 
 To run the test suite:
 
