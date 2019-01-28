@@ -1222,6 +1222,9 @@ Readability.prototype = {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
       var content = element.getAttribute("content");
+      if (!content) {
+        return;
+      }
       var matches = null;
       var name = null;
 
