@@ -1,4 +1,4 @@
-var jsdom = require("jsdom").jsdom;
+var JSDOM = require("jsdom").JSDOM;
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
@@ -61,11 +61,7 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
         // Provide one class name to preserve, which we know appears in a few
         // of the test documents.
         var myReader = new Readability(doc, { classesToPreserve: ["caption"] });
-        // Needs querySelectorAll function to test isProbablyReaderable method.
-        // jsdom implements querySelector but JSDOMParser doesn't.
-        var readerable = label === "jsdom" ? myReader.isProbablyReaderable() : null;
         result = myReader.parse();
-        result.readerable = readerable;
       } catch (err) {
         throw reformatError(err);
       }
@@ -167,12 +163,12 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       expect(expectedMetadata.excerpt).eql(result.excerpt);
     });
 
-    expectedMetadata.dir && it("should extract expected direction", function() {
-      expect(expectedMetadata.dir).eql(result.dir);
+    it("should extract expected site name", function() {
+      expect(expectedMetadata.siteName).eql(result.siteName);
     });
 
-    label === "jsdom" && it("should probably be readerable", function() {
-      expect(expectedMetadata.readerable).eql(result.readerable);
+    expectedMetadata.dir && it("should extract expected direction", function() {
+      expect(expectedMetadata.dir).eql(result.dir);
     });
   });
 }
@@ -223,13 +219,9 @@ describe("Test pages", function() {
       var uri = "http://fakehost/test/page.html";
 
       runTestsWithItems("jsdom", function(source) {
-        var doc = jsdom(source, {
+        var doc = new JSDOM(source, {
           url: uri,
-          features: {
-            FetchExternalResources: false,
-            ProcessExternalResources: false
-          }
-        });
+        }).window.document;
         removeCommentNodesRecursively(doc);
         return doc;
       }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);

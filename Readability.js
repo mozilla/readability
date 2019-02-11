@@ -39,6 +39,7 @@ function Readability(doc, options) {
   this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
+  this._articleSiteName = null;
   this._attempts = [];
 
   // Configurable options
@@ -111,8 +112,11 @@ Readability.prototype = {
   // All of the regular expressions in use within readability.
   // Defined up here so we don't instantiate them repeatedly in loops.
   REGEXPS: {
+    // NOTE: These two regular expressions are duplicated in
+    // Readability-readerable.js. Please keep both copies in sync.
     unlikelyCandidates: /-ad-|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|foot|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
     okMaybeItsACandidate: /and|article|body|column|main|shadow/i,
+
     positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
     negative: /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
@@ -320,7 +324,7 @@ Readability.prototype = {
       return uri;
     }
 
-    var links = articleContent.getElementsByTagName("a");
+    var links = this._getAllNodesWithTag(articleContent, ["a"]);
     this._forEachNode(links, function(link) {
       var href = link.getAttribute("href");
       if (href) {
@@ -335,7 +339,7 @@ Readability.prototype = {
       }
     });
 
-    var imgs = articleContent.getElementsByTagName("img");
+    var imgs = this._getAllNodesWithTag(articleContent, ["img"]);
     this._forEachNode(imgs, function(img) {
       var src = img.getAttribute("src");
       if (src) {
@@ -408,7 +412,7 @@ Readability.prototype = {
         curTitle = this._getInnerText(hOnes[0]);
     }
 
-    curTitle = curTitle.trim();
+    curTitle = curTitle.trim().replace(this.REGEXPS.normalize, " ");
     // If we now have 4 words or fewer as our title, and either no
     // 'hierarchical' separators (\, /, > or ») were found in the original
     // title or we decreased the number of words by more than 1 word, use
@@ -534,7 +538,16 @@ Readability.prototype = {
       replacement.readability = node.readability;
 
     for (var i = 0; i < node.attributes.length; i++) {
-      replacement.setAttribute(node.attributes[i].name, node.attributes[i].value);
+      try {
+        replacement.setAttribute(node.attributes[i].name, node.attributes[i].value);
+      } catch (ex) {
+        /* it's possible for setAttribute() to throw if the attribute name
+         * isn't a valid XML Name. Such attributes can however be parsed from
+         * source in HTML docs, see https://github.com/whatwg/html/issues/4275,
+         * so we can hit them here and then throw. We don't care about such
+         * attributes so we ignore them.
+         */
+      }
     }
     return replacement;
   },
@@ -1141,7 +1154,7 @@ Readability.prototype = {
           this._attempts.push({articleContent: articleContent, textLength: textLength});
           // No luck after removing flags, just return the longest text we found during the different loops
           this._attempts.sort(function (a, b) {
-            return a.textLength < b.textLength;
+            return b.textLength - a.textLength;
           });
 
           // But first check if we actually have something
@@ -1199,16 +1212,19 @@ Readability.prototype = {
     var metaElements = this._doc.getElementsByTagName("meta");
 
     // property is a space-separated list of values
-    var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title)\s*/gi;
+    var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title|site_name)\s*/gi;
 
     // name is a single value
-    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title)\s*$/i;
+    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title|site_name)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
       var elementName = element.getAttribute("name");
       var elementProperty = element.getAttribute("property");
       var content = element.getAttribute("content");
+      if (!content) {
+        return;
+      }
       var matches = null;
       var name = null;
 
@@ -1261,6 +1277,9 @@ Readability.prototype = {
                        values["weibo:webpage:description"] ||
                        values["description"] ||
                        values["twitter:description"];
+
+    // get site name
+    metadata.siteName = values["og:site_name"];
 
     return metadata;
   },
@@ -1705,65 +1724,6 @@ Readability.prototype = {
   },
 
   /**
-   * Decides whether or not the document is reader-able without parsing the whole thing.
-   *
-   * @return boolean Whether or not we suspect parse() will suceeed at returning an article object.
-   */
-  isProbablyReaderable: function(helperIsVisible) {
-    var nodes = this._getAllNodesWithTag(this._doc, ["p", "pre"]);
-
-    // Get <div> nodes which have <br> node(s) and append them into the `nodes` variable.
-    // Some articles' DOM structures might look like
-    // <div>
-    //   Sentences<br>
-    //   <br>
-    //   Sentences<br>
-    // </div>
-    var brNodes = this._getAllNodesWithTag(this._doc, ["div > br"]);
-    if (brNodes.length) {
-      var set = new Set();
-      [].forEach.call(brNodes, function(node) {
-        set.add(node.parentNode);
-      });
-      nodes = [].concat.apply(Array.from(set), nodes);
-    }
-
-    if (!helperIsVisible) {
-      helperIsVisible = this._isProbablyVisible;
-    }
-
-    var score = 0;
-    // This is a little cheeky, we use the accumulator 'score' to decide what to return from
-    // this callback:
-    return this._someNode(nodes, function(node) {
-      if (helperIsVisible && !helperIsVisible(node))
-        return false;
-      var matchString = node.className + " " + node.id;
-
-      if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
-          !this.REGEXPS.okMaybeItsACandidate.test(matchString)) {
-        return false;
-      }
-
-      if (node.matches && node.matches("li p")) {
-        return false;
-      }
-
-      var textContentLength = node.textContent.trim().length;
-      if (textContentLength < 140) {
-        return false;
-      }
-
-      score += Math.sqrt(textContentLength - 140);
-
-      if (score > 20) {
-        return true;
-      }
-      return false;
-    });
-  },
-
-  /**
    * Runs readability.
    *
    * Workflow:
@@ -1819,6 +1779,7 @@ Readability.prototype = {
       textContent: textContent,
       length: textContent.length,
       excerpt: metadata.excerpt,
+      siteName: metadata.siteName || this._articleSiteName
     };
   }
 };

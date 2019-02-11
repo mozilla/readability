@@ -3,5 +3,6 @@
   "byline": "Dublin Core property author",
   "dir": null,
   "excerpt": "Dublin Core property description",
-  "readerable": true
+  "readerable": true,
+  "siteName": null
 }

@@ -1,6 +1,6 @@
 {
   "name": "readability",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "Readability.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "eslint": ">=4.2",
     "htmltidy2": "^0.3.0",
     "js-beautify": "^1.5.5",
-    "jsdom": "^7.0",
+    "jsdom": "^13.1",
     "matcha": "^0.6.0",
     "mocha": "^2.2.*"
   }

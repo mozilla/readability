@@ -1,20 +1,10 @@
 # Readability.js
 
-[![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
+A standalone version of the readability library used for Firefox Reader View.
 
-A standalone version of the readability library used for Firefox Reader View. Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be automatically merged to mozilla-central.
+## Usage on the web.
 
-## Contributing
-
-For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
-
-To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
-
-Please make sure to run [eslint](http://eslint.org/) against any proposed changes when creating a pull request.
-
-## Usage
-
-To parse a document, you must create a new `Readability` object from a document object, and then call `parse()`. Here's an example:
+To parse a document, you must create a new `Readability` object from a DOM document object, and then call `parse()`. Here's an example:
 
 ```javascript
 var article = new Readability(document).parse();
@@ -29,25 +19,63 @@ This `article` object will contain the following properties:
 * `byline`: author metadata
 * `dir`: content direction
 
-If you're using Readability on the web, you will likely be able to use a `document` reference from elsewhere (e.g. fetched via XMLHttpRequest, in a same-origin `<iframe>` you have access to, etc.).
-
-Otherwise, you would need to construct such an object using a DOM parser such as [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do not recommend it for general use.
-
-If you're using `jsdom` to create a DOM object, you should ensure that the page doesn't run (page) scripts (avoid fetching remote resources etc.) as well as passing it the page's URI as the `url` property of the `options` object you pass the `JSDOM` constructor.
+If you're using Readability on the web, you will likely be able to use a `document` reference
+from elsewhere (e.g. fetched via XMLHttpRequest, in a same-origin `<iframe>` you have access to, etc.).
 
 ### Optional
 
-Readability's `parse()` works by modifying the DOM. This removes some elements in the web page. You could avoid this by passing the clone of the `document` object while creating a `Readability` object.
-
+Readability's `parse()` works by modifying the DOM. This removes some elements in the web page.
+You could avoid this by passing the clone of the `document` object while creating a `Readability` object.
 
 ```
 var documentClone = document.cloneNode(true); 
 var article = new Readability(documentClone).parse();
 ```
 
+## Usage from node.js
+
+In node.js, you won't generally have a DOM document object. To obtain one, you can use external
+libraries like [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of
+its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do
+not recommend it for general use.
+
+If you're using `jsdom` to create a DOM object, you should ensure that the page doesn't run (page)
+scripts (avoid fetching remote resources etc.) as well as passing it the page's URI as the `url`
+property of the `options` object you pass the `JSDOM` constructor.
+
+### Example:
+
+```
+var JSDOM = require('jsdom').JSDOM;
+var doc = new JSDOM("<body>Here's a bunch of text</body>", {
+  url: "https://www.example.com/the-page-i-got-the-source-from",
+});
+let reader = new Readability(doc.window.document);
+let article = reader.parse();
+```
+
+## What's Readability-readerable?
+
+It's a quick-and-dirty way of figuring out if it's plausible that the contents of a given
+document are suitable for processing with Readability. It is likely to produce both false
+positives and false negatives. The reason it exists is to avoid bogging down a time-sensitive
+process (like loading and showing the user a webpage) with the complex logic in the core of
+Readability. Improvements to its logic (while not deteriorating its performance) are very
+welcome.
+
+## Contributing
+
+[![Build Status](https://travis-ci.org/mozilla/readability.svg?branch=master)](https://travis-ci.org/mozilla/readability)
+
+For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
+
+Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be merged to mozilla-central and shipped in Firefox.
+
+To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
+
 ## Tests
 
-Please run [eslint](http://eslint.org/) as a first check that your changes adhere to our style guidelines.
+Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines.
 
 To run the test suite:
 
