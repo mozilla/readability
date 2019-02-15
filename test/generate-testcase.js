@@ -4,11 +4,11 @@ var path = require("path");
 var fs = require("fs");
 var JSDOM = require("jsdom").JSDOM;
 var prettyPrint = require("./utils").prettyPrint;
-var serializeDocument = require("jsdom").serializeDocument;
 var http = require("http");
 var urlparse = require("url").parse;
 var htmltidy = require("htmltidy2").tidy;
 
+var readabilityCheck = require("../Readability-readerable");
 var readability = require("../index");
 var Readability = readability.Readability;
 var JSDOMParser = readability.JSDOMParser;
@@ -81,7 +81,7 @@ function fetchSource(url, callbackFn) {
 }
 
 function sanitizeSource(html, callbackFn) {
-  htmltidy(serializeDocument(new JSDOM(html)), {
+  htmltidy(new JSDOM(html).serialize(), {
     "indent": true,
     "indent-spaces": 4,
     "numeric-entities": true,
@@ -130,9 +130,9 @@ function runReadability(source, destPath, metadataDestPath) {
   try {
     var jsdomDoc = new JSDOM(source, {
       url: uri,
-    });
+    }).window.document;
     myReader = new Readability(jsdomDoc);
-    readerable = myReader.isProbablyReaderable();
+    readerable = readabilityCheck.isProbablyReaderable(jsdomDoc);
   } catch (ex) {
     console.error(ex);
     ex.stack.forEach(console.log.bind(console));
