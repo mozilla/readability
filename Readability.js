@@ -1628,11 +1628,16 @@ Readability.prototype = {
     //
     // TODO: Consider taking into account original contentScore here.
     this._removeNodes(e.getElementsByTagName(tag), function(node) {
-      // First check if we're in a data table, in which case don't remove us.
+      // First check if this node IS data table, in which case don't remove it.
       var isDataTable = function(t) {
         return t._readabilityDataTable;
       };
 
+      if (tag === "table" && isDataTable(node)) {
+        return false;
+      }
+
+      // Next check if we're inside a data table, in which case don't remove it as well.
       if (this._hasAncestorTag(node, "table", -1, isDataTable)) {
         return false;
       }
