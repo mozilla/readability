@@ -1661,10 +1661,27 @@ Readability.prototype = {
         var input = node.getElementsByTagName("input").length;
 
         var embedCount = 0;
-        var embeds = node.getElementsByTagName("embed");
+        var videoCount = 0;
+        var embeds = this._concatNodeLists(
+          node.getElementsByTagName("object"),
+          node.getElementsByTagName("embed"),
+          node.getElementsByTagName("iframe"));
+
         for (var ei = 0, il = embeds.length; ei < il; ei += 1) {
-          if (!this.REGEXPS.videos.test(embeds[ei].src))
+          var attributeValues = [].map.call(node.attributes, function(attr) {
+            return attr.value;
+          }).join("|");
+
+          if (this.REGEXPS.videos.test(attributeValues) || this.REGEXPS.videos.test(node.innerHTML)) {
+            videoCount += 1;
+          } else {
             embedCount += 1;
+          }
+        }
+
+        // If contains video, don't delete this node
+        if (videoCount > 0) {
+          return false;
         }
 
         var linkDensity = this._getLinkDensity(node);
