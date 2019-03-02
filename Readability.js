@@ -577,10 +577,12 @@ Readability.prototype = {
     this._clean(articleContent, "link");
     this._clean(articleContent, "aside");
 
-    // Clean out elements have "share" in their id/class combinations from final top candidates,
+    // Clean out elements with little content that have "share" in their id/class combinations from final top candidates,
     // which means we don't remove the top candidates even they have "share".
-    this._forEachNode(articleContent.children, function(topCandidate) {
-      this._cleanMatchedNodes(topCandidate, /share/);
+    this._forEachNode(articleContent.children, function (topCandidate) {
+      this._cleanMatchedNodes(topCandidate, function (node, matchString) {
+        return /share/.test(matchString) && node.textContent.length < 500;
+      });
     });
 
     // If there is only one h2 and its text content substantially equals article title,
@@ -1685,17 +1687,17 @@ Readability.prototype = {
   },
 
   /**
-   * Clean out elements whose id/class combinations match specific string.
+   * Clean out elements that match the specified conditions
    *
    * @param Element
-   * @param RegExp match id/class combination.
+   * @param Function determines whether a node should be removed
    * @return void
    **/
-  _cleanMatchedNodes: function(e, regex) {
+  _cleanMatchedNodes: function(e, filter) {
     var endOfSearchMarkerNode = this._getNextNode(e, true);
     var next = this._getNextNode(e);
     while (next && next != endOfSearchMarkerNode) {
-      if (regex.test(next.className + " " + next.id)) {
+      if (filter(next, next.className + " " + next.id)) {
         next = this._removeAndGetNext(next);
       } else {
         next = this._getNextNode(next);
