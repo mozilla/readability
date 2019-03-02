@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            Evolve: Shared Mutable History — evolve extension for Mercurial
+        </title>
+        <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+        <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+        <script type="text/javascript">
+        //<![CDATA[
+        var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+        };
+        //]]>
+        </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <link rel="shortcut icon" href="_static/logo-evolve.ico" />
+        <link rel="top" title="evolve extension for Mercurial" href="index.html" />
+        <link rel="next" title="Evolve: Concepts" href="concepts.html" />
+        <link rel="prev" title="Evolve: User Guide" href="user-guide.html" />
+    </head>
+    <body>
+        <div class="header">
+            <h1 class="heading">
+                <a href="index.html"><span>evolve extension for Mercurial</span></a>
+            </h1>
+            <h2 class="heading">
+                <span>Evolve: Shared Mutable History</span>
+            </h2>
+        </div>
+        <div class="topnav">
+            <p>
+                «&#160;&#160;<a href="user-guide.html">Evolve: User Guide</a> &#160;&#160;::&#160;&#160; <a class="uplink" href="index.html">Contents</a> &#160;&#160;::&#160;&#160; <a href="concepts.html">Evolve: Concepts</a>&#160;&#160;»
+            </p>
+        </div>
+        <div class="content">
+            <div class="section" id="evolve-shared-mutable-history">
+                <h1>
+                    <a class="toc-backref" href="#id4">Evolve: Shared Mutable History</a><a class="headerlink" href="#evolve-shared-mutable-history" title="Permalink to this headline">¶</a>
+                </h1>
+                <div class="contents topic" id="contents">
+                    <p class="topic-title first">
+                        Contents
+                    </p>
+                    <ul class="simple">
+                        <li>
+                            <a class="reference internal" href="#evolve-shared-mutable-history" id="id4">Evolve: Shared Mutable History</a>
+                            <ul>
+                                <li>
+                                    <a class="reference internal" href="#sharing-with-a-single-developer" id="id5">Sharing with a single developer</a>
+                                    <ul>
+                                        <li>
+                                            <a class="reference internal" href="#publishing-and-non-publishing-repositories" id="id6">Publishing and non-publishing repositories</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#setting-up" id="id7">Setting up</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-1-amend-a-shared-changeset" id="id8">Example 1: Amend a shared changeset</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-2-amend-again-locally" id="id9">Example 2: Amend again, locally</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="reference internal" href="#sharing-with-multiple-developers-code-review" id="id10">Sharing with multiple developers: code review</a>
+                                    <ul>
+                                        <li>
+                                            <a class="reference internal" href="#id2" id="id11">Setting up</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-3-alice-commits-and-amends-a-draft-fix" id="id12">Example 3: Alice commits and amends a draft fix</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-4-bob-implements-and-publishes-a-new-feature" id="id13">Example 4: Bob implements and publishes a new feature</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-5-alice-integrates-and-publishes" id="id14">Example 5: Alice integrates and publishes</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="reference internal" href="#getting-into-trouble-with-shared-mutable-history" id="id15">Getting into trouble with shared mutable history</a>
+                                    <ul>
+                                        <li>
+                                            <a class="reference internal" href="#id3" id="id16">Setting up</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#example-6-divergent-changesets" id="id17">Example 6: Divergent changesets</a>
+                                        </li>
+                                        <li>
+                                            <a class="reference internal" href="#phase-divergence-when-a-rewritten-changeset-is-made-public" id="id18">Phase-divergence: when a rewritten changeset is made public</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="reference internal" href="#conclusion" id="id19">Conclusion</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <p>
+                    Once you have mastered the art of mutable history in a single repository (see the <a class="reference external" href="user-guide.html">user guide</a>), you can move up to the next level: <em>shared</em> mutable history. <tt class="docutils literal"><span class="pre">evolve</span></tt> lets you push and pull draft changesets between repositories along with their obsolescence markers. This opens up a number of interesting possibilities.
+                </p>
+                <p>
+                    The simplest scenario is a single developer working across two computers. Say you’re working on code that must be tested on a remote test server, probably in a rack somewhere, only accessible by SSH, and running an “enterprise-grade” (out-of-date) OS. But you probably prefer to write code locally: everything is setup the way you like it, and you can use your preferred editor, IDE, merge/diff tools, etc.
+                </p>
+                <p>
+                    Traditionally, your options are limited: either
+                </p>
+                <blockquote>
+                    <div>
+                        <ul class="simple">
+                            <li>(ab)use your source control system by committing half-working code in order to get it onto the remote test server, or
+                            </li>
+                            <li>go behind source control’s back by using <tt class="docutils literal"><span class="pre">rsync</span></tt> (or similar) to transfer your code back-and-forth until it is ready to commit
+                            </li>
+                        </ul>
+                    </div>
+                </blockquote>
+                <p>
+                    The former is less bad with distributed version control systems like Mercurial, but it’s still far from ideal. (One important version control “best practice” is that every commit should make things just a little bit better, i.e. you should never commit code that is worse than what came before.) The latter, avoiding version control entirely, means that you’re walking a tightrope without a safety net. One accidental <tt class="docutils literal"><span class="pre">rsync</span></tt> in the wrong direction could destroy hours of work.
+                </p>
+                <p>
+                    Using Mercurial with <tt class="docutils literal"><span class="pre">evolve</span></tt> to share mutable history solves these problems. As with single-repository <tt class="docutils literal"><span class="pre">evolve</span></tt>, you can commit whenever the code is demonstrably better, even if all the tests aren’t passing yet—just <tt class="docutils literal"><span class="pre">hg</span> <span class="pre">amend</span></tt> when they are. And you can transfer those half-baked changesets between repositories to try things out on your test server before anything is carved in stone.
+                </p>
+                <p>
+                    A less common scenario is multiple developers sharing mutable history, typically for code review. We’ll cover this scenario later. First, we will cover single-user sharing.
+                </p>
+                <div class="section" id="sharing-with-a-single-developer">
+                    <h2>
+                        <a class="toc-backref" href="#id5">Sharing with a single developer</a><a class="headerlink" href="#sharing-with-a-single-developer" title="Permalink to this headline">¶</a>
+                    </h2>
+                    <div class="section" id="publishing-and-non-publishing-repositories">
+                        <h3>
+                            <a class="toc-backref" href="#id6">Publishing and non-publishing repositories</a><a class="headerlink" href="#publishing-and-non-publishing-repositories" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            The key to shared mutable history is to keep your changesets in <em>draft</em> phase as you pass them around. Recall that by default, <tt class="docutils literal"><span class="pre">hg</span> <span class="pre">push</span></tt> promotes changesets from <em>draft</em> to <em>public</em>, and public changesets are immutable. You can change this behaviour by reconfiguring the <em>remote</em> repository so that it is non-publishing. (Short version: set <tt class="docutils literal"><span class="pre">phases.publish</span></tt> to <tt class="docutils literal"><span class="pre">false</span></tt>. Long version follows.)
+                        </p>
+                    </div>
+                    <div class="section" id="setting-up">
+                        <h3>
+                            <a class="toc-backref" href="#id7">Setting up</a><a class="headerlink" href="#setting-up" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            We’ll work through an example with three local repositories, although in the real world they’d most likely be on three different computers. First, the <tt class="docutils literal"><span class="pre">public</span></tt> repository is where tested, polished changesets live, and it is where you synchronize with the rest of your team.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg init public
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            We’ll need two clones where work gets done, <tt class="docutils literal"><span class="pre">test-repo</span></tt> and <tt class="docutils literal"><span class="pre">dev-repo</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg clone public test-repo
+updating to branch default
+0 files updated, 0 files merged, 0 files removed, 0 files unresolved
+$ hg clone test-repo dev-repo
+updating to branch default
+0 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            <tt class="docutils literal"><span class="pre">dev-repo</span></tt> is your local machine, with GUI merge tools and IDEs and everything configured just the way you like it. <tt class="docutils literal"><span class="pre">test-repo</span></tt> is the test server in a rack somewhere behind SSH. So for the most part, we’ll develop in <tt class="docutils literal"><span class="pre">dev-repo</span></tt>, push to <tt class="docutils literal"><span class="pre">test-repo</span></tt>, test and polish there, and push to <tt class="docutils literal"><span class="pre">public</span></tt>.
+                        </p>
+                        <p>
+                            The key to shared mutable history is to make the target repository, in this case <tt class="docutils literal"><span class="pre">test-repo</span></tt>, non-publishing. And, of course, we have to enable the <tt class="docutils literal"><span class="pre">evolve</span></tt> extension in both <tt class="docutils literal"><span class="pre">test-repo</span></tt> and <tt class="docutils literal"><span class="pre">dev-repo</span></tt>.
+                        </p>
+                        <p>
+                            First, edit the configuration for <tt class="docutils literal"><span class="pre">test-repo</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R test-repo config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>[phases]
+publish = false
+
+[extensions]
+evolve =
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Then edit the configuration for <tt class="docutils literal"><span class="pre">dev-repo</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R dev-repo config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>[extensions]
+evolve =
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Keep in mind that in real life, these repositories would probably be on separate computers, so you’d have to login to each one to configure each repository.
+                        </p>
+                        <p>
+                            To start things off, let’s make one public, immutable changeset:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd test-repo
+$ echo 'my new project' &gt; file1
+$ hg add file1
+$ hg commit -m 'create new project'
+$ hg push
+[...]
+added 1 changesets with 1 changes to 1 files
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and pull that into the development repository:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../dev-repo
+$ hg pull -u
+[...]
+added 1 changesets with 1 changes to 1 files
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" id="example-1-amend-a-shared-changeset">
+                        <h3>
+                            <a class="toc-backref" href="#id8">Example 1: Amend a shared changeset</a><a class="headerlink" href="#example-1-amend-a-shared-changeset" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            Everything you learned in the <a class="reference external" href="user-guide.html">user guide</a> applies to work done in <tt class="docutils literal"><span class="pre">dev-repo</span></tt>. You can commit, amend, uncommit, evolve, and so forth just as before.
+                        </p>
+                        <p>
+                            Things get different when you push changesets to <tt class="docutils literal"><span class="pre">test-repo</span></tt>. Or rather, things stay the same, which <em>is</em> different: because we configured <tt class="docutils literal"><span class="pre">test-repo</span></tt> to be non-publishing, draft changesets stay draft when we push them to <tt class="docutils literal"><span class="pre">test-repo</span></tt>. Importantly, they’re also draft (mutable) in <tt class="docutils literal"><span class="pre">test-repo</span></tt>.
+                        </p>
+                        <p>
+                            Let’s commit a preliminary change and push it to <tt class="docutils literal"><span class="pre">test-repo</span></tt> for testing.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'fix fix fix' &gt; file1
+$ hg commit -m 'prelim change'
+$ hg push ../test-repo
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            At this point, <tt class="docutils literal"><span class="pre">dev-repo</span></tt> and <tt class="docutils literal"><span class="pre">test-repo</span></tt> have the same changesets in the same phases:
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG01: rev 0:0dc9 public, rev 1:f649 draft, same on both repos]
+                            </div>
+                        </blockquote>
+                        <p>
+                            (You may notice a change in notation from the user guide: now changesets are labelled with their revision number and the first four digits of the 40-digit hexadecimal changeset ID. Mercurial revision numbers are never stable when working across repositories, especially when obsolescence is involved. We’ll see why shortly.)
+                        </p>
+                        <p>
+                            Now let’s switch to <tt class="docutils literal"><span class="pre">test-repo</span></tt> to test our change:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../test-repo
+$ hg update
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Don’t forget to <tt class="docutils literal"><span class="pre">hg</span> <span class="pre">update</span></tt>! Pushing only adds changesets to a remote repository; it does not update the working directory (unless you have a hook that updates for you).
+                        </p>
+                        <p>
+                            Now let’s imagine the tests failed because we didn’t use proper punctuation and capitalization (oops). Let’s amend our preliminary fix (and fix the lame commit message while we’re at it):
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'Fix fix fix.' &gt; file1
+$ hg amend -m 'fix bug 37'
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Now we’re in a funny intermediate state (figure 2): revision 1:f649 is obsolete in <tt class="docutils literal"><span class="pre">test-repo</span></tt>, having been replaced by revision 3:60ff (revision 2:2a03 is another one of those temporary amend commits that we saw in the user guide)—but <tt class="docutils literal"><span class="pre">dev-repo</span></tt> knows nothing of these recent developments.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG02: test-repo has rev 0:0dc9 public, rev 1:f649, 2:2a03 obsolete, rev 3:60ff draft; dev-repo same as in SG01]
+                            </div>
+                        </blockquote>
+                        <p>
+                            Let’s resynchronize:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../dev-repo
+$ hg pull -u
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            As seen in figure 3, this transfers the new changeset <em>and</em> the obsolescence marker for revision 1. However, it does <em>not</em> transfer the temporary amend commit, because it is hidden. Push and pull transfer obsolescence markers between repositories, but they do not transfer hidden changesets.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG03: dev-repo grows new rev 2:60ff, marks 1:f649 obsolete]
+                            </div>
+                        </blockquote>
+                        <p>
+                            Because of this deliberately incomplete synchronization, revision numbers in <tt class="docutils literal"><span class="pre">test-repo</span></tt> and <tt class="docutils literal"><span class="pre">dev-repo</span></tt> are no longer consistent. We <em>must</em> use changeset IDs.
+                        </p>
+                    </div>
+                    <div class="section" id="example-2-amend-again-locally">
+                        <h3>
+                            <a class="toc-backref" href="#id9">Example 2: Amend again, locally</a><a class="headerlink" href="#example-2-amend-again-locally" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            This process can repeat. Perhaps you figure out a more elegant fix to the bug, and want to mutate history so nobody ever knows you had a less-than-perfect idea. We’ll implement it locally in <tt class="docutils literal"><span class="pre">dev-repo</span></tt> and push to <tt class="docutils literal"><span class="pre">test-repo</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'Fix, fix, and fix.' &gt; file1
+$ hg amend
+$ hg push
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            This time around, the temporary amend commit is in <tt class="docutils literal"><span class="pre">dev-repo</span></tt>, and it is not transferred to <tt class="docutils literal"><span class="pre">test-repo</span></tt>—the same as before, just in the opposite direction. Figure 4 shows the two repositories after amending in <tt class="docutils literal"><span class="pre">dev-repo</span></tt> and pushing to <tt class="docutils literal"><span class="pre">test-repo</span></tt>.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG04: each repo has one temporary amend commit, but they’re different in each one]
+                            </div>
+                        </blockquote>
+                        <p>
+                            Let’s hop over to <tt class="docutils literal"><span class="pre">test-repo</span></tt> to test the more elegant fix:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../test-repo
+$ hg update
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            This time, all the tests pass, so no further amending is required. This bug fix is finished, so we push it to the public repository:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push
+[...]
+added 1 changesets with 1 changes to 1 files
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Note that only one changeset—the final version, after two amendments—was actually pushed. Again, Mercurial doesn’t transfer hidden changesets on push and pull.
+                        </p>
+                        <p>
+                            So the picture in <tt class="docutils literal"><span class="pre">public</span></tt> is much simpler than in either <tt class="docutils literal"><span class="pre">dev-repo</span></tt> or <tt class="docutils literal"><span class="pre">test-repo</span></tt>. Neither of our missteps nor our amendments are publicly visible, just the final, beautifully polished changeset:
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG05: public repo with rev 0:0dc9, 1:de61, both public]
+                            </div>
+                        </blockquote>
+                        <p>
+                            There is one important step left to do. Because we pushed from <tt class="docutils literal"><span class="pre">test-repo</span></tt> to <tt class="docutils literal"><span class="pre">public</span></tt>, the pushed changeset is in <em>public</em> phase in those two repositories. But <tt class="docutils literal"><span class="pre">dev-repo</span></tt> has been out-of-the-loop; changeset de61 is still <em>draft</em> there. If we’re not careful, we might mutate history in <tt class="docutils literal"><span class="pre">dev-repo</span></tt>, obsoleting a changeset that is already public. Let’s avoid that situation for now by pushing up to <tt class="docutils literal"><span class="pre">dev-repo</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push ../dev-repo
+pushing to ../dev-repo
+searching for changes
+no changes found
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Even though no <em>changesets</em> were pushed, Mercurial still pushed obsolescence markers and phase changes to <tt class="docutils literal"><span class="pre">dev-repo</span></tt>.
+                        </p>
+                        <p>
+                            A final note: since this fix is now <em>public</em>, it is immutable. It’s no longer possible to amend it:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg amend -m 'fix bug 37'
+abort: cannot amend public changesets
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            This is, after all, the whole point of Mercurial’s phases: to prevent rewriting history that has already been published.
+                        </p>
+                    </div>
+                </div>
+                <div class="section" id="sharing-with-multiple-developers-code-review">
+                    <h2>
+                        <a class="toc-backref" href="#id10">Sharing with multiple developers: code review</a><a class="headerlink" href="#sharing-with-multiple-developers-code-review" title="Permalink to this headline">¶</a>
+                    </h2>
+                    <p>
+                        Now that you know how to share your own mutable history across multiple computers, you might be wondering if it makes sense to share mutable history with others. It does, but you have to be careful, stay alert, and <em>communicate</em> with your peers.
+                    </p>
+                    <p>
+                        Code review is a good use case for sharing mutable history across multiple developers: Alice commits a draft changeset, submits it for review, and amends her changeset until her reviewer is satisfied. Meanwhile, Bob is also committing draft changesets for review, amending until his reviewer is satisfied. Once a particular changeset passes review, the respective author (Alice or Bob) pushes it to the public (publishing) repository.
+                    </p>
+                    <p>
+                        Incidentally, the reviewers here can be anyone: maybe Bob and Alice review each other’s work; maybe the same third party reviews both; or maybe they pick different experts to review their work on different parts of a large codebase. Similarly, it doesn’t matter if reviews are conducted in person, by email, or by carrier pigeon. Code review is outside of the scope of Mercurial, so all we’re looking at here is the mechanics of committing, amending, pushing, and pulling.
+                    </p>
+                    <div class="section" id="id2">
+                        <h3>
+                            <a class="toc-backref" href="#id11">Setting up</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            To demonstrate, let’s start with the <tt class="docutils literal"><span class="pre">public</span></tt> repository as we left it in the last example, with two immutable changesets (figure 5 above). We’ll clone a <tt class="docutils literal"><span class="pre">review</span></tt> repository from it, and then Alice and Bob will both clone from <tt class="docutils literal"><span class="pre">review</span></tt>.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg clone public review
+updating to branch default
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+$ hg clone review alice
+updating to branch default
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+$ hg clone review bob
+updating to branch default
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            We need to configure Alice’s and Bob’s working repositories to enable <tt class="docutils literal"><span class="pre">evolve</span></tt>. First, edit Alice’s configuration with
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R alice config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>[extensions]
+evolve =
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Then edit Bob’s repository configuration:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R bob config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add the same text.
+                        </p>
+                    </div>
+                    <div class="section" id="example-3-alice-commits-and-amends-a-draft-fix">
+                        <h3>
+                            <a class="toc-backref" href="#id12">Example 3: Alice commits and amends a draft fix</a><a class="headerlink" href="#example-3-alice-commits-and-amends-a-draft-fix" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            We’ll follow Alice working on a bug fix. We’re going to use bookmarks to make it easier to understand multiple branch heads in the <tt class="docutils literal"><span class="pre">review</span></tt> repository, so Alice starts off by creating a bookmark and committing her first attempt at a fix:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg bookmark bug15
+$ echo 'fix' &gt; file2
+$ hg commit -A -u alice -m 'fix bug 15 (v1)'
+adding file2
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Note the unorthodox “(v1)” in the commit message. We’re just using that to make this tutorial easier to follow; it’s not something we’d recommend in real life.
+                        </p>
+                        <p>
+                            Of course Alice wouldn’t commit unless her fix worked to her satisfaction, so it must be time to solicit a code review. She does this by pushing to the <tt class="docutils literal"><span class="pre">review</span></tt> repository:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push -B bug15
+[...]
+added 1 changesets with 1 changes to 1 files
+exporting bookmark bug15
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            (The use of <tt class="docutils literal"><span class="pre">-B</span></tt> is important to ensure that we only push the bookmarked head, and that the bookmark itself is pushed. See this <a class="reference external" href="http://mercurial.aragost.com/kick-start/en/bookmarks/">guide to bookmarks</a>, especially the <a class="reference external" href="http://mercurial.aragost.com/kick-start/en/bookmarks/#sharing-bookmarks">Sharing Bookmarks</a> section, if you’re not familiar with bookmarks.)
+                        </p>
+                        <p>
+                            Some time passes, and Alice receives her code review. As a result, Alice revises her fix and submits it for a second review:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'Fix.' &gt; file2
+$ hg amend -m 'fix bug 15 (v2)'
+$ hg push
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+updating bookmark bug15
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 6 shows the state of the <tt class="docutils literal"><span class="pre">review</span></tt> repository at this point.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG06: rev 2:fn1e is Alice’s obsolete v1, rev 3:cbdf is her v2; both children of rev 1:de61]
+                            </div>
+                        </blockquote>
+                        <p>
+                            After a busy morning of bug fixing, Alice stops for lunch. Let’s see what Bob has been up to.
+                        </p>
+                    </div>
+                    <div class="section" id="example-4-bob-implements-and-publishes-a-new-feature">
+                        <h3>
+                            <a class="toc-backref" href="#id13">Example 4: Bob implements and publishes a new feature</a><a class="headerlink" href="#example-4-bob-implements-and-publishes-a-new-feature" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            Meanwhile, Bob has been working on a new feature. Like Alice, he’ll use a bookmark to track his work, and he’ll push that bookmark to the <tt class="docutils literal"><span class="pre">review</span></tt> repository, so that reviewers know which changesets to review.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../bob
+$ echo 'stuff' &gt; file1
+$ hg bookmark featureX
+$ hg commit -u bob -m 'implement feature X (v1)'          # rev 4:1636
+$ hg push -B featureX
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+exporting bookmark featureX
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            When Bob receives his code review, he improves his implementation a bit, amends, and submits the resulting changeset for review:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'do stuff' &gt; file1
+$ hg amend -m 'implement feature X (v2)'                  # rev 5:0eb7
+$ hg push
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+updating bookmark featureX
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Unfortunately, that still doesn’t pass muster. Bob’s reviewer insists on proper capitalization and punctuation.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ echo 'Do stuff.' &gt; file1
+$ hg amend -m 'implement feature X (v3)'                  # rev 6:540b
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            On the bright side, the second review said, “Go ahead and publish once you fix that.” So Bob immediately publishes his third attempt:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push ../public
+[...]
+added 1 changesets with 1 changes to 1 files
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            It’s not enough just to update <tt class="docutils literal"><span class="pre">public</span></tt>, though! Other people also use the <tt class="docutils literal"><span class="pre">review</span></tt> repository, and right now it doesn’t have Bob’s latest amendment (“v3”, revision 6:540b), nor does it know that the precursor of that changeset (“v2”, revision 5:0eb7) is obsolete. Thus, Bob pushes to <tt class="docutils literal"><span class="pre">review</span></tt> as well:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push ../review
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+updating bookmark featureX
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 7 shows the result of Bob’s work in both <tt class="docutils literal"><span class="pre">review</span></tt> and <tt class="docutils literal"><span class="pre">public</span></tt>.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG07: review includes Alice’s draft work on bug 15, as well as Bob’s v1, v2, and v3 changes for feature X: v1 and v2 obsolete, v3 public. public contains only the final, public implementation of feature X]
+                            </div>
+                        </blockquote>
+                        <p>
+                            Incidentally, it’s important that Bob push to <tt class="docutils literal"><span class="pre">public</span></tt> <em>before</em> <tt class="docutils literal"><span class="pre">review</span></tt>. If he pushed to <tt class="docutils literal"><span class="pre">review</span></tt> first, then revision 6:540b would still be in <em>draft</em> phase in <tt class="docutils literal"><span class="pre">review</span></tt>, but it would be <em>public</em> in both Bob’s local repository and the <tt class="docutils literal"><span class="pre">public</span></tt> repository. That could lead to confusion at some point, which is easily avoided by pushing first to <tt class="docutils literal"><span class="pre">public</span></tt>.
+                        </p>
+                    </div>
+                    <div class="section" id="example-5-alice-integrates-and-publishes">
+                        <h3>
+                            <a class="toc-backref" href="#id14">Example 5: Alice integrates and publishes</a><a class="headerlink" href="#example-5-alice-integrates-and-publishes" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            Finally, Alice gets back from lunch and sees that the carrier pigeon with her second review has arrived (or maybe it’s in her email inbox). Alice’s reviewer approved her amended changeset, so she pushes it to <tt class="docutils literal"><span class="pre">public</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg push ../public
+[...]
+remote has heads on branch 'default' that are not known locally: 540ba8f317e6
+abort: push creates new remote head cbdfbd5a5db2!
+(pull and merge or see "hg help push" for details about pushing new heads)
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Oops! Bob has won the race to push first to <tt class="docutils literal"><span class="pre">public</span></tt>. So Alice needs to integrate with Bob: let’s pull his changeset(s) and see what the branch heads are.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg pull ../public
+[...]
+added 1 changesets with 1 changes to 1 files (+1 heads)
+(run 'hg heads' to see heads, 'hg merge' to merge)
+$ hg log -G -q -r 'head()' --template '{rev}:{node|short}  ({author})\n'
+o  5:540ba8f317e6  (bob)
+|
+| @  4:cbdfbd5a5db2  (alice)
+|/
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            We’ll assume Alice and Bob are perfectly comfortable with rebasing changesets. (After all, they’re already using mutable history in the form of <tt class="docutils literal"><span class="pre">amend</span></tt>.) So Alice rebases her changeset on top of Bob’s and publishes the result:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg rebase -d 5
+$ hg push ../public
+[...]
+added 1 changesets with 1 changes to 1 files
+$ hg push ../review
+[...]
+added 1 changesets with 0 changes to 0 files
+updating bookmark bug15
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            The result, in both <tt class="docutils literal"><span class="pre">review</span></tt> and <tt class="docutils literal"><span class="pre">public</span></tt> repositories, is shown in figure 8.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG08: review shows v1 and v2 of Alice’s fix, then v1, v2, v3 of Bob’s feature, finally Alice’s fix rebased onto Bob’s. public just shows the final public version of each changeset]
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+                <div class="section" id="getting-into-trouble-with-shared-mutable-history">
+                    <h2>
+                        <a class="toc-backref" href="#id15">Getting into trouble with shared mutable history</a><a class="headerlink" href="#getting-into-trouble-with-shared-mutable-history" title="Permalink to this headline">¶</a>
+                    </h2>
+                    <p>
+                        Mercurial with <tt class="docutils literal"><span class="pre">evolve</span></tt> is a powerful tool, and using powerful tools can have consequences. (You can cut yourself badly with a sharp knife, but every competent chef keeps several around. Ever try to chop onions with a spoon?)
+                    </p>
+                    <p>
+                        In the user guide, we saw examples of <em>unstbale</em> changesets, which are the most common type of troubled changeset. (Recall that a non-obsolete changeset with obsolete ancestors is an orphan.)
+                    </p>
+                    <p>
+                        Two other types of troubles can happen: <em>divergent</em> and <em>bumped</em> changesets. Both are more likely with shared mutable history, especially mutable history shared by multiple developers.
+                    </p>
+                    <div class="section" id="id3">
+                        <h3>
+                            <a class="toc-backref" href="#id16">Setting up</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            For these examples, we’re going to use a slightly different workflow: as before, Alice and Bob share a <tt class="docutils literal"><span class="pre">public</span></tt> repository. But this time there is no <tt class="docutils literal"><span class="pre">review</span></tt> repository. Instead, Alice and Bob put on their cowboy hats, throw good practice to the wind, and pull directly from each other’s working repositories.
+                        </p>
+                        <p>
+                            So we throw away everything except <tt class="docutils literal"><span class="pre">public</span></tt> and reclone:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ rm -rf review alice bob
+$ hg clone public alice
+updating to branch default
+2 files updated, 0 files merged, 0 files removed, 0 files unresolved
+$ hg clone public bob
+updating to branch default
+2 files updated, 0 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Once again we have to configure their repositories: enable <tt class="docutils literal"><span class="pre">evolve</span></tt> and (since Alice and Bob will be pulling directly from each other) make their repositories non-publishing. Edit Alice’s configuration:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R alice config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>[extensions]
+rebase =
+evolve =
+
+[phases]
+publish = false
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Then edit Bob’s repository configuration:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg -R bob config --edit --local
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            and add the same text.
+                        </p>
+                    </div>
+                    <div class="section" id="example-6-divergent-changesets">
+                        <h3>
+                            <a class="toc-backref" href="#id17">Example 6: Divergent changesets</a><a class="headerlink" href="#example-6-divergent-changesets" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            When an obsolete changeset has two successors, those successors are <em>divergent</em>. One way to get into such a situation is by failing to communicate with your teammates. Let’s see how that might happen.
+                        </p>
+                        <p>
+                            First, we’ll have Bob commit a bug fix that could still be improved:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd bob
+$ echo 'pretty good fix' &gt;&gt; file1
+$ hg commit -u bob -m 'fix bug 24 (v1)'                   # rev 4:2fe6
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Since Alice and Bob are now in cowboy mode, Alice pulls Bob’s draft changeset and amends it herself.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../alice
+$ hg pull -u ../bob
+[...]
+added 1 changesets with 1 changes to 1 files
+$ echo 'better fix (alice)' &gt;&gt; file1
+$ hg amend -u alice -m 'fix bug 24 (v2 by alice)'
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            But Bob has no idea that Alice just did this. (See how important good communication is?) So he implements a better fix of his own:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../bob
+$ echo 'better fix (bob)' &gt;&gt; file1
+$ hg amend -u bob -m 'fix bug 24 (v2 by bob)'             # rev 6:a360
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            At this point, the divergence exists, but only in theory: Bob’s original changeset, 4:2fe6, is obsolete and has two successors. But those successors are in different repositories, so the trouble is not visible to anyone yet. It will be as soon as Bob pulls from Alice’s repository (or vice-versa).
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg pull ../alice
+[...]
+added 1 changesets with 1 changes to 2 files (+1 heads)
+(run 'hg heads' to see heads, 'hg merge' to merge)
+2 new divergent changesets
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 9 shows the situation in Bob’s repository.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG09: Bob’s repo with 2 heads for the 2 divergent changesets, 6:a360 and 7:e3f9; wc is at 6:a360; both are successors of obsolete 4:2fe6, hence divergence]
+                            </div>
+                        </blockquote>
+                        <p>
+                            Now we need to get out of trouble. As usual, the answer is to evolve history.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ HGMERGE=internal:other hg evolve
+merge:[6] fix bug 24 (v2 by bob)
+with: [7] fix bug 24 (v2 by alice)
+base: [4] fix bug 24 (v1)
+0 files updated, 1 files merged, 0 files removed, 0 files unresolved
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 10 shows how Bob’s repository looks now.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG10: only one visible head, 9:5ad6, successor to hidden 6:a360 and 7:e3f9]
+                            </div>
+                        </blockquote>
+                        <p>
+                            We carefully dodged a merge conflict by specifying a merge tool (<tt class="docutils literal"><span class="pre">internal:other</span></tt>) that will take Alice’s changes over Bob’s. (You might wonder why Bob wouldn’t prefer his own changes by using <tt class="docutils literal"><span class="pre">internal:local</span></tt>. He’s avoiding a <a class="reference internal" href="#bug">bug</a> in <tt class="docutils literal"><span class="pre">evolve</span></tt> that occurs when evolving divergent changesets using <tt class="docutils literal"><span class="pre">internal:local</span></tt>.)
+                        </p>
+                        <p>
+                            # XXX this link does not work .. <span class="target" id="bug">bug</span>: <a class="reference external" href="https://bitbucket.org/marmoute/mutable-history/issue/48/">https://bitbucket.org/marmoute/mutable-history/issue/48/</a>
+                        </p>
+                        <p>
+                            ** STOP HERE: WORK IN PROGRESS **
+                        </p>
+                    </div>
+                    <div class="section" id="phase-divergence-when-a-rewritten-changeset-is-made-public">
+                        <h3>
+                            <a class="toc-backref" href="#id18">Phase-divergence: when a rewritten changeset is made public</a><a class="headerlink" href="#phase-divergence-when-a-rewritten-changeset-is-made-public" title="Permalink to this headline">¶</a>
+                        </h3>
+                        <p>
+                            If Alice and Bob are collaborating on some mutable changesets, it’s possible to get into a situation where an otherwise worthwhile changeset cannot be pushed to the public repository; it is <em>phase-divergent</em> with another changeset that was made public first. Let’s demonstrate one way this could happen.
+                        </p>
+                        <p>
+                            It starts with Alice committing a bug fix. Right now, we don’t yet know if this bug fix is good enough to push to the public repository, but it’s good enough for Alice to commit.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd alice
+$ echo 'fix' &gt; file2
+$ hg commit -A -m 'fix bug 15'
+adding file2
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Now Bob has a bad idea: he decides to pull whatever Alice is working on and tweak her bug fix to his taste:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../bob
+$ hg pull -u ../alice
+[...]
+added 1 changesets with 1 changes to 1 files
+1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+$ echo 'Fix.' &gt; file2
+$ hg amend -A -m 'fix bug 15 (amended)'
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            (Note the lack of communication between Alice and Bob. Failing to communicate with your colleagues is a good way to get into trouble. Nevertheless, <tt class="docutils literal"><span class="pre">evolve</span></tt> can usually sort things out, as we will see.)
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG06: Bob’s repo with one amendment]
+                            </div>
+                        </blockquote>
+                        <p>
+                            After some testing, Alice realizes her bug fix is just fine as it is: no need for further polishing and amending, this changeset is ready to publish.
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../alice
+$ hg push
+[...]
+added 1 changesets with 1 changes to 1 files
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            This introduces a contradiction: in Bob’s repository, changeset 2:e011 (his copy of Alice’s fix) is obsolete, since Bob amended it. But in Alice’s repository (and the <tt class="docutils literal"><span class="pre">public</span></tt> repository), that changeset is public: it is immutable, carved in stone for all eternity. No changeset can be both obsolete and public, so Bob is in for a surprise the next time he pulls from <tt class="docutils literal"><span class="pre">public</span></tt>:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ cd ../bob
+$ hg pull -q -u
+1 new phase-divergent changesets
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 7 shows what just happened to Bob’s repository: changeset 2:e011 is now public, so it can’t be obsolete. When that changeset was obsolete, it made perfect sense for it to have a successor, namely Bob’s amendment of Alice’s fix (changeset 4:fe88). But it’s illogical for a public changeset to have a successor, so 4:fe88 is troubled: it has become <em>bumped</em>.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG07: 2:e011 now public not obsolete, 4:fe88 now bumped]
+                            </div>
+                        </blockquote>
+                        <p>
+                            As usual when there’s trouble in your repository, the solution is to evolve it:
+                        </p>
+                        <div class="highlight-python">
+                            <div class="highlight">
+                                <pre>$ hg evolve --all
+</pre>
+                            </div>
+                        </div>
+                        <p>
+                            Figure 8 illustrates Bob’s repository after evolving away the bumped changeset. Ignoring the obsolete changesets, Bob now has a nice, clean, simple history. His amendment of Alice’s bug fix lives on, as changeset 5:227d—albeit with a software-generated commit message. (Bob should probably amend that changeset to improve the commit message.) But the important thing is that his repository no longer has any troubled changesets, thanks to <tt class="docutils literal"><span class="pre">evolve</span></tt>.
+                        </p>
+                        <blockquote>
+                            <div>
+                                [figure SG08: 5:227d is new, formerly bumped changeset 4:fe88 now hidden]
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+                <div class="section" id="conclusion">
+                    <h2>
+                        <a class="toc-backref" href="#id19">Conclusion</a><a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a>
+                    </h2>
+                    <p>
+                        Mutable history is a powerful tool. Like a sharp knife, an experienced user can do wonderful things with it, much more wonderful than with a dull knife (never mind a rusty spoon). At the same time, an inattentive or careless user can do harm to himself or others. Mercurial with <tt class="docutils literal"><span class="pre">evolve</span></tt> goes to great lengths to limit the harm you can do by trying to handle all possible types of “troubled” changesets. Nevertheless, having a first-aid kit nearby does not mean you should stop being careful with sharp knives.
+                    </p>
+                    <p>
+                        Mutable history shared across multiple repositories by a single developer is a natural extension of this model. Once you are used to using a single sharp knife on its own, it’s pretty straightforward to chop onions and mushrooms using the same knife, or to alternate between two chopping boards with different knives.
+                    </p>
+                    <p>
+                        Mutable history shared by multiple developers is a scary place to go. Imagine a professional kitchen full of expert chefs tossing their favourite knives back and forth, with the occasional axe or chainsaw thrown in to spice things up. If you’re confident that you <em>and your colleagues</em> can do it without losing a limb, go for it. But be sure to practice a lot first before you rely on it!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="bottomnav">
+            <p>
+                «&#160;&#160;<a href="user-guide.html">Evolve: User Guide</a> &#160;&#160;::&#160;&#160; <a class="uplink" href="index.html">Contents</a> &#160;&#160;::&#160;&#160; <a href="concepts.html">Evolve: Concepts</a>&#160;&#160;»
+            </p>
+        </div>
+        <div class="footer">
+            © Copyright 2010-2014, Pierre-Yves David, Greg Ward, and contributors. Last updated on Sep 21, 2017. Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+        </div>
+    </body>
+</html>
