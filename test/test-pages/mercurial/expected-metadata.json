@@ -1,0 +1,8 @@
+{
+  "title": "Shared Mutable History — evolve extension for Mercurial",
+  "byline": null,
+  "dir": null,
+  "excerpt": "Once you have mastered the art of mutable history in a single repository (see the user guide), you can move up to the next level: shared mutable history. evolve lets you push and pull draft changesets between repositories along with their obsolescence markers. This opens up a number of interesting possibilities.",
+  "siteName": null,
+  "readerable": true
+}
