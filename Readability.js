@@ -580,8 +580,8 @@ Readability.prototype = {
     // Clean out elements with little content that have "share" in their id/class combinations from final top candidates,
     // which means we don't remove the top candidates even they have "share".
 
-    var shareElementThreshold = this.DEFAULT_CHAR_THRESHOLD
-    
+    var shareElementThreshold = this.DEFAULT_CHAR_THRESHOLD;
+
     this._forEachNode(articleContent.children, function (topCandidate) {
       this._cleanMatchedNodes(topCandidate, function (node, matchString) {
         return /share/.test(matchString) && node.textContent.length < shareElementThreshold;
