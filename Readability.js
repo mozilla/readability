@@ -1482,17 +1482,17 @@ Readability.prototype = {
     this._removeNodes(e.getElementsByTagName(tag), function(element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
-        var attributeValues = [].map.call(element.attributes, function(attr) {
-          return attr.value;
-        }).join("|");
-
         // First, check the elements attributes to see if any of them contain youtube or vimeo
-        if (this.REGEXPS.videos.test(attributeValues))
-          return false;
+        for (var i = 0; i < element.attributes.length || 0; i++) {
+          if (this.REGEXPS.videos.test(element.attributes[i].value)) {
+            return false;
+          }
+        }
 
-        // Then check the elements inside this element for the same.
-        if (this.REGEXPS.videos.test(element.innerHTML))
+        // For embed with <object> tag, check inner HTML as well.
+        if (element.tagName === "object" && this.REGEXPS.videos.test(element.innerHTML)) {
           return false;
+        }
       }
 
       return true;
@@ -1661,27 +1661,25 @@ Readability.prototype = {
         var input = node.getElementsByTagName("input").length;
 
         var embedCount = 0;
-        var videoCount = 0;
         var embeds = this._concatNodeLists(
           node.getElementsByTagName("object"),
           node.getElementsByTagName("embed"),
           node.getElementsByTagName("iframe"));
 
-        for (var ei = 0, il = embeds.length; ei < il; ei += 1) {
-          var attributeValues = [].map.call(node.attributes, function(attr) {
-            return attr.value;
-          }).join("|");
-
-          if (this.REGEXPS.videos.test(attributeValues) || this.REGEXPS.videos.test(node.innerHTML)) {
-            videoCount += 1;
-          } else {
-            embedCount += 1;
+        for (var i = 0; i < embeds.length; i++) {
+          // If this embed has attribute that matches video regex, don't delete it.
+          for (var j = 0; j < embeds[i].attributes.length || 0; j++) {
+            if (this.REGEXPS.videos.test(embeds[i].attributes[j].value)) {
+              return false;
+            }
           }
-        }
 
-        // If contains video, don't delete this node
-        if (videoCount > 0) {
-          return false;
+          // For embed with <object> tag, check inner HTML as well.
+          if (embeds[i].tagName === "object" && this.REGEXPS.videos.test(embeds[i].innerHTML)) {
+            return false;
+          }
+
+          embedCount++;
         }
 
         var linkDensity = this._getLinkDensity(node);
