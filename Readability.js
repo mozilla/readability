@@ -1483,7 +1483,7 @@ Readability.prototype = {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
         // First, check the elements attributes to see if any of them contain youtube or vimeo
-        for (var i = 0; i < element.attributes.length || 0; i++) {
+        for (var i = 0; i < element.attributes.length; i++) {
           if (this.REGEXPS.videos.test(element.attributes[i].value)) {
             return false;
           }
@@ -1668,7 +1668,7 @@ Readability.prototype = {
 
         for (var i = 0; i < embeds.length; i++) {
           // If this embed has attribute that matches video regex, don't delete it.
-          for (var j = 0; j < embeds[i].attributes.length || 0; j++) {
+          for (var j = 0; j < embeds[i].attributes.length; j++) {
             if (this.REGEXPS.videos.test(embeds[i].attributes[j].value)) {
               return false;
             }
