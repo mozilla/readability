@@ -1487,17 +1487,17 @@ Readability.prototype = {
     this._removeNodes(e.getElementsByTagName(tag), function(element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
-        var attributeValues = [].map.call(element.attributes, function(attr) {
-          return attr.value;
-        }).join("|");
-
         // First, check the elements attributes to see if any of them contain youtube or vimeo
-        if (this.REGEXPS.videos.test(attributeValues))
-          return false;
+        for (var i = 0; i < element.attributes.length; i++) {
+          if (this.REGEXPS.videos.test(element.attributes[i].value)) {
+            return false;
+          }
+        }
 
-        // Then check the elements inside this element for the same.
-        if (this.REGEXPS.videos.test(element.innerHTML))
+        // For embed with <object> tag, check inner HTML as well.
+        if (element.tagName === "object" && this.REGEXPS.videos.test(element.innerHTML)) {
           return false;
+        }
       }
 
       return true;
@@ -1666,10 +1666,25 @@ Readability.prototype = {
         var input = node.getElementsByTagName("input").length;
 
         var embedCount = 0;
-        var embeds = node.getElementsByTagName("embed");
-        for (var ei = 0, il = embeds.length; ei < il; ei += 1) {
-          if (!this.REGEXPS.videos.test(embeds[ei].src))
-            embedCount += 1;
+        var embeds = this._concatNodeLists(
+          node.getElementsByTagName("object"),
+          node.getElementsByTagName("embed"),
+          node.getElementsByTagName("iframe"));
+
+        for (var i = 0; i < embeds.length; i++) {
+          // If this embed has attribute that matches video regex, don't delete it.
+          for (var j = 0; j < embeds[i].attributes.length; j++) {
+            if (this.REGEXPS.videos.test(embeds[i].attributes[j].value)) {
+              return false;
+            }
+          }
+
+          // For embed with <object> tag, check inner HTML as well.
+          if (embeds[i].tagName === "object" && this.REGEXPS.videos.test(embeds[i].innerHTML)) {
+            return false;
+          }
+
+          embedCount++;
         }
 
         var linkDensity = this._getLinkDensity(node);
