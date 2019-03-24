@@ -34,6 +34,16 @@ var article = new Readability(documentClone).parse();
 
 ## Usage from node.js
 
+To install this library using npm, run
+
+```npm install --save mozilla/readability#master```
+
+Note: For Firefox, we import from 'master' on this repository, and fix any issues that come up.
+For example, on 2019-03-20 the latest import (that would ship with Firefox 67) was from what
+is 'master' was few days ago, see https://bugzilla.mozilla.org/show_bug.cgi?id=1531712 . 
+(Compared to current 'master', it was only missing a test-only commit, ie cb5771f ). 
+(See https://github.com/mozilla/readability/issues/533 )
+
 In node.js, you won't generally have a DOM document object. To obtain one, you can use external
 libraries like [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of
 its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do
