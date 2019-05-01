@@ -1640,7 +1640,7 @@ Readability.prototype = {
             } else {
               //if the item is a <figure> that does not contain an image or picture, create one and place it inside the figure
               //see the nytimes-3 testcase for an example
-              if (elem.tagName === "FIGURE" && elem.getElementsByTagName("img").length === 0 && elem.getElementsByTagName("picture").length === 0) {
+              if (elem.tagName === "FIGURE" && !this._getAllNodesWithTag(elem, ["img", "picture"]).length) {
                 var img = this._doc.createElement("img")
                 img.setAttribute(copyTo, attr.value)
                 elem.appendChild(img)
