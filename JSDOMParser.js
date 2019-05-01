@@ -666,6 +666,14 @@
       this.setAttribute("src", str);
     },
 
+    get srcset() {
+      return this.getAttribute("srcset") || "";
+    },
+
+    set srcset(str) {
+      this.setAttribute("srcset", str);
+    },
+
     get nodeName() {
       return this.tagName;
     },
