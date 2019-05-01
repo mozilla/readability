@@ -1628,9 +1628,9 @@ Readability.prototype = {
             continue;
           }
           var copyTo = null;
-          if (/.*\.(jpg|png|bmp|tiff)\s\d+/.test(attr.value)) {
+          if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
             copyTo = "srcset"
-          } else if (/https?:\/\/.*\.(jpg|png|bmp|tiff)/.test(attr.value)) {
+          } else if (/https?:\/\/.*\.(jpg|jpeg|png|webp)/.test(attr.value)) {
             copyTo = "src"
           }
           if(copyTo) {
