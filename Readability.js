@@ -567,6 +567,8 @@ Readability.prototype = {
     // visually linked to other content-ful elements (text, images, etc.).
     this._markDataTables(articleContent);
 
+    this._fixLazyImages(articleContent)
+
     // Clean out junk from the article content
     this._cleanConditionally(articleContent, "form");
     this._cleanConditionally(articleContent, "fieldset");
@@ -1614,6 +1616,44 @@ Readability.prototype = {
       // Now just go by size entirely:
       table._readabilityDataTable = sizeInfo.rows * sizeInfo.columns > 10;
     }
+  },
+
+  /* convert images and figures that have properties like data-src into images that can be loaded without JS */
+  _fixLazyImages: function(root) {
+    var nodesToCheck = [].slice.call(root.getElementsByTagName("img"))
+    .concat([].slice.call(root.getElementsByTagName("picture")))
+    .concat([].slice.call(root.getElementsByTagName("figure")))
+
+    this._forEachNode(nodesToCheck, function(elem) {
+      if ((!elem.src && !elem.srcset) || elem.className.indexOf("lazy") !== -1) {
+        for (var i = 0; i < elem.attributes.length; i++) {
+          var attr = elem.attributes[i]
+          if(attr.name === "src" || attr.name === "srcset") {
+            continue;
+          }
+          var copyTo = null;
+          if(/.*\.(jpg|png|bmp|tiff)\s\d+/.test(attr.value)) {
+            copyTo = "srcset"
+          } else if (/https?:\/\/.*\.(jpg|png|bmp|tiff)/.test(attr.value)) {
+            copyTo = "src"
+          }
+          if(copyTo) {
+            //if this is an img or picture, set the attribute directly
+            if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
+              elem.setAttribute(copyTo, attr.value)
+            } else {
+              //if the item is a <figure> that does not contain an image or picture, create one and place it inside the figure
+              //see the nytimes-3 testcase for an example
+              if (elem.tagName === "FIGURE" && elem.getElementsByTagName("img").length === 0 && elem.getElementsByTagName("picture").length === 0) {
+                var img = this._doc.createElement("img")
+                img.setAttribute(copyTo, attr.value)
+                elem.appendChild(img)
+              }
+            }
+          }
+        }
+      }
+    })
   },
 
   /**
