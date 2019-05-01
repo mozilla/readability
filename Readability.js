@@ -1619,20 +1619,16 @@ Readability.prototype = {
   },
 
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
-  _fixLazyImages: function(root) {
-    var nodesToCheck = [].slice.call(root.getElementsByTagName("img"))
-    .concat([].slice.call(root.getElementsByTagName("picture")))
-    .concat([].slice.call(root.getElementsByTagName("figure")))
-
-    this._forEachNode(nodesToCheck, function(elem) {
-      if ((!elem.src && !elem.srcset) || elem.className.indexOf("lazy") !== -1) {
+  _fixLazyImages: function (root) {
+    this._forEachNode(this._getAllNodesWithTag(root, ["img", "picture", "figure"]), function (elem) {
+      if ((!elem.src && !elem.srcset) || elem.className.toLowerCase().indexOf("lazy") !== -1) {
         for (var i = 0; i < elem.attributes.length; i++) {
           var attr = elem.attributes[i]
-          if(attr.name === "src" || attr.name === "srcset") {
+          if (attr.name === "src" || attr.name === "srcset") {
             continue;
           }
           var copyTo = null;
-          if(/.*\.(jpg|png|bmp|tiff)\s\d+/.test(attr.value)) {
+          if (/.*\.(jpg|png|bmp|tiff)\s\d+/.test(attr.value)) {
             copyTo = "srcset"
           } else if (/https?:\/\/.*\.(jpg|png|bmp|tiff)/.test(attr.value)) {
             copyTo = "src"
