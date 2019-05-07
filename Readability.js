@@ -1621,7 +1621,7 @@ Readability.prototype = {
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
   _fixLazyImages: function (root) {
     this._forEachNode(this._getAllNodesWithTag(root, ["img", "picture", "figure"]), function (elem) {
-      if ((!elem.src && !elem.srcset) || elem.className.toLowerCase().indexOf("lazy") !== -1) {
+      if ((!elem.src && (!elem.srcset || elem.srcset == "null")) || elem.className.toLowerCase().indexOf("lazy") !== -1) {
         for (var i = 0; i < elem.attributes.length; i++) {
           var attr = elem.attributes[i]
           if (attr.name === "src" || attr.name === "srcset") {
@@ -1630,10 +1630,10 @@ Readability.prototype = {
           var copyTo = null;
           if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
             copyTo = "srcset"
-          } else if (/https?:\/\/.*\.(jpg|jpeg|png|webp)/.test(attr.value)) {
+          } else if (/^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/.test(attr.value)) {
             copyTo = "src"
           }
-          if(copyTo) {
+          if (copyTo) {
             //if this is an img or picture, set the attribute directly
             if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
               elem.setAttribute(copyTo, attr.value)
