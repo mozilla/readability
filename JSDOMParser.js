@@ -495,13 +495,13 @@
       return this._value;
     },
     getValue: function() {
-      return this._value
+      return this._value;
     },
     setValue: function(newValue) {
       this._value = newValue;
     },
     getEncodedValue: function() {
-      return encodeHTML(this._value)
+      return encodeHTML(this._value);
     },
   };
 
