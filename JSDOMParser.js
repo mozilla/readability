@@ -496,17 +496,9 @@
     },
     setValue: function(newValue) {
       this._value = newValue;
-      delete this._decodedValue;
     },
-    setDecodedValue: function(newValue) {
-      this._value = encodeHTML(newValue);
-      this._decodedValue = newValue;
-    },
-    getDecodedValue: function() {
-      if (typeof this._decodedValue === "undefined") {
-        this._decodedValue = (this._value && decodeHTML(this._value)) || "";
-      }
-      return this._decodedValue;
+    getEncodedValue: function() {
+      return encodeHTML(this._value);
     },
   };
 
@@ -666,6 +658,14 @@
       this.setAttribute("src", str);
     },
 
+    get srcset() {
+      return this.getAttribute("srcset") || "";
+    },
+
+    set srcset(str) {
+      this.setAttribute("srcset", str);
+    },
+
     get nodeName() {
       return this.tagName;
     },
@@ -682,7 +682,7 @@
             for (var j = 0; j < child.attributes.length; j++) {
               var attr = child.attributes[j];
               // the attribute value will be HTML escaped.
-              var val = attr.value;
+              var val = attr.getEncodedValue();
               var quote = (val.indexOf('"') === -1 ? '"' : "'");
               arr.push(" " + attr.name + "=" + quote + val + quote);
             }
@@ -760,8 +760,9 @@
     getAttribute: function (name) {
       for (var i = this.attributes.length; --i >= 0;) {
         var attr = this.attributes[i];
-        if (attr.name === name)
-          return attr.getDecodedValue();
+        if (attr.name === name) {
+          return attr.value;
+        }
       }
       return undefined;
     },
@@ -770,11 +771,11 @@
       for (var i = this.attributes.length; --i >= 0;) {
         var attr = this.attributes[i];
         if (attr.name === name) {
-          attr.setDecodedValue(value);
+          attr.setValue(value);
           return;
         }
       }
-      this.attributes.push(new Attribute(name, encodeHTML(value)));
+      this.attributes.push(new Attribute(name, value));
     },
 
     removeAttribute: function (name) {
@@ -938,7 +939,7 @@
       // Read the attribute value (and consume the matching quote)
       var value = this.readString(c);
 
-      node.attributes.push(new Attribute(name, value));
+      node.attributes.push(new Attribute(name, decodeHTML(value)));
 
       return;
     },
