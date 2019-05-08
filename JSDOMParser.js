@@ -494,9 +494,6 @@
     get value() {
       return this._value;
     },
-    getValue: function() {
-      return this._value;
-    },
     setValue: function(newValue) {
       this._value = newValue;
     },
@@ -764,7 +761,7 @@
       for (var i = this.attributes.length; --i >= 0;) {
         var attr = this.attributes[i];
         if (attr.name === name) {
-          return attr.getValue();
+          return attr.value;
         }
       }
       return undefined;
