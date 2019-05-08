@@ -1621,6 +1621,7 @@ Readability.prototype = {
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
   _fixLazyImages: function (root) {
     this._forEachNode(this._getAllNodesWithTag(root, ["img", "picture", "figure"]), function (elem) {
+      // also check for "null" to work around https://github.com/jsdom/jsdom/issues/2580
       if ((!elem.src && (!elem.srcset || elem.srcset == "null")) || elem.className.toLowerCase().indexOf("lazy") !== -1) {
         for (var i = 0; i < elem.attributes.length; i++) {
           var attr = elem.attributes[i];
