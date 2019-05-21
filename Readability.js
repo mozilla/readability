@@ -586,7 +586,7 @@ Readability.prototype = {
 
     this._forEachNode(articleContent.children, function (topCandidate) {
       this._cleanMatchedNodes(topCandidate, function (node, matchString) {
-        return /share/.test(matchString) && node.textContent.length < shareElementThreshold;
+        return /[^a-zA-Z0-9]share[^a-zA-Z0-9]/g.test(" " + matchString + " ") && node.textContent.length < shareElementThreshold;
       });
     });
 
