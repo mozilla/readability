@@ -124,6 +124,7 @@ Readability.prototype = {
     replaceFonts: /<(\/?)font[^>]*>/gi,
     normalize: /\s{2,}/g,
     videos: /\/\/(www\.)?((dailymotion|youtube|youtube-nocookie|player\.vimeo|v\.qq)\.com|(archive|upload\.wikimedia)\.org|player\.twitch\.tv)/i,
+    shareElements: /(\b|_)(share|sharedaddy)(\b|_)/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
@@ -586,7 +587,7 @@ Readability.prototype = {
 
     this._forEachNode(articleContent.children, function (topCandidate) {
       this._cleanMatchedNodes(topCandidate, function (node, matchString) {
-        return /share/.test(matchString) && node.textContent.length < shareElementThreshold;
+        return this.REGEXPS.shareElements.test(matchString) && node.textContent.length < shareElementThreshold;
       });
     });
 
@@ -1751,7 +1752,7 @@ Readability.prototype = {
     var endOfSearchMarkerNode = this._getNextNode(e, true);
     var next = this._getNextNode(e);
     while (next && next != endOfSearchMarkerNode) {
-      if (filter(next, next.className + " " + next.id)) {
+      if (filter.call(this, next, next.className + " " + next.id)) {
         next = this._removeAndGetNext(next);
       } else {
         next = this._getNextNode(next);
