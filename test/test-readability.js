@@ -202,10 +202,10 @@ describe("Readability API", function() {
       expect(new Readability(doc, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
     });
 
-    it("should accept a shouldCleanClasses option", function() {
-      expect(new Readability(doc)._shouldCleanClasses).eql(true);
-      expect(new Readability(doc, {shouldCleanClasses: true})._shouldCleanClasses).eql(true);
-      expect(new Readability(doc, {shouldCleanClasses: false})._shouldCleanClasses).eql(false);
+    it("should accept a keepClasses option", function() {
+      expect(new Readability(doc)._keepClasses).eql(false);
+      expect(new Readability(doc, {keepClasses: true})._keepClasses).eql(true);
+      expect(new Readability(doc, {keepClasses: false})._keepClasses).eql(false);
     });
   });
 
