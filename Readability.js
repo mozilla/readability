@@ -48,11 +48,7 @@ function Readability(doc, options) {
   this._nbTopCandidates = options.nbTopCandidates || this.DEFAULT_N_TOP_CANDIDATES;
   this._charThreshold = options.charThreshold || this.DEFAULT_CHAR_THRESHOLD;
   this._classesToPreserve = this.CLASSES_TO_PRESERVE.concat(options.classesToPreserve || []);
-  this._shouldCleanClasses = options.shouldCleanClasses || true;
-
-  if (!this._shouldCleanClasses && this._classesToPreserve.length) {
-    throw new Error("classesToPreserve does not work with shouldCleanClasses set to false.");
-  }
+  this._keepClasses = !!options.keepClasses;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -168,7 +164,7 @@ Readability.prototype = {
     // Readability cannot open relative uris so we convert them to absolute uris.
     this._fixRelativeUris(articleContent);
 
-    if (this._shouldCleanClasses) {
+    if (!this._keepClasses) {
       // Remove classes.
       this._cleanClasses(articleContent);
     }
