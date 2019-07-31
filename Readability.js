@@ -50,6 +50,10 @@ function Readability(doc, options) {
   this._classesToPreserve = this.CLASSES_TO_PRESERVE.concat(options.classesToPreserve || []);
   this._shouldCleanClasses = options.shouldCleanClasses || true;
 
+  if (!this._shouldCleanClasses && this._classesToPreserve.length) {
+    throw new Error("classesToPreserve does not work with shouldCleanClasses set to false.");
+  }
+
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
                 this.FLAG_WEIGHT_CLASSES |

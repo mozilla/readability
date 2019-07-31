@@ -201,6 +201,12 @@ describe("Readability API", function() {
       expect(new Readability(doc)._maxElemsToParse).eql(0);
       expect(new Readability(doc, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
     });
+
+    it("should accept a shouldCleanClasses option", function() {
+      expect(new Readability(doc)._shouldCleanClasses).eql(true);
+      expect(new Readability(doc, {shouldCleanClasses: true})._shouldCleanClasses).eql(true);
+      expect(new Readability(doc, {shouldCleanClasses: false})._shouldCleanClasses).eql(false);
+    });
   });
 
   describe("#parse", function() {
