@@ -1,5 +1,6 @@
 var JSDOM = require("jsdom").JSDOM;
 var chai = require("chai");
+var sinon = require("sinon");
 chai.config.includeStack = true;
 var expect = chai.expect;
 
@@ -201,15 +202,57 @@ describe("Readability API", function() {
       expect(new Readability(doc)._maxElemsToParse).eql(0);
       expect(new Readability(doc, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
     });
+
+    it("should accept a keepClasses option", function() {
+      expect(new Readability(doc)._keepClasses).eql(false);
+      expect(new Readability(doc, {keepClasses: true})._keepClasses).eql(true);
+      expect(new Readability(doc, {keepClasses: false})._keepClasses).eql(false);
+    });
   });
 
   describe("#parse", function() {
+    var exampleSource = testPages[0].source;
+
     it("shouldn't parse oversized documents as per configuration", function() {
       var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
       expect(function() {
         new Readability(doc, {maxElemsToParse: 1}).parse();
       }).to.Throw("Aborting parsing document; 2 elements found");
     });
+
+    it("should run _cleanClasses with default configuration", function() {
+      var doc = new JSDOMParser().parse(exampleSource);
+      var parser = new Readability(doc);
+
+      parser._cleanClasses = sinon.fake();
+
+      parser.parse();
+
+      expect(parser._cleanClasses.called).eql(true);
+    });
+
+    it("should run _cleanClasses when option keepClasses = false", function() {
+      var doc = new JSDOMParser().parse(exampleSource);
+      var parser = new Readability(doc, {keepClasses: false});
+
+      parser._cleanClasses = sinon.fake();
+
+      parser.parse();
+
+      expect(parser._cleanClasses.called).eql(true);
+    });
+
+    it("shouldn't run _cleanClasses when option keepClasses = true", function() {
+      var doc = new JSDOMParser().parse(exampleSource);
+      var parser = new Readability(doc, {keepClasses: true});
+
+      parser._cleanClasses = sinon.fake();
+
+      parser.parse();
+
+      expect(parser._cleanClasses.called).eql(false);
+    });
+
   });
 });
 
