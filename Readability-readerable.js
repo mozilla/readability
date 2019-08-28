@@ -31,7 +31,7 @@ var REGEXPS = {
 function isNodeVisible(node) {
   // Have to null-check node.style to deal with SVG and MathML nodes.
   return (!node.style || node.style.display != "none") && !node.hasAttribute("hidden")
-		&& (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") !== "true");
+    && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") !== "true");
 }
 
 /**
