@@ -706,7 +706,9 @@ Readability.prototype = {
 
   _removeAndGetNext: function(node) {
     var nextNode = this._getNextNode(node, true);
-    node.parentNode.removeChild(node);
+    if (node.parentNode) {
+      node.parentNode.removeChild(node);  
+    }
     return nextNode;
   },
 
