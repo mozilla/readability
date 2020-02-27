@@ -31,9 +31,9 @@ var REGEXPS = {
 function isNodeVisible(node) {
   // Have to null-check node.style and node.className.indexOf to deal with SVG and MathML nodes.
   return (!node.style || node.style.display != "none")
-  && !node.hasAttribute("hidden")
-  //check for "fallback-image" so that wikimedia math images are displayed
-  && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1));
+    && !node.hasAttribute("hidden")
+    //check for "fallback-image" so that wikimedia math images are displayed
+    && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1));
 }
 
 /**
