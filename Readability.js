@@ -332,11 +332,21 @@ Readability.prototype = {
     this._forEachNode(links, function(link) {
       var href = link.getAttribute("href");
       if (href) {
-        // Replace links with javascript: URIs with text content, since
+        // Remove links with javascript: URIs, since
         // they won't work after scripts have been removed from the page.
         if (href.indexOf("javascript:") === 0) {
-          var text = this._doc.createTextNode(link.textContent);
-          link.parentNode.replaceChild(text, link);
+          // if the link only contains simple text content, it can be converted to a text node
+          if (link.childNodes.length === 1 && link.childNodes[0].nodeType === this.TEXT_NODE) {
+            var text = this._doc.createTextNode(link.textContent);
+            link.parentNode.replaceChild(text, link);  
+          } else {
+            // if the link has multiple children, they should all be preserved
+            var container = this._doc.createElement('span')
+            while (link.childNodes.length > 0) {
+              container.appendChild(link.childNodes[0])
+            }
+            link.parentNode.replaceChild(container, link);
+          }
         } else {
           link.setAttribute("href", toAbsoluteURI(href));
         }
