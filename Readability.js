@@ -36,6 +36,7 @@ function Readability(doc, options) {
   options = options || {};
 
   this._doc = doc;
+  this._docJSDOMParser = this._doc.firstChild.__JSDOMParser__;
   this._articleTitle = null;
   this._articleByline = null;
   this._articleDir = null;
@@ -181,6 +182,10 @@ Readability.prototype = {
    * @return void
    */
   _removeNodes: function(nodeList, filterFn) {
+    // Avoid ever operating on live node lists.
+    if (this._docJSDOMParser && nodeList._isLiveNodeList) {
+      throw new Error("Do not pass live node lists to _removeNodes");
+    }
     for (var i = nodeList.length - 1; i >= 0; i--) {
       var node = nodeList[i];
       var parentNode = node.parentNode;
@@ -200,6 +205,10 @@ Readability.prototype = {
    * @return void
    */
   _replaceNodeTags: function(nodeList, newTagName) {
+    // Avoid ever operating on live node lists.
+    if (this._docJSDOMParser && nodeList._isLiveNodeList) {
+      throw new Error("Do not pass live node lists to _replaceNodeTags");
+    }
     for (var i = nodeList.length - 1; i >= 0; i--) {
       var node = nodeList[i];
       this._setNodeTag(node, newTagName);
@@ -451,13 +460,13 @@ Readability.prototype = {
     var doc = this._doc;
 
     // Remove all style tags in head
-    this._removeNodes(doc.getElementsByTagName("style"));
+    this._removeNodes(this._getAllNodesWithTag(doc, ["style"]));
 
     if (doc.body) {
       this._replaceBrs(doc.body);
     }
 
-    this._replaceNodeTags(doc.getElementsByTagName("font"), "SPAN");
+    this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
   },
 
   /**
@@ -537,7 +546,7 @@ Readability.prototype = {
 
   _setNodeTag: function (node, tag) {
     this.log("_setNodeTag", node, tag);
-    if (node.__JSDOMParser__) {
+    if (this._docJSDOMParser) {
       node.localName = tag.toLowerCase();
       node.tagName = tag.toUpperCase();
       return node;
@@ -637,7 +646,7 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "div");
 
     // Remove extra paragraphs
-    this._removeNodes(articleContent.getElementsByTagName("p"), function (paragraph) {
+    this._removeNodes(this._getAllNodesWithTag(articleContent, ["p"]), function (paragraph) {
       var imgCount = paragraph.getElementsByTagName("img").length;
       var embedCount = paragraph.getElementsByTagName("embed").length;
       var objectCount = paragraph.getElementsByTagName("object").length;
@@ -1313,12 +1322,12 @@ Readability.prototype = {
    * @param Element
   **/
   _removeScripts: function(doc) {
-    this._removeNodes(doc.getElementsByTagName("script"), function(scriptNode) {
+    this._removeNodes(this._getAllNodesWithTag(doc, ["script"]), function(scriptNode) {
       scriptNode.nodeValue = "";
       scriptNode.removeAttribute("src");
       return true;
     });
-    this._removeNodes(doc.getElementsByTagName("noscript"));
+    this._removeNodes(this._getAllNodesWithTag(doc, ["noscript"]));
   },
 
   /**
@@ -1501,7 +1510,7 @@ Readability.prototype = {
   _clean: function(e, tag) {
     var isEmbed = ["object", "embed", "iframe"].indexOf(tag) !== -1;
 
-    this._removeNodes(e.getElementsByTagName(tag), function(element) {
+    this._removeNodes(this._getAllNodesWithTag(e, [tag]), function(element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
       if (isEmbed) {
         // First, check the elements attributes to see if any of them contain youtube or vimeo
@@ -1682,7 +1691,7 @@ Readability.prototype = {
     // without effecting the traversal.
     //
     // TODO: Consider taking into account original contentScore here.
-    this._removeNodes(e.getElementsByTagName(tag), function(node) {
+    this._removeNodes(this._getAllNodesWithTag(e, [tag]), function(node) {
       // First check if this node IS data table, in which case don't remove it.
       var isDataTable = function(t) {
         return t._readabilityDataTable;
@@ -1716,10 +1725,7 @@ Readability.prototype = {
         var input = node.getElementsByTagName("input").length;
 
         var embedCount = 0;
-        var embeds = this._concatNodeLists(
-          node.getElementsByTagName("object"),
-          node.getElementsByTagName("embed"),
-          node.getElementsByTagName("iframe"));
+        var embeds = this._getAllNodesWithTag(node, ["object", "embed", "iframe"]);
 
         for (var i = 0; i < embeds.length; i++) {
           // If this embed has attribute that matches video regex, don't delete it.
@@ -1780,11 +1786,9 @@ Readability.prototype = {
    * @return void
   **/
   _cleanHeaders: function(e) {
-    for (var headerIndex = 1; headerIndex < 3; headerIndex += 1) {
-      this._removeNodes(e.getElementsByTagName("h" + headerIndex), function (header) {
-        return this._getClassWeight(header) < 0;
-      });
-    }
+    this._removeNodes(this._getAllNodesWithTag(e, ["h1", "h2"]), function (header) {
+      return this._getClassWeight(header) < 0;
+    });
   },
 
   _flagIsActive: function(flag) {
