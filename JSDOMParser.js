@@ -308,6 +308,7 @@
       }
     }
     getElems(this);
+    elems._isLiveNodeList = true;
     return elems;
   }
 
