@@ -36,7 +36,8 @@ function inOrderIgnoreEmptyTextNodes(fromNode) {
 function traverseDOM(callback, expectedDOM, actualDOM) {
   var actualNode = actualDOM.documentElement || actualDOM.childNodes[0];
   var expectedNode = expectedDOM.documentElement || expectedDOM.childNodes[0];
-  while (actualNode) {
+  while (actualNode || expectedNode) {
+    // We'll stop if we don't have both actualNode and expectedNode
     if (!callback(actualNode, expectedNode)) {
       break;
     }
@@ -74,6 +75,9 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
 
     it("should extract expected content", function() {
       function nodeStr(n) {
+        if (!n) {
+          return "(no node)";
+        }
         if (n.nodeType == 3) {
           return "#text(" + htmlTransform(n.textContent) + ")";
         }
@@ -113,10 +117,10 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
         }).join(",");
       }
 
+
       var actualDOM = domGenerationFn(result.content);
       var expectedDOM = domGenerationFn(expectedContent);
       traverseDOM(function(actualNode, expectedNode) {
-        expect(!!actualNode).eql(!!expectedNode);
         if (actualNode && expectedNode) {
           var actualDesc = nodeStr(actualNode);
           var expectedDesc = nodeStr(expectedNode);
@@ -146,6 +150,7 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
             }
           }
         } else {
+          expect(nodeStr(actualNode), "Should have a node from both DOMs").eql(nodeStr(expectedNode));
           return false;
         }
         return true;
