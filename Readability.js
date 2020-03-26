@@ -1317,6 +1317,61 @@ Readability.prototype = {
   },
 
   /**
+   * Find all <noscript> that located after <img> node, and contains exactly
+   * single <img> element. Once it found, this method will replace the previous <img>
+   * with <img> inside <noscript>, then finally remove the <noscript> tag. This is
+   * done because in some website (e.g. Medium), they use lazy load method like this.
+   *
+   * @param Element
+  **/
+  _unwrapNoscriptImages: function(doc) {
+    // First, find div which only contains single img element, then put it out.
+    var divs = doc.getElementsByTagName("div");
+    this._forEachNode(divs, function(div) {
+      if (div.children.length == 1 && div.children[0].tagName === "IMG") {
+        div.parentNode.replaceChild(div.children[0], div);
+      }
+    });
+
+    // Next find img without source, and remove it. This is done to
+    // prevent a placeholder img is replaced by img from noscript in next step.
+    var imgs = doc.getElementsByTagName("img");
+    this._forEachNode(imgs, function(img) {
+      var src = img.getAttribute("src") || "",
+        srcset = img.getAttribute("srcset") || "",
+        dataSrc = img.getAttribute("data-src") || "",
+        dataSrcset = img.getAttribute("data-srcset") || "";
+      
+      if (src === "" && srcset === "" && dataSrc === "" && dataSrcset === "") {
+        img.parentNode.removeChild(img);
+      }
+    });
+
+    // Next find noscript and try to extract its image
+    var noscripts = doc.getElementsByTagName("noscript");
+    this._forEachNode(noscripts, function(noscript) {
+      // Make sure prev sibling is exist and it's image
+      var prevElement = noscript.previousElementSibling;
+      if (prevElement == null || prevElement.tagName !== "IMG") {
+        return;
+      }
+      
+      // In jsdom content of noscript is treated as string, so here we parse it.
+      var tmp = doc.createElement("div");
+      tmp.innerHTML = noscript.innerHTML;
+
+      // Make sure noscript only has one children, and it's <img> element
+      var children = tmp.children;
+      if (children.length != 1 || children[0].tagName !== "IMG") {
+        return;
+      }
+      
+      // At this point, just replace the previous img with img from noscript.
+      noscript.parentNode.replaceChild(children[0], prevElement);
+    });
+  },
+
+  /**
    * Removes script tags from the document.
    *
    * @param Element
@@ -1827,6 +1882,9 @@ Readability.prototype = {
         throw new Error("Aborting parsing document; " + numTags + " elements found");
       }
     }
+
+    // Unwrap image from noscript
+    this._unwrapNoscriptImages(this._doc);
 
     // Remove script tags from the document.
     this._removeScripts(this._doc);
