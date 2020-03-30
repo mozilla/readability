@@ -1317,10 +1317,10 @@ Readability.prototype = {
   },
 
   /**
-   * Find all <noscript> that located after <img> node, and contains exactly
-   * single <img> element. Once it found, this method will replace the previous <img>
-   * with <img> inside <noscript>, then finally remove the <noscript> tag. This is
-   * done because in some website (e.g. Medium), they use lazy load method like this.
+   * Find all <noscript> that are located after <img> nodes, and which contain only one
+   * <img> element. Replace the first image with the image from inside the <noscript> tag,
+   * and remove the <noscript> tag. This improves the quality of the images we use on
+   * some sites (e.g. Medium).
    *
    * @param Element
   **/
@@ -1341,7 +1341,7 @@ Readability.prototype = {
         srcset = img.getAttribute("srcset") || "",
         dataSrc = img.getAttribute("data-src") || "",
         dataSrcset = img.getAttribute("data-srcset") || "";
-      
+
       if (src === "" && srcset === "" && dataSrc === "" && dataSrcset === "") {
         img.parentNode.removeChild(img);
       }
@@ -1350,22 +1350,23 @@ Readability.prototype = {
     // Next find noscript and try to extract its image
     var noscripts = doc.getElementsByTagName("noscript");
     this._forEachNode(noscripts, function(noscript) {
-      // Make sure prev sibling is exist and it's image
+      // Make sure prev sibling exists and it's image
       var prevElement = noscript.previousElementSibling;
       if (prevElement == null || prevElement.tagName !== "IMG") {
         return;
       }
-      
-      // In jsdom content of noscript is treated as string, so here we parse it.
+
+      // In spec-compliant browser, content of noscript is treated as
+      // string so here we parse it.
       var tmp = doc.createElement("div");
       tmp.innerHTML = noscript.innerHTML;
 
-      // Make sure noscript only has one children, and it's <img> element
+      // Make sure noscript only has one child, and it's <img> element
       var children = tmp.children;
       if (children.length != 1 || children[0].tagName !== "IMG") {
         return;
       }
-      
+
       // At this point, just replace the previous img with img from noscript.
       noscript.parentNode.replaceChild(children[0], prevElement);
     });
