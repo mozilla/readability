@@ -1323,9 +1323,14 @@ Readability.prototype = {
    * @param Element
   **/
   _isSingleImage: function(node) {
-    if (node.tagName === "IMG") return true;
-    if (node.children.length !== 1) return false;
-    if (node.textContent.trim() !== "") return false;
+    if (node.tagName === "IMG") {
+      return true;
+    }
+
+    if (node.children.length !== 1 || node.textContent.trim() !== "") {
+      return false;
+    }
+
     return this._isSingleImage(node.children[0]);
   },
 
@@ -1358,7 +1363,9 @@ Readability.prototype = {
       // Parse content of noscript and make sure it only contains image
       var tmp = doc.createElement("div");
       tmp.innerHTML = noscript.innerHTML;
-      if (!this._isSingleImage(tmp)) return;
+      if (!this._isSingleImage(tmp)) {
+        return;
+      }
 
       // If noscript has previous sibling and it only contains image,
       // replace it with noscript content. However, in some case there
