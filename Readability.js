@@ -1317,6 +1317,19 @@ Readability.prototype = {
   },
 
   /**
+   * Check if node is image, or if node contains exactly only one image
+   * whether as a direct child or as its descendants.
+   *
+   * @param Element
+  **/
+  _isSingleImage: function(node) {
+    if (node.tagName === "IMG") return true;
+    if (node.children.length !== 1) return false;
+    if (node.textContent.trim() !== "") return false;
+    return this._isSingleImage(node.children[0]);
+  },
+
+  /**
    * Find all <noscript> that are located after <img> nodes, and which contain only one
    * <img> element. Replace the first image with the image from inside the <noscript> tag,
    * and remove the <noscript> tag. This improves the quality of the images we use on
@@ -1325,24 +1338,16 @@ Readability.prototype = {
    * @param Element
   **/
   _unwrapNoscriptImages: function(doc) {
-    // First, find div which only contains single img element, then put it out.
-    var divs = doc.getElementsByTagName("div");
-    this._forEachNode(divs, function(div) {
-      if (div.children.length == 1 && div.children[0].tagName === "IMG") {
-        div.parentNode.replaceChild(div.children[0], div);
-      }
-    });
-
-    // Next find img without source, and remove it. This is done to
-    // prevent a placeholder img is replaced by img from noscript in next step.
+    // Find img without source and remove it. This is done to prevent a placeholder
+    // img is replaced by img from noscript in next step.
     var imgs = doc.getElementsByTagName("img");
     this._forEachNode(imgs, function(img) {
-      var src = img.getAttribute("src") || "",
-        srcset = img.getAttribute("srcset") || "",
-        dataSrc = img.getAttribute("data-src") || "",
-        dataSrcset = img.getAttribute("data-srcset") || "";
+      var src = img.getAttribute("src");
+      var srcset = img.getAttribute("srcset");
+      var dataSrc = img.getAttribute("data-src");
+      var dataSrcset = img.getAttribute("data-srcset");
 
-      if (src === "" && srcset === "" && dataSrc === "" && dataSrcset === "") {
+      if (!src && !srcset && !dataSrc && !dataSrcset) {
         img.parentNode.removeChild(img);
       }
     });
@@ -1350,25 +1355,17 @@ Readability.prototype = {
     // Next find noscript and try to extract its image
     var noscripts = doc.getElementsByTagName("noscript");
     this._forEachNode(noscripts, function(noscript) {
-      // Make sure prev sibling exists and it's image
-      var prevElement = noscript.previousElementSibling;
-      if (prevElement == null || prevElement.tagName !== "IMG") {
-        return;
-      }
-
-      // In spec-compliant browser, content of noscript is treated as
-      // string so here we parse it.
+      // Parse content of noscript and make sure it only contains image
       var tmp = doc.createElement("div");
       tmp.innerHTML = noscript.innerHTML;
+      if (!this._isSingleImage(tmp)) return;
 
-      // Make sure noscript only has one child, and it's <img> element
-      var children = tmp.children;
-      if (children.length != 1 || children[0].tagName !== "IMG") {
-        return;
+      // If noscript has previous sibling and it only contains image,
+      // replace it with noscript content.
+      var prevElement = noscript.previousElementSibling;
+      if (prevElement && this._isSingleImage(prevElement)) {
+        noscript.parentNode.replaceChild(tmp.children[0], prevElement);
       }
-
-      // At this point, just replace the previous img with img from noscript.
-      noscript.parentNode.replaceChild(children[0], prevElement);
     });
   },
 
