@@ -1340,7 +1340,7 @@ Readability.prototype = {
   _unwrapNoscriptImages: function(doc) {
     // Find img without source and remove it. This is done to prevent a placeholder
     // img is replaced by img from noscript in next step.
-    var imgs = doc.getElementsByTagName("img");
+    var imgs = Array.from(doc.getElementsByTagName("img"));
     this._forEachNode(imgs, function(img) {
       var src = img.getAttribute("src");
       var srcset = img.getAttribute("srcset");
@@ -1353,7 +1353,7 @@ Readability.prototype = {
     });
 
     // Next find noscript and try to extract its image
-    var noscripts = doc.getElementsByTagName("noscript");
+    var noscripts = Array.from(doc.getElementsByTagName("noscript"));
     this._forEachNode(noscripts, function(noscript) {
       // Parse content of noscript and make sure it only contains image
       var tmp = doc.createElement("div");
