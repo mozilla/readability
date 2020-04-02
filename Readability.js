@@ -840,6 +840,12 @@ Readability.prototype = {
             node = this._removeAndGetNext(node);
             continue;
           }
+
+          if (node.getAttribute("role") == "complementary") {
+            this.log("Removing complementary content - " + matchString);
+            node = this._removeAndGetNext(node);
+            continue;
+          }
         }
 
         // Remove DIV, SECTION, and HEADER nodes without any content(e.g. text, image, video, or iframe).
