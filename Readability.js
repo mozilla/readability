@@ -1343,18 +1343,26 @@ Readability.prototype = {
    * @param Element
   **/
   _unwrapNoscriptImages: function(doc) {
-    // Find img without source and remove it. This is done to prevent a placeholder
-    // img is replaced by img from noscript in next step.
+    // Find img without source or attributes that might contains image, and remove it.
+    // This is done to prevent a placeholder img is replaced by img from noscript in next step.
     var imgs = Array.from(doc.getElementsByTagName("img"));
     this._forEachNode(imgs, function(img) {
-      var src = img.getAttribute("src");
-      var srcset = img.getAttribute("srcset");
-      var dataSrc = img.getAttribute("data-src");
-      var dataSrcset = img.getAttribute("data-srcset");
+      for (var i = 0; i < img.attributes.length; i++) {
+        var attr = img.attributes[i];
+        switch (attr.name) {
+          case "src":
+          case "srcset":
+          case "data-src":
+          case "data-srcset":
+            return
+        }
 
-      if (!src && !srcset && !dataSrc && !dataSrcset) {
-        img.parentNode.removeChild(img);
+        if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
+          return
+        }
       }
+
+      img.parentNode.removeChild(img);
     });
 
     // Next find noscript and try to extract its image
@@ -1372,7 +1380,8 @@ Readability.prototype = {
       // is possibility that img inside noscript has lower quality
       // than the one in previous sibling, so we will keep the src
       // and srcset attribute from old img as data attribute for
-      // img from noscript.
+      // img from noscript. We also keep old attributes that might
+      // contains image.
       var prevElement = noscript.previousElementSibling;
       if (prevElement && this._isSingleImage(prevElement)) {
         var prevImg = prevElement;
@@ -1392,6 +1401,17 @@ Readability.prototype = {
 
         if (prevImgSrcset && prevImgSrcset !== newImgSrcset) {
           newImg.setAttribute("data-old-srcset", prevImgSrcset);
+        }
+
+        for (var i = 0; i < prevImg.attributes.length; i++) {
+          var attr = prevImg.attributes[i];
+          if (attr.name == "src" || attr.name == "srcset" || newImg.hasAttribute(attr.name)) {
+            continue;
+          }
+
+          if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
+            newImg.setAttribute(attr.name, attr.value);
+          }
         }
 
         noscript.parentNode.replaceChild(tmp.children[0], prevElement);
