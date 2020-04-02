@@ -1354,11 +1354,11 @@ Readability.prototype = {
           case "srcset":
           case "data-src":
           case "data-srcset":
-            return
+            return;
         }
 
         if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-          return
+          return;
         }
       }
 
