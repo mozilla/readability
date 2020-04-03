@@ -1739,30 +1739,45 @@ Readability.prototype = {
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
   _fixLazyImages: function (root) {
     this._forEachNode(this._getAllNodesWithTag(root, ["img", "picture", "figure"]), function (elem) {
+      // In some sites (e.g. Kotaku), they put 1px square image as data uri in the src attribute.
+      // So, here we check if the data uri is too short, just might as well remove it.
+      if (elem.src && elem.src.startsWith("data:")) {
+        // I don't have any source but I guess if image is less than 100 bytes it will be too
+        // small, therefore it might be placeholder image. With that said, I will use 100B
+        // as threshold (or 133B after encoded to base64).
+        var b64starts = elem.src.indexOf("base64,") + 7;
+        var b64length = elem.src.length - b64starts;
+        if (b64length < 133) {
+          elem.removeAttribute("src");
+        }
+      }
+
       // also check for "null" to work around https://github.com/jsdom/jsdom/issues/2580
-      if ((!elem.src && (!elem.srcset || elem.srcset == "null")) || elem.className.toLowerCase().indexOf("lazy") !== -1) {
-        for (var i = 0; i < elem.attributes.length; i++) {
-          var attr = elem.attributes[i];
-          if (attr.name === "src" || attr.name === "srcset") {
-            continue;
-          }
-          var copyTo = null;
-          if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
-            copyTo = "srcset";
-          } else if (/^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/.test(attr.value)) {
-            copyTo = "src";
-          }
-          if (copyTo) {
-            //if this is an img or picture, set the attribute directly
-            if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
-              elem.setAttribute(copyTo, attr.value);
-            } else if (elem.tagName === "FIGURE" && !this._getAllNodesWithTag(elem, ["img", "picture"]).length) {
-              //if the item is a <figure> that does not contain an image or picture, create one and place it inside the figure
-              //see the nytimes-3 testcase for an example
-              var img = this._doc.createElement("img");
-              img.setAttribute(copyTo, attr.value);
-              elem.appendChild(img);
-            }
+      if ((elem.src || (elem.srcset && elem.srcset != "null")) && elem.className.toLowerCase().indexOf("lazy") === -1) {
+        return;
+      }
+
+      for (var i = 0; i < elem.attributes.length; i++) {
+        var attr = elem.attributes[i];
+        if (attr.name === "src" || attr.name === "srcset") {
+          continue;
+        }
+        var copyTo = null;
+        if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
+          copyTo = "srcset";
+        } else if (/^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/.test(attr.value)) {
+          copyTo = "src";
+        }
+        if (copyTo) {
+          //if this is an img or picture, set the attribute directly
+          if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
+            elem.setAttribute(copyTo, attr.value);
+          } else if (elem.tagName === "FIGURE" && !this._getAllNodesWithTag(elem, ["img", "picture"]).length) {
+            //if the item is a <figure> that does not contain an image or picture, create one and place it inside the figure
+            //see the nytimes-3 testcase for an example
+            var img = this._doc.createElement("img");
+            img.setAttribute(copyTo, attr.value);
+            elem.appendChild(img);
           }
         }
       }
