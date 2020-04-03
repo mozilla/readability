@@ -1376,12 +1376,8 @@ Readability.prototype = {
       }
 
       // If noscript has previous sibling and it only contains image,
-      // replace it with noscript content. However, in some case there
-      // is possibility that img inside noscript has lower quality
-      // than the one in previous sibling, so we will keep the src
-      // and srcset attribute from old img as data attribute for
-      // img from noscript. We also keep old attributes that might
-      // contains image.
+      // replace it with noscript content. However we also keep old
+      // attributes that might contains image.
       var prevElement = noscript.previousElementSibling;
       if (prevElement && this._isSingleImage(prevElement)) {
         var prevImg = prevElement;
@@ -1403,14 +1399,14 @@ Readability.prototype = {
 
             var attrName = attr.name;
             if (newImg.hasAttribute(attrName)) {
-                attrName = "data-old-" + attrName;
+              attrName = "data-old-" + attrName;
             }
 
             newImg.setAttribute(attrName, attr.value);
           }
         }
 
-        noscript.parentNode.replaceChild(tmp.children[0], prevElement);
+        noscript.parentNode.replaceChild(tmp.firstElementChild, prevElement);
       }
     });
   },
