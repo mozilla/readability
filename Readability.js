@@ -1390,27 +1390,23 @@ Readability.prototype = {
         }
 
         var newImg = tmp.getElementsByTagName("img")[0];
-        var newImgSrc = newImg.getAttribute("src");
-        var newImgSrcset = newImg.getAttribute("srcset");
-        var prevImgSrc = prevImg.getAttribute("src");
-        var prevImgSrcset = prevImg.getAttribute("srcset");
-
-        if (prevImgSrc && prevImgSrc !== newImgSrc) {
-          newImg.setAttribute("data-old-src", prevImgSrc);
-        }
-
-        if (prevImgSrcset && prevImgSrcset !== newImgSrcset) {
-          newImg.setAttribute("data-old-srcset", prevImgSrcset);
-        }
-
         for (var i = 0; i < prevImg.attributes.length; i++) {
           var attr = prevImg.attributes[i];
-          if (attr.name == "src" || attr.name == "srcset" || newImg.hasAttribute(attr.name)) {
+          if (attr.value === "") {
             continue;
           }
 
-          if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-            newImg.setAttribute(attr.name, attr.value);
+          if (attr.name === "src" || attr.name === "srcset" || /\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
+            if (newImg.getAttribute(attr.name) === attr.value) {
+              continue;
+            }
+
+            var attrName = attr.name;
+            if (newImg.hasAttribute(attrName)) {
+                attrName = "data-old-" + attrName;
+            }
+
+            newImg.setAttribute(attrName, attr.value);
           }
         }
 
