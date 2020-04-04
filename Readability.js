@@ -156,6 +156,21 @@ Readability.prototype = {
   // These are the classes that readability sets itself.
   CLASSES_TO_PRESERVE: [ "page" ],
 
+  // These are the list of HTML entities that need to be escaped.
+  HTML_ESCAPE_MAP: {
+    "&#60;": "<", "&lt;": "<",
+    "&#62;": ">", "&gt;": ">",
+    "&#38;": "&", "&amp;": "&",
+    "&#34;": '"', "&quot;": '"',
+    "&#39;": "'", "&apos;": "'",
+    "&#162;": "¢", "&cent;": "¢",
+    "&#163;": "£", "&pound;": "£",
+    "&#165;": "¥", "&yen;": "¥",
+    "&#8364;": "€", "&euro;": "€",
+    "&#169;": "©", "&copy;": "©",
+    "&#174;": "®", "&reg;": "®",
+  },
+
   /**
    * Run any post-process modifications to article content as necessary.
    *
@@ -1259,6 +1274,28 @@ Readability.prototype = {
   },
 
   /**
+   * Converts some of the common HTML entities in string to their corresponding characters.
+   *
+   * @param str {string} - a string to unescape.
+   * @return string without HTML entity.
+   */
+  _unescapeHtmlEntities: function(str) {
+    if (!str) {
+      return str;
+    }
+
+    var htmlEscapeMap = this.HTML_ESCAPE_MAP;
+    return str.replace(/&[#0-9a-z]+;/g, function(match) {
+      if (match.startsWith("&#0")) {
+        match = match.replace(/&#0+/, "&#");
+      }
+
+      var unescaped = htmlEscapeMap[match];
+      return unescaped ? unescaped : match;
+    });
+  },
+
+  /**
    * Attempts to get excerpt and byline metadata for the article.
    *
    * @return Object with optional "excerpt" and "byline" properties
@@ -1337,6 +1374,13 @@ Readability.prototype = {
 
     // get site name
     metadata.siteName = values["og:site_name"];
+
+    // in many sites the meta value is escaped with HTML entities,
+    // so here we need to unescape it
+    metadata.title = this._unescapeHtmlEntities(metadata.title);
+    metadata.byline = this._unescapeHtmlEntities(metadata.byline);
+    metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
+    metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
 
     return metadata;
   },
