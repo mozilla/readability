@@ -131,6 +131,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
+    srcsetUrl: /(\S+)(\s+\d+[xw])?,?/g,
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
@@ -328,6 +329,12 @@ Readability.prototype = {
       if (baseURI == documentURI && uri.charAt(0) == "#") {
         return uri;
       }
+
+      // If it's data uri, return as it is
+      if (uri.startsWith("data:")) {
+        return uri;
+      }
+
       // Otherwise, resolve against base URI:
       try {
         return new URL(uri, baseURI).href;
@@ -362,11 +369,28 @@ Readability.prototype = {
       }
     });
 
-    var imgs = this._getAllNodesWithTag(articleContent, ["img"]);
-    this._forEachNode(imgs, function(img) {
-      var src = img.getAttribute("src");
+    var medias = this._getAllNodesWithTag(articleContent, [
+      "img", "picture", "figure", "video", "audio", "source"
+    ]);
+
+    this._forEachNode(medias, function(media) {
+      var src = media.getAttribute("src");
+      var poster = media.getAttribute("poster");
+      var srcset = media.getAttribute("srcset");
+
       if (src) {
-        img.setAttribute("src", toAbsoluteURI(src));
+        media.setAttribute("src", toAbsoluteURI(src));
+      }
+
+      if (poster) {
+        media.setAttribute("poster", toAbsoluteURI(poster));
+      }
+
+      if (srcset) {
+        var newSets = Array.from(srcset.matchAll(this.REGEXPS.srcsetUrl), m => {
+          return toAbsoluteURI(m[1]) + (m[2] || "");
+        })
+        media.setAttribute("srcset", newSets.join(", "));
       }
     });
   },
