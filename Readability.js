@@ -387,9 +387,10 @@ Readability.prototype = {
       }
 
       if (srcset) {
-        var newSets = Array.from(srcset.matchAll(this.REGEXPS.srcsetUrl), m => {
+        var matches = srcset.matchAll(this.REGEXPS.srcsetUrl);
+        var newSets = Array.from(matches, function(m) {
           return toAbsoluteURI(m[1]) + (m[2] || "");
-        })
+        });
         media.setAttribute("srcset", newSets.join(", "));
       }
     });
