@@ -131,7 +131,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
-    srcsetUrl: /(\S+)(\s+\d+[xw])?,?/g,
+    srcsetUrl: /(\S+)(\s+[\d.]+[xw])?,?/g,
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
