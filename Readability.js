@@ -158,17 +158,11 @@ Readability.prototype = {
 
   // These are the list of HTML entities that need to be escaped.
   HTML_ESCAPE_MAP: {
-    "&#60;": "<", "&lt;": "<",
-    "&#62;": ">", "&gt;": ">",
-    "&#38;": "&", "&amp;": "&",
-    "&#34;": '"', "&quot;": '"',
-    "&#39;": "'", "&apos;": "'",
-    "&#162;": "¢", "&cent;": "¢",
-    "&#163;": "£", "&pound;": "£",
-    "&#165;": "¥", "&yen;": "¥",
-    "&#8364;": "€", "&euro;": "€",
-    "&#169;": "©", "&copy;": "©",
-    "&#174;": "®", "&reg;": "®",
+    "lt": "<",
+    "gt": ">",
+    "amp": "&",
+    "quot": '"',
+    "apos": "'",
   },
 
   /**
@@ -1279,14 +1273,16 @@ Readability.prototype = {
       return str;
     }
 
-    var htmlEscapeMap = this.HTML_ESCAPE_MAP;
-    return str.replace(/&[#0-9a-z]+;/g, function(match) {
-      if (match.startsWith("&#0")) {
-        match = match.replace(/&#0+/, "&#");
-      }
+    if (/&(quot|amp|apos|lt|gt);/.test(str)) {
+      var htmlEscapeMap = this.HTML_ESCAPE_MAP;
+      return str.replace(/&(quot|amp|apos|lt|gt);/g, function(_, tag) {
+        return htmlEscapeMap[tag];
+      });
+    }
 
-      var unescaped = htmlEscapeMap[match];
-      return unescaped ? unescaped : match;
+    return str.replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(_, hex, numStr) {
+      var num = parseInt(hex || numStr, hex ? 16 : 10);
+      return String.fromCharCode(num);
     });
   },
 
