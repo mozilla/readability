@@ -345,11 +345,6 @@ Readability.prototype = {
         return uri;
       }
 
-      // If it's data uri, return as it is
-      if (uri.startsWith("data:")) {
-        return uri;
-      }
-
       // Otherwise, resolve against base URI:
       try {
         return new URL(uri, baseURI).href;
