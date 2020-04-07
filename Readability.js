@@ -131,7 +131,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
-    srcsetUrl: /(\S+)(\s+[\d.]+[xw])?,?/g,
+    srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*,\s*)?/g,
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
@@ -397,11 +397,11 @@ Readability.prototype = {
       }
 
       if (srcset) {
-        var matches = srcset.matchAll(this.REGEXPS.srcsetUrl);
-        var newSets = Array.from(matches, function(m) {
-          return toAbsoluteURI(m[1]) + (m[2] || "");
+        var newSrcset = srcset.replace(this.REGEXPS.srcsetUrl, function(_, p1, p2, p3) {
+          return toAbsoluteURI(p1) + (p2 || "") + (p3 || "");
         });
-        media.setAttribute("srcset", newSets.join(", "));
+
+        media.setAttribute("srcset", newSrcset);
       }
     });
   },
