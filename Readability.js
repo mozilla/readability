@@ -131,7 +131,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
-    srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*,\s*)?/g,
+    srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
     b64DataUrl: /^data:\s*(\S+)\s*;\s*base64\s*,/i
   },
 
@@ -393,7 +393,7 @@ Readability.prototype = {
 
       if (srcset) {
         var newSrcset = srcset.replace(this.REGEXPS.srcsetUrl, function(_, p1, p2, p3) {
-          return toAbsoluteURI(p1) + (p2 || "") + (p3 || "");
+          return toAbsoluteURI(p1) + (p2 || "") + p3;
         });
 
         media.setAttribute("srcset", newSrcset);
