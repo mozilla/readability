@@ -132,6 +132,7 @@ Readability.prototype = {
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*,\s*)?/g,
+    b64DataUrl: /^data:\s*(\S+)\s*;\s*base64\s*,/i
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
@@ -1799,12 +1800,17 @@ Readability.prototype = {
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
   _fixLazyImages: function (root) {
     this._forEachNode(this._getAllNodesWithTag(root, ["img", "picture", "figure"]), function (elem) {
-      // In some sites (e.g. Kotaku), they put 1px square image as data uri in the src attribute.
+      // In some sites (e.g. Kotaku), they put 1px square image as base64 data uri in the src attribute.
       // So, here we check if the data uri is too short, just might as well remove it.
-      if (elem.src && elem.src.startsWith("data:")) {
-        // I don't have any source but I guess if image is less than 100 bytes it will be too
-        // small, therefore it might be placeholder image. With that said, I will use 100B
-        // as threshold (or 133B after encoded to base64).
+      if (elem.src && this.REGEXPS.b64DataUrl.test(elem.src)) {
+        // Make sure it's not SVG, because SVG can have a meaningful image in under 133 bytes.
+        var parts = this.REGEXPS.b64DataUrl.exec(elem.src);
+        if (parts[1] === "image/svg+xml") {
+          return;
+        }
+
+        // Here we assume if image is less than 100 bytes (or 133B after encoded to base64)
+        // it will be too small, therefore it might be placeholder image. 
         var b64starts = elem.src.indexOf("base64,") + 7;
         var b64length = elem.src.length - b64starts;
         if (b64length < 133) {
