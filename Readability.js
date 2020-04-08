@@ -1274,14 +1274,10 @@ Readability.prototype = {
       return str;
     }
 
-    if (/&(quot|amp|apos|lt|gt);/.test(str)) {
-      var htmlEscapeMap = this.HTML_ESCAPE_MAP;
-      return str.replace(/&(quot|amp|apos|lt|gt);/g, function(_, tag) {
-        return htmlEscapeMap[tag];
-      });
-    }
-
-    return str.replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(_, hex, numStr) {
+    var htmlEscapeMap = this.HTML_ESCAPE_MAP;
+    return str.replace(/&(quot|amp|apos|lt|gt);/g, function(_, tag) {
+      return htmlEscapeMap[tag];
+    }).replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(_, hex, numStr) {
       var num = parseInt(hex || numStr, hex ? 16 : 10);
       return String.fromCharCode(num);
     });
