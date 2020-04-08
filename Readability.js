@@ -1809,12 +1809,29 @@ Readability.prototype = {
           return;
         }
 
+        // Make sure this element has other attributes which contains image.
+        // If it doesn't, then this src is important and shouldn't be removed.
+        var srcCouldBeRemoved = false;
+        for (var i = 0; i < elem.attributes.length; i++) {
+          var attr = elem.attributes[i];
+          if (attr.name === "src") {
+            continue;
+          }
+
+          if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
+            srcCouldBeRemoved = true;
+            break;
+          }
+        }
+
         // Here we assume if image is less than 100 bytes (or 133B after encoded to base64)
-        // it will be too small, therefore it might be placeholder image. 
-        var b64starts = elem.src.indexOf("base64,") + 7;
-        var b64length = elem.src.length - b64starts;
-        if (b64length < 133) {
-          elem.removeAttribute("src");
+        // it will be too small, therefore it might be placeholder image.
+        if (srcCouldBeRemoved) {
+          var b64starts = elem.src.search(/base64\s*/i) + 7;
+          var b64length = elem.src.length - b64starts;
+          if (b64length < 133) {
+            elem.removeAttribute("src");
+          }
         }
       }
 
@@ -1823,8 +1840,8 @@ Readability.prototype = {
         return;
       }
 
-      for (var i = 0; i < elem.attributes.length; i++) {
-        var attr = elem.attributes[i];
+      for (var j = 0; j < elem.attributes.length; j++) {
+        attr = elem.attributes[j];
         if (attr.name === "src" || attr.name === "srcset") {
           continue;
         }
