@@ -132,7 +132,7 @@ Readability.prototype = {
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
-    b64DataUrl: /^data:\s*(\S+)\s*;\s*base64\s*,/i
+    b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
