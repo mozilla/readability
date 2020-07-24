@@ -278,7 +278,7 @@
 
   var whitespace = [" ", "\t", "\n", "\r"];
 
-  // See http://www.w3schools.com/dom/dom_nodetype.asp
+  // See https://www.w3schools.com/jsref/prop_node_nodetype.asp
   var nodeTypes = {
     ELEMENT_NODE: 1,
     ATTRIBUTE_NODE: 2,
