@@ -202,4 +202,4 @@ module.exports = {
     // Only check typeof against valid results
     "valid-typeof": 2,
   },
-}
+};

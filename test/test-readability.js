@@ -258,6 +258,17 @@ describe("Readability API", function() {
       expect(parser._cleanClasses.called).eql(false);
     });
 
+    it("should use custom content serializer sent as option", function() {
+      var dom = new JSDOM("My cat: <img src=''>");
+      var expected_xhtml = "<div xmlns=\"http://www.w3.org/1999/xhtml\" id=\"readability-page-1\" class=\"page\">My cat: <img src=\"\" /></div>";
+      var xml = new dom.window.XMLSerializer();
+      var content = new Readability(dom.window.document, {
+        serializer: function(el) {
+          return xml.serializeToString(el.firstChild);
+        }
+      }).parse().content;
+      expect(content).eql(expected_xhtml);
+    });
   });
 });
 
