@@ -8,10 +8,9 @@ var http = require("http");
 var urlparse = require("url").parse;
 var htmltidy = require("htmltidy2").tidy;
 
-var readabilityCheck = require("../Readability-readerable");
-var readability = require("../index");
-var Readability = readability.Readability;
-var JSDOMParser = readability.JSDOMParser;
+var readabilityCheck = require("../index").isProbablyReaderable;
+var Readability = require("../Readability.js");
+var JSDOMParser = require("../JSDOMParser.js");
 
 var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0";
 
@@ -132,7 +131,7 @@ function runReadability(source, destPath, metadataDestPath) {
       url: uri,
     }).window.document;
     myReader = new Readability(jsdomDoc);
-    readerable = readabilityCheck.isProbablyReaderable(jsdomDoc);
+    readerable = readabilityCheck(jsdomDoc);
   } catch (ex) {
     console.error(ex);
     ex.stack.forEach(console.log.bind(console));

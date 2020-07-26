@@ -1,5 +1,5 @@
 {
-  "name": "readability",
+  "name": "@mozilla/readability",
   "version": "0.2.0",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "Readability.js",

@@ -1187,3 +1187,7 @@
   global.JSDOMParser = JSDOMParser;
 
 })(this);
+
+if (typeof module === 'object') {
+  module.exports = this.JSDOMParser;
+}
