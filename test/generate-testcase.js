@@ -9,8 +9,8 @@ var urlparse = require("url").parse;
 var htmltidy = require("htmltidy2").tidy;
 
 var readabilityCheck = require("../index").isProbablyReaderable;
-var Readability = require("../Readability.js");
-var JSDOMParser = require("../JSDOMParser.js");
+var Readability = require("../index").Readability;
+var JSDOMParser = require("../JSDOMParser");
 
 var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0";
 

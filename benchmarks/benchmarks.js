@@ -1,8 +1,8 @@
 var getTestPages = require("../test/utils").getTestPages;
 
 var readabilityCheck = require("../index").isProbablyReaderable;
+var Readability = require("../index").Readability;
 var JSDOM = require("jsdom").JSDOM;
-var Readability = require("../Readability");
 var JSDOMParser = require("../JSDOMParser");
 
 var referenceTestPages = [

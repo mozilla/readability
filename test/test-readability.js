@@ -4,7 +4,7 @@ var sinon = require("sinon");
 chai.config.includeStack = true;
 var expect = chai.expect;
 
-var Readability = require("../Readability");
+var Readability = require("../index").Readability;
 var JSDOMParser = require("../JSDOMParser");
 
 var testPages = require("./utils").getTestPages();
