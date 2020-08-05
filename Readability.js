@@ -1316,55 +1316,55 @@ Readability.prototype = {
    * @return Object with any metadata that could be extracted (possibly none)
    */
   _getJSONLD: function (doc) {
-    
+
     var scripts = this._getAllNodesWithTag(doc, ["script"]);
 
     var jsonLdElement = this._findNode(scripts, function(el) {
-      return el.getAttribute('type') === 'application/ld+json';
+      return el.getAttribute("type") === "application/ld+json";
     });
 
     if (jsonLdElement) {
       try {
         // Strip CDATA markers if present
-        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[\s*|\s*\]\]>\s*$/g, '');
+        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[\s*|\s*\]\]>\s*$/g, "");
         var parsed = JSON.parse(content);
         var metadata = {};
         if (
-          !parsed['@context'] ||
-          !parsed['@context'].match(/^https?\:\/\/schema\.org$/)
+          !parsed["@context"] ||
+          !parsed["@context"].match(/^https?\:\/\/schema\.org$/)
         ) {
           return metadata;
         }
 
-        if (!parsed['@type'] && Array.isArray(parsed['@graph'])) {
-          parsed = parsed['@graph'].find(it =>
-            (it['@type'] || '').match(
+        if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
+          parsed = parsed["@graph"].find(function(it) {
+            return (it["@type"] || "").match(
               this.REGEXPS.jsonLdArticleTypes
-            )
-          );
+            );
+          });
         }
 
         if (
           !parsed ||
-          !parsed['@type'] ||
-          !parsed['@type'].match(this.REGEXPS.jsonLdArticleTypes)
+          !parsed["@type"] ||
+          !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)
         ) {
           return metadata;
         }
-        if (typeof parsed.name === 'string') {
+        if (typeof parsed.name === "string") {
           metadata.title = parsed.name;
-        } else if (typeof parsed.headline === 'string') {
+        } else if (typeof parsed.headline === "string") {
           metadata.title = parsed.headline;
         }
-        if (parsed.author && typeof parsed.author.name === 'string') {
+        if (parsed.author && typeof parsed.author.name === "string") {
           metadata.byline = parsed.author.name;
         }
-        if (typeof parsed.description === 'string') {
+        if (typeof parsed.description === "string") {
           metadata.excerpt = parsed.description.trim();
         }
         if (
           parsed.publisher &&
-          typeof parsed.publisher.name === 'string'
+          typeof parsed.publisher.name === "string"
         ) {
           metadata.siteName = parsed.publisher.name;
         }
@@ -1450,7 +1450,7 @@ Readability.prototype = {
                       values["author"];
 
     // get description
-    metadata.excerpt = jsonld.excerpt || 
+    metadata.excerpt = jsonld.excerpt ||
                        values["dc:description"] ||
                        values["dcterm:description"] ||
                        values["og:description"] ||
@@ -1460,7 +1460,7 @@ Readability.prototype = {
                        values["twitter:description"];
 
     // get site name
-    metadata.siteName = jsonld.siteName || 
+    metadata.siteName = jsonld.siteName ||
                         values["og:site_name"];
 
     // in many sites the meta value is escaped with HTML entities,
