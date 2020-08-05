@@ -279,7 +279,7 @@ describe("Test pages", function() {
 
       runTestsWithItems("jsdom", function(source) {
         var doc = new JSDOM(source, {
-          url: uri
+          url: uri,
         }).window.document;
         removeCommentNodesRecursively(doc);
         return doc;

@@ -53,7 +53,7 @@ function Readability(doc, options) {
   this._serializer = options.serializer || function(el) {
     return el.innerHTML;
   };
-  this._preferJSONLD = !!options.preferJSONLD || true;
+  this._disableJSONLD = !!options.disableJSONLD;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -1316,7 +1316,6 @@ Readability.prototype = {
    * @return Object with any metadata that could be extracted (possibly none)
    */
   _getJSONLD: function (doc) {
-
     var scripts = this._getAllNodesWithTag(doc, ["script"]);
 
     var jsonLdElement = this._findNode(scripts, function(el) {
@@ -1326,7 +1325,7 @@ Readability.prototype = {
     if (jsonLdElement) {
       try {
         // Strip CDATA markers if present
-        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[\s*|\s*\]\]>\s*$/g, "");
+        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "");
         var parsed = JSON.parse(content);
         var metadata = {};
         if (
@@ -2121,7 +2120,7 @@ Readability.prototype = {
     this._unwrapNoscriptImages(this._doc);
 
     // Extract JSON-LD metadata before removing scripts
-    var jsonLd = this._preferJSONLD ? this._getJSONLD(this._doc) : {};
+    var jsonLd = this._disableJSONLD ? {} : this._getJSONLD(this._doc);
 
     // Remove script tags from the document.
     this._removeScripts(this._doc);
