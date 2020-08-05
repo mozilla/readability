@@ -875,7 +875,11 @@
 
   JSDOMParser.prototype = {
     error: function(m) {
-      dump("JSDOMParser error: " + m + "\n");
+      if (typeof dump !== "undefined") {
+        dump("JSDOMParser error: " + m + "\n");
+      } else if (typeof console !== "undefined") {
+        console.log("JSDOMParser error: " + m + "\n");
+      }
       this.errorState += m + "\n";
     },
 
