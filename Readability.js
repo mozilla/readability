@@ -1351,12 +1351,12 @@ Readability.prototype = {
           return metadata;
         }
         if (typeof parsed.name === "string") {
-          metadata.title = parsed.name;
+          metadata.title = parsed.name.trim();
         } else if (typeof parsed.headline === "string") {
-          metadata.title = parsed.headline;
+          metadata.title = parsed.headline.trim();
         }
         if (parsed.author && typeof parsed.author.name === "string") {
-          metadata.byline = parsed.author.name;
+          metadata.byline = parsed.author.name.trim();
         }
         if (typeof parsed.description === "string") {
           metadata.excerpt = parsed.description.trim();
@@ -1365,7 +1365,7 @@ Readability.prototype = {
           parsed.publisher &&
           typeof parsed.publisher.name === "string"
         ) {
-          metadata.siteName = parsed.publisher.name;
+          metadata.siteName = parsed.publisher.name.trim();
         }
         return metadata;
       } catch (err) {
