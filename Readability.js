@@ -53,6 +53,7 @@ function Readability(doc, options) {
   this._serializer = options.serializer || function(el) {
     return el.innerHTML;
   };
+  this._preferJSONLD = !!options.preferJSONLD || true;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -135,7 +136,9 @@ Readability.prototype = {
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
-    b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i
+    b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
+    // See: https://schema.org/Article
+    jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
   },
 
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
@@ -242,6 +245,21 @@ Readability.prototype = {
    */
   _forEachNode: function(nodeList, fn) {
     Array.prototype.forEach.call(nodeList, fn, this);
+  },
+
+  /**
+   * Iterate over a NodeList, and return the first node that passes
+   * the supplied test function
+   *
+   * For convenience, the current object context is applied to the provided
+   * test function.
+   *
+   * @param  NodeList nodeList The NodeList.
+   * @param  Function fn       The test function.
+   * @return void
+   */
+  _findNode: function(nodeList, fn) {
+    return Array.prototype.find.call(nodeList, fn, this);
   },
 
   /**
@@ -1293,11 +1311,81 @@ Readability.prototype = {
   },
 
   /**
+   * Try to extract metadata from JSON-LD object.
+   * For now, only Schema.org objects of type Article or its subtypes are supported.
+   * @return Object with any metadata that could be extracted (possibly none)
+   */
+  _getJSONLD: function (doc) {
+    
+    var scripts = this._getAllNodesWithTag(doc, ["script"]);
+
+    var jsonLdElement = this._findNode(scripts, function(el) {
+      return el.getAttribute('type') === 'application/ld+json';
+    });
+
+    if (jsonLdElement) {
+      try {
+        // Strip CDATA markers if present
+        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[\s*|\s*\]\]>\s*$/g, '');
+        var parsed = JSON.parse(content);
+        var metadata = {};
+        if (
+          !parsed['@context'] ||
+          !parsed['@context'].match(/^https?\:\/\/schema\.org$/)
+        ) {
+          return metadata;
+        }
+
+        if (!parsed['@type'] && Array.isArray(parsed['@graph'])) {
+          parsed = parsed['@graph'].find(it =>
+            (it['@type'] || '').match(
+              this.REGEXPS.jsonLdArticleTypes
+            )
+          );
+        }
+
+        if (
+          !parsed ||
+          !parsed['@type'] ||
+          !parsed['@type'].match(this.REGEXPS.jsonLdArticleTypes)
+        ) {
+          return metadata;
+        }
+        if (typeof parsed.name === 'string') {
+          metadata.title = parsed.name;
+        } else if (typeof parsed.headline === 'string') {
+          metadata.title = parsed.headline;
+        }
+        if (parsed.author && typeof parsed.author.name === 'string') {
+          metadata.byline = parsed.author.name;
+        }
+        if (typeof parsed.description === 'string') {
+          metadata.excerpt = parsed.description.trim();
+        }
+        if (
+          parsed.publisher &&
+          typeof parsed.publisher.name === 'string'
+        ) {
+          metadata.siteName = parsed.publisher.name;
+        }
+        return metadata;
+      } catch (err) {
+        // ignore malformed JSON-LD
+        console.error(err);
+      }
+    }
+    return {};
+  },
+
+  /**
    * Attempts to get excerpt and byline metadata for the article.
+   *
+   * @param {Object} jsonld — object containing any metadata that
+   * could be extracted from JSON-LD object.
    *
    * @return Object with optional "excerpt" and "byline" properties
    */
-  _getArticleMetadata: function() {
+  _getArticleMetadata: function(jsonld) {
     var metadata = {};
     var values = {};
     var metaElements = this._doc.getElementsByTagName("meta");
@@ -1343,7 +1431,8 @@ Readability.prototype = {
     });
 
     // get title
-    metadata.title = values["dc:title"] ||
+    metadata.title = jsonld.title ||
+                     values["dc:title"] ||
                      values["dcterm:title"] ||
                      values["og:title"] ||
                      values["weibo:article:title"] ||
@@ -1356,12 +1445,14 @@ Readability.prototype = {
     }
 
     // get author
-    metadata.byline = values["dc:creator"] ||
+    metadata.byline = jsonld.byline ||
+                      values["dc:creator"] ||
                       values["dcterm:creator"] ||
                       values["author"];
 
     // get description
-    metadata.excerpt = values["dc:description"] ||
+    metadata.excerpt = jsonld.excerpt || 
+                       values["dc:description"] ||
                        values["dcterm:description"] ||
                        values["og:description"] ||
                        values["weibo:article:description"] ||
@@ -1370,7 +1461,8 @@ Readability.prototype = {
                        values["twitter:description"];
 
     // get site name
-    metadata.siteName = values["og:site_name"];
+    metadata.siteName = jsonld.siteName || 
+                        values["og:site_name"];
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
@@ -2029,12 +2121,15 @@ Readability.prototype = {
     // Unwrap image from noscript
     this._unwrapNoscriptImages(this._doc);
 
+    // Extract JSON-LD metadata before removing scripts
+    var jsonLd = this._preferJSONLD ? this._getJSONLD(this._doc) : {};
+
     // Remove script tags from the document.
     this._removeScripts(this._doc);
 
     this._prepDocument();
 
-    var metadata = this._getArticleMetadata();
+    var metadata = this._getArticleMetadata(jsonLd);
     this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();

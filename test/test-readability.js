@@ -158,23 +158,23 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
     });
 
     it("should extract expected title", function() {
-      expect(expectedMetadata.title).eql(result.title);
+      expect(result.title).eql(expectedMetadata.title);
     });
 
     it("should extract expected byline", function() {
-      expect(expectedMetadata.byline).eql(result.byline);
+      expect(result.byline).eql(expectedMetadata.byline);
     });
 
     it("should extract expected excerpt", function() {
-      expect(expectedMetadata.excerpt).eql(result.excerpt);
+      expect(result.excerpt).eql(expectedMetadata.excerpt);
     });
 
     it("should extract expected site name", function() {
-      expect(expectedMetadata.siteName).eql(result.siteName);
+      expect(result.siteName).eql(expectedMetadata.siteName);
     });
 
     expectedMetadata.dir && it("should extract expected direction", function() {
-      expect(expectedMetadata.dir).eql(result.dir);
+      expect(result.dir).eql(expectedMetadata.dir);
     });
   });
 }
@@ -279,7 +279,7 @@ describe("Test pages", function() {
 
       runTestsWithItems("jsdom", function(source) {
         var doc = new JSDOM(source, {
-          url: uri,
+          url: uri
         }).window.document;
         removeCommentNodesRecursively(doc);
         return doc;
