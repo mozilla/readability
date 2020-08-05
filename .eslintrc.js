@@ -1,6 +1,9 @@
 "use strict";
 
 module.exports = {
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
   "rules": {
     // Braces only needed for multi-line arrow function blocks
     // "arrow-body-style": [2, "as-needed"],

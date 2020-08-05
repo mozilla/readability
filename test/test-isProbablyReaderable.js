@@ -4,7 +4,7 @@ chai.config.includeStack = true;
 var expect = chai.expect;
 
 var testPages = require("./utils").getTestPages();
-var readabilityCheck = require("../Readability-readerable.js");
+var isProbablyReaderable = require("../index").isProbablyReaderable;
 
 describe("isProbablyReaderable - test pages", function() {
   testPages.forEach(function(testPage) {
@@ -15,7 +15,7 @@ describe("isProbablyReaderable - test pages", function() {
       }).window.document;
       var expected = testPage.expectedMetadata.readerable;
       it("The result should " + (expected ? "" : "not ") + "be readerable", function() {
-        expect(readabilityCheck.isProbablyReaderable(doc)).eql(expected);
+        expect(isProbablyReaderable(doc)).eql(expected);
       });
     });
   });

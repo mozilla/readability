@@ -2,7 +2,7 @@
 
 A standalone version of the readability library used for Firefox Reader View.
 
-## Usage on the web.
+## Usage on the web
 
 To parse a document, you must create a new `Readability` object from a DOM document object, and then call `parse()`. Here's an example:
 
@@ -32,10 +32,16 @@ var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 ```
 
-## Usage from node.js
+## Usage from Node.js
 
-In node.js, you won't generally have a DOM document object. To obtain one, you can use external
-libraries like [jsdom](https://github.com/tmpvar/jsdom). While this repository contains a parser of
+Readability is available on npm:
+
+```bash
+npm install @mozilla/readability
+```
+
+In Node.js, you won't generally have a DOM document object. To obtain one, you can use external
+libraries like [jsdom](https://github.com/jsdom/jsdom). While this repository contains a parser of
 its own (`JSDOMParser`), that is restricted to reading XML-compatible markup and therefore we do
 not recommend it for general use.
 
@@ -45,10 +51,11 @@ property of the `options` object you pass the `JSDOM` constructor.
 
 ### Example:
 
-```
+```js
+var { Readability } = require('@mozilla/readability');
 var JSDOM = require('jsdom').JSDOM;
 var doc = new JSDOM("<body>Here's a bunch of text</body>", {
-  url: "https://www.example.com/the-page-i-got-the-source-from",
+  url: "https://www.example.com/the-page-i-got-the-source-from"
 });
 let reader = new Readability(doc.window.document);
 let article = reader.parse();

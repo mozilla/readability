@@ -1,10 +1,8 @@
 var getTestPages = require("../test/utils").getTestPages;
 
-var readability = require("../index.js");
-var readabilityCheck = require("../Readability-readerable.js");
+var { Readability, isProbablyReaderable } = require("../index");
 var JSDOM = require("jsdom").JSDOM;
-var Readability = readability.Readability;
-var JSDOMParser = readability.JSDOMParser;
+var JSDOMParser = require("../JSDOMParser");
 
 var referenceTestPages = [
   "002",
@@ -62,7 +60,7 @@ suite("isProbablyReaderable perf", function () {
       url: uri,
     }).window.document;
     bench(testPage.dir + " readability perf", function() {
-      readabilityCheck.isProbablyReaderable(doc);
+      isProbablyReaderable(doc);
     });
   });
 });
