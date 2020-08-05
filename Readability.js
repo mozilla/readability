@@ -1370,8 +1370,7 @@ Readability.prototype = {
         }
         return metadata;
       } catch (err) {
-        // ignore malformed JSON-LD
-        console.error(err);
+        this.log(err.message);
       }
     }
     return {};
