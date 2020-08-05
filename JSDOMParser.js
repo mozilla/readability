@@ -278,7 +278,7 @@
 
   var whitespace = [" ", "\t", "\n", "\r"];
 
-  // See http://www.w3schools.com/dom/dom_nodetype.asp
+  // See https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
   var nodeTypes = {
     ELEMENT_NODE: 1,
     ATTRIBUTE_NODE: 2,
@@ -705,7 +705,6 @@
       }
 
       // Using Array.join() avoids the overhead from lazy string concatenation.
-      // See http://blog.cdleary.com/2012/01/string-representation-in-spidermonkey/#ropes
       var arr = [];
       getHTML(this);
       return arr.join("");
