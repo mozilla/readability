@@ -34,15 +34,15 @@ function generateTestcase(slug) {
             onResponseReceived(null, data, destRoot);
           });
         } else {
-          fetchSource(argURL, function(err, data) {
-            onResponseReceived(err, data, destRoot);
+          fetchSource(argURL, function(fetchErr, data) {
+            onResponseReceived(fetchErr, data, destRoot);
           });
         }
       });
       return;
     }
-    fetchSource(argURL, function(err, data) {
-      onResponseReceived(err, data, destRoot);
+    fetchSource(argURL, function(fetchErr, data) {
+      onResponseReceived(fetchErr, data, destRoot);
     });
   });
 }
