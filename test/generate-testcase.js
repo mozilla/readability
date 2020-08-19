@@ -160,8 +160,6 @@ function runReadability(source, destPath, metadataDestPath) {
         console.error("Couldn't write data to expected-metadata.json!");
         console.error(metadataWriteErr);
       }
-
-      process.exit(0);
     });
   });
 }
