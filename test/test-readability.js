@@ -6,6 +6,7 @@ var expect = chai.expect;
 
 var Readability = require("../index").Readability;
 var JSDOMParser = require("../JSDOMParser");
+var prettyPrint = require("./utils").prettyPrint;
 
 var testPages = require("./utils").getTestPages();
 
@@ -117,8 +118,8 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       }
 
 
-      var actualDOM = domGenerationFn(result.content);
-      var expectedDOM = domGenerationFn(expectedContent);
+      var actualDOM = domGenerationFn(prettyPrint(result.content));
+      var expectedDOM = domGenerationFn(prettyPrint(expectedContent));
       traverseDOM(function(actualNode, expectedNode) {
         if (actualNode && expectedNode) {
           var actualDesc = nodeStr(actualNode);
