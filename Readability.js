@@ -182,6 +182,8 @@ Readability.prototype = {
     // Readability cannot open relative uris so we convert them to absolute uris.
     this._fixRelativeUris(articleContent);
 
+    this._simplifyNestedElements(articleContent);
+
     if (!this._keepClasses) {
       // Remove classes.
       this._cleanClasses(articleContent);
@@ -420,6 +422,23 @@ Readability.prototype = {
         media.setAttribute("srcset", newSrcset);
       }
     });
+  },
+
+  _simplifyNestedElements: function(articleContent) {
+    var node = articleContent;
+
+    while (node) {
+      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && (this._isElementWithoutContent(node) || this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION"))) {
+        var child = node.children[0];
+        for (var i = 0; i < node.attributes.length; i++) {
+          child.setAttribute(node.attributes[i].name, node.attributes[i].value);
+        }
+        node.parentNode.replaceChild(child, node);
+        node = child;
+      } else {
+        node = this._getNextNode(node);
+      }
+    }
   },
 
   /**
