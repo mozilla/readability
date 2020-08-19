@@ -428,16 +428,22 @@ Readability.prototype = {
     var node = articleContent;
 
     while (node) {
-      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && (this._isElementWithoutContent(node) || this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION"))) {
-        var child = node.children[0];
-        for (var i = 0; i < node.attributes.length; i++) {
-          child.setAttribute(node.attributes[i].name, node.attributes[i].value);
+      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName)) {
+        if (this._isElementWithoutContent(node)) {
+          node = this._removeAndGetNext(node);
+          continue;
+        } else if (this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION")) {
+          var child = node.children[0];
+          for (var i = 0; i < node.attributes.length; i++) {
+            child.setAttribute(node.attributes[i].name, node.attributes[i].value);
+          }
+          node.parentNode.replaceChild(child, node);
+          node = child;
+          continue;
         }
-        node.parentNode.replaceChild(child, node);
-        node = child;
-      } else {
-        node = this._getNextNode(node);
       }
+
+      node = this._getNextNode(node);
     }
   },
 
