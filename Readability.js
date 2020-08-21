@@ -1380,8 +1380,19 @@ Readability.prototype = {
         } else if (typeof parsed.headline === "string") {
           metadata.title = parsed.headline.trim();
         }
-        if (parsed.author && typeof parsed.author.name === "string") {
-          metadata.byline = parsed.author.name.trim();
+        if (parsed.author) {
+          if (typeof parsed.author.name === "string") {
+            metadata.byline = parsed.author.name.trim();
+          } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
+            metadata.byline = parsed.author
+              .filter(function(author) {
+                return author && typeof author.name === "string";
+              })
+              .map(function(author) {
+                return author.name.trim();
+              })
+              .join(", ");
+          }
         }
         if (typeof parsed.description === "string") {
           metadata.excerpt = parsed.description.trim();
