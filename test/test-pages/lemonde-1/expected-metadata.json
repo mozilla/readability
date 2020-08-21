@@ -1,7 +1,8 @@
 {
   "title": "Le projet de loi sur le renseignement massivement approuvé à l'Assemblée",
   "byline": "Martin Untersinger (avec Damien Leloup et Morgane Tual)",
+  "dir": null,
   "excerpt": "Largement approuvé par les députés, le texte sera désormais examiné par le Sénat, puis le Conseil constitutionnel.",
-  "readerable": true,
-  "siteName": "Le Monde.fr"
+  "siteName": "Le Monde.fr",
+  "readerable": true
 }

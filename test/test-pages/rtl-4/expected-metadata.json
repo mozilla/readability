@@ -1,8 +1,8 @@
 {
   "title": "RTL Test",
   "byline": null,
-  "excerpt": "Lorem ipsum dolor sit amet.",
   "dir": null,
-  "readerable": true,
-  "siteName": null
+  "excerpt": "Lorem ipsum dolor sit amet.",
+  "siteName": null,
+  "readerable": true
 }

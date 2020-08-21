@@ -1,25 +1,23 @@
 <div id="readability-page-1" class="page">
     <section>
-        <p><strong>So finally you're <a href="http://fakehost/code/2013/testing-frontend-javascript-code-using-mocha-chai-and-sinon/">testing your frontend JavaScript code</a>? Great! The more you
-write tests, the more confident you are with your code… but how much precisely?
-That's where <a href="http://en.wikipedia.org/wiki/Code_coverage">code coverage</a> might
-help.</strong> </p>
+        <p><strong>So finally you're <a href="http://fakehost/code/2013/testing-frontend-javascript-code-using-mocha-chai-and-sinon/">testing your frontend JavaScript code</a>? Great! The more you write tests, the more confident you are with your code… but how much precisely? That's where <a href="http://en.wikipedia.org/wiki/Code_coverage">code coverage</a> might help.</strong>
+        </p>
         <p>The idea behind code coverage is to record which parts of your code (functions, statements, conditionals and so on) have been executed by your test suite, to compute metrics out of these data and usually to provide tools for navigating and inspecting them.</p>
         <p>Not a lot of frontend developers I know actually test their frontend code, and I can barely imagine how many of them have ever setup code coverage… Mostly because there are not many frontend-oriented tools in this area I guess.</p>
         <p>Actually I've only found one which provides an adapter for <a href="http://visionmedia.github.io/mocha/">Mocha</a> and actually works…</p>
         <blockquote>
-            <p>Drinking game for web devs:
-                <br/>(1) Think of a noun
-                <br/>(2) Google "&lt;noun&gt;.js"
-                <br/>(3) If a library with that name exists - drink</p>— Shay Friedman (@ironshay) <a href="https://twitter.com/ironshay/statuses/370525864523743232">August 22, 2013</a> </blockquote>
-        <p><strong><a href="http://blanketjs.org/">Blanket.js</a></strong> is an <em>easy to install, easy to configure,
-and easy to use JavaScript code coverage library that works both in-browser and
-with nodejs.</em> </p>
-        <p>Its use is dead easy, adding Blanket support to your Mocha test suite is just matter of adding this simple line to your HTML test file:</p> <pre><code>&lt;script src="vendor/blanket.js"
+            <p>Drinking game for web devs: <br />(1) Think of a noun <br />(2) Google "&lt;noun&gt;.js" <br />(3) If a library with that name exists - drink</p>— Shay Friedman (@ironshay) <a href="https://twitter.com/ironshay/statuses/370525864523743232">August 22, 2013</a>
+        </blockquote>
+        <p><strong><a href="http://blanketjs.org/">Blanket.js</a></strong> is an <em>easy to install, easy to configure, and easy to use JavaScript code coverage library that works both in-browser and with nodejs.</em>
+        </p>
+        <p>Its use is dead easy, adding Blanket support to your Mocha test suite is just matter of adding this simple line to your HTML test file:</p>
+        <pre><code>&lt;script src="vendor/blanket.js"
         data-cover-adapter="vendor/mocha-blanket.js"&gt;&lt;/script&gt;
 </code></pre>
-        <p>Source files: <a href="https://raw.github.com/alex-seville/blanket/master/dist/qunit/blanket.min.js">blanket.js</a>, <a href="https://raw.github.com/alex-seville/blanket/master/src/adapters/mocha-blanket.js">mocha-blanket.js</a> </p>
-        <p>As an example, let's reuse the silly <code>Cow</code> example we used <a href="http://fakehost/code/2013/testing-frontend-javascript-code-using-mocha-chai-and-sinon/">in a previous episode</a>:</p> <pre><code>// cow.js
+        <p>Source files: <a href="https://raw.github.com/alex-seville/blanket/master/dist/qunit/blanket.min.js">blanket.js</a>, <a href="https://raw.github.com/alex-seville/blanket/master/src/adapters/mocha-blanket.js">mocha-blanket.js</a>
+        </p>
+        <p>As an example, let's reuse the silly <code>Cow</code> example we used <a href="http://fakehost/code/2013/testing-frontend-javascript-code-using-mocha-chai-and-sinon/">in a previous episode</a>:</p>
+        <pre><code>// cow.js
 (function(exports) {
   "use strict";
 
@@ -37,7 +35,8 @@ with nodejs.</em> </p>
   };
 })(this);
 </code></pre>
-        <p>And its test suite, powered by Mocha and <a href="http://chaijs.com/">Chai</a>:</p> <pre><code>var expect = chai.expect;
+        <p>And its test suite, powered by Mocha and <a href="http://chaijs.com/">Chai</a>:</p>
+        <pre><code>var expect = chai.expect;
 
 describe("Cow", function() {
   describe("constructor", function() {
@@ -60,7 +59,8 @@ describe("Cow", function() {
   });
 });
 </code></pre>
-        <p>Let's create the HTML test file for it, featuring Blanket and its adapter for Mocha:</p> <pre><code>&lt;!DOCTYPE html&gt;
+        <p>Let's create the HTML test file for it, featuring Blanket and its adapter for Mocha:</p>
+        <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
@@ -88,9 +88,12 @@ describe("Cow", function() {
             <li>The HTML test file <em>must</em> be served over HTTP for the adapter to be loaded.</li>
         </ul>
         <p>Running the tests now gives us something like this:</p>
-        <p> <img alt="screenshot" src="http://fakehost/static/code/2013/blanket-coverage.png"/> </p>
+        <p>
+            <img alt="screenshot" src="http://fakehost/static/code/2013/blanket-coverage.png" />
+        </p>
         <p>As you can see, the report at the bottom highlights that we haven't actually tested the case where an error is raised in case a target name is missing. We've been informed of that, nothing more, nothing less. We simply know we're missing a test here. Isn't this cool? I think so!</p>
         <p>Just remember that code coverage will only <a href="http://codebetter.com/karlseguin/2008/12/09/code-coverage-use-it-wisely/">bring you numbers</a> and raw information, not actual proofs that the whole of your <em>code logic</em> has been actually covered. If you ask me, the best inputs you can get about your code logic and implementation ever are the ones issued out of <a href="http://www.extremeprogramming.org/rules/pair.html">pair programming</a> sessions and <a href="http://alexgaynor.net/2013/sep/26/effective-code-review/">code reviews</a> — but that's another story.</p>
-        <p><strong>So is code coverage silver bullet? No. Is it useful? Definitely. Happy testing!</strong> </p>
+        <p><strong>So is code coverage silver bullet? No. Is it useful? Definitely. Happy testing!</strong>
+        </p>
     </section>
 </div>

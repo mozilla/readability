@@ -11,40 +11,41 @@ var htmltidy = require("htmltidy2").tidy;
 var { Readability, isProbablyReaderable } = require("../index");
 var JSDOMParser = require("../JSDOMParser");
 
-var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0";
+var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0";
 
-if (process.argv.length < 3) {
-  console.error("Need at least a destination slug and potentially a URL (if the slug doesn't have source).");
-  process.exit(0);
-  throw "Abort";
-}
+var testcaseRoot = path.join(__dirname, "test-pages");
 
-var slug = process.argv[2];
 var argURL = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
 
-var destRoot = path.join(__dirname, "test-pages", slug);
+function generateTestcase(slug) {
+  var destRoot = path.join(testcaseRoot, slug);
 
-fs.mkdir(destRoot, function(err) {
-  if (err) {
-    var sourceFile = path.join(destRoot, "source.html");
-    fs.exists(sourceFile, function(exists) {
-      if (exists) {
-        fs.readFile(sourceFile, {encoding: "utf-8"}, function(readFileErr, data) {
-          if (readFileErr) {
-            console.error("Source existed but couldn't be read?");
-            process.exit(1);
-            return;
-          }
-          onResponseReceived(null, data);
-        });
-      } else {
-        fetchSource(argURL, onResponseReceived);
-      }
+  fs.mkdir(destRoot, function(err) {
+    if (err) {
+      var sourceFile = path.join(destRoot, "source.html");
+      fs.exists(sourceFile, function(exists) {
+        if (exists) {
+          fs.readFile(sourceFile, {encoding: "utf-8"}, function(readFileErr, data) {
+            if (readFileErr) {
+              console.error("Source existed but couldn't be read?");
+              process.exit(1);
+              return;
+            }
+            onResponseReceived(null, data, destRoot);
+          });
+        } else {
+          fetchSource(argURL, function(fetchErr, data) {
+            onResponseReceived(fetchErr, data, destRoot);
+          });
+        }
+      });
+      return;
+    }
+    fetchSource(argURL, function(fetchErr, data) {
+      onResponseReceived(fetchErr, data, destRoot);
     });
-    return;
-  }
-  fetchSource(argURL, onResponseReceived);
-});
+  });
+}
 
 function fetchSource(url, callbackFn) {
   if (!url) {
@@ -88,7 +89,7 @@ function sanitizeSource(html, callbackFn) {
   }, callbackFn);
 }
 
-function onResponseReceived(error, source) {
+function onResponseReceived(error, source, destRoot) {
   if (error) {
     console.error("Couldn't tidy source html!");
     console.error(error);
@@ -159,9 +160,27 @@ function runReadability(source, destPath, metadataDestPath) {
         console.error("Couldn't write data to expected-metadata.json!");
         console.error(metadataWriteErr);
       }
-
-      process.exit(0);
     });
   });
 }
 
+if (process.argv.length < 3) {
+  console.error("Need at least a destination slug and potentially a URL (if the slug doesn't have source).");
+  process.exit(0);
+  throw "Abort";
+}
+
+if (process.argv[2] === "all") {
+  fs.readdir(testcaseRoot, function(err, files) {
+    if (err) {
+      console.error("error reading testcaseses");
+      return;
+    }
+
+    files.forEach(function(file) {
+      generateTestcase(file);
+    });
+  });
+} else {
+  generateTestcase(process.argv[2]);
+}

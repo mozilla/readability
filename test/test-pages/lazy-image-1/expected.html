@@ -1,240 +1,188 @@
 <div id="readability-page-1" class="page">
     <div>
         <div>
+            <p><a rel="noopener" href="http://fakehost/@vincentvallet?source=post_page-----d6e62af173e2----------------------"><img alt="Vincent Vallet" src="https://miro.medium.com/fit/c/96/96/1*vFTVh_mYyf0p6m7f77A3vw.jpeg" width="48" height="48" /></a>
+            </p>
+        </div>
+        <p id="d2c1"> I work at <a href="http://voodoo.io/" target="_blank" rel="noopener nofollow">Voodoo</a>, a French company that creates mobile video games. We have a lot of challenges with performance, availability, and scalability because of the insane amount of traffic our infrastructure supports (billions of events/requests per day …… no joke!). In this setting, every metric is important and gives us a lot of information about the state of our system. </p>
+        <p id="0e89"> When working with Node.js one of the most critical resources to monitor is the CPU. Most of the time, when working on a low traffic API or project we don’t realize how many simple lines of code can have a huge impact on CPU. On the other hand, when traffic increases, a simple mistake can cost dearly. </p>
+        <p id="1efa"> What kind of resources does your application need? In most cases, we focus on memory and CPU. Good monitoring of these two elements is mandatory for an application running on production. </p>
+        <p id="dce9"> For memory, constant monitoring is the best practice to track the worst developer nightmare a.k.a memory leak. </p>
+        <figure>
             <div>
-                <div>
-                    <div>
-                        <div>
-                            <p><a rel="noopener" href="http://fakehost/@vincentvallet?source=post_page-----d6e62af173e2----------------------"><img alt="Vincent Vallet" src="https://miro.medium.com/fit/c/96/96/1*vFTVh_mYyf0p6m7f77A3vw.jpeg" width="48" height="48" /></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <p><img src="https://miro.medium.com/max/3788/1*5o3M5niyi911waUrKWVZ0Q.png" width="1894" height="970" role="presentation" data-old-src="https://miro.medium.com/max/60/1*5o3M5niyi911waUrKWVZ0Q.png?q=20" />
+                </p>
             </div>
-            <p id="d2c1"> I work at <a href="http://voodoo.io/" target="_blank" rel="noopener nofollow">Voodoo</a>, a French company that creates mobile video games. We have a lot of challenges with performance, availability, and scalability because of the insane amount of traffic our infrastructure supports (billions of events/requests per day …… no joke!). In this setting, every metric is important and gives us a lot of information about the state of our system. </p>
-            <p id="0e89"> When working with Node.js one of the most critical resources to monitor is the CPU. Most of the time, when working on a low traffic API or project we don’t realize how many simple lines of code can have a huge impact on CPU. On the other hand, when traffic increases, a simple mistake can cost dearly. </p>
-            <p id="1efa"> What kind of resources does your application need? In most cases, we focus on memory and CPU. Good monitoring of these two elements is mandatory for an application running on production. </p>
-            <p id="dce9"> For memory, constant monitoring is the best practice to track the worst developer nightmare a.k.a memory leak. </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/3788/1*5o3M5niyi911waUrKWVZ0Q.png" width="1894" height="970" role="presentation" data-old-src="https://miro.medium.com/max/60/1*5o3M5niyi911waUrKWVZ0Q.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> Memory leak in action </figcaption>
-            </figure>
-            <p id="69dd"> A good way to debug memory leak is a memory dump and/or memory sampling but this is not the subject. </p>
-            <p id="1fbc"> (for more details about V8 and its garbage collector you can read my previous article <a target="_blank" rel="noopener" href="http://fakehost/voodoo-engineering/nodejs-internals-v8-garbage-collector-a6eca82540ec">here</a>) </p>
-            <blockquote>
-                <p> Stay focused on the CPU! </p>
-            </blockquote>
-            <p id="40e6"> Most of the time we monitor this resource with a simple solution allowing us to get a graph representing CPU consumption over time. If we want to be reactive we add an alarm, based on a threshold, to warn us when CPU usage is too high. </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1994/1*8uOdeOfnUzTaFIY1r7oAMg.png" width="997" height="230" role="presentation" data-old-src="https://miro.medium.com/max/60/1*8uOdeOfnUzTaFIY1r7oAMg.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> Basic CPU monitoring </figcaption>
-            </figure>
-            <p id="0728"> And what next? We don’t have data about the state of the instance when the CPU usage has increased. So we can’t determine why we had this peak, at least not without an important time of debugging, comparing log, etc. This is exactly why you need to use CPU profiling. </p>
-            <blockquote>
-                <p> “Most commonly, profiling information serves to aid program optimization. Profiling is achieved by instrumenting either the program source code or its binary executable form using a tool called a profiler” </p>
-            </blockquote>
-            <p id="3e11"> Basically, for Node.js, CPU profiling is nothing more than collecting data about functions which are CPU consuming. And ideally, get a graphic representation of the collected data a.k.a “flame graph” or “flame chart”. </p>
-            <p id="91c5"> It will help you to track the exact file, line, and function which takes the most time to execute. </p>
-            <h2 id="dd40"> Add arguments to Node.js </h2>
-            <p id="0306"> Node.js provides a way to collect data about CPU with two command lines. </p>
-            <p id="66c8"> The first command just executes your application, the argument just tells to V8 engine to collect data. When you stop your script all information is stored in a file. </p>
-            <pre><span id="16bd">node --prof app.js</span></pre>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1698/1*e7gjTlzi55udTXbbPeEs2A.png" width="849" height="534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*e7gjTlzi55udTXbbPeEs2A.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> Output of — prof </figcaption>
-            </figure>
-            <p id="57a6"> It is not very clear, is it? </p>
-            <p id="abed"> That’s why you just need to run this second command to transform your raw file into a more human-readable output. </p>
-            <pre><span id="061c">node --prof-process isolate-0xnnnnn-v8.log &gt; processed.txt</span></pre>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1508/1*JJkRh7JihTUo2apW_9ZXAQ.png" width="754" height="306" role="presentation" data-old-src="https://miro.medium.com/max/60/1*JJkRh7JihTUo2apW_9ZXAQ.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> The output of — prof-process </figcaption>
-            </figure>
-            <p id="85fa"> It seems better, here you can determine which function consumes the most of CPU (percentage of the time). </p>
-            <h2 id="9e54"> ClinicJs </h2>
-            <p id="176a"> ClinicJs is a set of tools that allow you to collect data and display performance charts. With “clinic flame” you can generate a flame graph based on CPU consumption. </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/5760/1*6wi5BlNNnykjZs0PufrvLQ.png" width="2880" height="1534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*6wi5BlNNnykjZs0PufrvLQ.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> Flame chart </figcaption>
-            </figure>
-            <p id="5347"> But once again, you have to stop your app, launch the tool, then terminate the script in order to display the graph (files are generated on the disk). </p>
-            <p id="d6e6"> For more details, you can see the <a href="https://clinicjs.org/" target="_blank" rel="noopener nofollow">project</a>. </p>
-            <p id="be18">
-                <strong>To sum up</strong>, here is the list of drawbacks of the two previous solutions. </p>
-            <ul>
-                <li id="3bef">Downtime (you should kill your application to collect the data) </li>
-                <li id="c0df">Performance overhead </li>
-                <li id="27ec">Data collected locally </li>
-                <li id="a4fd">Need external tools (ClinicJs) </li>
-            </ul>
-            <p id="3f2c"> In conclusion: these are good solutions to debug on development environments and/or on a local machine. </p>
-            <blockquote>
-                <p id="fcd9"> Unfortunately, CPU issues have a worrying tendency to occur on production, and when you are not in front of your screen. </p>
-            </blockquote>
-            <p id="294e"> “Inspector” refers to an API thanks to which you can debug your application. By debugging we mean to be able to connect directly to the core of Node.js to collect real-time data about the process. </p>
-            <p id="ea23"> A module, available since version 8.x of Node.js, provides this kind of feature. There are two advantages to use it: </p>
-            <ul>
-                <li id="ed54">it’s native (no additional installation required) </li>
-                <li id="7992">it can be used programmatically (no interruption) </li>
-            </ul>
-            <p id="731f"> And here is how to make a CPU profiling with this module: </p>
-            <figure>
-                <div>
-                </div>
-            </figure>
-            <p id="79d1"> As you can see, all the data is returned in variable “profile”. Basically, it’s a simple JSON object representing all the call stack and the CPU consumption for each function. And if you want to use an Async/await syntax you can install the module “inspector-api”. </p>
-            <pre><span id="c085">npm install inspector-api --save</span></pre>
-            <p id="195d"> It also comes with a built-in exporter to send data to S3, with this method <strong>you don’t write anything on the disk</strong>! </p>
-            <figure>
-                <div>
-                </div>
-            </figure>
-            <p id="964f"> If you use another storage system you can just collect the data and export it by yourself. </p>
-            <figure>
-                <div>
-                </div>
-            </figure>
-            <p id="6933"> We have an API that we want to test with autocannon tool. At this step, our project is able to serve around 200 requests in 20 seconds. There is probably a mistake somewhere in the code which slows down our application. </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1694/1*cS9IXYGfMmgxaAUlC7oqOQ.png" width="847" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*cS9IXYGfMmgxaAUlC7oqOQ.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </figure>
-            <p id="fb78"> But now, what if we want to trigger a CPU profiling remotely (without ssh connection to the server)? It’s possible using Websocket, SSE or any other technology to send a message to your instance. </p>
-            <p id="2c91"> Here is a simple example of a server using the “ws” module to send a message to a unique instance. </p>
-            <figure>
-                <div>
-                </div>
-            </figure>
-            <p id="2206"> Of course, it only works with one instance, but it’s a fake project to demonstrate the principle ;) </p>
-            <p id="e92d"> Now we can request our server to ask it to send a message to our instance and start/stop a CPU profiling. In your instance, you can handle the CPU profiling like this: </p>
-            <figure>
-                <div>
-                </div>
-            </figure>
-            <p id="c3d0">
-                <strong>To sum up</strong>: we are able to trigger a CPU profiling, on-demand, in real-time, without interruption or connection to the server. Data can be collected on the disk (and extracted later) or can be sent to S3 (or any other system, PR are welcomed on the <a href="https://github.com/wallet77/v8-inspector-api" target="_blank" rel="noopener nofollow">inspector-api project</a>). </p>
-            <blockquote>
-                <p id="6e87"> And because the profiler is a part of V8 itself, the format of the generated JSON file is compatible with the Chrome dev tools. </p>
-            </blockquote>
-        </div>
+            <figcaption> Memory leak in action </figcaption>
+        </figure>
+        <p id="69dd"> A good way to debug memory leak is a memory dump and/or memory sampling but this is not the subject. </p>
+        <p id="1fbc"> (for more details about V8 and its garbage collector you can read my previous article <a target="_blank" rel="noopener" href="http://fakehost/voodoo-engineering/nodejs-internals-v8-garbage-collector-a6eca82540ec">here</a>) </p>
+        <blockquote>
+            <p> Stay focused on the CPU! </p>
+        </blockquote>
+        <p id="40e6"> Most of the time we monitor this resource with a simple solution allowing us to get a graph representing CPU consumption over time. If we want to be reactive we add an alarm, based on a threshold, to warn us when CPU usage is too high. </p>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1994/1*8uOdeOfnUzTaFIY1r7oAMg.png" width="997" height="230" role="presentation" data-old-src="https://miro.medium.com/max/60/1*8uOdeOfnUzTaFIY1r7oAMg.png?q=20" />
+                </p>
+            </div>
+            <figcaption> Basic CPU monitoring </figcaption>
+        </figure>
+        <p id="0728"> And what next? We don’t have data about the state of the instance when the CPU usage has increased. So we can’t determine why we had this peak, at least not without an important time of debugging, comparing log, etc. This is exactly why you need to use CPU profiling. </p>
+        <blockquote>
+            <p> “Most commonly, profiling information serves to aid program optimization. Profiling is achieved by instrumenting either the program source code or its binary executable form using a tool called a profiler” </p>
+        </blockquote>
+        <p id="3e11"> Basically, for Node.js, CPU profiling is nothing more than collecting data about functions which are CPU consuming. And ideally, get a graphic representation of the collected data a.k.a “flame graph” or “flame chart”. </p>
+        <p id="91c5"> It will help you to track the exact file, line, and function which takes the most time to execute. </p>
+        <h2 id="dd40"> Add arguments to Node.js </h2>
+        <p id="0306"> Node.js provides a way to collect data about CPU with two command lines. </p>
+        <p id="66c8"> The first command just executes your application, the argument just tells to V8 engine to collect data. When you stop your script all information is stored in a file. </p>
+        <pre><span id="16bd">node --prof app.js</span></pre>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1698/1*e7gjTlzi55udTXbbPeEs2A.png" width="849" height="534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*e7gjTlzi55udTXbbPeEs2A.png?q=20" />
+                </p>
+            </div>
+            <figcaption> Output of — prof </figcaption>
+        </figure>
+        <p id="57a6"> It is not very clear, is it? </p>
+        <p id="abed"> That’s why you just need to run this second command to transform your raw file into a more human-readable output. </p>
+        <pre><span id="061c">node --prof-process isolate-0xnnnnn-v8.log &gt; processed.txt</span></pre>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1508/1*JJkRh7JihTUo2apW_9ZXAQ.png" width="754" height="306" role="presentation" data-old-src="https://miro.medium.com/max/60/1*JJkRh7JihTUo2apW_9ZXAQ.png?q=20" />
+                </p>
+            </div>
+            <figcaption> The output of — prof-process </figcaption>
+        </figure>
+        <p id="85fa"> It seems better, here you can determine which function consumes the most of CPU (percentage of the time). </p>
+        <h2 id="9e54"> ClinicJs </h2>
+        <p id="176a"> ClinicJs is a set of tools that allow you to collect data and display performance charts. With “clinic flame” you can generate a flame graph based on CPU consumption. </p>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/5760/1*6wi5BlNNnykjZs0PufrvLQ.png" width="2880" height="1534" role="presentation" data-old-src="https://miro.medium.com/max/60/1*6wi5BlNNnykjZs0PufrvLQ.png?q=20" />
+                </p>
+            </div>
+            <figcaption> Flame chart </figcaption>
+        </figure>
+        <p id="5347"> But once again, you have to stop your app, launch the tool, then terminate the script in order to display the graph (files are generated on the disk). </p>
+        <p id="d6e6"> For more details, you can see the <a href="https://clinicjs.org/" target="_blank" rel="noopener nofollow">project</a>. </p>
+        <p id="be18">
+            <strong>To sum up</strong>, here is the list of drawbacks of the two previous solutions.
+        </p>
+        <ul>
+            <li id="3bef">Downtime (you should kill your application to collect the data) </li>
+            <li id="c0df">Performance overhead </li>
+            <li id="27ec">Data collected locally </li>
+            <li id="a4fd">Need external tools (ClinicJs) </li>
+        </ul>
+        <p id="3f2c"> In conclusion: these are good solutions to debug on development environments and/or on a local machine. </p>
+        <blockquote>
+            <p id="fcd9"> Unfortunately, CPU issues have a worrying tendency to occur on production, and when you are not in front of your screen. </p>
+        </blockquote>
+        <p id="294e"> “Inspector” refers to an API thanks to which you can debug your application. By debugging we mean to be able to connect directly to the core of Node.js to collect real-time data about the process. </p>
+        <p id="ea23"> A module, available since version 8.x of Node.js, provides this kind of feature. There are two advantages to use it: </p>
+        <ul>
+            <li id="ed54">it’s native (no additional installation required) </li>
+            <li id="7992">it can be used programmatically (no interruption) </li>
+        </ul>
+        <p id="731f"> And here is how to make a CPU profiling with this module: </p>
+        <figure>
+        </figure>
+        <p id="79d1"> As you can see, all the data is returned in variable “profile”. Basically, it’s a simple JSON object representing all the call stack and the CPU consumption for each function. And if you want to use an Async/await syntax you can install the module “inspector-api”. </p>
+        <pre><span id="c085">npm install inspector-api --save</span></pre>
+        <p id="195d"> It also comes with a built-in exporter to send data to S3, with this method <strong>you don’t write anything on the disk</strong>! </p>
+        <figure>
+        </figure>
+        <p id="964f"> If you use another storage system you can just collect the data and export it by yourself. </p>
+        <figure>
+        </figure>
+        <p id="6933"> We have an API that we want to test with autocannon tool. At this step, our project is able to serve around 200 requests in 20 seconds. There is probably a mistake somewhere in the code which slows down our application. </p>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1694/1*cS9IXYGfMmgxaAUlC7oqOQ.png" width="847" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*cS9IXYGfMmgxaAUlC7oqOQ.png?q=20" />
+                </p>
+            </div>
+        </figure>
+        <p id="fb78"> But now, what if we want to trigger a CPU profiling remotely (without ssh connection to the server)? It’s possible using Websocket, SSE or any other technology to send a message to your instance. </p>
+        <p id="2c91"> Here is a simple example of a server using the “ws” module to send a message to a unique instance. </p>
+        <figure>
+        </figure>
+        <p id="2206"> Of course, it only works with one instance, but it’s a fake project to demonstrate the principle ;) </p>
+        <p id="e92d"> Now we can request our server to ask it to send a message to our instance and start/stop a CPU profiling. In your instance, you can handle the CPU profiling like this: </p>
+        <figure>
+        </figure>
+        <p id="c3d0">
+            <strong>To sum up</strong>: we are able to trigger a CPU profiling, on-demand, in real-time, without interruption or connection to the server. Data can be collected on the disk (and extracted later) or can be sent to S3 (or any other system, PR are welcomed on the <a href="https://github.com/wallet77/v8-inspector-api" target="_blank" rel="noopener nofollow">inspector-api project</a>).
+        </p>
+        <blockquote>
+            <p id="6e87"> And because the profiler is a part of V8 itself, the format of the generated JSON file is compatible with the Chrome dev tools. </p>
+        </blockquote>
     </div>
     <div>
-        <div>
-            <p id="2cda">
-                <strong>How can we identify an issue?</strong>
-            </p>
-            <p id="e0d2"> A CPU profiling should be read like this: </p>
-            <ul>
-                <li id="27e6">the x-axis shows the stack profile population </li>
-                <li id="194a">the y-axis shows stack depth </li>
-            </ul>
-            <p id="e950">
-                <strong>What does it mean?</strong>
-            </p>
-            <p id="174c"> The larger is a box (a function call) the more it consumed CPU. So a good CPU profiling should look like a “flame” graph where each stack is the finest possible. </p>
-            <p id="48d9"> In our example, every request try to generate a token. For this purpose, it calls the function pbkdf2 which is CPU consuming. Our CPU profile looks like a sequence of big blocks of time, like if the last function in the call stack takes 99% of the total time. </p>
-            <p id="d62c"> The CPU profiling after optimizations, with the same time range. </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1860/1*87KlGgfbuWP38nAaQaj3xw.png" width="930" height="523" role="presentation" data-old-src="https://miro.medium.com/max/60/1*87KlGgfbuWP38nAaQaj3xw.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <figcaption> CPU profiling after optimizations </figcaption>
-            </figure>
-            <p id="10ee"> As you can notice, we have to zoom to the profile if we want to see the call stack, because after optimizations the API was able to take a lot more traffic. Now every function in the call stack looks like a microtask. </p>
-        </div>
+        <p id="2cda">
+            <strong>How can we identify an issue?</strong>
+        </p>
+        <p id="e0d2"> A CPU profiling should be read like this: </p>
+        <ul>
+            <li id="27e6">the x-axis shows the stack profile population </li>
+            <li id="194a">the y-axis shows stack depth </li>
+        </ul>
+        <p id="e950">
+            <strong>What does it mean?</strong>
+        </p>
+        <p id="174c"> The larger is a box (a function call) the more it consumed CPU. So a good CPU profiling should look like a “flame” graph where each stack is the finest possible. </p>
+        <p id="48d9"> In our example, every request try to generate a token. For this purpose, it calls the function pbkdf2 which is CPU consuming. Our CPU profile looks like a sequence of big blocks of time, like if the last function in the call stack takes 99% of the total time. </p>
+        <p id="d62c"> The CPU profiling after optimizations, with the same time range. </p>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1860/1*87KlGgfbuWP38nAaQaj3xw.png" width="930" height="523" role="presentation" data-old-src="https://miro.medium.com/max/60/1*87KlGgfbuWP38nAaQaj3xw.png?q=20" />
+                </p>
+            </div>
+            <figcaption> CPU profiling after optimizations </figcaption>
+        </figure>
+        <p id="10ee"> As you can notice, we have to zoom to the profile if we want to see the call stack, because after optimizations the API was able to take a lot more traffic. Now every function in the call stack looks like a microtask. </p>
     </div>
     <div>
-        <div>
-            <p id="10f1"> And now our application is able to serve more than 200,000 requests in 20 seconds; <strong>we increased the performance by a factor of 100k</strong>! </p>
-            <figure>
-                <div>
-                    <div>
-                        <div>
-                            <p><img src="https://miro.medium.com/max/1690/1*kfOK60PtmWx6iP681-qRcg.png" width="845" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*kfOK60PtmWx6iP681-qRcg.png?q=20" />
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </figure>
-            <p id="e1ad"> With the inspector module, you can do much more than just CPU profiling, here is a non-exhaustive list: </p>
-            <ul>
-                <li id="eb04">memory dump &amp; memory sampling </li>
-                <li id="a9ea">code coverage </li>
-                <li id="b896">use the debugger in real-time </li>
-            </ul>
-            <p id="731b"> Every tool, even the most powerful, comes with its own disadvantages. If you enable the profiler and/or the debugger on your production you have to keep an eye on two things: </p>
-            <p id="e485">
-                <strong>1) performance overhead</strong>
-            </p>
-            <p id="0513"> A profiler needs to use CPU to work and it collects data into memory. The longer you let it run and the more CPU / memory it will need. This is why you should begin with very short CPU profiling, no more than a few seconds between the start and stop command. And never forget to monitor the impact of the profiler on your own infrastructure. If everything is fine you can increase the time and the frequency of CPU profiling. </p>
-            <p id="049c"> One more very important thing: <strong>never forget to always stop a started CPU profiling</strong>. You can add a timer to automatically call the stop function after a while. </p>
-            <p id="0656">
-                <strong>2) security</strong>
-            </p>
-            <p id="7999"> Using the inspector in Node.js it’s like opening the door of the core of your application. You should be very careful about who can use features like CPU profiling and/or the debugger. Never make the inspector “public” as being able to launch a feature from an unsafe route (not protected with an authentification mechanism). Even the collected data can be seen as critical, never send it to a system you do not trust. </p>
-            <p id="ae1a"> CPU profiling is really a must-have tool for every developer. And now, with some precautions, we can run it on production thanks to the amazing work done by the V8 and Node.js team. </p>
-            <p id="1eab"> The inspector module offers a lot more features than you can use to debug your application. </p>
-            <p id="0aba"> I will write another article about using CPU profiling and the inspector on production on a high traffic project. </p>
-            <ul>
-                <li id="d86d">
-                    <a href="https://nodejs.org/api/inspector.html" target="_blank" rel="noopener nofollow">https://nodejs.org/api/inspector.html</a>
-                </li>
-                <li id="cc52">
-                    <a href="https://chromedevtools.github.io/devtools-protocol/v8" target="_blank" rel="noopener nofollow">https://chromedevtools.github.io/devtools-protocol/v8</a>
-                </li>
-                <li id="d331">
-                    <a target="_blank" rel="noopener" href="http://fakehost/netflix-techblog/node-js-in-flames-ddd073803aa4">https://medium.com/netflix-techblog/node-js-in-flames-ddd073803aa4</a>
-                </li>
-                <li id="6420">
-                    <a href="https://www.npmjs.com/package/inspector-api" target="_blank" rel="noopener nofollow">https://www.npmjs.com/package/inspector-api</a>
-                </li>
-            </ul>
-        </div>
+        <p id="10f1"> And now our application is able to serve more than 200,000 requests in 20 seconds; <strong>we increased the performance by a factor of 100k</strong>! </p>
+        <figure>
+            <div>
+                <p><img src="https://miro.medium.com/max/1690/1*kfOK60PtmWx6iP681-qRcg.png" width="845" height="362" role="presentation" data-old-src="https://miro.medium.com/max/60/1*kfOK60PtmWx6iP681-qRcg.png?q=20" />
+                </p>
+            </div>
+        </figure>
+        <p id="e1ad"> With the inspector module, you can do much more than just CPU profiling, here is a non-exhaustive list: </p>
+        <ul>
+            <li id="eb04">memory dump &amp; memory sampling </li>
+            <li id="a9ea">code coverage </li>
+            <li id="b896">use the debugger in real-time </li>
+        </ul>
+        <p id="731b"> Every tool, even the most powerful, comes with its own disadvantages. If you enable the profiler and/or the debugger on your production you have to keep an eye on two things: </p>
+        <p id="e485">
+            <strong>1) performance overhead</strong>
+        </p>
+        <p id="0513"> A profiler needs to use CPU to work and it collects data into memory. The longer you let it run and the more CPU / memory it will need. This is why you should begin with very short CPU profiling, no more than a few seconds between the start and stop command. And never forget to monitor the impact of the profiler on your own infrastructure. If everything is fine you can increase the time and the frequency of CPU profiling. </p>
+        <p id="049c"> One more very important thing: <strong>never forget to always stop a started CPU profiling</strong>. You can add a timer to automatically call the stop function after a while. </p>
+        <p id="0656">
+            <strong>2) security</strong>
+        </p>
+        <p id="7999"> Using the inspector in Node.js it’s like opening the door of the core of your application. You should be very careful about who can use features like CPU profiling and/or the debugger. Never make the inspector “public” as being able to launch a feature from an unsafe route (not protected with an authentification mechanism). Even the collected data can be seen as critical, never send it to a system you do not trust. </p>
+        <p id="ae1a"> CPU profiling is really a must-have tool for every developer. And now, with some precautions, we can run it on production thanks to the amazing work done by the V8 and Node.js team. </p>
+        <p id="1eab"> The inspector module offers a lot more features than you can use to debug your application. </p>
+        <p id="0aba"> I will write another article about using CPU profiling and the inspector on production on a high traffic project. </p>
+        <ul>
+            <li id="d86d">
+                <a href="https://nodejs.org/api/inspector.html" target="_blank" rel="noopener nofollow">https://nodejs.org/api/inspector.html</a>
+            </li>
+            <li id="cc52">
+                <a href="https://chromedevtools.github.io/devtools-protocol/v8" target="_blank" rel="noopener nofollow">https://chromedevtools.github.io/devtools-protocol/v8</a>
+            </li>
+            <li id="d331">
+                <a target="_blank" rel="noopener" href="http://fakehost/netflix-techblog/node-js-in-flames-ddd073803aa4">https://medium.com/netflix-techblog/node-js-in-flames-ddd073803aa4</a>
+            </li>
+            <li id="6420">
+                <a href="https://www.npmjs.com/package/inspector-api" target="_blank" rel="noopener nofollow">https://www.npmjs.com/package/inspector-api</a>
+            </li>
+        </ul>
     </div>
 </div>
