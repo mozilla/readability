@@ -428,7 +428,7 @@ Readability.prototype = {
     var node = articleContent;
 
     while (node) {
-      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && !(node.id && node.id.startsWith('readability'))) {
+      if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
         if (this._isElementWithoutContent(node)) {
           node = this._removeAndGetNext(node);
           continue;
