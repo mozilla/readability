@@ -141,6 +141,8 @@ Readability.prototype = {
     jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
   },
 
+  UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
+
   DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
@@ -917,8 +919,8 @@ Readability.prototype = {
             continue;
           }
 
-          if (node.getAttribute("role") == "complementary") {
-            this.log("Removing complementary content - " + matchString);
+          if (this.UNLIKELY_ROLES.includes(node.getAttribute("role"))) {
+            this.log("Removing content with role " + node.getAttribute("role") + " - " + matchString);
             node = this._removeAndGetNext(node);
             continue;
           }
