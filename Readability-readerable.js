@@ -40,7 +40,7 @@ function isNodeVisible(node) {
  *
  * @return boolean Whether or not we suspect Readability.parse() will suceeed at returning an article object.
  */
-function isProbablyReaderable(doc, isVisible) {
+function isProbablyReaderable(doc, isVisible = null, options = { minScore: 20, minContentLength: 140 }) {
   if (!isVisible) {
     isVisible = isNodeVisible;
   }
@@ -81,13 +81,13 @@ function isProbablyReaderable(doc, isVisible) {
     }
 
     var textContentLength = node.textContent.trim().length;
-    if (textContentLength < 140) {
+    if (textContentLength < options.minContentLength) {
       return false;
     }
 
-    score += Math.sqrt(textContentLength - 140);
+    score += Math.sqrt(textContentLength - options.minContentLength);
 
-    if (score > 20) {
+    if (score > options.minScore) {
       return true;
     }
     return false;
