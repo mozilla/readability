@@ -14,6 +14,7 @@ This `article` object will contain the following properties:
 
 * `title`: article title
 * `content`: HTML string of processed article content
+* `textContent`: text content of the article (all HTML removed)
 * `length`: length of an article, in characters
 * `excerpt`: article description, or short excerpt from the content
 * `byline`: author metadata
