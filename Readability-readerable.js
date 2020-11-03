@@ -38,8 +38,8 @@ function isNodeVisible(node) {
 /**
  * Decides whether or not the document is reader-able without parsing the whole thing.
  * @param {Object} options Configuration object.
- * @param {number} [options.minContentLength=140] The minimum content length used to decide if the document is readerable.
- * @param {number} [options.minScore=20] The minumum 'score' used to determine if the document is readerable.
+ * @param {number} [options.minContentLength=140] The minimum node content length used to decide if the document is readerable.
+ * @param {number} [options.minScore=20] The minumum cumulated 'score' used to determine if the document is readerable.
  * @param {Function} [options.visibilityChecker=isNodeVisible] The function used to determine if a node is visible.
  * @return {boolean} Whether or not we suspect Readability.parse() will suceeed at returning an article object.
  */
@@ -51,7 +51,7 @@ function isProbablyReaderable(doc, options = {}) {
   }
 
   var defaultOptions = { minScore: 20, minContentLength: 140, visibilityChecker: isNodeVisible };
-  options = Object.assign(options || {}, defaultOptions);
+  options = Object.assign(defaultOptions, options);
 
   var nodes = doc.querySelectorAll("p, pre");
 
@@ -65,7 +65,7 @@ function isProbablyReaderable(doc, options = {}) {
   var brNodes = doc.querySelectorAll("div > br");
   if (brNodes.length) {
     var set = new Set(nodes);
-    [].forEach.call(brNodes, function(node) {
+    [].forEach.call(brNodes, function (node) {
       set.add(node.parentNode);
     });
     nodes = Array.from(set);
@@ -74,13 +74,14 @@ function isProbablyReaderable(doc, options = {}) {
   var score = 0;
   // This is a little cheeky, we use the accumulator 'score' to decide what to return from
   // this callback:
-  return [].some.call(nodes, function(node) {
-    if (!options.visibilityChecker(node))
+  return [].some.call(nodes, function (node) {
+    if (!options.visibilityChecker(node)) {
       return false;
+    }
 
     var matchString = node.className + " " + node.id;
     if (REGEXPS.unlikelyCandidates.test(matchString) &&
-        !REGEXPS.okMaybeItsACandidate.test(matchString)) {
+      !REGEXPS.okMaybeItsACandidate.test(matchString)) {
       return false;
     }
 
