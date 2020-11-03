@@ -37,13 +37,21 @@ function isNodeVisible(node) {
 
 /**
  * Decides whether or not the document is reader-able without parsing the whole thing.
- *
- * @return boolean Whether or not we suspect Readability.parse() will suceeed at returning an article object.
+ * @param {Object} options Configuration object.
+ * @param {number} [options.minContentLength=140] The minimum content length used to decide if the document is readerable.
+ * @param {number} [options.minScore=20] The minumum 'score' used to determine if the document is readerable.
+ * @param {Function} [options.visibilityChecker=isNodeVisible] The function used to determine if a node is visible.
+ * @return {boolean} Whether or not we suspect Readability.parse() will suceeed at returning an article object.
  */
-function isProbablyReaderable(doc, isVisible = null, options = { minScore: 20, minContentLength: 140 }) {
-  if (!isVisible) {
-    isVisible = isNodeVisible;
+function isProbablyReaderable(doc, options = {}) {
+  // For backward compatibility reasons 'options' can either be a configuration object or the function used
+  // to determine if a node is visible.
+  if (typeof options === "function") {
+    options = { visibilityChecker: options };
   }
+
+  var defaultOptions = { minScore: 20, minContentLength: 140, visibilityChecker: isNodeVisible };
+  options = Object.assign(options || {}, defaultOptions);
 
   var nodes = doc.querySelectorAll("p, pre");
 
@@ -67,7 +75,7 @@ function isProbablyReaderable(doc, isVisible = null, options = { minScore: 20, m
   // This is a little cheeky, we use the accumulator 'score' to decide what to return from
   // this callback:
   return [].some.call(nodes, function(node) {
-    if (!isVisible(node))
+    if (!options.visibilityChecker(node))
       return false;
 
     var matchString = node.className + " " + node.id;
