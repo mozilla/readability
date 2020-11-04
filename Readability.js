@@ -577,7 +577,7 @@ Readability.prototype = {
       // <p> block.
       var replaced = false;
 
-      // If we find a <br> chain, remove the <br>s until we hit another element
+      // If we find a <br> chain, remove the <br>s until we hit another node
       // or non-whitespace. This leaves behind the first <br> in the chain
       // (which will be replaced with a <p> later).
       while ((next = this._nextNode(next)) && (next.tagName == "BR")) {
