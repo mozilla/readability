@@ -6,8 +6,8 @@ tasks:
     '(tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"])':
       taskId:
         $eval: as_slugid("pr_task")
-      provisionerId: proj-getting-started
-      workerType: tutorial
+      provisionerId: proj-misc
+      workerType: ci
       payload:
         maxRunTime: 3600
         image: node
