@@ -3,7 +3,7 @@ policy:
   pullRequests: public
 tasks:
   $match:
-    '(tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"])':
+    '(tasks_for == "github-pull-request" && event["action"] in ["opened","reopened","synchronize"]) || (tasks_for == "github-push")':
       taskId:
         $eval: as_slugid("pr_task")
       provisionerId: proj-misc
