@@ -46,7 +46,7 @@ function isNodeVisible(node) {
 function isProbablyReaderable(doc, options = {}) {
   // For backward compatibility reasons 'options' can either be a configuration object or the function used
   // to determine if a node is visible.
-  if (typeof options === "function") {
+  if (typeof options == "function") {
     options = { visibilityChecker: options };
   }
 
