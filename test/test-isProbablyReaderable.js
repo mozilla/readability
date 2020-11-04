@@ -94,7 +94,8 @@ describe("isProbablyReaderable", function () {
   it("should use node visibility checker provided as parameter - not visible", function () {
     var called = false;
     var visibilityChecker = () => {
-      called = true; return false;
+      called = true;
+      return false;
     };
     expect(isProbablyReaderable(veryLargeDoc, visibilityChecker)).to.be.false;
     expect(called).to.be.true;
@@ -103,7 +104,8 @@ describe("isProbablyReaderable", function () {
   it("should use node visibility checker provided as parameter - visible", function () {
     var called = false;
     var visibilityChecker = () => {
-      called = true; return true;
+      called = true;
+      return true;
     };
     expect(isProbablyReaderable(veryLargeDoc, visibilityChecker)).to.be.true;
     expect(called).to.be.true;

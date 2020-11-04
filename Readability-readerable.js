@@ -81,7 +81,7 @@ function isProbablyReaderable(doc, options = {}) {
 
     var matchString = node.className + " " + node.id;
     if (REGEXPS.unlikelyCandidates.test(matchString) &&
-      !REGEXPS.okMaybeItsACandidate.test(matchString)) {
+        !REGEXPS.okMaybeItsACandidate.test(matchString)) {
       return false;
     }
 
