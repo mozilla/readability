@@ -18,7 +18,7 @@ tasks:
           - >-
             git clone {{event.head.repo.url}} repo && cd repo && git config
             advice.detachedHead false && git checkout {{event.head.sha}} && npm
-            install . && npm test
+            install . && npm run lint && npm test
       metadata:
         name: Run tests and linter
         description: ''
