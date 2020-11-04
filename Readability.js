@@ -548,7 +548,7 @@ Readability.prototype = {
   },
 
   /**
-   * Finds the next element, starting from the given node, and ignoring
+   * Finds the next node, starting from the given node, and ignoring
    * whitespace in between. If the given node is an element, the same node is
    * returned.
    */
