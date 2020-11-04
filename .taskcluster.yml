@@ -1,0 +1,26 @@
+version: 1
+policy:
+  pullRequests: public
+tasks:
+  $match:
+    '(tasks_for == "github-pull-request" && event["action"] in [pull_request.opened,pull_request.reopened,pull_request.synchronize])':
+      taskId:
+        $eval: as_slugid("pr_task")
+      provisionerId: proj-getting-started
+      workerType: tutorial
+      payload:
+        maxRunTime: 3600
+        image: node
+        command:
+          - /bin/bash
+          - '--login'
+          - '-c'
+          - >-
+            git clone {{event.head.repo.url}} repo && cd repo && git config
+            advice.detachedHead false && git checkout {{event.head.sha}} && npm
+            install . && npm test
+      metadata:
+        name: Run tests and linter
+        description: ''
+        owner: '${event.sender.login}@users.noreply.github.com'
+        source: '${event.repository.url}'
