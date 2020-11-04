@@ -20,7 +20,7 @@ tasks:
         workerType: ci
         deadline: {$fromNow: '1 day'}
         payload:
-          maxRunTime: 3600
+          maxRunTime: 600
           image: node
           command:
             - /bin/bash
