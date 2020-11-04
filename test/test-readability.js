@@ -53,7 +53,7 @@ function htmlTransform(str) {
 
 function runTestsWithItems(label, domGenerationFn, source, expectedContent, expectedMetadata) {
   describe(label, function() {
-    this.timeout(10000);
+    this.timeout(30000);
 
     var result;
 
