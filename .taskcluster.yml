@@ -7,6 +7,7 @@ tasks:
       taskId:
         $eval: as_slugid("pr_task")
       provisionerId: proj-misc
+      deadline: {$fromNow: '1 day'}
       workerType: ci
       payload:
         maxRunTime: 3600
