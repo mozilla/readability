@@ -1,7 +1,0 @@
-language: node_js
-sudo: false
-node_js:
-  - '11.0'
-script:
-  - npm run lint
-  - npm run test
