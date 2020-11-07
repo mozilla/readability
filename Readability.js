@@ -230,7 +230,7 @@ Readability.prototype = {
     if (this._docJSDOMParser && nodeList._isLiveNodeList) {
       throw new Error("Do not pass live node lists to _replaceNodeTags");
     }
-    for (var i = nodeList.length - 1; i >= 0; i--) {
+    for (var i = 0; i < nodeList.length; i++) {
       var node = nodeList[i];
       this._setNodeTag(node, newTagName);
     }
@@ -452,7 +452,7 @@ Readability.prototype = {
   /**
    * Get the article title as an H1.
    *
-   * @return void
+   * @return string
    **/
   _getArticleTitle: function() {
     var doc = this._doc;
@@ -1446,7 +1446,7 @@ Readability.prototype = {
       if (elementProperty) {
         matches = elementProperty.match(propertyPattern);
         if (matches) {
-          for (var i = matches.length - 1; i >= 0; i--) {
+          for (var i = 0; i < matches.length; i++) {
             // Convert to lowercase, and remove any whitespace
             // so we can match below.
             name = matches[i].toLowerCase().replace(/\s/g, "");
