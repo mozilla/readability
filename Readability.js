@@ -872,7 +872,7 @@ Readability.prototype = {
   _grabArticle: function (page) {
     this.log("**** grabArticle ****");
     var doc = this._doc;
-    var isPaging = (page !== null ? true: false);
+    var isPaging = page !== null;
     page = page ? page : this._doc.body;
 
     // We can't grab an article if we don't have a page!
@@ -2033,11 +2033,10 @@ Readability.prototype = {
       }
 
       var weight = this._getClassWeight(node);
-      var contentScore = 0;
 
       this.log("Cleaning Conditionally", node);
 
-      if (weight + contentScore < 0) {
+      if (weight < 0) {
         return true;
       }
 
