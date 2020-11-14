@@ -143,7 +143,7 @@ Readability.prototype = {
 
   UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
 
-  DIV_TO_P_ELEMS: [ "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL" ],
+  DIV_TO_P_ELEMS: new Set([ "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL" ]),
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
 
@@ -1654,7 +1654,7 @@ Readability.prototype = {
    */
   _hasChildBlockElement: function (element) {
     return this._someNode(element.childNodes, function(node) {
-      return this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
+      return this.DIV_TO_P_ELEMS.has(node.tagName) ||
              this._hasChildBlockElement(node);
     });
   },
