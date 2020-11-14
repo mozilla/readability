@@ -230,8 +230,7 @@ Readability.prototype = {
     if (this._docJSDOMParser && nodeList._isLiveNodeList) {
       throw new Error("Do not pass live node lists to _replaceNodeTags");
     }
-    for (var i = 0; i < nodeList.length; i++) {
-      var node = nodeList[i];
+    for (const node of nodeList) {
       this._setNodeTag(node, newTagName);
     }
   },
@@ -1446,13 +1445,11 @@ Readability.prototype = {
       if (elementProperty) {
         matches = elementProperty.match(propertyPattern);
         if (matches) {
-          for (var i = 0; i < matches.length; i++) {
-            // Convert to lowercase, and remove any whitespace
-            // so we can match below.
-            name = matches[i].toLowerCase().replace(/\s/g, "");
-            // multiple authors
-            values[name] = content.trim();
-          }
+          // Convert to lowercase, and remove any whitespace
+          // so we can match below.
+          name = matches[0].toLowerCase().replace(/\s/g, "");
+          // multiple authors
+          values[name] = content.trim();
         }
       }
       if (!matches && elementName && namePattern.test(elementName)) {
@@ -2036,7 +2033,9 @@ Readability.prototype = {
 
       this.log("Cleaning Conditionally", node);
 
-      if (weight < 0) {
+      var contentScore = 0;
+
+      if (weight + contentScore < 0) {
         return true;
       }
 
