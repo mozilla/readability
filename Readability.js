@@ -143,7 +143,7 @@ Readability.prototype = {
 
   UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
 
-  DIV_TO_P_ELEMS: [ "A", "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL", "SELECT" ],
+  DIV_TO_P_ELEMS: new Set([ "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL" ]),
 
   ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
 
@@ -230,8 +230,7 @@ Readability.prototype = {
     if (this._docJSDOMParser && nodeList._isLiveNodeList) {
       throw new Error("Do not pass live node lists to _replaceNodeTags");
     }
-    for (var i = nodeList.length - 1; i >= 0; i--) {
-      var node = nodeList[i];
+    for (const node of nodeList) {
       this._setNodeTag(node, newTagName);
     }
   },
@@ -452,7 +451,7 @@ Readability.prototype = {
   /**
    * Get the article title as an H1.
    *
-   * @return void
+   * @return string
    **/
   _getArticleTitle: function() {
     var doc = this._doc;
@@ -872,7 +871,7 @@ Readability.prototype = {
   _grabArticle: function (page) {
     this.log("**** grabArticle ****");
     var doc = this._doc;
-    var isPaging = (page !== null ? true: false);
+    var isPaging = page !== null;
     page = page ? page : this._doc.body;
 
     // We can't grab an article if we don't have a page!
@@ -1446,13 +1445,11 @@ Readability.prototype = {
       if (elementProperty) {
         matches = elementProperty.match(propertyPattern);
         if (matches) {
-          for (var i = matches.length - 1; i >= 0; i--) {
-            // Convert to lowercase, and remove any whitespace
-            // so we can match below.
-            name = matches[i].toLowerCase().replace(/\s/g, "");
-            // multiple authors
-            values[name] = content.trim();
-          }
+          // Convert to lowercase, and remove any whitespace
+          // so we can match below.
+          name = matches[0].toLowerCase().replace(/\s/g, "");
+          // multiple authors
+          values[name] = content.trim();
         }
       }
       if (!matches && elementName && namePattern.test(elementName)) {
@@ -1654,7 +1651,7 @@ Readability.prototype = {
    */
   _hasChildBlockElement: function (element) {
     return this._someNode(element.childNodes, function(node) {
-      return this.DIV_TO_P_ELEMS.indexOf(node.tagName) !== -1 ||
+      return this.DIV_TO_P_ELEMS.has(node.tagName) ||
              this._hasChildBlockElement(node);
     });
   },
@@ -2033,9 +2030,10 @@ Readability.prototype = {
       }
 
       var weight = this._getClassWeight(node);
-      var contentScore = 0;
 
       this.log("Cleaning Conditionally", node);
+
+      var contentScore = 0;
 
       if (weight + contentScore < 0) {
         return true;
