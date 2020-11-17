@@ -1,5 +1,66 @@
 <div id="readability-page-1" class="page">
     <div id="evolve-shared-mutable-history">
+        <div id="contents">
+            <p> Contents </p>
+            <ul>
+                <li>
+                    <a href="#evolve-shared-mutable-history" id="id4">Evolve: Shared Mutable History</a>
+                    <ul>
+                        <li>
+                            <a href="#sharing-with-a-single-developer" id="id5">Sharing with a single developer</a>
+                            <ul>
+                                <li>
+                                    <a href="#publishing-and-non-publishing-repositories" id="id6">Publishing and non-publishing repositories</a>
+                                </li>
+                                <li>
+                                    <a href="#setting-up" id="id7">Setting up</a>
+                                </li>
+                                <li>
+                                    <a href="#example-1-amend-a-shared-changeset" id="id8">Example 1: Amend a shared changeset</a>
+                                </li>
+                                <li>
+                                    <a href="#example-2-amend-again-locally" id="id9">Example 2: Amend again, locally</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#sharing-with-multiple-developers-code-review" id="id10">Sharing with multiple developers: code review</a>
+                            <ul>
+                                <li>
+                                    <a href="#id2" id="id11">Setting up</a>
+                                </li>
+                                <li>
+                                    <a href="#example-3-alice-commits-and-amends-a-draft-fix" id="id12">Example 3: Alice commits and amends a draft fix</a>
+                                </li>
+                                <li>
+                                    <a href="#example-4-bob-implements-and-publishes-a-new-feature" id="id13">Example 4: Bob implements and publishes a new feature</a>
+                                </li>
+                                <li>
+                                    <a href="#example-5-alice-integrates-and-publishes" id="id14">Example 5: Alice integrates and publishes</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#getting-into-trouble-with-shared-mutable-history" id="id15">Getting into trouble with shared mutable history</a>
+                            <ul>
+                                <li>
+                                    <a href="#id3" id="id16">Setting up</a>
+                                </li>
+                                <li>
+                                    <a href="#example-6-divergent-changesets" id="id17">Example 6: Divergent changesets</a>
+                                </li>
+                                <li>
+                                    <a href="#phase-divergence-when-a-rewritten-changeset-is-made-public" id="id18">Phase-divergence: when a rewritten changeset is made public</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#conclusion" id="id19">Conclusion</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
         <p> Once you have mastered the art of mutable history in a single repository (see the <a href="http://fakehost/test/user-guide.html">user guide</a>), you can move up to the next level: <em>shared</em> mutable history. <tt><span>evolve</span></tt> lets you push and pull draft changesets between repositories along with their obsolescence markers. This opens up a number of interesting possibilities. </p>
         <p> The simplest scenario is a single developer working across two computers. Say you’re working on code that must be tested on a remote test server, probably in a rack somewhere, only accessible by SSH, and running an “enterprise-grade” (out-of-date) OS. But you probably prefer to write code locally: everything is setup the way you like it, and you can use your preferred editor, IDE, merge/diff tools, etc. </p>
         <p> Traditionally, your options are limited: either </p>
