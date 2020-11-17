@@ -135,6 +135,7 @@ Readability.prototype = {
     prevLink: /(prev|earl|old|new|<|«)/i,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
+    hashUrl: /^#.+/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
     // See: https://schema.org/Article
@@ -1746,7 +1747,7 @@ Readability.prototype = {
     // XXX implement _reduceNodeList?
     this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
       var href = linkNode.getAttribute("href");
-      if (!href || href[0] !== "#") {
+      if (!href || !href.match(this.REGEXPS.hashUrl)) {
         linkLength += this._getInnerText(linkNode).length;
       }
     });
