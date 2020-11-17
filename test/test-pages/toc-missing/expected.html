@@ -1,0 +1,1018 @@
+<div id="readability-page-1" class="page">
+    <article data-progress-indicator="">
+        <hr />
+        <p> Many developers think that having a critical bug in their code is the worst thing that can happen. Well, there is something much worse than that: Having a critical bug in your code and <strong>not knowing about it!</strong>
+        </p>
+        <p> To make sure I get notified about critical bugs as soon as possible, I started looking for ways to find anomalies in my data. I quickly found that information about these subjects tend to get very complicated, and involve a lot of ad-hoc tools and dependencies. </p>
+        <p> I'm not a statistician and not a data scientist, I'm just a developer. Before I introduce dependencies into my system I make sure I really can't do without them. So, <strong>using some high school level statistics and a fair knowledge of SQL, I implemented a simple anomaly detection system <em>that works</em>.</strong>
+        </p>
+        <figure>
+            <img alt="Can you spot the anomaly?&lt;br&gt;&lt;small&gt;Photo by &lt;a href=&quot;https://unsplash.com/photos/KmKZV8pso-s&quot;&gt;Ricardo Gomez Angel&lt;/a&gt;&lt;/small&gt;" src="https://hakibenita.com/images/00-sql-anomaly-detection.png" />
+            <figcaption> Can you spot the anomaly?<br />
+                <small>Photo by <a href="https://unsplash.com/photos/KmKZV8pso-s">Ricardo Gomez Angel</a></small>
+            </figcaption>
+        </figure>
+        <details open="">
+            <summary> Table of Contents </summary>
+            <div>
+                <ul>
+                    <li>
+                        <a href="#detecting-anomalies">Detecting Anomalies</a>
+                        <ul>
+                            <li>
+                                <a href="#understanding-z-score">Understanding Z-Score</a>
+                            </li>
+                            <li>
+                                <a href="#optimizing-z-score">Optimizing Z-Score</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#analyzing-a-server-log">Analyzing a Server Log</a>
+                        <ul>
+                            <li>
+                                <a href="#preparing-the-data">Preparing the Data</a>
+                            </li>
+                            <li>
+                                <a href="#getting-a-sense-of-the-data">Getting a Sense of the Data</a>
+                            </li>
+                            <li>
+                                <a href="#identifying-anomalies">Identifying Anomalies</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#backtesting">Backtesting</a>
+                        <ul>
+                            <li>
+                                <a href="#finding-past-anomalies">Finding Past Anomalies</a>
+                            </li>
+                            <li>
+                                <a href="#adding-thresholds">Adding Thresholds</a>
+                            </li>
+                            <li>
+                                <a href="#eliminating-repeating-alerts">Eliminating Repeating Alerts</a>
+                            </li>
+                            <li>
+                                <a href="#experiment-with-different-values">Experiment With Different Values</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#improving-accuracy">Improving Accuracy</a>
+                        <ul>
+                            <li>
+                                <a href="#use-weighted-mean">Use Weighted Mean</a>
+                            </li>
+                            <li>
+                                <a href="#use-median">Use Median</a>
+                            </li>
+                            <li>
+                                <a href="#use-mad">Use MAD</a>
+                            </li>
+                            <li>
+                                <a href="#use-different-measures">Use Different Measures</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#conclusion">Conclusion</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+        <hr />
+        <hr />
+        <h2 id="detecting-anomalies">
+            <a href="#detecting-anomalies">Detecting Anomalies</a>
+        </h2>
+        <p> Anomaly in a data series is a significant deviation from some reasonable value. Looking at this series of numbers for example, which number stands out? </p>
+        <div>
+            <pre>2, 3, 5, 2, 3, 12, 5, 3, 4
+</pre>
+        </div>
+        <p> The number that stands out in this series is 12. </p>
+        <figure>
+            <img alt="Scatter plot" src="https://hakibenita.com/images/00-sql-anomaly-detection-scatter-plot.png" />
+            <figcaption> Scatter plot </figcaption>
+        </figure>
+        <p> This is intuitive to a human, but computer programs don't have intuition... </p>
+        <p> To find the anomaly in the series we first need to define what a reasonable value is, and then define how far away from this value we consider a significant deviation. A good place to start looking for a reasonable value is the mean: </p>
+        <div>
+            <pre><span>SELECT</span> <span>avg</span><span>(</span><span>n</span><span>)</span>
+<span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span><span>;</span>
+
+<span>       avg</span>
+<span>────────────────────</span>
+<span>4.3333333333333333</span>
+</pre>
+        </div>
+        <p> The mean is ~4.33. </p>
+        <p> Next, we need to define the deviation. Let's use <a href="https://en.wikipedia.org/wiki/Standard_deviation" rel="noopener">Standard Deviation</a>: </p>
+        <div>
+            <pre><span>SELECT</span> <span>stddev</span><span>(</span><span>n</span><span>)</span>
+<span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span><span>;</span>
+
+<span>      stddev</span>
+<span>────────────────────</span>
+<span>3.0822070014844882</span>
+</pre>
+        </div>
+        <p> Standard deviation is the square root of the <a href="https://en.wikipedia.org/wiki/Variance" rel="noopener">variance</a>, which is the average squared distance from the mean. In this case it's 3.08. </p>
+        <p> Now that we've defined a "reasonable" value and a deviation, we can define a <em>range</em> of acceptable values: </p>
+        <div>
+            <pre><span>SELECT</span>
+   <span>avg</span><span>(</span><span>n</span><span>)</span> <span>-</span> <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>AS</span> <span>lower_bound</span><span>,</span>
+   <span>avg</span><span>(</span><span>n</span><span>)</span> <span>+</span> <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>AS</span> <span>upper_bound</span>
+<span>FROM</span>
+   <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span><span>;</span>
+
+<span>    lower_bound    │     upper_bound</span>
+<span>───────────────────┼────────────────────</span>
+<span>1.2511263318488451 │ 7.4155403348178215</span>
+</pre>
+        </div>
+        <p> The range we defined is one standard deviation from the mean. Any value outside this range is considered an anomaly: </p>
+        <div>
+            <pre><span>WITH</span> <span>series</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span> <span>*</span>
+   <span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span>
+<span>),</span>
+<span>bounds</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>avg</span><span>(</span><span>n</span><span>)</span> <span>-</span> <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>AS</span> <span>lower_bound</span><span>,</span>
+       <span>avg</span><span>(</span><span>n</span><span>)</span> <span>+</span> <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>AS</span> <span>upper_bound</span>
+   <span>FROM</span>
+       <span>series</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>n</span><span>,</span>
+   <span>n</span> <span>NOT</span> <span>BETWEEN</span> <span>lower_bound</span> <span>AND</span> <span>upper_bound</span> <span>AS</span> <span>is_anomaly</span>
+<span>FROM</span>
+   <span>series</span><span>,</span>
+   <span>bounds</span><span>;</span>
+
+<span>n  │ is_anomaly</span>
+<span>───┼────────────</span>
+<span> 2 │ f</span>
+<span> 3 │ f</span>
+<span> 5 │ f</span>
+<span> 2 │ f</span>
+<span> 3 │ f</span>
+<span><span>12 │ t</span>
+</span><span> 5 │ f</span>
+<span> 3 │ f</span>
+<span> 4 │ f</span>
+</pre>
+        </div>
+        <p> Using the query we found that the value 12 is outside the range of acceptable values, and identified it as an anomaly. </p>
+        <h3 id="understanding-z-score">
+            <a href="#understanding-z-score">Understanding Z-Score</a>
+        </h3>
+        <p> Another way to represent a range of acceptable values is using a z-score. <a href="https://en.wikipedia.org/wiki/Standard_score" rel="noopener">z-score, or Standard Score</a>, is the number of standard deviations from the mean. In the previous section, our acceptable range was one standard deviation from the mean, or in other words, a z-score in the range ±1: </p>
+        <div>
+            <pre><span>WITH</span> <span>series</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span> <span>*</span>
+   <span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span>
+<span>),</span>
+<span>stats</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>avg</span><span>(</span><span>n</span><span>)</span> <span>series_mean</span><span>,</span>
+       <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>as</span> <span>series_stddev</span>
+   <span>FROM</span>
+       <span>series</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>n</span><span>,</span>
+<span>   <span>(</span><span>n</span> <span>-</span> <span>series_mean</span><span>)</span> <span>/</span> <span>series_stddev</span> <span>as</span> <span>zscore</span>
+</span><span>FROM</span>
+   <span>series</span><span>,</span>
+   <span>stats</span><span>;</span>
+
+<span>n  │         zscore</span>
+<span>───┼─────────────────────────</span>
+<span> 2 │ -0.75703329861022517346</span>
+<span> 3 │ -0.43259045634870009448</span>
+<span> 5 │  0.21629522817435006346</span>
+<span> 2 │ -0.75703329861022517346</span>
+<span> 3 │ -0.43259045634870009448</span>
+<span>12 │      2.4873951240050256</span>
+<span> 5 │  0.21629522817435006346</span>
+<span> 3 │ -0.43259045634870009448</span>
+<span> 4 │ -0.10814761408717501551</span>
+</pre>
+        </div>
+        <p> Like before, we can detect anomalies by searching for values which are outside the acceptable range using the z-score: </p>
+        <div>
+            <pre><span>WITH</span> <span>series</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span> <span>*</span>
+   <span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span>
+<span>),</span>
+<span>stats</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>avg</span><span>(</span><span>n</span><span>)</span> <span>series_avg</span><span>,</span>
+       <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>as</span> <span>series_stddev</span>
+   <span>FROM</span>
+       <span>series</span>
+<span>),</span>
+<span>zscores</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>n</span><span>,</span>
+       <span>(</span><span>n</span> <span>-</span> <span>series_avg</span><span>)</span> <span>/</span> <span>series_stddev</span> <span>AS</span> <span>zscore</span>
+   <span>FROM</span>
+       <span>series</span><span>,</span>
+       <span>stats</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>*</span><span>,</span>
+   <span>zscore</span> <span>NOT</span> <span>BETWEEN</span> <span>-</span><span>1</span> <span>AND</span> <span>1</span> <span>AS</span> <span>is_anomaly</span>
+<span>FROM</span>
+   <span>zscores</span><span>;</span>
+
+<span>n  │         zscore          │ is_anomaly</span>
+<span>───┼─────────────────────────┼────────────</span>
+<span> 2 │ -0.75703329861022517346 │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f</span>
+<span> 5 │  0.21629522817435006346 │ f</span>
+<span> 2 │ -0.75703329861022517346 │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f</span>
+<span><span>12 │      2.4873951240050256 │ t</span>
+</span><span> 5 │  0.21629522817435006346 │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f</span>
+<span> 4 │ -0.10814761408717501551 │ f</span>
+</pre>
+        </div>
+        <p> Using z-score, we also identified 12 as an anomaly in this series. </p>
+        <h3 id="optimizing-z-score">
+            <a href="#optimizing-z-score">Optimizing Z-Score</a>
+        </h3>
+        <p> So far we used one standard deviation from the mean, or a z-score of ±1 to identify anomalies. Changing the z-score threshold can affect our results. For example, let's see what anomalies we identify when the z-score is greater than 0.5 and when it's greater than 3: </p>
+        <div>
+            <pre><span>WITH</span> <span>series</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span> <span>*</span>
+   <span>FROM</span> <span>unnest</span><span>(</span><span>array</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>12</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>AS</span> <span>n</span>
+<span>),</span>
+<span>stats</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>avg</span><span>(</span><span>n</span><span>)</span> <span>series_avg</span><span>,</span>
+       <span>stddev</span><span>(</span><span>n</span><span>)</span> <span>as</span> <span>series_stddev</span>
+   <span>FROM</span>
+       <span>series</span>
+<span>),</span>
+<span>zscores</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>n</span><span>,</span>
+       <span>(</span><span>n</span> <span>-</span> <span>series_avg</span><span>)</span> <span>/</span> <span>series_stddev</span> <span>AS</span> <span>zscore</span>
+   <span>FROM</span>
+       <span>series</span><span>,</span>
+       <span>stats</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>*</span><span>,</span>
+<span>   <span>zscore</span> <span>NOT</span> <span>BETWEEN</span> <span>-</span><span>0.5</span> <span>AND</span> <span>0.5</span> <span>AS</span> <span>is_anomaly_0_5</span><span>,</span>
+</span><span>   <span>zscore</span> <span>NOT</span> <span>BETWEEN</span> <span>-</span><span>1</span> <span>AND</span> <span>1</span> <span>AS</span> <span>is_anomaly_1</span><span>,</span>
+</span><span>   <span>zscore</span> <span>NOT</span> <span>BETWEEN</span> <span>-</span><span>3</span> <span>AND</span> <span>3</span> <span>AS</span> <span>is_anomaly_3</span>
+</span><span>FROM</span>
+   <span>zscores</span><span>;</span>
+
+<span>n  │         zscore          │ is_anomaly_0_5 │ is_anomaly_1 │ is_anomaly_3</span>
+<span>───┼─────────────────────────┼────────────────┼──────────────┼──────────────</span>
+<span> 2 │ -0.75703329861022517346 │ t              │ f            │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f              │ f            │ f</span>
+<span> 5 │  0.21629522817435006346 │ f              │ f            │ f</span>
+<span> 2 │ -0.75703329861022517346 │ t              │ f            │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f              │ f            │ f</span>
+<span>12 │      2.4873951240050256 │ t              │ t            │ f</span>
+<span> 5 │  0.21629522817435006346 │ f              │ f            │ f</span>
+<span> 3 │ -0.43259045634870009448 │ f              │ f            │ f</span>
+<span> 4 │ -0.10814761408717501551 │ f              │ f            │ f</span>
+</pre>
+        </div>
+        <p> Let's see what we got: </p>
+        <ul>
+            <li>When we decreased the z-score threshold to 0.5, we identified the value 2 as an anomaly in addition to the value 12. </li>
+            <li>When we increased the z-score threshold to 3 we did not identify any anomaly. </li>
+        </ul>
+        <p> The quality of our results are directly related to the parameters we set for the query. Later we'll see how using backtesting can help us identify ideal values. </p>
+        <hr />
+        <h2 id="analyzing-a-server-log">
+            <a href="#analyzing-a-server-log">Analyzing a Server Log</a>
+        </h2>
+        <p> Application servers such as nginx, Apache and IIS write a lot of useful information to access logs. The data in these logs can be extremely useful in identifying anomalies. </p>
+        <p> We are going to analyze logs of a web application, so the data we are most interested in is the timestamp and the status code of every response from the server. To illustrate the type of insight we can draw from just this data: </p>
+        <ul>
+            <li>
+                <strong>A sudden increase in 500 status code</strong>: You may have a problem in the server. Did you just push a new version? Is there an external service you're using that started failing in unexpected ways?
+            </li>
+            <li>
+                <strong>A sudden increase in 400 status code</strong>: You may have a problem in the client. Did you change some validation logic and forgot to update the client? Did you make a change and forgot to handle backward compatibility?
+            </li>
+            <li>
+                <strong>A sudden increase in 404 status code</strong>: You may have an SEO problem. Did you move some pages and forgot to set up redirects? Is there some script kiddy running a scan on your site?
+            </li>
+            <li>
+                <strong>A sudden increase in 200 status code</strong>: You either have some significant legit traffic coming in, or you are under a DOS attack. Either way, you probably want to check where it's coming from.
+            </li>
+        </ul>
+        <h3 id="preparing-the-data">
+            <a href="#preparing-the-data">Preparing the Data</a>
+        </h3>
+        <p> Parsing and processing logs is outside the scope of this article, so let's assume we did that and we have a table that looks like this: </p>
+        <div>
+            <pre><span>CREATE</span> <span>TABLE</span> <span>server_log_summary</span> <span>AS</span> <span>(</span>
+   <span>period</span> <span>timestamptz</span><span>,</span>
+   <span>status_code</span> <span>int</span><span>,</span>
+   <span>entries</span> <span>int</span>
+<span>);</span>
+</pre>
+        </div>
+        <p> The table stores the number of entries for each status code at a given period. For example, our table stores how many responses returned each status code every minute: </p>
+        <div>
+            <pre><span>db=#</span> <span>SELECT</span> <span>*</span> <span>FROM</span> <span>server_log_summary</span> <span>ORDER</span> <span>BY</span> <span>period</span> <span>DESC</span> <span>LIMIT</span> <span>10</span><span>;</span>
+
+<span>        period         │ status_code │ entries</span>
+<span>───────────────────────┼─────────────┼─────────</span>
+<span>2020-08-01 18:00:00+00 │         200 │    4084</span>
+<span>2020-08-01 18:00:00+00 │         404 │       0</span>
+<span>2020-08-01 18:00:00+00 │         400 │      24</span>
+<span>2020-08-01 18:00:00+00 │         500 │       0</span>
+<span>2020-08-01 17:59:00+00 │         400 │      12</span>
+<span>2020-08-01 17:59:00+00 │         200 │    3927</span>
+<span>2020-08-01 17:59:00+00 │         500 │       0</span>
+<span>2020-08-01 17:59:00+00 │         404 │       0</span>
+<span>2020-08-01 17:58:00+00 │         400 │       2</span>
+<span>2020-08-01 17:58:00+00 │         200 │    3850</span>
+</pre>
+        </div>
+        <p> Note that the table has a row for every minute, even if the status code was never returned in that minute. Given a table of statuses, it's very tempting to do something like this: </p>
+        <div>
+            <pre><span>-- Wrong!</span>
+<span>SELECT</span>
+   <span>date_trunc</span><span>(</span><span>'minute'</span><span>,</span> <span>timestamp</span><span>)</span> <span>AS</span> <span>period</span><span>,</span>
+   <span>status_code</span><span>,</span>
+   <span>count</span><span>(</span><span>*</span><span>)</span> <span>AS</span> <span>entries</span>
+<span>FROM</span>
+   <span>server_log</span>
+<span>GROUP</span> <span>BY</span>
+   <span>period</span><span>,</span>
+   <span>status_code</span><span>;</span>
+</pre>
+        </div>
+        <p> This is a common mistake and it can leave you with gaps in the data. Zero is a value, and it holds a significant meaning. A better approach is to create an "axis", and join to it: </p>
+        <div>
+            <pre><span>-- Correct!</span>
+<span>WITH</span> <span>axis</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>generate_series</span><span>(</span>
+           <span>date_trunc</span><span>(</span><span>'minute'</span><span>,</span> <span>now</span><span>()),</span>
+           <span>date_trunc</span><span>(</span><span>'minute'</span><span>,</span> <span>now</span><span>()</span> <span>-</span> <span>interval</span> <span>'1 hour'</span><span>),</span>
+           <span>interval</span> <span>'1 minute'</span> <span>*</span> <span>-</span><span>1</span>
+       <span>)</span> <span>AS</span> <span>period</span>
+   <span>FROM</span> <span>(</span>
+       <span>VALUES</span> <span>(</span><span>200</span><span>),</span> <span>(</span><span>400</span><span>),</span> <span>(</span><span>404</span><span>),</span> <span>(</span><span>500</span><span>)</span>
+   <span>)</span> <span>AS</span> <span>t</span><span>(</span><span>status_code</span><span>)</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>a</span><span>.</span><span>period</span><span>,</span>
+   <span>a</span><span>.</span><span>status_code</span><span>,</span>
+   <span>count</span><span>(</span><span>*</span><span>)</span> <span>AS</span> <span>entries</span>
+<span>FROM</span>
+   <span>axis</span> <span>a</span>
+   <span>LEFT</span> <span>JOIN</span> <span>server_log</span> <span>l</span> <span>ON</span> <span>(</span>
+       <span>date_trunc</span><span>(</span><span>'minute'</span><span>,</span> <span>l</span><span>.</span><span>timestamp</span><span>)</span> <span>=</span> <span>a</span><span>.</span><span>period</span>
+       <span>AND</span> <span>l</span><span>.</span><span>status_code</span> <span>=</span> <span>a</span><span>.</span><span>status_code</span>
+   <span>)</span>
+<span>GROUP</span> <span>BY</span>
+   <span>period</span><span>,</span>
+   <span>status_code</span><span>;</span>
+</pre>
+        </div>
+        <p> First we generate an axis using a cartesian join between the status codes we want to track, and the times we want to monitor. To generate the axis we used two nice features of PostgreSQL: </p>
+        <ul>
+            <li>
+                <a href="https://www.postgresql.org/docs/current/functions-srf.html" rel="noopener"><code>generate_series</code></a>: function that generates a range of values.
+            </li>
+            <li>
+                <a href="https://www.postgresql.org/docs/current/queries-values.html" rel="noopener"><code>VALUES</code> list</a>: special clause that can generate "constant tables", as the documentation calls it. You might be familiar with the <code>VALUES</code> clause from <code>INSERT</code> statements. In the old days, to generate data we had to use a bunch of <code>SELECT ... UNION ALL</code>... using <code>VALUES</code> is much nicer.
+            </li>
+        </ul>
+        <p> After generating the axis, we left join the actual data into it to get a complete series for each status code. The resulting data has no gaps, and is ready for analysis. </p>
+        <h3 id="getting-a-sense-of-the-data">
+            <a href="#getting-a-sense-of-the-data">Getting a Sense of the Data</a>
+        </h3>
+        <p> To get a sense of the data, let's draw a stacked bar chart by status: </p>
+        <figure>
+            <img alt="stacked bar chart by status, over time" src="https://hakibenita.com/images/00-sql-anomaly-detection-chart-by-status-over-time.png" />
+            <figcaption> stacked bar chart by status, over time </figcaption>
+        </figure>
+        <p> The chart shows a period of 12 hours. It looks like we have a nice trend with two peaks at around 09:30 and again at 18:00. </p>
+        <p> We also spot right away that at ~11:30 there was a significant increase in 500 errors. The burst died down after around 10 minutes. This is the type of anomalies we want to identify early on. </p>
+        <p> It's entirely possible that there were other problems during that time, we just can't spot them with a naked eye. </p>
+        <h3 id="identifying-anomalies">
+            <a href="#identifying-anomalies">Identifying Anomalies</a>
+        </h3>
+        <p> In anomaly detection systems, we usually want to identify if we have an anomaly <em>right now</em>, and send an alert. </p>
+        <p> To identify if the last datapoint is an anomaly, we start by calculating the mean and standard deviation for each status code in the past hour: </p>
+        <div>
+            <pre><span>db=#</span> <span>WITH</span> <span>stats</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>(</span><span>MAX</span><span>(</span><span>ARRAY</span><span>[</span><span>EXTRACT</span><span>(</span><span>'epoch'</span> <span>FROM</span> <span>period</span><span>),</span> <span>entries</span><span>]))[</span><span>2</span><span>]</span> <span>AS</span> <span>last_value</span><span>,</span>
+       <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>AS</span> <span>mean_entries</span><span>,</span>
+       <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>AS</span> <span>stddev_entries</span>
+   <span>FROM</span>
+       <span>server_log_summary</span>
+   <span>WHERE</span>
+       <span>-- In the demo data use:</span>
+       <span>-- period &gt; '2020-08-01 17:00 UTC'::timestamptz</span>
+       <span>period</span> <span>&gt;</span> <span>now</span><span>()</span> <span>-</span> <span>interval</span> <span>'1 hour'</span>
+   <span>GROUP</span> <span>BY</span>
+       <span>status_code</span>
+<span>)</span>
+<span>SELECT</span> <span>*</span> <span>FROM</span> <span>stats</span><span>;</span>
+
+<span>status_code │ last_value │      mean_entries      │     stddev_entries</span>
+<span>────────────┼────────────┼────────────────────────┼────────────────────────</span>
+<span>        404 │          0 │ 0.13333333333333333333 │ 0.34280333180088158345</span>
+<span>        500 │          0 │ 0.15000000000000000000 │ 0.36008473579027553993</span>
+<span>        200 │       4084 │  2779.1000000000000000 │       689.219644702665</span>
+<span>        400 │         24 │ 0.73333333333333333333 │     3.4388935285299212</span>
+</pre>
+        </div>
+        <p> To get the last value in a GROUP BY in addition to the mean and standard deviation <a href="http://fakehost/sql-group-by-first-last-value">we used a little array trick</a>. </p>
+        <p> Next, we calculate the z-score for the last value for each status code: </p>
+        <div>
+            <pre><span>db=#</span> <span>WITH</span> <span>stats</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>(</span><span>MAX</span><span>(</span><span>ARRAY</span><span>[</span><span>EXTRACT</span><span>(</span><span>'epoch'</span> <span>FROM</span> <span>period</span><span>),</span> <span>entries</span><span>]))[</span><span>2</span><span>]</span> <span>AS</span> <span>last_value</span><span>,</span>
+       <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>AS</span> <span>mean_entries</span><span>,</span>
+       <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>AS</span> <span>stddev_entries</span>
+   <span>FROM</span>
+       <span>server_log_summary</span>
+   <span>WHERE</span>
+       <span>-- In the demo data use:</span>
+       <span>-- period &gt; '2020-08-01 17:00 UTC'::timestamptz</span>
+       <span>period</span> <span>&gt;</span> <span>now</span><span>()</span> <span>-</span> <span>interval</span> <span>'1 hour'</span>
+   <span>GROUP</span> <span>BY</span>
+       <span>status_code</span>
+<span>)</span>
+<span>SELECT</span>
+   <span>*</span><span>,</span>
+<span>   <span>(</span><span>last_value</span> <span>-</span> <span>mean_entries</span><span>)</span> <span>/</span> <span>NULLIF</span><span>(</span><span>stddev_entries</span><span>::</span><span>float</span><span>,</span> <span>0</span><span>)</span> <span>as</span> <span>zscore</span>
+</span><span>FROM</span>
+   <span>stats</span><span>;</span>
+
+<span>status_code │ last_value │ mean_entries │ stddev_entries │  zscore</span>
+<span>────────────┼────────────┼──────────────┼────────────────┼────────</span>
+<span>        404 │          0 │ 0.133        │ 0.3428         │ -0.388</span>
+<span>        500 │          0 │ 0.150        │ 0.3600         │ -0.416</span>
+<span>        200 │       4084 │ 2779.100     │ 689.2196       │  1.893</span>
+<span><span>        400 │         24 │ 0.733        │ 3.4388         │  6.765</span>
+</span></pre>
+        </div>
+        <p> We calculated the z-score by finding the number of standard deviations between the last value and the mean. To <a href="http://fakehost/sql-dos-and-donts#guard-against-division-by-zero-errors">avoid a "division by zero" error</a> we transform the denominator to NULL if it's zero. </p>
+        <p> Looking at the z-scores we got, we can spot that status code 400 got a very high z-score of 6. In the past minute we returned a 400 status code 24 times, which is significantly higher than the average of 0.73 in the past hour. </p>
+        <p> Let's take a look at the raw data: </p>
+        <div>
+            <pre><span>SELECT</span> <span>*</span>
+<span>FROM</span> <span>server_log_summary</span>
+<span>WHERE</span> <span>status_code</span> <span>=</span> <span>400</span>
+<span>ORDER</span> <span>BY</span> <span>period</span> <span>DESC</span>
+<span>LIMIT</span> <span>20</span><span>;</span>
+
+<span>        period         │ status_code │ entries</span>
+<span>───────────────────────┼─────────────┼─────────</span>
+<span>2020-08-01 18:00:00+00 │         400 │      24</span>
+<span>2020-08-01 17:59:00+00 │         400 │      12</span>
+<span>2020-08-01 17:58:00+00 │         400 │       2</span>
+<span>2020-08-01 17:57:00+00 │         400 │       0</span>
+<span>2020-08-01 17:56:00+00 │         400 │       1</span>
+<span>2020-08-01 17:55:00+00 │         400 │       0</span>
+<span>2020-08-01 17:54:00+00 │         400 │       0</span>
+<span>2020-08-01 17:53:00+00 │         400 │       0</span>
+<span>2020-08-01 17:52:00+00 │         400 │       0</span>
+<span>2020-08-01 17:51:00+00 │         400 │       0</span>
+<span>2020-08-01 17:50:00+00 │         400 │       0</span>
+<span>2020-08-01 17:49:00+00 │         400 │       0</span>
+<span>2020-08-01 17:48:00+00 │         400 │       0</span>
+<span>2020-08-01 17:47:00+00 │         400 │       0</span>
+<span>2020-08-01 17:46:00+00 │         400 │       0</span>
+<span>2020-08-01 17:45:00+00 │         400 │       0</span>
+<span>2020-08-01 17:44:00+00 │         400 │       0</span>
+<span>2020-08-01 17:43:00+00 │         400 │       0</span>
+<span>2020-08-01 17:42:00+00 │         400 │       0</span>
+<span>2020-08-01 17:41:00+00 │         400 │       0</span>
+</pre>
+        </div>
+        <p> It does look like in the last couple of minutes we are getting more errors than expected. </p>
+        <figure>
+            <img alt="Status 400 in the past hour" src="https://hakibenita.com/images/00-sql-anomaly-detection-400.png" />
+            <figcaption> Status 400 in the past hour </figcaption>
+        </figure>
+        <p> What our naked eye missed in the chart and in the raw data, was found by the query, and was classified as an anomaly. We are off to a great start! </p>
+        <hr />
+        <h2 id="backtesting">
+            <a href="#backtesting">Backtesting</a>
+        </h2>
+        <p> In the previous section we identified an anomaly. We found an increase in 400 status code because the z-score was 6. But how do we set the threshold for the z-score? Is a z-score of 3 an anomaly? What about 2, or 1? </p>
+        <p> To find thresholds that fit our needs, we can run simulations on past data with different values, and evaluate the results. This is often called backtesting. </p>
+        <h3 id="finding-past-anomalies">
+            <a href="#finding-past-anomalies">Finding Past Anomalies</a>
+        </h3>
+        <p> The first thing we need to do is to calculate the mean and the standard deviation for each status code up until every row, just as if it’s the current value. This is a classic job for a <a href="https://www.postgresql.org/docs/current/tutorial-window.html" rel="noopener">window function</a>: </p>
+        <div>
+            <pre><span>WITH</span> <span>calculations_over_window</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+      <span>status_code</span><span>,</span>
+      <span>period</span><span>,</span>
+      <span>entries</span><span>,</span>
+      <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>mean_entries</span><span>,</span>
+      <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>stddev_entries</span>
+   <span>FROM</span>
+      <span>server_log_summary</span>
+   <span>WINDOW</span> <span>status_window</span> <span>AS</span> <span>(</span>
+      <span>PARTITION</span> <span>BY</span> <span>status_code</span>
+      <span>ORDER</span> <span>BY</span> <span>period</span>
+      <span>ROWS</span> <span>BETWEEN</span> <span>60</span> <span>PRECEDING</span> <span>AND</span> <span>CURRENT</span> <span>ROW</span>
+   <span>)</span>
+<span>)</span>
+<span>SELECT</span> <span>*</span>
+<span>FROM</span> <span>calculations_over_window</span>
+<span>ORDER</span> <span>BY</span> <span>period</span> <span>DESC</span>
+<span>LIMIT</span> <span>20</span><span>;</span>
+
+<span>status_code │         period         │ entries │      mean_entries      │     stddev_entries</span>
+<span>────────────┼────────────────────────┼─────────┼────────────────────────┼────────────────────────</span>
+<span>        200 │ 2020-08-01 18:00:00+00 │    4084 │  2759.9672131147540984 │       699.597407256800</span>
+<span>        400 │ 2020-08-01 18:00:00+00 │      24 │ 0.72131147540983606557 │     3.4114080550460080</span>
+<span>        404 │ 2020-08-01 18:00:00+00 │       0 │ 0.13114754098360655738 │ 0.34036303344446665347</span>
+<span>        500 │ 2020-08-01 18:00:00+00 │       0 │ 0.14754098360655737705 │ 0.35758754516763638735</span>
+<span>        500 │ 2020-08-01 17:59:00+00 │       0 │ 0.16393442622950819672 │ 0.37328844382740000274</span>
+<span>        400 │ 2020-08-01 17:59:00+00 │      12 │ 0.32786885245901639344 │     1.5676023249473471</span>
+<span>        200 │ 2020-08-01 17:59:00+00 │    3927 │  2718.6721311475409836 │       694.466863171826</span>
+<span>        404 │ 2020-08-01 17:59:00+00 │       0 │ 0.13114754098360655738 │ 0.34036303344446665347</span>
+<span>        500 │ 2020-08-01 17:58:00+00 │       0 │ 0.16393442622950819672 │ 0.37328844382740000274</span>
+<span>        404 │ 2020-08-01 17:58:00+00 │       0 │ 0.13114754098360655738 │ 0.34036303344446665347</span>
+<span>        200 │ 2020-08-01 17:58:00+00 │    3850 │  2680.4754098360655738 │       690.967283512936</span>
+<span>        400 │ 2020-08-01 17:58:00+00 │       2 │ 0.13114754098360655738 │ 0.38623869286861001780</span>
+<span>        404 │ 2020-08-01 17:57:00+00 │       0 │ 0.13114754098360655738 │ 0.34036303344446665347</span>
+<span>        400 │ 2020-08-01 17:57:00+00 │       0 │ 0.09836065573770491803 │ 0.30027309973793774423</span>
+<span>        500 │ 2020-08-01 17:57:00+00 │       1 │ 0.16393442622950819672 │ 0.37328844382740000274</span>
+<span>        200 │ 2020-08-01 17:57:00+00 │    3702 │  2643.0327868852459016 │       688.414796645480</span>
+<span>        200 │ 2020-08-01 17:56:00+00 │    3739 │  2607.5081967213114754 │       688.769908918569</span>
+<span>        404 │ 2020-08-01 17:56:00+00 │       0 │ 0.14754098360655737705 │ 0.35758754516763638735</span>
+<span>        400 │ 2020-08-01 17:56:00+00 │       1 │ 0.11475409836065573770 │ 0.32137001808599097120</span>
+<span>        500 │ 2020-08-01 17:56:00+00 │       0 │ 0.14754098360655737705 │ 0.35758754516763638735</span>
+</pre>
+        </div>
+        <p> To calculate the mean and standard deviation over a sliding window of 60 minutes, we use a <a href="https://www.postgresql.org/docs/current/tutorial-window.html" rel="noopener">window function</a>. To avoid having to repeat the <code>WINDOW</code> clause for every aggregate, we define a <a href="https://www.postgresql.org/docs/current/sql-select.html#SQL-WINDOW" rel="noopener">named window</a> called "status_window". This is another nice feature of PostgreSQL. </p>
+        <p> In the results we can now see that for every entry, we have the mean and standard deviation of the previous 60 rows. This is similar to the calculation we did in the previous section, only this time we do it for every row. </p>
+        <p> Now we can calculate the z-score for every row: </p>
+        <div>
+            <pre><span>WITH</span> <span>calculations_over_window</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+      <span>status_code</span><span>,</span>
+      <span>period</span><span>,</span>
+      <span>entries</span><span>,</span>
+      <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>mean_entries</span><span>,</span>
+      <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>stddev_entries</span>
+   <span>FROM</span>
+      <span>server_log_summary</span>
+   <span>WINDOW</span> <span>status_window</span> <span>AS</span> <span>(</span>
+      <span>PARTITION</span> <span>BY</span> <span>status_code</span>
+      <span>ORDER</span> <span>BY</span> <span>period</span>
+      <span>ROWS</span> <span>BETWEEN</span> <span>60</span> <span>PRECEDING</span> <span>AND</span> <span>CURRENT</span> <span>ROW</span>
+   <span>)</span>
+<span>),</span>
+
+<span><span>with_zscore</span> <span>AS</span> <span>(</span>
+</span>   <span>SELECT</span>
+       <span>*</span><span>,</span>
+<span>       <span>(</span><span>entries</span> <span>-</span> <span>mean_entries</span><span>)</span> <span>/</span> <span>NULLIF</span><span>(</span><span>stddev_entries</span><span>::</span><span>float</span><span>,</span> <span>0</span><span>)</span> <span>as</span> <span>zscore</span>
+</span>   <span>FROM</span>
+       <span>calculations_over_window</span>
+<span>)</span>
+
+<span>SELECT</span>
+   <span>status_code</span><span>,</span>
+   <span>period</span><span>,</span>
+   <span>zscore</span>
+<span>FROM</span>
+   <span>with_zscore</span>
+<span>ORDER</span> <span>BY</span>
+   <span>period</span> <span>DESC</span>
+<span>LIMIT</span>
+   <span>20</span><span>;</span>
+
+<span>status_code │         period         │        zscore</span>
+<span>────────────┼────────────────────────┼──────────────────────</span>
+<span>        200 │ 2020-08-01 18:00:00+00 │   1.8925638848161648</span>
+<span>        400 │ 2020-08-01 18:00:00+00 │    6.823777205473068</span>
+<span>        404 │ 2020-08-01 18:00:00+00 │ -0.38531664163524526</span>
+<span>        500 │ 2020-08-01 18:00:00+00 │ -0.41260101365496504</span>
+<span>        500 │ 2020-08-01 17:59:00+00 │  -0.4391628750910588</span>
+<span>        400 │ 2020-08-01 17:59:00+00 │    7.445849602151508</span>
+<span>        200 │ 2020-08-01 17:59:00+00 │   1.7399359608515874</span>
+<span>        404 │ 2020-08-01 17:59:00+00 │ -0.38531664163524526</span>
+<span>        500 │ 2020-08-01 17:58:00+00 │  -0.4391628750910588</span>
+<span>        404 │ 2020-08-01 17:58:00+00 │ -0.38531664163524526</span>
+<span>        200 │ 2020-08-01 17:58:00+00 │   1.6925903990967166</span>
+<span>        400 │ 2020-08-01 17:58:00+00 │    4.838594613958412</span>
+<span>        404 │ 2020-08-01 17:57:00+00 │ -0.38531664163524526</span>
+<span>        400 │ 2020-08-01 17:57:00+00 │ -0.32757065425956844</span>
+<span>        500 │ 2020-08-01 17:57:00+00 │      2.2397306629644</span>
+<span>        200 │ 2020-08-01 17:57:00+00 │   1.5382691050147506</span>
+<span>        200 │ 2020-08-01 17:56:00+00 │   1.6427718293547886</span>
+<span>        404 │ 2020-08-01 17:56:00+00 │ -0.41260101365496504</span>
+<span>        400 │ 2020-08-01 17:56:00+00 │     2.75460015502278</span>
+<span>        500 │ 2020-08-01 17:56:00+00 │ -0.41260101365496504</span>
+</pre>
+        </div>
+        <p> We now have z-scores for every row, and we can try to identify anomalies: </p>
+        <div>
+            <pre><span>WITH</span> <span>calculations_over_window</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>period</span><span>,</span>
+       <span>entries</span><span>,</span>
+       <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>mean_entries</span><span>,</span>
+       <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>stddev_entries</span>
+   <span>FROM</span>
+       <span>server_log_summary</span>
+   <span>WINDOW</span> <span>status_window</span> <span>AS</span> <span>(</span>
+       <span>PARTITION</span> <span>BY</span> <span>status_code</span>
+       <span>ORDER</span> <span>BY</span> <span>period</span>
+       <span>ROWS</span> <span>BETWEEN</span> <span>60</span> <span>PRECEDING</span> <span>AND</span> <span>CURRENT</span> <span>ROW</span>
+   <span>)</span>
+<span>),</span>
+
+<span>with_zscore</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+       <span>(</span><span>entries</span> <span>-</span> <span>mean_entries</span><span>)</span> <span>/</span> <span>NULLIF</span><span>(</span><span>stddev_entries</span><span>::</span><span>float</span><span>,</span> <span>0</span><span>)</span> <span>as</span> <span>zscore</span>
+   <span>FROM</span>
+       <span>calculations_over_window</span>
+<span>),</span>
+
+<span>with_alert</span> <span>AS</span> <span>(</span>
+
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+<span>       <span>zscore</span> <span>&gt;</span> <span>3</span> <span>AS</span> <span>alert</span>
+</span>   <span>FROM</span>
+       <span>with_zscore</span>
+<span>)</span>
+
+<span>SELECT</span>
+   <span>status_code</span><span>,</span>
+   <span>period</span><span>,</span>
+   <span>entries</span><span>,</span>
+   <span>zscore</span><span>,</span>
+   <span>alert</span>
+<span>FROM</span>
+   <span>with_alert</span>
+<span>WHERE</span>
+   <span>alert</span>
+<span>ORDER</span> <span>BY</span>
+   <span>period</span> <span>DESC</span>
+<span>LIMIT</span>
+   <span>20</span><span>;</span>
+
+<span>status_code │         period         │ entries │       zscore       │ alert</span>
+<span>────────────┼────────────────────────┼─────────┼────────────────────┼───────</span>
+<span>        400 │ 2020-08-01 18:00:00+00 │      24 │  6.823777205473068 │ t</span>
+<span>        400 │ 2020-08-01 17:59:00+00 │      12 │  7.445849602151508 │ t</span>
+<span>        400 │ 2020-08-01 17:58:00+00 │       2 │  4.838594613958412 │ t</span>
+<span>        500 │ 2020-08-01 17:29:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        500 │ 2020-08-01 17:20:00+00 │       1 │ 3.3190952747131184 │ t</span>
+<span>        500 │ 2020-08-01 17:18:00+00 │       1 │ 3.7438474117708043 │ t</span>
+<span>        500 │ 2020-08-01 17:13:00+00 │       1 │ 3.7438474117708043 │ t</span>
+<span>        500 │ 2020-08-01 17:09:00+00 │       1 │  4.360778994930029 │ t</span>
+<span>        500 │ 2020-08-01 16:59:00+00 │       1 │ 3.7438474117708043 │ t</span>
+<span>        400 │ 2020-08-01 16:29:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        404 │ 2020-08-01 16:13:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        500 │ 2020-08-01 15:13:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        500 │ 2020-08-01 15:11:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        500 │ 2020-08-01 14:58:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        400 │ 2020-08-01 14:56:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        400 │ 2020-08-01 14:55:00+00 │       1 │ 3.3190952747131184 │ t</span>
+<span>        400 │ 2020-08-01 14:50:00+00 │       1 │ 3.3190952747131184 │ t</span>
+<span>        500 │ 2020-08-01 14:37:00+00 │       1 │ 3.0027309973793774 │ t</span>
+<span>        400 │ 2020-08-01 14:35:00+00 │       1 │ 3.3190952747131184 │ t</span>
+<span>        400 │ 2020-08-01 14:32:00+00 │       1 │ 3.3190952747131184 │ t</span>
+</pre>
+        </div>
+        <p> We decided to classify values with z-score greater than 3 as anomalies. 3 is usually the magic number you’ll see in textbooks, but don’t get sentimental about it because you can definitely change it to get better results. </p>
+        <h3 id="adding-thresholds">
+            <a href="#adding-thresholds">Adding Thresholds</a>
+        </h3>
+        <p> In the last query we detected a large number of "anomalies" with just one entry. This is very common in errors that don't happen very often. In our case, every once in a while we get a 400 status code, but because it doesn't happen very often, the standard deviation is very low so that even a single error can be considered way above the acceptable value. </p>
+        <p> We don't really want to receive an alert in the middle of the night just because of one 400 status code. We can't have every curious developer fiddling with the devtools in his browser wake us up in the middle of the night. </p>
+        <p> To eliminate rows with only a few entries we set a threshold: </p>
+        <div>
+            <pre><span>WITH</span> <span>calculations_over_window</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>period</span><span>,</span>
+       <span>entries</span><span>,</span>
+       <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>mean_entries</span><span>,</span>
+       <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>stddev_entries</span>
+   <span>FROM</span>
+       <span>server_log_summary</span>
+   <span>WINDOW</span> <span>status_window</span> <span>AS</span> <span>(</span>
+       <span>PARTITION</span> <span>BY</span> <span>status_code</span>
+       <span>ORDER</span> <span>BY</span> <span>period</span>
+       <span>ROWS</span> <span>BETWEEN</span> <span>60</span> <span>PRECEDING</span> <span>AND</span> <span>CURRENT</span> <span>ROW</span>
+   <span>)</span>
+<span>),</span>
+
+<span>with_zscore</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+       <span>(</span><span>entries</span> <span>-</span> <span>mean_entries</span><span>)</span> <span>/</span> <span>NULLIF</span><span>(</span><span>stddev_entries</span><span>::</span><span>float</span><span>,</span> <span>0</span><span>)</span> <span>as</span> <span>zscore</span>
+   <span>FROM</span>
+       <span>calculations_over_window</span>
+<span>),</span>
+
+<span>with_alert</span> <span>AS</span> <span>(</span>
+
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+<span>       <span>entries</span> <span>&gt;</span> <span>10</span> <span>AND</span> <span>zscore</span> <span>&gt;</span> <span>3</span> <span>AS</span> <span>alert</span>
+</span>   <span>FROM</span>
+       <span>with_zscore</span>
+<span>)</span>
+
+<span>SELECT</span>
+   <span>status_code</span><span>,</span>
+   <span>period</span><span>,</span>
+   <span>entries</span><span>,</span>
+   <span>zscore</span><span>,</span>
+   <span>alert</span>
+<span>FROM</span>
+   <span>with_alert</span>
+<span>WHERE</span>
+   <span>alert</span>
+<span>ORDER</span> <span>BY</span>
+   <span>period</span> <span>DESC</span><span>;</span>
+
+<span>status_code │         period         │ entries │       zscore       │ alert</span>
+<span>────────────┼────────────────────────┼─────────┼────────────────────┼───────</span>
+<span>        400 │ 2020-08-01 18:00:00+00 │      24 │  6.823777205473068 │ t</span>
+<span>        400 │ 2020-08-01 17:59:00+00 │      12 │  7.445849602151508 │ t</span>
+<span>        500 │ 2020-08-01 11:29:00+00 │    5001 │  3.172198441961645 │ t</span>
+<span>        500 │ 2020-08-01 11:28:00+00 │    4812 │ 3.3971646910263917 │ t</span>
+<span>        500 │ 2020-08-01 11:27:00+00 │    4443 │ 3.5349400089601586 │ t</span>
+<span>        500 │ 2020-08-01 11:26:00+00 │    4522 │ 4.1264785335553595 │ t</span>
+<span>        500 │ 2020-08-01 11:25:00+00 │    5567 │   6.17629336121081 │ t</span>
+<span>        500 │ 2020-08-01 11:24:00+00 │    3657 │ 6.8689992361141154 │ t</span>
+<span>        500 │ 2020-08-01 11:23:00+00 │    1512 │  6.342260662589681 │ t</span>
+<span>        500 │ 2020-08-01 11:22:00+00 │    1022 │  7.682189672504754 │ t</span>
+<span>        404 │ 2020-08-01 07:20:00+00 │      23 │  5.142126410098476 │ t</span>
+<span>        404 │ 2020-08-01 07:19:00+00 │      20 │  6.091200697920824 │ t</span>
+<span>        404 │ 2020-08-01 07:18:00+00 │      15 │   7.57547172423804 │ t</span>
+</pre>
+        </div>
+        <p> After eliminating potential anomalies with less than 10 entries we get much fewer, and probably more relevant results. </p>
+        <h3 id="eliminating-repeating-alerts">
+            <a href="#eliminating-repeating-alerts">Eliminating Repeating Alerts</a>
+        </h3>
+        <p> In the previous section we eliminated potential anomalies with less than 10 entries. Using thresholds we were able to remove some non interesting anomalies. </p>
+        <p> Let's have a look at the data for status code 400 after applying the threshold: </p>
+        <div>
+            <pre>status_code │         period         │ entries │       zscore       │ alert
+────────────┼────────────────────────┼─────────┼────────────────────┼───────
+        400 │ 2020-08-01 18:00:00+00 │      24 │  6.823777205473068 │ t
+        400 │ 2020-08-01 17:59:00+00 │      12 │  7.445849602151508 │ t
+</pre>
+        </div>
+        <p> The first alert happened in 17:59, and a minute later the z-score was still high with a large number of entries and so we classified the next rows at 18:00 as an anomaly as well. </p>
+        <p> If you think of an alerting system, we want to send an alert only when an anomaly first happens. We don't want to send an alert every minute until the z-score comes back below the threshold. In this case, we only want to send one alert at 17:59. We don't want to send <em>another</em> alert a minute later at 18:00. </p>
+        <p> Let's remove alerts where the previous period was also classified as an alert: </p>
+        <div>
+            <pre><span>WITH</span> <span>calculations_over_window</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>status_code</span><span>,</span>
+       <span>period</span><span>,</span>
+       <span>entries</span><span>,</span>
+       <span>AVG</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>mean_entries</span><span>,</span>
+       <span>STDDEV</span><span>(</span><span>entries</span><span>)</span> <span>OVER</span> <span>status_window</span> <span>as</span> <span>stddev_entries</span>
+   <span>FROM</span>
+       <span>server_log_summary</span>
+   <span>WINDOW</span> <span>status_window</span> <span>AS</span> <span>(</span>
+       <span>PARTITION</span> <span>BY</span> <span>status_code</span>
+       <span>ORDER</span> <span>BY</span> <span>period</span>
+       <span>ROWS</span> <span>BETWEEN</span> <span>60</span> <span>PRECEDING</span> <span>AND</span> <span>CURRENT</span> <span>ROW</span>
+   <span>)</span>
+<span>),</span>
+
+<span>with_zscore</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+       <span>(</span><span>entries</span> <span>-</span> <span>mean_entries</span><span>)</span> <span>/</span> <span>NULLIF</span><span>(</span><span>stddev_entries</span><span>::</span><span>float</span><span>,</span> <span>0</span><span>)</span> <span>as</span> <span>zscore</span>
+   <span>FROM</span>
+       <span>calculations_over_window</span>
+<span>),</span>
+
+<span>with_alert</span> <span>AS</span> <span>(</span>
+
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+       <span>entries</span> <span>&gt;</span> <span>10</span> <span>AND</span> <span>zscore</span> <span>&gt;</span> <span>3</span> <span>AS</span> <span>alert</span>
+   <span>FROM</span>
+       <span>with_zscore</span>
+<span>),</span>
+
+<span>with_previous_alert</span> <span>AS</span> <span>(</span>
+   <span>SELECT</span>
+       <span>*</span><span>,</span>
+<span>       <span>LAG</span><span>(</span><span>alert</span><span>)</span> <span>OVER</span> <span>(</span><span>PARTITION</span> <span>BY</span> <span>status_code</span> <span>ORDER</span> <span>BY</span> <span>period</span><span>)</span> <span>AS</span> <span>previous_alert</span>
+</span>   <span>FROM</span>
+       <span>with_alert</span>
+<span>)</span>
+
+<span>SELECT</span>
+   <span>status_code</span><span>,</span>
+   <span>period</span><span>,</span>
+   <span>entries</span><span>,</span>
+   <span>zscore</span><span>,</span>
+   <span>alert</span>
+<span>FROM</span>
+   <span>with_previous_alert</span>
+<span>WHERE</span>
+<span>   <span>alert</span> <span>AND</span> <span>NOT</span> <span>previous_alert</span>
+</span><span>ORDER</span> <span>BY</span>
+   <span>period</span> <span>DESC</span><span>;</span>
+
+<span>status_code │         period         │ entries │      zscore       │ alert</span>
+<span>────────────┼────────────────────────┼─────────┼───────────────────┼───────</span>
+<span>        400 │ 2020-08-01 17:59:00+00 │      12 │ 7.445849602151508 │ t</span>
+<span>        500 │ 2020-08-01 11:22:00+00 │    1022 │ 7.682189672504754 │ t</span>
+<span>        404 │ 2020-08-01 07:18:00+00 │      15 │  7.57547172423804 │ t</span>
+</pre>
+        </div>
+        <p> By eliminating alerts that were already triggered we get a very small list of anomalies that may have happened during the day. Looking at the results we can see what anomalies we would have discovered: </p>
+        <ul>
+            <li>Anomaly in status code 400 at 17:59: we also found that one earlier. </li>
+        </ul>
+        <figure>
+            <img alt="Anomaly in status code 400" src="https://hakibenita.com/images/00-sql-anomaly-detection-400.png" />
+            <figcaption> Anomaly in status code 400 </figcaption>
+        </figure>
+        <ul>
+            <li>Anomaly in status code 500: we spotted this one on the chart when we started. </li>
+        </ul>
+        <figure>
+            <img alt="Anomaly in status code 500" src="https://hakibenita.com/images/00-sql-anomaly-detection-500.png" />
+            <figcaption> Anomaly in status code 500 </figcaption>
+        </figure>
+        <ul>
+            <li>Anomaly in status code 404: this is a hidden hidden anomaly which we did not know about until now. </li>
+        </ul>
+        <figure>
+            <img alt="A hidden anomaly in status code 404" src="https://hakibenita.com/images/00-sql-anomaly-detection-404.png" />
+            <figcaption> A hidden anomaly in status code 404 </figcaption>
+        </figure>
+        <p> The query can now be used to fire alerts when it encounters an anomaly. </p>
+        <h3 id="experiment-with-different-values">
+            <a href="#experiment-with-different-values">Experiment With Different Values</a>
+        </h3>
+        <p> In the process so far we’ve used several constants in our calculations: </p>
+        <ul>
+            <li>
+                <strong>Lookback period</strong>: How far back we calculate the mean and standard deviation for each status code. The value we used is 60 minutes.
+            </li>
+            <li>
+                <strong>Entries Threshold</strong>: The least amount of entries we want to get an alert for. The value we used is 10.
+            </li>
+            <li>
+                <strong>Z-Score Threshold</strong>: The z-score after which we classify the value as an anomaly. The value we used is 6.
+            </li>
+        </ul>
+        <p> Now that we have a working query to backtest, we can experiment with different values. </p>
+        <figure>
+            <img alt="Experimenting with parameter values" src="https://hakibenita.com/images/00-sql-anomaly-detection-parameters.png" />
+            <figcaption> Experimenting with parameter values </figcaption>
+        </figure>
+        <p> This is a chart showing the alerts our system identified in the past 12 hours: </p>
+        <figure>
+            <img alt="Backtesting with default parameters. &lt;a href=&quot;https://popsql.com/queries/-MECQV6GiKr04WdCWM0K/simple-anomaly-detection-with-sql?access_token=2d2c0729f9a1cfa7b6a2dbb5b0adb45c&quot;&gt;View in editor&lt;/a&gt;" src="https://hakibenita.com/images/00-sql-anomaly-detection-backtest-10-3-60.png" />
+            <figcaption> Backtesting with default parameters. <a href="https://popsql.com/queries/-MECQV6GiKr04WdCWM0K/simple-anomaly-detection-with-sql?access_token=2d2c0729f9a1cfa7b6a2dbb5b0adb45c">View in editor</a>
+            </figcaption>
+        </figure>
+        <p> To get a sense of each parameter, let's adjust the values and see how it affects the number and quality of alerts we get. </p>
+        <p> If we decrease the value of the z-score threshold from 3 to 1, we should get more alerts. With a lower threshold, more values are likely to be considered an anomaly: </p>
+        <figure>
+            <img alt="Backtesting with lower z-score threshold" src="https://hakibenita.com/images/00-sql-anomaly-detection-backtest-10-1-60.png" />
+            <figcaption> Backtesting with lower z-score threshold </figcaption>
+        </figure>
+        <p> If we increase the entries threshold from 10 to 30, we should get less alerts: </p>
+        <figure>
+            <img alt="Backtesting with higher entries threshold" src="https://hakibenita.com/images/00-sql-anomaly-detection-backtest-30-3-60.png" />
+            <figcaption> Backtesting with higher entries threshold </figcaption>
+        </figure>
+        <p> If we increase the backtest period from 60 minutes to 360 minutes, we get more alerts: </p>
+        <figure>
+            <img alt="Backtesting with higher entries threshold" src="https://hakibenita.com/images/00-sql-anomaly-detection-backtest-30-3-360.png" />
+            <figcaption> Backtesting with higher entries threshold </figcaption>
+        </figure>
+        <p> A good alerting system is a system that produces true alerts, at a reasonable time. Using the backtesting query you can experiment with different values that produces quality alerts you can act on. </p>
+        <hr />
+        <h2 id="improving-accuracy">
+            <a href="#improving-accuracy">Improving Accuracy</a>
+        </h2>
+        <p> Using a z-score for detecting anomalies is an easy way to get started with anomaly detection and see results right away. But, this method is not always the best choice, and if you don't get good alerts using this method, there are some improvements and other methods you can try using just SQL. </p>
+        <h3 id="use-weighted-mean">
+            <a href="#use-weighted-mean">Use Weighted Mean</a>
+        </h3>
+        <p> Our system uses a mean to determine a reasonable value, and a lookback period to determine how long back to calculate that mean over. In our case, we calculated the mean based on data from 1 hour ago. </p>
+        <p> Using this method of calculating mean gives the same weight to entries that happened 1 hour ago and to entries that just happened. If you give more weight to recent entries at the expense of previous entries, the new weighted mean should become more sensitive to recent entries, and you may be able to identify anomalies quicker. </p>
+        <p> To give more weight to recent entries, you can use a <a href="https://en.wikipedia.org/wiki/Weighted_arithmetic_mean" rel="noopener">weighted average</a>: </p>
+        <div>
+            <pre><span>SELECT</span>
+   <span>status_code</span><span>,</span>
+   <span>avg</span><span>(</span><span>entries</span><span>)</span> <span>as</span> <span>mean</span><span>,</span>
+   <span>sum</span><span>(</span>
+      <span>entries</span> <span>*</span>
+      <span>(</span><span>60</span> <span>-</span> <span>extract</span><span>(</span><span>'seconds'</span> <span>from</span> <span>'2020-08-01 17:00 UTC'</span><span>::</span><span>timestamptz</span> <span>-</span> <span>period</span><span>))</span>
+   <span>)</span> <span>/</span> <span>(</span><span>60</span> <span>*</span> <span>61</span> <span>/</span> <span>2</span><span>)</span> <span>as</span> <span>weighted_mean</span>
+<span>FROM</span>
+   <span>server_log_summary</span>
+<span>WHERE</span>
+   <span>-- Last 60 periods</span>
+   <span>period</span> <span>&gt;</span> <span>'2020-08-01 17:00 UTC'</span><span>::</span><span>timestamptz</span>
+<span>GROUP</span> <span>BY</span>
+   <span>status_code</span><span>;</span>
+
+<span> status_code │          mean          │    weighted_mean</span>
+<span>─────────────┼────────────────────────┼─────────────────────</span>
+<span>         404 │ 0.13333333333333333333 │ 0.26229508196721313</span>
+<span>         500 │ 0.15000000000000000000 │ 0.29508196721311475</span>
+<span>         200 │  2779.1000000000000000 │   5467.081967213115</span>
+<span>         400 │ 0.73333333333333333333 │  1.4426229508196722</span>
+</pre>
+        </div>
+        <p> In the results you can see the difference between the mean and the weighted mean for each status code. </p>
+        <p> A weighted average is a very <a href="https://www.investopedia.com/ask/answers/071414/whats-difference-between-moving-average-and-weighted-moving-average.asp" rel="noopener">common indicator used by stock traders</a>. We used a linear weighted average, but there are also exponential weighted averages and others you can try. </p>
+        <h3 id="use-median">
+            <a href="#use-median">Use Median</a>
+        </h3>
+        <p> In statistics, a mean is considered not robust because it is influenced by extreme values. Given our use case, the measure we are using to identify extreme values, is affected by those values we are trying to identify. </p>
+        <p> For example, in the beginning of the article we used this series of values: </p>
+        <div>
+            <pre>2, 3, 5, 2, 3, 12, 5, 3, 4
+</pre>
+        </div>
+        <p> The mean of this series is 4.33, and we detected 12 as an anomaly. </p>
+        <p> If the 12 were a 120, the mean of the series would have been 16.33. Hence, our "reasonable" value is heavily affected by the values it is supposed to identify. </p>
+        <p> A measure that is considered more robust is a <a href="https://en.wikipedia.org/wiki/Median" rel="noopener">median</a>. The median of a series is the value that half the series is greater than, and half the series is less than: </p>
+        <div>
+            <pre><span>SELECT</span> <span>percentile_disc</span><span>(</span><span>0.5</span><span>)</span> <span>within</span> <span>group</span><span>(</span><span>order</span> <span>by</span> <span>n</span><span>)</span>
+<span>FROM</span> <span>unnest</span><span>(</span><span>ARRAY</span><span>[</span><span>2</span><span>,</span> <span>3</span><span>,</span> <span>5</span><span>,</span> <span>2</span><span>,</span> <span>3</span><span>,</span> <span>120</span><span>,</span> <span>5</span><span>,</span> <span>3</span><span>,</span> <span>4</span><span>])</span> <span>as</span> <span>n</span><span>;</span>
+
+<span> median</span>
+<span>────────</span>
+<span>      3</span>
+</pre>
+        </div>
+        <p> To calculate the median in PostgreSQL we use the function <a href="https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-ORDEREDSET-TABLE" rel="noopener"><code>percentile_disc</code></a>. In the series above, the median is 3. If we sort the list and cut it in the middle it will become more clear: </p>
+        <div>
+            <pre>2, 2, 3, 3, 3
+4, 5, 5, 12
+</pre>
+        </div>
+        <p> If we change the value of 12 to 120, the median will not be affected at all: </p>
+        <div>
+            <pre>2, 2, 3, 3, 3
+4, 5, 5, 120
+</pre>
+        </div>
+        <p> This is why a median is considered more robust than mean. </p>
+        <h3 id="use-mad">
+            <a href="#use-mad">Use MAD</a>
+        </h3>
+        <p>
+            <a href="https://en.wikipedia.org/wiki/Median_absolute_deviation" rel="noopener">Median absolute deviation (MAD)</a> is another way of finding anomalies in a series. MAD is considered better than z-score for real life data.
+        </p>
+        <p> MAD is calculated by finding the median of the deviations from the series median. Just for comparison, the standard deviation is the root square of the average square distance from the mean. </p>
+        <h3 id="use-different-measures">
+            <a href="#use-different-measures">Use Different Measures</a>
+        </h3>
+        <p> We used the number of entries per minute as an indicator. However, depending on the use case, there might be other things you can measure that can yield better results. For example: </p>
+        <ul>
+            <li>To try and identify DOS attacks you can monitor the ratio between unique IP addresses to HTTP requests. </li>
+            <li>To reduce the amount of false positives, you can normalize the number of responses to the proportion of the total responses. This way, for example, if you're using a flaky remote service that fails once after every certain amount of requests, using the proportion may not trigger an alert when the increase in errors correlates with an increase in overall traffic. </li>
+        </ul>
+        <hr />
+        <h2 id="conclusion">
+            <a href="#conclusion">Conclusion</a>
+        </h2>
+        <p> The method presented above is a very simple method to detect anomalies and produce actionable alerts that can potentially save you a lot of grief. There are many tools out there that provide similar functionally, but they require either tight integration or $$$. The main appeal of this approach is that you can get started with tools you probably already have, some SQL and a scheduled task! </p>
+        <hr />
+        <p>
+            <strong>UPDATE:</strong> many readers asked me how I created the charts in this article... well, I used <a href="https://popsql.com/" rel="noopener">PopSQL</a>. It’s a new modern SQL editor focused on collaborative editing. If you're in the market for one, go check it out...
+        </p>
+    </article>
+</div>

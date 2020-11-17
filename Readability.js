@@ -1745,7 +1745,10 @@ Readability.prototype = {
 
     // XXX implement _reduceNodeList?
     this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
-      linkLength += this._getInnerText(linkNode).length;
+      var href = linkNode.getAttribute("href");
+      if (!href || href[0] !== "#") {
+        linkLength += this._getInnerText(linkNode).length;
+      }
     });
 
     return linkLength / textLength;
