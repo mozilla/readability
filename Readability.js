@@ -1747,9 +1747,8 @@ Readability.prototype = {
     // XXX implement _reduceNodeList?
     this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
       var href = linkNode.getAttribute("href");
-      if (!href || !href.match(this.REGEXPS.hashUrl)) {
-        linkLength += this._getInnerText(linkNode).length;
-      }
+      var coefficient = href && href.match(this.REGEXPS.hashUrl) ? 0.2 : 1;
+      linkLength += this._getInnerText(linkNode).length * coefficient;
     });
 
     return linkLength / textLength;
