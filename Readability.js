@@ -124,7 +124,7 @@ Readability.prototype = {
     okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
 
     positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
-    negative: /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
+    negative: /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby|p-author/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
@@ -1747,7 +1747,7 @@ Readability.prototype = {
     // XXX implement _reduceNodeList?
     this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
       var href = linkNode.getAttribute("href");
-      var coefficient = href && href.match(this.REGEXPS.hashUrl) ? 0.2 : 1;
+      var coefficient = href && this.REGEXPS.hashUrl.test(href) ? 0.3 : 1;
       linkLength += this._getInnerText(linkNode).length * coefficient;
     });
 
@@ -2010,8 +2010,6 @@ Readability.prototype = {
     if (!this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY))
       return;
 
-    var isList = tag === "ul" || tag === "ol";
-
     // Gather counts for other typical elements embedded within.
     // Traverse backwards so we can remove nodes at the same time
     // without effecting the traversal.
@@ -2022,6 +2020,14 @@ Readability.prototype = {
       var isDataTable = function(t) {
         return t._readabilityDataTable;
       };
+
+      var isList = tag === "ul" || tag === "ol";
+      if (!isList) {
+        var listLength = 0;
+        var listNodes = this._getAllNodesWithTag(node, ["ul", "ol"]);
+        this._forEachNode(listNodes, (list) => listLength += this._getInnerText(list).length);
+        isList = listLength / this._getInnerText(node).length > 0.9;
+      }
 
       if (tag === "table" && isDataTable(node)) {
         return false;
