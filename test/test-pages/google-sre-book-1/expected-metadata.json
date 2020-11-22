@@ -1,0 +1,8 @@
+{
+  "title": "Google - Site Reliability Engineering",
+  "byline": "Written by Rob Ewaschuk\n                            Edited by Betsy Beyer",
+  "dir": null,
+  "excerpt": "Google’s SRE teams have some basic principles and best practices for building successful monitoring and alerting systems. This chapter offers guidelines for what issues should interrupt a human via a page, and how to deal with issues that aren’t serious enough to trigger a page.",
+  "siteName": null,
+  "readerable": true
+}
