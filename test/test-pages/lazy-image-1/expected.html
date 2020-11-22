@@ -4,8 +4,10 @@
             <p><a rel="noopener" href="http://fakehost/@vincentvallet?source=post_page-----d6e62af173e2----------------------"><img alt="Vincent Vallet" src="https://miro.medium.com/fit/c/96/96/1*vFTVh_mYyf0p6m7f77A3vw.jpeg" width="48" height="48" /></a>
             </p>
         </div>
+        <h2 id="0231"> Why CPU monitoring is important? </h2>
         <p id="d2c1"> I work at <a href="http://voodoo.io/" target="_blank" rel="noopener nofollow">Voodoo</a>, a French company that creates mobile video games. We have a lot of challenges with performance, availability, and scalability because of the insane amount of traffic our infrastructure supports (billions of events/requests per day …… no joke!). In this setting, every metric is important and gives us a lot of information about the state of our system. </p>
         <p id="0e89"> When working with Node.js one of the most critical resources to monitor is the CPU. Most of the time, when working on a low traffic API or project we don’t realize how many simple lines of code can have a huge impact on CPU. On the other hand, when traffic increases, a simple mistake can cost dearly. </p>
+        <h2 id="292e"> Resources </h2>
         <p id="1efa"> What kind of resources does your application need? In most cases, we focus on memory and CPU. Good monitoring of these two elements is mandatory for an application running on production. </p>
         <p id="dce9"> For memory, constant monitoring is the best practice to track the worst developer nightmare a.k.a memory leak. </p>
         <figure>
@@ -29,11 +31,13 @@
             <figcaption> Basic CPU monitoring </figcaption>
         </figure>
         <p id="0728"> And what next? We don’t have data about the state of the instance when the CPU usage has increased. So we can’t determine why we had this peak, at least not without an important time of debugging, comparing log, etc. This is exactly why you need to use CPU profiling. </p>
+        <h2 id="8d00"> CPU profiling: what’s the difference with CPU monitoring? </h2>
         <blockquote>
             <p> “Most commonly, profiling information serves to aid program optimization. Profiling is achieved by instrumenting either the program source code or its binary executable form using a tool called a profiler” </p>
         </blockquote>
         <p id="3e11"> Basically, for Node.js, CPU profiling is nothing more than collecting data about functions which are CPU consuming. And ideally, get a graphic representation of the collected data a.k.a “flame graph” or “flame chart”. </p>
         <p id="91c5"> It will help you to track the exact file, line, and function which takes the most time to execute. </p>
+        <h2 id="088b"> What about existing solutions? </h2>
         <h2 id="dd40"> Add arguments to Node.js </h2>
         <p id="0306"> Node.js provides a way to collect data about CPU with two command lines. </p>
         <p id="66c8"> The first command just executes your application, the argument just tells to V8 engine to collect data. When you stop your script all information is stored in a file. </p>
@@ -80,6 +84,7 @@
         <blockquote>
             <p id="fcd9"> Unfortunately, CPU issues have a worrying tendency to occur on production, and when you are not in front of your screen. </p>
         </blockquote>
+        <h2 id="13ef"> Inspector </h2>
         <p id="294e"> “Inspector” refers to an API thanks to which you can debug your application. By debugging we mean to be able to connect directly to the core of Node.js to collect real-time data about the process. </p>
         <p id="ea23"> A module, available since version 8.x of Node.js, provides this kind of feature. There are two advantages to use it: </p>
         <ul>
@@ -97,6 +102,7 @@
         <p id="964f"> If you use another storage system you can just collect the data and export it by yourself. </p>
         <figure>
         </figure>
+        <h2 id="848b"> And now, CPU profiling on-demand! </h2>
         <p id="6933"> We have an API that we want to test with autocannon tool. At this step, our project is able to serve around 200 requests in 20 seconds. There is probably a mistake somewhere in the code which slows down our application. </p>
         <figure>
             <div>
@@ -151,12 +157,14 @@
                 </p>
             </div>
         </figure>
+        <h2 id="98b9"> More than just CPU profiling </h2>
         <p id="e1ad"> With the inspector module, you can do much more than just CPU profiling, here is a non-exhaustive list: </p>
         <ul>
             <li id="eb04">memory dump &amp; memory sampling </li>
             <li id="a9ea">code coverage </li>
             <li id="b896">use the debugger in real-time </li>
         </ul>
+        <h2 id="06d2"> Warnings </h2>
         <p id="731b"> Every tool, even the most powerful, comes with its own disadvantages. If you enable the profiler and/or the debugger on your production you have to keep an eye on two things: </p>
         <p id="e485">
             <strong>1) performance overhead</strong>
@@ -167,9 +175,11 @@
             <strong>2) security</strong>
         </p>
         <p id="7999"> Using the inspector in Node.js it’s like opening the door of the core of your application. You should be very careful about who can use features like CPU profiling and/or the debugger. Never make the inspector “public” as being able to launch a feature from an unsafe route (not protected with an authentification mechanism). Even the collected data can be seen as critical, never send it to a system you do not trust. </p>
+        <h2 id="5618"> Conclusion </h2>
         <p id="ae1a"> CPU profiling is really a must-have tool for every developer. And now, with some precautions, we can run it on production thanks to the amazing work done by the V8 and Node.js team. </p>
         <p id="1eab"> The inspector module offers a lot more features than you can use to debug your application. </p>
         <p id="0aba"> I will write another article about using CPU profiling and the inspector on production on a high traffic project. </p>
+        <h2 id="3c5b"> Sources &amp; links </h2>
         <ul>
             <li id="d86d">
                 <a href="https://nodejs.org/api/inspector.html" target="_blank" rel="noopener nofollow">https://nodejs.org/api/inspector.html</a>

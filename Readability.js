@@ -133,6 +133,7 @@ Readability.prototype = {
     shareElements: /(\b|_)(share|sharedaddy)(\b|_)/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
+    tokenize: /\W+/g,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
@@ -702,6 +703,9 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "ul");
     this._cleanConditionally(articleContent, "div");
 
+    // replace H1 with H2 as H1 should be only title that is displayed separately
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h1"]), "h2");
+
     // Remove extra paragraphs
     this._removeNodes(this._getAllNodesWithTag(articleContent, ["p"]), function (paragraph) {
       var imgCount = paragraph.getElementsByTagName("img").length;
@@ -811,18 +815,21 @@ Readability.prototype = {
     return node && node.nextElementSibling;
   },
 
-  _isTextSimilar: function(textA, textB) {
-    if (textA === undefined || textB === undefined) {
-      return false;
+  // text similarity comparison
+  // 1 = same text, 0 = completely different text
+  // works the way that it splits both texts into words and then finds words that are unique in one or the other
+  // the result is given by the lower length of unique parts
+  _textSimilarity: function(textA, textB) {
+    var tokensA = textA.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
+    var tokensB = textB.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
+    if (tokensA.length === 0 || tokensB.length === 0) {
+      return 0;
     }
-    var lengthSimilarRate = (textA.length - textB.length) / textB.length;
-    if (Math.abs(lengthSimilarRate) > 0.5) {
-      return false;
-    }
-    if (lengthSimilarRate > 0) {
-      return textA.toLowerCase().includes(textB.toLowerCase());
-    }
-    return textB.toLowerCase().includes(textA.toLowerCase());
+    var uniqTokensA = tokensA.filter(token => !tokensB.includes(token));
+    var uniqTokensB = tokensB.filter(token => !tokensA.includes(token));
+    var distanceA = uniqTokensA.join(" ").length / tokensA.join(" ").length;
+    var distanceB = uniqTokensB.join(" ").length / tokensB.join(" ").length;
+    return 1 - Math.min(distanceA, distanceB);
   },
 
   _checkByline: function(node, matchString) {
@@ -1994,7 +2001,7 @@ Readability.prototype = {
   _getTextDensity: function(e, tags) {
     var textLength = this._getInnerText(e, true).length;
     if (textLength === 0) {
-      return 1;
+      return 0;
     }
     var childrenLength = 0;
     var children = this._getAllNodesWithTag(e, tags);
@@ -2110,17 +2117,28 @@ Readability.prototype = {
   },
 
   /**
-   * Clean out spurious headers from an Element. Checks things like classnames and link density.
+   * Clean out spurious headers from an Element.
    *
    * @param Element
    * @return void
   **/
   _cleanHeaders: function(e) {
-    this._removeNodes(this._getAllNodesWithTag(e, ["h1", "h2"]), function (header) {
-      if (this._isTextSimilar(this._articleTitle, this._getInnerText(header, false))) {
+    this._removeNodes(this._getAllNodesWithTag(e, ["h1", "h2"]), function (node) {
+      // remove heading if it is first element
+      let prev = node.previousSibling || (node.parentNode || {}).previousSibling;
+      while (prev && this._isWhitespace(prev)) {
+        prev = prev.previousSibling || (prev.parentNode || {}).previousSibling;
+      }
+      if (!prev) {
         return true;
       }
-      return this._getClassWeight(header) < 0;
+      // remove heading if it is similar to title
+      var heading = this._getInnerText(node, false);
+      if (this._textSimilarity(this._articleTitle, heading) > 0.9) {
+        return true;
+      }
+      // remove heading if class weight is negative
+      return this._getClassWeight(node) < 0;
     });
   },
 
