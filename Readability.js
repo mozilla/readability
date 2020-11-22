@@ -674,7 +674,6 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "fieldset");
     this._clean(articleContent, "object");
     this._clean(articleContent, "embed");
-    this._clean(articleContent, "h1");
     this._clean(articleContent, "footer");
     this._clean(articleContent, "link");
     this._clean(articleContent, "aside");
@@ -689,25 +688,6 @@ Readability.prototype = {
         return this.REGEXPS.shareElements.test(matchString) && node.textContent.length < shareElementThreshold;
       });
     });
-
-    // If there is only one h2 and its text content substantially equals article title,
-    // they are probably using it as a header and not a subheader,
-    // so remove it since we already extract the title separately.
-    var h2 = articleContent.getElementsByTagName("h2");
-    if (h2.length === 1) {
-      var lengthSimilarRate = (h2[0].textContent.length - this._articleTitle.length) / this._articleTitle.length;
-      if (Math.abs(lengthSimilarRate) < 0.5) {
-        var titlesMatch = false;
-        if (lengthSimilarRate > 0) {
-          titlesMatch = h2[0].textContent.includes(this._articleTitle);
-        } else {
-          titlesMatch = this._articleTitle.includes(h2[0].textContent);
-        }
-        if (titlesMatch) {
-          this._clean(articleContent, "h2");
-        }
-      }
-    }
 
     this._clean(articleContent, "iframe");
     this._clean(articleContent, "input");
@@ -829,6 +809,20 @@ Readability.prototype = {
       node = node.parentNode;
     } while (node && !node.nextElementSibling);
     return node && node.nextElementSibling;
+  },
+
+  _isTextSimilar: function(textA, textB) {
+    if (textA === undefined || textB === undefined) {
+      return false;
+    }
+    var lengthSimilarRate = (textA.length - textB.length) / textB.length;
+    if (Math.abs(lengthSimilarRate) > 0.5) {
+      return false;
+    }
+    if (lengthSimilarRate > 0) {
+      return textA.toLowerCase().includes(textB.toLowerCase());
+    }
+    return textB.toLowerCase().includes(textA.toLowerCase());
   },
 
   _checkByline: function(node, matchString) {
@@ -1997,6 +1991,17 @@ Readability.prototype = {
     });
   },
 
+  _getTextDensity: function(e, tags) {
+    var textLength = this._getInnerText(e, true).length;
+    if (textLength === 0) {
+      return 1;
+    }
+    var childrenLength = 0;
+    var children = this._getAllNodesWithTag(e, tags);
+    this._forEachNode(children, (child) => childrenLength += this._getInnerText(child, true).length);
+    return childrenLength / textLength;
+  },
+
   /**
    * Clean an element of all tags of type "tag" if they look fishy.
    * "Fishy" is an algorithm based on content length, classnames, link density, number of images & embeds, etc.
@@ -2047,6 +2052,7 @@ Readability.prototype = {
         var img = node.getElementsByTagName("img").length;
         var li = node.getElementsByTagName("li").length - 100;
         var input = node.getElementsByTagName("input").length;
+        var headingDensity = this._getTextDensity(node, ["h1", "h2", "h3", "h4", "h5", "h6"]);
 
         var embedCount = 0;
         var embeds = this._getAllNodesWithTag(node, ["object", "embed", "iframe"]);
@@ -2074,7 +2080,7 @@ Readability.prototype = {
           (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
-          (!isList && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
+          (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
           (!isList && weight < 25 && linkDensity > 0.2) ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
@@ -2111,6 +2117,9 @@ Readability.prototype = {
   **/
   _cleanHeaders: function(e) {
     this._removeNodes(this._getAllNodesWithTag(e, ["h1", "h2"]), function (header) {
+      if (this._isTextSimilar(this._articleTitle, this._getInnerText(header, false))) {
+        return true;
+      }
       return this._getClassWeight(header) < 0;
     });
   },

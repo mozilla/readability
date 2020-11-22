@@ -8,8 +8,18 @@
             <p> Now that ATF is deployed and currently serving 9,000 async tasks scheduled per second and in use by 28 engineering teams internally, we’re glad to fill that information gap. We’ve documented Dropbox ATF thoroughly, as a reference and guide for the engineering community seeking their own async solutions. </p>
         </div>
         <div>
+            <p id="introduction">
+            <h2> Introduction </h2>
+            </p>
+        </div>
+        <div>
             <p> Scheduling asynchronous tasks on-demand is a critical capability that powers many features and internal platforms at Dropbox. Async Task Framework (ATF) is the infrastructural system that supports this capability at Dropbox through a callback-based architecture. ATF enables developers to define callbacks, and schedule tasks that execute against these pre-defined callbacks. </p>
             <p> Since its introduction over a year ago, ATF has gone on to become an important building block in the Dropbox infrastructure, used by nearly 30 internal teams across our codebase. It currently supports 100+ use cases which require either immediate or delayed task scheduling.&#160; </p>
+        </div>
+        <div>
+            <p id="glossary">
+            <h2> Glossary </h2>
+            </p>
         </div>
         <div>
             <p> Some basic terms repeatedly used in this post, defined as used in the context of this discussion. </p>
@@ -27,6 +37,11 @@
             </p>
         </div>
         <div>
+            <p id="features">
+            <h2> Features </h2>
+            </p>
+        </div>
+        <div>
             <p>
                 <b>Task scheduling</b><br /> Clients can schedule tasks to execute at a specified time. Tasks can be scheduled for immediate execution, or delayed to fit the use case.
             </p>
@@ -38,6 +53,11 @@
             </p>
             <p>
                 <b>Track task status</b><br /> Clients can query the status of a scheduled task.
+            </p>
+        </div>
+        <div>
+            <p id="system-guarantees">
+            <h2> System guarantees </h2>
             </p>
         </div>
         <div>
@@ -58,6 +78,11 @@
             </p>
         </div>
         <div>
+            <p id="-lambda-requirements">
+            <h2> Lambda requirements </h2>
+            </p>
+        </div>
+        <div>
             <p> Following are some restrictions we place on the callback logic (lambda): </p>
             <p>
                 <b>Idempotence</b><br /> A single task on a lambda can be executed multiple times within the ATF system. Developers should ensure that their lambda logic and correctness of task execution in clients are not affected by this.
@@ -67,6 +92,11 @@
             </p>
             <p>
                 <b>Terminal state handling<br /></b> ATF retries tasks until they are signaled to be complete from the lambda logic. Client code can mark a task as successfully completed, fatally terminated, or retriable. It is critical that lambda owners design clients to signal task completion appropriately to avoid misbehavior such as infinite retries.&#160;
+            </p>
+        </div>
+        <div>
+            <p id="architecture">
+            <h2> Architecture </h2>
             </p>
         </div>
         <div>
@@ -130,8 +160,18 @@
             </p>
         </div>
         <div>
+            <p id="data-model">
+            <h2> Data model </h2>
+            </p>
+        </div>
+        <div>
             <p> ATF uses our in-house metadata store, Edgestore, as a task store. Edgestore objects can be Entities or Associations (<span>assoc</span>), each of which can have user-defined attributes. Associations are used to represent relationships between entities. Edgestore supports indexing only on attributes of associations. </p>
             <p> Based on this design, we have two kinds of ATF-related objects in Edgestore. The ATF association stores scheduling information, such as the next scheduled timestamp at which the Store Consumer should poll a given task (either for the first time or for a retry). The ATF entity stores all task related information that is used to track the task state and payload for task execution. We query on associations from the Store Consumer in a pull model to pick up tasks ready for execution. </p>
+        </div>
+        <div>
+            <p id="lifecycle-of-a-task">
+            <h2> Lifecycle of a task </h2>
+            </p>
         </div>
         <div>
             <ol>
@@ -317,6 +357,11 @@
             </figure>
         </div>
         <div>
+            <p id="-achieving-guarantees">
+            <h2> Achieving guarantees </h2>
+            </p>
+        </div>
+        <div>
             <p>
                 <b>At-least-once task execution<br /></b> At-least-once execution is guaranteed in ATF by retrying a task until it completes execution (which is signaled by a <span>Success</span> or a <span>FatalFailure</span> state). All ATF system errors are implicitly considered retriable failures, and lambda owners have an option of marking tasks with a <span>RetriableFailure</span> state. Tasks might be dropped from the ATF execution pipeline in different parts of the system through transient RPC failures and failures on dependencies like Edgestore or SQS. These transient failures at different parts of the system do not affect the at-least-once guarantee, though, because of the system of timeouts and re-polling from Store Consumer.
             </p>
@@ -333,7 +378,17 @@
                 <b>Delivery latency<br /></b> ATF use cases do not require ultra-low task delivery latencies. Task delivery latencies on the order of a couple of seconds are acceptable. Tasks ready for execution are periodically polled by the Store Consumer and this period of polling largely controls the task delivery latency. Using this as a tuning lever, ATF can achieve different delivery latencies as required. Increasing poll frequency reduces task delivery latency and vice versa. Currently, we have calibrated ATF to poll for ready tasks once every two seconds.
             </p>
         </div>
+        <div>
+            <p id="ownership-model">
+            <h2> Ownership model </h2>
+            </p>
+        </div>
         <p> ATF is designed to be a self-serve framework for developers at Dropbox. The design is very intentional in driving an ownership model where lambda owners own all aspects of their lambdas’ operations. To promote this, all lambda worker clusters are owned by the lambda owners. They have full control over operations on these clusters, including code deployments and capacity management. Each executor process is bound to one lambda. Owners have the option of deploying multiple lambdas on their worker clusters simply by spawning new executor processes on their hosts. </p>
+        <div>
+            <p id="-extending-atf">
+            <h2> Extending ATF </h2>
+            </p>
+        </div>
         <div>
             <p> As described above, ATF provides an infrastructural building block for scheduling asynchronous tasks. With this foundation established, ATF can be extended to support more generic use cases and provide more features as a framework. Following are some examples of what could be built as an extension to ATF.&#160; </p>
             <p>
@@ -346,6 +401,11 @@
                 <b>Dead letter queues for misbehaving tasks<br /></b> One common source of maintenance overhead we observe on ATF is that some tasks get stuck in infinite retry loops due to occasional bugs in lambda logic. This requires manual intervention from the ATF framework owners in some cases where there are a large number of tasks stuck in such loops, occupying a lot of the scheduling bandwidth in the system. Typical manual actions in response to such a situation include pausing execution of the lambdas with misbehaving tasks, or dropping them outright.
             </p>
             <p> One way to reduce this operational overhead and provide an easy interface for lambda owners to recover from such incidents would be to create dead letter queues filled with such misbehaving tasks. The ATF framework could impose a maximum number of retries before tasks are pushed onto the dead letter queue. We could create and expose tools that make it easy to reschedule tasks from the dead letter queue back into the ATF system, once the associated lambda bugs are fixed.<br />
+            </p>
+        </div>
+        <div>
+            <p id="conclusion">
+            <h2> Conclusion </h2>
             </p>
         </div>
         <p> We hope this post helps engineers elsewhere to develop better async task frameworks of their own. Many thanks to everyone who worked on this project: Anirudh Jayakumar, Deepak Gupta, Dmitry Kopytkov, Koundinya Muppalla, Peng Kang, Rajiv Desai, Ryan Armstrong, Steve Rodrigues, Thomissa Comellas, Xiaonan Zhang and Yuhuan Du.<br /> &#160; </p>
