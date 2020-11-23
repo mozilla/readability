@@ -912,6 +912,7 @@ Readability.prototype = {
           if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
               !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
               !this._hasAncestorTag(node, "table") &&
+              !this._hasAncestorTag(node, "code") &&
               node.tagName !== "BODY" &&
               node.tagName !== "A") {
             this.log("Removing unlikely candidate - " + matchString);
@@ -2035,6 +2036,10 @@ Readability.prototype = {
 
       // Next check if we're inside a data table, in which case don't remove it as well.
       if (this._hasAncestorTag(node, "table", -1, isDataTable)) {
+        return false;
+      }
+
+      if (this._hasAncestorTag(node, "code")) {
         return false;
       }
 
