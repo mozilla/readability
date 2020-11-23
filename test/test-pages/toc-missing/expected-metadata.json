@@ -1,0 +1,8 @@
+{
+  "title": "Simple Anomaly Detection Using Plain SQL",
+  "byline": "Haki Benita",
+  "dir": null,
+  "excerpt": "Many developers think that having a critical bug in their code is the worse thing that can happen. Well, there is something much worst than that: Having a critical bug in your code and not knowing about it! Using some high school level statistics and a fair knowledge of SQL, I implemented a very simple anomaly detection system.",
+  "siteName": "Haki Benita",
+  "readerable": true
+}
