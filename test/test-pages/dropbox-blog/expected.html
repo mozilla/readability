@@ -1,0 +1,413 @@
+<div id="readability-page-1" class="page">
+    <div>
+        <div>
+            <p> I joined Dropbox not long after graduating with a Master’s degree in computer science. Aside from an internship, this was my first big-league engineering job. My team had already begun designing a critical internal service that most of our software would use: It would handle asynchronous computing requests behind the scenes, powering everything from dragging a file into a Dropbox folder to scheduling a marketing campaign. </p>
+            <p> This Asynchronous Task Framework (ATF) would replace multiple bespoke async systems used by different engineering teams. It would reduce redundant development, incompatibilities, and reliance on legacy software. There were no open-source projects or buy-not-build solutions that worked well for our use case and scale, so we had to create our own. ATF is both an important and interesting challenge, though, so we were happy to design, build and deploy our own in-house service. </p>
+            <p> ATF not only had to work well, it had to work well at scale: It would be a foundational building block of Dropbox infrastructure. It would need to handle 10,000 async tasks per second from the start, and be architected for future growth. It would need to support nearly 100 unique async task types from the start, again with room to grow. There were at least two dozen engineering teams that would want to use it for entirely different parts of our codebase, for many products and services.&#160; </p>
+            <p> As any engineer would, we Googled to see what other companies with mega-scale services had done to handle async tasks. We were disappointed to find little material published by engineers who built supersized async services. </p>
+            <p> Now that ATF is deployed and currently serving 9,000 async tasks scheduled per second and in use by 28 engineering teams internally, we’re glad to fill that information gap. We’ve documented Dropbox ATF thoroughly, as a reference and guide for the engineering community seeking their own async solutions. </p>
+        </div>
+        <div>
+            <p id="introduction">
+            <h2> Introduction </h2>
+            </p>
+        </div>
+        <div>
+            <p> Scheduling asynchronous tasks on-demand is a critical capability that powers many features and internal platforms at Dropbox. Async Task Framework (ATF) is the infrastructural system that supports this capability at Dropbox through a callback-based architecture. ATF enables developers to define callbacks, and schedule tasks that execute against these pre-defined callbacks. </p>
+            <p> Since its introduction over a year ago, ATF has gone on to become an important building block in the Dropbox infrastructure, used by nearly 30 internal teams across our codebase. It currently supports 100+ use cases which require either immediate or delayed task scheduling.&#160; </p>
+        </div>
+        <div>
+            <p id="glossary">
+            <h2> Glossary </h2>
+            </p>
+        </div>
+        <div>
+            <p> Some basic terms repeatedly used in this post, defined as used in the context of this discussion. </p>
+            <p>
+                <b>Lambda:</b> A callback implementing business logic.
+            </p>
+            <p>
+                <span><b>Task:</b> Unit of execution of a lambda. Each asynchronous job scheduled with ATF is a task.</span>
+            </p>
+            <p>
+                <span><b>Collection:</b> A labeled subset of tasks belonging to a lambda. If <span>send email</span> is implemented as a lambda, then <span>password reset email</span> and <span>marketing email</span> would be collections.</span>
+            </p>
+            <p>
+                <span><b>&#160;Priority:</b> Labels defining priority of execution of tasks within a lambda.&#160;</span>
+            </p>
+        </div>
+        <div>
+            <p id="features">
+            <h2> Features </h2>
+            </p>
+        </div>
+        <div>
+            <p>
+                <b>Task scheduling</b><br /> Clients can schedule tasks to execute at a specified time. Tasks can be scheduled for immediate execution, or delayed to fit the use case.
+            </p>
+            <p>
+                <b>Priority based execution</b><br /> Tasks should be associated with a priority. Tasks with higher priority should get executed before tasks with a lower priority once they are ready for execution.
+            </p>
+            <p>
+                <b>Task gating</b><br /> ATF enables the the gating of tasks based on lambda, or a subset of tasks on a lambda based on collection. Tasks can be gated to be completely dropped or paused until a suitable time for execution.
+            </p>
+            <p>
+                <b>Track task status</b><br /> Clients can query the status of a scheduled task.
+            </p>
+        </div>
+        <div>
+            <p id="system-guarantees">
+            <h2> System guarantees </h2>
+            </p>
+        </div>
+        <div>
+            <p>
+                <b>At-least once task execution<br /></b> The ATF system guarantees that a task is executed at least once after being scheduled. Execution is said to be complete once the user-defined callback signals task completion to the ATF system.
+            </p>
+            <p>
+                <b>No concurrent task execution<br /></b> The ATF system guarantees that at most one instance of a task will be actively executing at any given in point. This helps users write their callbacks without designing for concurrent execution of the same task from different locations.
+            </p>
+            <p>
+                <b>Isolation<br /></b> Tasks in a given lambda are isolated from the tasks in other lambdas. This isolation spans across several dimensions, including worker capacity for task execution and resource use for task scheduling. Tasks on the same lambda but different priority levels are also isolated in their resource use for task scheduling.
+            </p>
+            <p>
+                <b>Delivery latency<br /></b> 95% of tasks begin execution within five seconds from their scheduled execution time.
+            </p>
+            <p>
+                <b>High availability for task scheduling<br /></b> The ATF service is 99.9% available to accept task scheduling requests from any client.
+            </p>
+        </div>
+        <div>
+            <p id="-lambda-requirements">
+            <h2> Lambda requirements </h2>
+            </p>
+        </div>
+        <div>
+            <p> Following are some restrictions we place on the callback logic (lambda): </p>
+            <p>
+                <b>Idempotence</b><br /> A single task on a lambda can be executed multiple times within the ATF system. Developers should ensure that their lambda logic and correctness of task execution in clients are not affected by this.
+            </p>
+            <p>
+                <b>Resiliency</b><br /> Worker processes which execute tasks might die at any point during task execution. ATF retries abruptly interrupted tasks, which could also be retried on different hosts. Lambda owners must design their lambdas such that retries on different hosts do not affect lambda correctness.
+            </p>
+            <p>
+                <b>Terminal state handling<br /></b> ATF retries tasks until they are signaled to be complete from the lambda logic. Client code can mark a task as successfully completed, fatally terminated, or retriable. It is critical that lambda owners design clients to signal task completion appropriately to avoid misbehavior such as infinite retries.&#160;
+            </p>
+        </div>
+        <div>
+            <p id="architecture">
+            <h2> Architecture </h2>
+            </p>
+        </div>
+        <div>
+            <figure>
+                <img src="http://fakehost/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/diagrams/Techblog-ATF-720x844px-1.png" aria-hidden="false" alt="Async Task Framework (ATF) [Fig 1]" height="1688" width="1440" />
+                <figcaption> Async Task Framework (ATF) [Fig 1] </figcaption>
+            </figure>
+        </div>
+        <div>
+            <p> In this section, we describe the high-level architecture of ATF and give brief description of its different components. (See Fig. 1 above.)&#160;In this section, we describe the high-level architecture of ATF and give brief description of its different components. (See Fig. 1 above.) Dropbox <a href="https://dropbox.tech/infrastructure/courier-dropbox-migration-to-grpc">uses gRPC</a> for remote calls and our in-house <a href="https://dropbox.tech/infrastructure/reintroducing-edgestore">Edgestore</a> to store tasks. </p>
+            <p> ATF consists of the following components:&#160; </p>
+            <ul>
+                <li>Frontend </li>
+                <li>Task Store </li>
+                <li>Store Consumer </li>
+                <li>Queue </li>
+                <li>Controller </li>
+                <li>Executor </li>
+                <li>Heartbeat and Status Controller (HSC)<span><br /></span>
+                </li>
+            </ul>
+            <p>
+                <span><b>Frontend</b><br /> This is the service that schedules requests via an RPC interface. The frontend accepts RPC requests from clients and schedules tasks by interacting with ATF’s task store described below.</span><br />
+            </p>
+            <p>
+                <b>Task Store<br /></b> ATF tasks are stored in and triggered from the task store. The task store could be any generic data store with indexed querying capability. In ATF’s case, We use our in-house metadata store Edgestore to power the task store. More details can be&#160;found in the <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">D</a><a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">ata</a> <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">M</a><a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">odel</a> section below.
+            </p>
+            <p>
+                <b>Store Consumer<br /></b> The Store Consumer is a service that periodically polls the task store to find tasks that are ready for execution and pushes them onto the right queues, as described in the queue section below. These could be tasks that are newly ready for execution, or older tasks that are ready for execution again because they either failed in a retriable way on execution, or were dropped elsewhere within the ATF system.&#160;
+            </p>
+            <p> Below is a simple walkthrough of the Store Consumer’s function:&#160; </p>
+        </div>
+        <div>
+            <pre><code>repeat every second:
+  1. poll tasks ready for execution from task store
+  2. push tasks onto the right queues
+  3. update task statuses</code></pre>
+        </div>
+        <div>
+            <p> The Store Consumer polls tasks that failed in earlier execution attempts. This helps with the at-least-once guarantee that the ATF system provides. More details on how the Store Consumer polls new and previously failed tasks is presented in the <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=342792671048375002388848&amp;h2=Lifecycle-of-a-task">Lifecycle of a task</a> section below. </p>
+            <p>
+                <b>Queue<br /></b> ATF uses AWS <a href="https://aws.amazon.com/sqs/">Simple Queue Service</a> (SQS) to queue tasks internally. These queues act as a buffer between the Store Consumer and Controllers (described below). Each <span>&lt;lambda, priority&gt;</span> &#160;pair gets a dedicated SQS queue. The total number of SQS queues used by ATF is <span>#lambdas x #priorities</span>.
+            </p>
+            <p>
+                <b>Controller<br /></b> Worker hosts are physical hosts dedicated for task execution. Each worker host has one controller process responsible for polling tasks from SQS queues in a background thread, and then pushing them onto process local buffered queues. The Controller is only aware of the lambdas it is serving and thus polls only the limited set of necessary queues.&#160;
+            </p>
+            <p> The Controller serves tasks from its process local queue as a response to <span>NextWork</span> RPCs. This is the layer where execution level task prioritization occurs. The Controller has different process level queues for tasks of different priorities and can thus prioritize tasks in response to <span>NextWork</span> RPCs. </p>
+            <p>
+                <b>Executor<br /></b> The Executor is a process with multiple threads, responsible for the actual task execution. Each thread within an Executor process follows this simple loop:
+            </p>
+        </div>
+        <div>
+            <pre><code>while True:
+  w = get_next_work()
+  do_work(w)</code></pre>
+        </div>
+        <div>
+            <p> Each worker host has a single Controller process and multiple executor processes. Both the Controller and Executors work in a “pull” model, in which active loops continuously long-poll for new work to be done. </p>
+            <p>
+                <b>Heartbeat and Status Controller (HSC)</b><br /> The HSC serves RPCs for claiming a task for execution (<span>ClaimTask</span>), setting task status after execution (<span>SetResults</span>) and heartbeats during task execution (<span>Heartbeat</span>). <span>ClaimTask</span> requests originate from the Controllers in response to <span>NextWork</span> requests. <span>Heartbeat</span> and <span>SetResults</span> requests originate from executor processes during and after task execution. The HSC interacts with the task store to update the task status on the kind of request it receives.
+            </p>
+        </div>
+        <div>
+            <p id="data-model">
+            <h2> Data model </h2>
+            </p>
+        </div>
+        <div>
+            <p> ATF uses our in-house metadata store, Edgestore, as a task store. Edgestore objects can be Entities or Associations (<span>assoc</span>), each of which can have user-defined attributes. Associations are used to represent relationships between entities. Edgestore supports indexing only on attributes of associations. </p>
+            <p> Based on this design, we have two kinds of ATF-related objects in Edgestore. The ATF association stores scheduling information, such as the next scheduled timestamp at which the Store Consumer should poll a given task (either for the first time or for a retry). The ATF entity stores all task related information that is used to track the task state and payload for task execution. We query on associations from the Store Consumer in a pull model to pick up tasks ready for execution. </p>
+        </div>
+        <div>
+            <p id="lifecycle-of-a-task">
+            <h2> Lifecycle of a task </h2>
+            </p>
+        </div>
+        <div>
+            <ol>
+                <li>Client performs a <span>Schedule</span> RPC call to <b>Frontend</b> with task information, including execution time.&#160; </li>
+                <li>Frontend creates Edgestore <span>entity</span> and <span>assoc</span> for the task.&#160; </li>
+                <li>When it is time to process the task, <b>Store Consumer</b> pulls the task from <b>Edgestore</b> and pushes it to a related <b>SQS</b> queue.&#160; </li>
+                <li>
+                    <b>Executor</b> makes <span>NextWork</span> RPC call to <b>Controller</b>, which pulls tasks from the <b>SQS</b> queue, makes a <span>ClaimTask</span> RPC to the HSC and then returns the task to the <b>Executor</b>.&#160;
+                </li>
+                <li>
+                    <b>Executor</b> invokes the callback for the task. While processing, <b>Executor</b> performs <span>Heartbeat</span> RPC calls to <b>Heartbeat and Status Controller (HSC)</b>. Once processing is done, <b>Executor</b> performs <span>TaskStatus</span> RPC call to <b>HSC</b>.&#160;
+                </li>
+                <li>Upon getting <span>Heartbeat</span> and <span>TaskStatus</span> RPC calls, <b>HSC</b> updates the <b>Edgestore</b> entity and <span>assoc</span>. </li>
+            </ol>
+            <p> Every state update in the lifecycle of a task is accompanied by an update to the next trigger timestamp in the <span>assoc</span>. This ensures that the Store Consumer pulls the task again if there is no change in state of the task within the next trigger timestamp. This helps ATF achieve its at-least-once delivery guarantee by ensuring that no task is dropped. </p>
+            <p> Following are the task entity and association states in ATF and their corresponding timestamp updates: </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                <b>Entity status</b>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <b>Assoc status</b>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <b>next trigger timestamp in Assoc</b>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <b>Comment</b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>new</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>new</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>scheduled_timestamp</span> of the task
+                            </p>
+                        </td>
+                        <td>
+                            <p> Pick up new tasks that are ready.&#160; </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>enqueued</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>started</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>enqueued_timestamp</span> + <span>enqueue_timeout</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p> Re-enqueue task if it has been in <span>enqueued</span> state for too long. This can happen if the queue loses data or the controller goes down after polling the queue and before the task is claimed. </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>claimed</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>started</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>claimed_timestamp</span> + <span>claim_timeout</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p> Re-enqueue if task is claimed but never transfered to <span>processing</span>. This can happen if Controller is down after claiming a task. Task status is changed to <span>enqueued</span> after re-enqueue. </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>processing</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>started</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>heartbeat_timestamp</span> + <span>heartbeat_timeout</span>`
+                            </p>
+                        </td>
+                        <td>
+                            <p> Re-enqueue if task hasn’t sent <span>heartbeat</span> for too long. This can happen if Executor is down. Task status is changed to <span>enqueued</span> after re-enqueue.&#160; </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>retriable failure</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p> started </p>
+                        </td>
+                        <td>
+                            <p> compute <span>next_timestamp</span> according to backoff logic </p>
+                        </td>
+                        <td>
+                            <p> Exponential backoff for tasks with retriable failure.&#160; </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>success</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>completed</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p> N/A </p>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <span>fatal_failure</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span>completed</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p> N/A </p>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p> The store consumer polls for tasks based on the following query: </p>
+            <p>
+                <span>assoc_status= &amp;&amp; next_timestamp&lt;=time.now()<br /></span>
+            </p>
+            <p> Below is the state machine that defines task state transitions:&#160;<br />
+            </p>
+        </div>
+        <div>
+            <figure>
+                <img src="http://fakehost/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/diagrams/Techblog-ATF-720x225px-2.png" aria-hidden="false" alt="Task State Transitions [Fig 2]" height="450" width="1440" />
+            </figure>
+        </div>
+        <div>
+            <p id="-achieving-guarantees">
+            <h2> Achieving guarantees </h2>
+            </p>
+        </div>
+        <div>
+            <p>
+                <b>At-least-once task execution<br /></b> At-least-once execution is guaranteed in ATF by retrying a task until it completes execution (which is signaled by a <span>Success</span> or a <span>FatalFailure</span> state). All ATF system errors are implicitly considered retriable failures, and lambda owners have an option of marking tasks with a <span>RetriableFailure</span> state. Tasks might be dropped from the ATF execution pipeline in different parts of the system through transient RPC failures and failures on dependencies like Edgestore or SQS. These transient failures at different parts of the system do not affect the at-least-once guarantee, though, because of the system of timeouts and re-polling from Store Consumer.
+            </p>
+            <p>
+                <b>No concurrent task execution<br /></b> Concurrent task execution is avoided through a combination of two methods in ATF. First, tasks are explicitly claimed through an exclusive task state (<span>Claimed</span>) before starting execution. Once the task execution is complete, the task status is updated to one of <span>Success</span>, <span>FatalFailure</span> or <span>RetriableFailure</span>. A task can be claimed only if its existing task state is <span>Enqueued</span> (retried tasks go to the <span>Enqueued</span> state as well once they are re-pushed onto SQS).
+            </p>
+            <p> However, there might be situations where once a long running task starts execution, its heartbeats might fail repeatedly yet the task execution continues. ATF would retry this task by polling it from the store consumer because the heartbeat timeouts would’ve expired. This task can then be claimed by another worker and lead to concurrent execution.&#160;<br />
+            </p>
+            <p> To avoid this situation, there is a termination logic in the Executor processes whereby an Executor process terminates itself as soon as three consecutive heartbeat calls fail. Each heartbeat timeout is large enough to eclipse three consecutive heartbeat failures. This ensures that the Store Consumer cannot pull such tasks before the termination logic ends them—the second method that helps achieve this guarantee. </p>
+            <p>
+                <b>Isolation<br /></b> Isolation of lambdas is achieved through dedicated worker clusters, dedicated queues, and dedicated per-lambda scheduling quotas. In addition, isolation across different priorities within the same lambda is likewise achieved through dedicated queues and scheduling bandwidth.
+            </p>
+            <p>
+                <b>Delivery latency<br /></b> ATF use cases do not require ultra-low task delivery latencies. Task delivery latencies on the order of a couple of seconds are acceptable. Tasks ready for execution are periodically polled by the Store Consumer and this period of polling largely controls the task delivery latency. Using this as a tuning lever, ATF can achieve different delivery latencies as required. Increasing poll frequency reduces task delivery latency and vice versa. Currently, we have calibrated ATF to poll for ready tasks once every two seconds.
+            </p>
+        </div>
+        <div>
+            <p id="ownership-model">
+            <h2> Ownership model </h2>
+            </p>
+        </div>
+        <p> ATF is designed to be a self-serve framework for developers at Dropbox. The design is very intentional in driving an ownership model where lambda owners own all aspects of their lambdas’ operations. To promote this, all lambda worker clusters are owned by the lambda owners. They have full control over operations on these clusters, including code deployments and capacity management. Each executor process is bound to one lambda. Owners have the option of deploying multiple lambdas on their worker clusters simply by spawning new executor processes on their hosts. </p>
+        <div>
+            <p id="-extending-atf">
+            <h2> Extending ATF </h2>
+            </p>
+        </div>
+        <div>
+            <p> As described above, ATF provides an infrastructural building block for scheduling asynchronous tasks. With this foundation established, ATF can be extended to support more generic use cases and provide more features as a framework. Following are some examples of what could be built as an extension to ATF.&#160; </p>
+            <p>
+                <b>Periodic task execution<br /></b> Currently, ATF is a system for one-time task scheduling. Building support for periodic task execution as an extension to this framework would be useful in unlocking new capabilities for our clients.
+            </p>
+            <p>
+                <b>Better support for task chaining<br /></b> Currently, it is possible to chain tasks on ATF by scheduling a task onto ATF that then schedules other tasks onto ATF during its execution. Although it is possible to do this in the current ATF setup, visibility and control on this chaining is absent at the framework level. Another natural extension here would be to better support task chaining through framework-level visibility and control, to make this use case a first class concept in the ATF model.
+            </p>
+            <p>
+                <b>Dead letter queues for misbehaving tasks<br /></b> One common source of maintenance overhead we observe on ATF is that some tasks get stuck in infinite retry loops due to occasional bugs in lambda logic. This requires manual intervention from the ATF framework owners in some cases where there are a large number of tasks stuck in such loops, occupying a lot of the scheduling bandwidth in the system. Typical manual actions in response to such a situation include pausing execution of the lambdas with misbehaving tasks, or dropping them outright.
+            </p>
+            <p> One way to reduce this operational overhead and provide an easy interface for lambda owners to recover from such incidents would be to create dead letter queues filled with such misbehaving tasks. The ATF framework could impose a maximum number of retries before tasks are pushed onto the dead letter queue. We could create and expose tools that make it easy to reschedule tasks from the dead letter queue back into the ATF system, once the associated lambda bugs are fixed.<br />
+            </p>
+        </div>
+        <div>
+            <p id="conclusion">
+            <h2> Conclusion </h2>
+            </p>
+        </div>
+        <p> We hope this post helps engineers elsewhere to develop better async task frameworks of their own. Many thanks to everyone who worked on this project: Anirudh Jayakumar, Deepak Gupta, Dmitry Kopytkov, Koundinya Muppalla, Peng Kang, Rajiv Desai, Ryan Armstrong, Steve Rodrigues, Thomissa Comellas, Xiaonan Zhang and Yuhuan Du.<br /> &#160; </p>
+    </div>
+</div>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" data-cms-lang="en-us" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            How we designed Dropbox ATF: an async task framework - Dropbox
+        </title>
+        <meta name="data-tags" content="Async,Edgestore,Infrastructure,Task Scheduling" />
+        <meta name="data-tagTaxonomy" content="Async; Edgestore; Infrastructure; Task Scheduling;" />
+        <meta name="page-id" content="infrastructure-asynchronous-task-scheduling-at-dropbox" />
+        <meta name="topic" content="Infrastructure" />
+        <meta name="publishDate" content="2020-11-11 12:00:00.000-0600" />
+        <meta name="author" content="Arun Sai Krishnan" />
+        <link rel="canonical" href="https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" />
+        <link rel="icon" href="https://cfl.dropboxstatic.com/static/images/favicon-vflUeLeeY.ico" type="image/x-icon" />
+        <meta property="og:url" content="https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="How we designed Dropbox’s ATF - an async task framework" />
+        <meta property="og:image" content="https://aem.dropbox.com/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/diagrams/Techblog-ATF-Social.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta content="width=device-width,initial-scale=1.0,user-scalable=no" name="viewport" />
+        <link rel="alternate" hreflang="en-us" href="https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" /><!-- /* Enable rebrand styles  */
+<sly data-sly-use.inheritUtil="com.dropbox.aem.common.models.utils.InheritanceUtilUse"
+     data-sly-test.pageStyle="" /> -->
+        <link rel="stylesheet" href="/cms/etc.clientlibs/settings/wcm/designs/dropbox-common/clientlib-cms-common.757d73acbd22d3e2bf4eeb953c16c4d5.css" type="text/css" />
+        <link rel="stylesheet" href="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-all.fc2ae6db413129b3901dd5a89e64f347.css" type="text/css" /><!--Knotch Integration should be added in header-->
+
+        <script src="https://www.knotch-cdn.com/unit/latest/knotch.min.js" data-account="33c0d4ac-b5bc-4168-a95b-e963ec65974d" async="async"></script>
+        <link rel="stylesheet" href="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content.22c503f9a8a000fceab6a403af5ce96f.css" type="text/css" />
+        <style>
+        <![CDATA[
+        body.stormcrow-animate{opacity:1;}
+        ]]>
+        </style>
+    </head>
+    <body class="tech-blog-article-page__page stormcrow-animate" data-article-uuid="d4052e45-cbcb-4ebb-b834-eb377ab543e8">
+        <input type="hidden" id="wcmRunmode" name="wcmRunmode" value="publish,prod" /> 
+        <script type="text/javascript">
+        //<![CDATA[
+
+            var attr = "tealium_event$cms".split(",");
+
+            var utag_data = {}
+            attr.forEach(function (item) {
+                if (item && item.indexOf("$") > -1)
+                    utag_data[item.split("$")[0]] = item.split("$")[1];
+            })
+        //]]>
+        </script> 
+        <script type="text/javascript">
+        //<![CDATA[
+
+            (function (a, b, c, d) {
+                a = "\/\/tags.tiqcdn.com\/utag\/dropbox\/tech\u002Dblog\/prod\/utag.js";
+                b = document;
+                c = 'script';
+                d = b.createElement(c);
+                d.src = a;
+                d.type = 'text/java' + c;
+                d.async = true;
+                a = b.getElementsByTagName(c)[0];
+                a.parentNode.insertBefore(d, a);
+            })();
+        //]]>
+        </script>
+        <header class="dr-header">
+            <div class="dr-header__sticky-container">
+                <section class="dr-header__section dr-flex dr-flex--align-center dr-padding-right-40 dr-padding-left-40 dr-header__sticky-content-container dr-header__sticky-content-container--opened dr-container--surface">
+                    <div class="dr-flex-1">
+                        <a class="dr-link dr-link--no-underline dr-link--no-underline-hover dr-typography-t1" href="https://dropbox.tech/">Dropbox.Tech</a>
+                    </div><button class="dr-header__item dr-nav__menu-toggle-button dr-button dr-hide-from-md dr-flex dr-flex-align-center dr-flex-justify-center" data-dr-tooltip="Menu" data-dr-tooltip-theme="white"><svg viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="dr-width-100 dr-height-100">
+                    <rect x="0.501831" y="8" width="28" height="2" fill="white"></rect>
+                    <rect x="0.500977" y="18" width="28" height="2" fill="white"></rect></svg></button>
+                    <nav class="dr-show-block-from-md dr-nav__nav">
+                        <button class="dr-button dr-nav__menu-close-button"><svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.2875 2.15983L17.6683 0.566406L9.82597 8.28403L2.33211 0.909344L0.71294 2.50277L8.2068 9.87746L0.666992 17.2974L2.28617 18.8908L9.82597 11.4709L17.7143 19.2337L19.3334 17.6403L11.4451 9.87746L19.2875 2.15983Z" fill="white"></path></svg></button>
+                        <ul class="dr-unstyled-list dr-typography-t2 dr-flex dr-nav__nav-list">
+                            <li class="dr-header__item dr-position-relative dr-header__item--with-subnav dr-header__list-item">
+                                <button class="dr-button dr-button--link dr-header__link--with-subnav">Topics</button>
+                                <ul class="dr-unstyled-list dr-display-none dr-header__subnav dr-position-absolute dr-container--surface dr-padding-top-30 dr-padding-left-40 dr-padding-bottom-20 dr-padding-right-40 dr-font-weight-500">
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/application" class="dr-display-block dr-link dr-link--no-underline dr-container--application dr-link--primary">Application</a>
+                                    </li>
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/frontend" class="dr-display-block dr-link dr-link--no-underline dr-container--frontend dr-link--primary">Front End</a>
+                                    </li>
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/infrastructure" class="dr-display-block dr-link dr-link--no-underline dr-container--infrastructure dr-link--primary">Infrastructure</a>
+                                    </li>
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/machine-learning" class="dr-display-block dr-link dr-link--no-underline dr-container--machine-learning dr-link--primary">Machine Learning</a>
+                                    </li>
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/mobile" class="dr-display-block dr-link dr-link--no-underline dr-container--mobile dr-link--primary">Mobile</a>
+                                    </li>
+                                    <li class="dr-header__list-item dr-header__list-item--subnav">
+                                        <a href="https://dropbox.tech/security" class="dr-display-block dr-link dr-link--no-underline dr-container--security dr-link--primary">Security</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dr-header__item dr-header__list-item">
+                                <a href="https://dropbox.tech/developers" class="dr-link dr-link--no-underline dr-nav__main-category">Developers</a>
+                            </li>
+                            <li class="dr-header__item dr-header__list-item">
+                                <a class="dr-link dr-link--no-underline dr-header__link" href="http://dropbox.com/jobs" target="_blank">Jobs</a>
+                            </li>
+                        </ul>
+                    </nav><button data-dark-mode-switcher="" class="dr-header__item dr-header__dark-mode-switcher dr-button dr-button--link dr-cursor-pointer" data-dr-tooltip="Dark Mode" data-dr-tooltip-theme="white" type="button"><img alt="" height="30" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-all/resources/button_dark-mode-new.svg" width="30" class="dr-header__mode-image" /></button> <button class="dr-header__item dr-header__search-button dr-button dr-button--link dr-cursor-pointer" data-dr-tooltip="Search" data-dr-tooltip-theme="white" type="button"><img alt="" height="20" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-all/resources/button_search-new.svg" width="20" /></button> <!--search-result-page-only-->
+                     <!--search-result-page-only-->
+                    <div class="dr-header__search dr-display-none">
+                        <button class="dr-header__search-close-button dr-header__item dr-button dr-button--link dr-cursor-pointer" type="button"><svg width="20" height="20" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.2875 2.15983L17.6683 0.566406L9.82597 8.28403L2.33211 0.909344L0.71294 2.50277L8.2068 9.87746L0.666992 17.2974L2.28617 18.8908L9.82597 11.4709L17.7143 19.2337L19.3334 17.6403L11.4451 9.87746L19.2875 2.15983Z" fill="white"></path></svg></button>
+                        <div class="dr-header__search-form-container">
+                            <form action="https://dropbox.tech/search-results.html" class="dr-header__search-form dr-container__content dr-width-100">
+                                <input autocomplete="off" class="dr-header__search-input dr-typography-t3" name="q" placeholder="Search" required="true" type="text" />
+                                <p class="dr-header__search-hint dr-margin-top-30 dr-margin-bottom-0 dr-typography-t5 dr-display-none">
+                                    // Press enter to search
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </header>
+        <div class="dr-article-hero">
+            <div class="dr-article-hero__background-container dr-container--infrastructure">
+                <picture class="dr-article-hero__background dr-article-hero__background--regular"><source media="( max-width: 375px )" srcset="/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-375x150-light.png" /> <source media="( max-width: 376px ) and ( max-width: 1199px )" srcset="/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-1024x250-light.png" /> <img class="dr-article-hero__background-image" src="/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-1440x305-light.png" alt="" /></picture> <picture class="dr-article-hero__background dr-article-hero__background--dark"><source media="( max-width: 375px )" srcset="/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-375x150-dark.png" /> <source media="( max-width: 376px ) and ( max-width: 1199px )" srcset="/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-1024x250-dark.png" /> <img class="dr-article-hero__background-image" src="/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/header/Infrastructure-ATF-1440x305-dark.png" alt="" /></picture>
+            </div>
+            <section class="dr-container__content">
+                <h1 class="dr-display-inline dr-typography-t15 dr-container--surface dr-article-hero__title">
+                    <span class="dr-article-hero__title-container dr-container--infrastructure">How we designed Dropbox ATF: an async task framework</span>
+                </h1>
+                <div class="dr-typography-no-space dr-margin-top-10 dr-margin-md-top-20">
+                    <span class="dr-typography-t5">// By Arun Sai Krishnan • Nov 11, 2020</span>
+                </div>
+            </section>
+        </div>
+        <div class="dr-article-content">
+            <div class="dr-article-content__scroll-tracker-container dr-container--infrastructure">
+                <div class="dr-article-content__scroll-tracker"></div>
+            </div>
+            <div class="dr-container__content">
+                <div class="dr-article-content__content-container dr-padding-md-left-80 dr-padding-md-right-80 dr-typography-t12">
+                    <nav class="dr-article-content__side-nav dr-article-content__side-nav--initial dr-typography-t5">
+                        <ol class="dr-article-content__side-nav-list dr-margin-0">
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#introduction" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Introduction</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#glossary" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Glossary</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#features" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Features</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#system-guarantees" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">System guarantees</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#-lambda-requirements" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Lambda requirements</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#architecture" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Architecture</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#data-model" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Data model</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#lifecycle-of-a-task" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Lifecycle of a task</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#-achieving-guarantees" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Achieving guarantees</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#ownership-model" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Ownership model</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#-extending-atf" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Extending ATF</a>
+                            </li>
+                            <li class="dr-article-content__side-nav-list-item dr-margin-bottom-5">
+                                <a href="#conclusion" class="dr-link dr-link--no-underline dr-article-content__side-nav-link">Conclusion</a>
+                            </li>
+                        </ol>
+                    </nav>
+                    <div class="dr-article-content__content">
+                        <div class="aem-Grid aem-Grid--12 aem-Grid--default--12">
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    I joined Dropbox not long after graduating with a Master’s degree in computer science. Aside from an internship, this was my first big-league engineering job. My team had already begun designing a critical internal service that most of our software would use: It would handle asynchronous computing requests behind the scenes, powering everything from dragging a file into a Dropbox folder to scheduling a marketing campaign.
+                                </p>
+                                <p>
+                                    This Asynchronous Task Framework (ATF) would replace multiple bespoke async systems used by different engineering teams. It would reduce redundant development, incompatibilities, and reliance on legacy software. There were no open-source projects or buy-not-build solutions that worked well for our use case and scale, so we had to create our own. ATF is both an important and interesting challenge, though, so we were happy to design, build and deploy our own in-house service.
+                                </p>
+                                <p>
+                                    ATF not only had to work well, it had to work well at scale: It would be a foundational building block of Dropbox infrastructure. It would need to handle 10,000 async tasks per second from the start, and be architected for future growth. It would need to support nearly 100 unique async task types from the start, again with room to grow. There were at least two dozen engineering teams that would want to use it for entirely different parts of our codebase, for many products and services.&#160;
+                                </p>
+                                <p>
+                                    As any engineer would, we Googled to see what other companies with mega-scale services had done to handle async tasks. We were disappointed to find little material published by engineers who built supersized async services.
+                                </p>
+                                <p>
+                                    Now that ATF is deployed and currently serving 9,000 async tasks scheduled per second and in use by 28 engineering teams internally, we’re glad to fill that information gap. We’ve documented Dropbox ATF thoroughly, as a reference and guide for the engineering community seeking their own async solutions.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="introduction">
+                                    <h2 class="dr-article-content__section-title">
+                                        Introduction
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    Scheduling asynchronous tasks on-demand is a critical capability that powers many features and internal platforms at Dropbox. Async Task Framework (ATF) is the infrastructural system that supports this capability at Dropbox through a callback-based architecture. ATF enables developers to define callbacks, and schedule tasks that execute against these pre-defined callbacks.
+                                </p>
+                                <p>
+                                    Since its introduction over a year ago, ATF has gone on to become an important building block in the Dropbox infrastructure, used by nearly 30 internal teams across our codebase. It currently supports 100+ use cases which require either immediate or delayed task scheduling.&#160;
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="glossary">
+                                    <h2 class="dr-article-content__section-title">
+                                        Glossary
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    Some basic terms repeatedly used in this post, defined as used in the context of this discussion.
+                                </p>
+                                <p>
+                                    <b>Lambda:</b> A callback implementing business logic.
+                                </p>
+                                <p>
+                                    <span><b>Task:</b> Unit of execution of a lambda. Each asynchronous job scheduled with ATF is a task.</span>
+                                </p>
+                                <p>
+                                    <span><b>Collection:</b> A labeled subset of tasks belonging to a lambda. If <span class="dr-code">send email</span> is implemented as a lambda, then <span class="dr-code">password reset email</span> and <span class="dr-code">marketing email</span> would be collections.</span>
+                                </p>
+                                <p>
+                                    <span><b>&#160;Priority:</b> Labels defining priority of execution of tasks within a lambda.&#160;</span>
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="features">
+                                    <h2 class="dr-article-content__section-title">
+                                        Features
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    <b>Task scheduling</b><br />
+                                    Clients can schedule tasks to execute at a specified time. Tasks can be scheduled for immediate execution, or delayed to fit the use case.
+                                </p>
+                                <p>
+                                    <b>Priority based execution</b><br />
+                                    Tasks should be associated with a priority. Tasks with higher priority should get executed before tasks with a lower priority once they are ready for execution.
+                                </p>
+                                <p>
+                                    <b>Task gating</b><br />
+                                    ATF enables the the gating of tasks based on lambda, or a subset of tasks on a lambda based on collection. Tasks can be gated to be completely dropped or paused until a suitable time for execution.
+                                </p>
+                                <p>
+                                    <b>Track task status</b><br />
+                                    Clients can query the status of a scheduled task.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="system-guarantees">
+                                    <h2 class="dr-article-content__section-title">
+                                        System guarantees
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    <b>At-least once task execution<br /></b> The ATF system guarantees that a task is executed at least once after being scheduled. Execution is said to be complete once the user-defined callback signals task completion to the ATF system.
+                                </p>
+                                <p>
+                                    <b>No concurrent task execution<br /></b> The ATF system guarantees that at most one instance of a task will be actively executing at any given in point. This helps users write their callbacks without designing for concurrent execution of the same task from different locations.
+                                </p>
+                                <p>
+                                    <b>Isolation<br /></b> Tasks in a given lambda are isolated from the tasks in other lambdas. This isolation spans across several dimensions, including worker capacity for task execution and resource use for task scheduling. Tasks on the same lambda but different priority levels are also isolated in their resource use for task scheduling.
+                                </p>
+                                <p>
+                                    <b>Delivery latency<br /></b> 95% of tasks begin execution within five seconds from their scheduled execution time.
+                                </p>
+                                <p>
+                                    <b>High availability for task scheduling<br /></b> The ATF service is 99.9% available to accept task scheduling requests from any client.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="-lambda-requirements">
+                                    <h2 class="dr-article-content__section-title">
+                                        Lambda requirements
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    Following are some restrictions we place on the callback logic (lambda):
+                                </p>
+                                <p>
+                                    <b>Idempotence</b><br />
+                                    A single task on a lambda can be executed multiple times within the ATF system. Developers should ensure that their lambda logic and correctness of task execution in clients are not affected by this.
+                                </p>
+                                <p>
+                                    <b>Resiliency</b><br />
+                                    Worker processes which execute tasks might die at any point during task execution. ATF retries abruptly interrupted tasks, which could also be retried on different hosts. Lambda owners must design their lambdas such that retries on different hosts do not affect lambda correctness.
+                                </p>
+                                <p>
+                                    <b>Terminal state handling<br /></b> ATF retries tasks until they are signaled to be complete from the lambda logic. Client code can mark a task as successfully completed, fatally terminated, or retriable. It is critical that lambda owners design clients to signal task completion appropriately to avoid misbehavior such as infinite retries.&#160;
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="architecture">
+                                    <h2 class="dr-article-content__section-title">
+                                        Architecture
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="image c04-image aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-image image cq-dd-image">
+                                    <figure class="dr-margin-0 dr-display-inline-block">
+                                        <img src="/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/diagrams/Techblog-ATF-720x844px-1.png" aria-hidden="false" alt="Async Task Framework (ATF) [Fig 1]" height="1688" width="1440" />
+                                        <figcaption class="dr-typography-t5 dr-color-ink-60">
+                                            Async Task Framework (ATF) [Fig 1]
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    In this section, we describe the high-level architecture of ATF and give brief description of its different components. (See Fig. 1 above.)&#160;In this section, we describe the high-level architecture of ATF and give brief description of its different components. (See Fig. 1 above.) Dropbox <a href="https://dropbox.tech/infrastructure/courier-dropbox-migration-to-grpc">uses gRPC</a> for remote calls and our in-house <a href="https://dropbox.tech/infrastructure/reintroducing-edgestore">Edgestore</a> to store tasks.
+                                </p>
+                                <p>
+                                    ATF consists of the following components:&#160;
+                                </p>
+                                <ul>
+                                    <li>Frontend
+                                    </li>
+                                    <li>Task Store
+                                    </li>
+                                    <li>Store Consumer
+                                    </li>
+                                    <li>Queue
+                                    </li>
+                                    <li>Controller
+                                    </li>
+                                    <li>Executor
+                                    </li>
+                                    <li>Heartbeat and Status Controller (HSC)<span><br /></span>
+                                    </li>
+                                </ul>
+                                <p>
+                                    <span><b>Frontend</b><br />
+                                    This is the service that schedules requests via an RPC interface. The frontend accepts RPC requests from clients and schedules tasks by interacting with ATF’s task store described below.</span><br />
+                                </p>
+                                <p>
+                                    <b>Task Store<br /></b> ATF tasks are stored in and triggered from the task store. The task store could be any generic data store with indexed querying capability. In ATF’s case, We use our in-house metadata store Edgestore to power the task store. More details can be&#160;found in the <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">D</a><a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">ata</a> <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">M</a><a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=395988446153757833740421&amp;h2=Data-model">odel</a> section below.
+                                </p>
+                                <p>
+                                    <b>Store Consumer<br /></b> The Store Consumer is a service that periodically polls the task store to find tasks that are ready for execution and pushes them onto the right queues, as described in the queue section below. These could be tasks that are newly ready for execution, or older tasks that are ready for execution again because they either failed in a retriable way on execution, or were dropped elsewhere within the ATF system.&#160;
+                                </p>
+                                <p>
+                                    Below is a simple walkthrough of the Store Consumer’s function:&#160;
+                                </p>
+                            </div>
+                            <div class="dr-code-container aem-GridColumn aem-GridColumn--default--12">
+                                <button class="dr-code-container__copy-button dr-button dr-typography-t17">Copy</button>
+                                <pre class="dr-code-container__pre"><code class="dr-code-container__code dr-typography-t5">repeat every second:
+  1. poll tasks ready for execution from task store
+  2. push tasks onto the right queues
+  3. update task statuses</code></pre>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    The Store Consumer polls tasks that failed in earlier execution attempts. This helps with the at-least-once guarantee that the ATF system provides. More details on how the Store Consumer polls new and previously failed tasks is presented in the <a href="https://paper.dropbox.com/doc/How-we-designed-Dropboxs-ATF-an-async-task-framework--A~wmq5aW48OkHns4LzkM~o6zAg-cf95JuxevqilF2iWWATj6#:uid=342792671048375002388848&amp;h2=Lifecycle-of-a-task">Lifecycle of a task</a> section below.
+                                </p>
+                                <p>
+                                    <b>Queue<br /></b> ATF uses AWS <a href="https://aws.amazon.com/sqs/" style="background-color: rgb(255,255,255);">Simple Queue Service</a> (SQS) to queue tasks internally. These queues act as a buffer between the Store Consumer and Controllers (described below). Each <span class="dr-code">&lt;lambda, priority&gt;</span> &#160;pair gets a dedicated SQS queue. The total number of SQS queues used by ATF is <span class="dr-code">#lambdas x #priorities</span>.
+                                </p>
+                                <p>
+                                    <b>Controller<br /></b> Worker hosts are physical hosts dedicated for task execution. Each worker host has one controller process responsible for polling tasks from SQS queues in a background thread, and then pushing them onto process local buffered queues. The Controller is only aware of the lambdas it is serving and thus polls only the limited set of necessary queues.&#160;
+                                </p>
+                                <p>
+                                    The Controller serves tasks from its process local queue as a response to <span class="dr-code">NextWork</span> RPCs. This is the layer where execution level task prioritization occurs. The Controller has different process level queues for tasks of different priorities and can thus prioritize tasks in response to <span class="dr-code">NextWork</span> RPCs.
+                                </p>
+                                <p>
+                                    <b>Executor<br /></b> The Executor is a process with multiple threads, responsible for the actual task execution. Each thread within an Executor process follows this simple loop:
+                                </p>
+                            </div>
+                            <div class="dr-code-container aem-GridColumn aem-GridColumn--default--12">
+                                <button class="dr-code-container__copy-button dr-button dr-typography-t17">Copy</button>
+                                <pre class="dr-code-container__pre"><code class="dr-code-container__code dr-typography-t5">while True:
+  w = get_next_work()
+  do_work(w)</code></pre>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    Each worker host has a single Controller process and multiple executor processes. Both the Controller and Executors work in a “pull” model, in which active loops continuously long-poll for new work to be done.
+                                </p>
+                                <p>
+                                    <b>Heartbeat and Status Controller (HSC)</b><br />
+                                    The HSC serves RPCs for claiming a task for execution (<span class="dr-code">ClaimTask</span>), setting task status after execution (<span class="dr-code">SetResults</span>) and heartbeats during task execution (<span class="dr-code">Heartbeat</span>). <span class="dr-code">ClaimTask</span> requests originate from the Controllers in response to <span class="dr-code">NextWork</span> requests. <span class="dr-code">Heartbeat</span> and <span class="dr-code">SetResults</span> requests originate from executor processes during and after task execution. The HSC interacts with the task store to update the task status on the kind of request it receives.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="data-model">
+                                    <h2 class="dr-article-content__section-title">
+                                        Data model
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    ATF uses our in-house metadata store, Edgestore, as a task store. Edgestore objects can be Entities or Associations (<span class="dr-code">assoc</span>), each of which can have user-defined attributes. Associations are used to represent relationships between entities. Edgestore supports indexing only on attributes of associations.
+                                </p>
+                                <p>
+                                    Based on this design, we have two kinds of ATF-related objects in Edgestore. The ATF association stores scheduling information, such as the next scheduled timestamp at which the Store Consumer should poll a given task (either for the first time or for a retry). The ATF entity stores all task related information that is used to track the task state and payload for task execution. We query on associations from the Store Consumer in a pull model to pick up tasks ready for execution.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="lifecycle-of-a-task">
+                                    <h2 class="dr-article-content__section-title">
+                                        Lifecycle of a task
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <ol>
+                                    <li>Client performs a <span class="dr-code">Schedule</span> RPC call to <b>Frontend</b> with task information, including execution time.&#160;
+                                    </li>
+                                    <li>Frontend creates Edgestore <span class="dr-code">entity</span> and <span class="dr-code">assoc</span> for the task.&#160;
+                                    </li>
+                                    <li>When it is time to process the task, <b>Store Consumer</b> pulls the task from <b>Edgestore</b> and pushes it to a related <b>SQS</b> queue.&#160;
+                                    </li>
+                                    <li>
+                                        <b>Executor</b> makes <span class="dr-code">NextWork</span> RPC call to <b>Controller</b>, which pulls tasks from the <b>SQS</b> queue, makes a <span class="dr-code">ClaimTask</span> RPC to the HSC and then returns the task to the <b>Executor</b>.&#160;
+                                    </li>
+                                    <li>
+                                        <b>Executor</b> invokes the callback for the task. While processing, <b>Executor</b> performs <span class="dr-code">Heartbeat</span> RPC calls to <b>Heartbeat and Status Controller (HSC)</b>. Once processing is done, <b>Executor</b> performs <span class="dr-code">TaskStatus</span> RPC call to <b>HSC</b>.&#160;
+                                    </li>
+                                    <li>Upon getting <span class="dr-code">Heartbeat</span> and <span class="dr-code">TaskStatus</span> RPC calls, <b>HSC</b> updates the <b>Edgestore</b> entity and <span class="dr-code">assoc</span>.
+                                    </li>
+                                </ol>
+                                <p>
+                                    Every state update in the lifecycle of a task is accompanied by an update to the next trigger timestamp in the <span class="dr-code">assoc</span>. This ensures that the Store Consumer pulls the task again if there is no change in state of the task within the next trigger timestamp. This helps ATF achieve its at-least-once delivery guarantee by ensuring that no task is dropped.
+                                </p>
+                                <p>
+                                    Following are the task entity and association states in ATF and their corresponding timestamp updates:
+                                </p>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <b>Entity status</b>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <b>Assoc status</b>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <b>next trigger timestamp in Assoc</b>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <b>Comment</b>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">new</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">new</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">scheduled_timestamp</span> of the task
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    Pick up new tasks that are ready.&#160;
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">enqueued</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">started</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">enqueued_timestamp</span> + <span class="dr-code">enqueue_timeout</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    Re-enqueue task if it has been in <span class="dr-code">enqueued</span> state for too long. This can happen if the queue loses data or the controller goes down after polling the queue and before the task is claimed.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">claimed</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">started</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">claimed_timestamp</span> + <span class="dr-code">claim_timeout</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    Re-enqueue if task is claimed but never transfered to <span class="dr-code">processing</span>. This can happen if Controller is down after claiming a task. Task status is changed to <span class="dr-code">enqueued</span> after re-enqueue.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">processing</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">started</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">heartbeat_timestamp</span> + <span class="dr-code">heartbeat_timeout</span>`
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    Re-enqueue if task hasn’t sent <span class="dr-code">heartbeat</span> for too long. This can happen if Executor is down. Task status is changed to <span class="dr-code">enqueued</span> after re-enqueue.&#160;
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">retriable failure</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    started
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    compute <span class="dr-code">next_timestamp</span> according to backoff logic
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    Exponential backoff for tasks with retriable failure.&#160;
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">success</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">completed</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    N/A
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    &#160;
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">fatal_failure</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <span class="dr-code">completed</span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    N/A
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    &#160;
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>
+                                    The store consumer polls for tasks based on the following query:
+                                </p>
+                                <p>
+                                    <span class="dr-code">assoc_status= &amp;&amp; next_timestamp&lt;=time.now()<br /></span>
+                                </p>
+                                <p>
+                                    Below is the state machine that defines task state transitions:&#160;<br />
+                                </p>
+                            </div>
+                            <div class="image c04-image aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-image image cq-dd-image">
+                                    <figure class="dr-margin-0 dr-display-inline-block">
+                                        <img src="/cms/content/dam/dropbox/tech-blog/en-us/2020/11/atf/diagrams/Techblog-ATF-720x225px-2.png" aria-hidden="false" alt="Task State Transitions [Fig 2]" height="450" width="1440" />
+                                    </figure>
+                                </div>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="-achieving-guarantees">
+                                    <h2 class="dr-article-content__section-title">
+                                        Achieving guarantees
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    <b>At-least-once task execution<br /></b> At-least-once execution is guaranteed in ATF by retrying a task until it completes execution (which is signaled by a <span class="dr-code">Success</span> or a <span class="dr-code">FatalFailure</span> state). All ATF system errors are implicitly considered retriable failures, and lambda owners have an option of marking tasks with a <span class="dr-code">RetriableFailure</span> state. Tasks might be dropped from the ATF execution pipeline in different parts of the system through transient RPC failures and failures on dependencies like Edgestore or SQS. These transient failures at different parts of the system do not affect the at-least-once guarantee, though, because of the system of timeouts and re-polling from Store Consumer.
+                                </p>
+                                <p>
+                                    <b>No concurrent task execution<br /></b> Concurrent task execution is avoided through a combination of two methods in ATF. First, tasks are explicitly claimed through an exclusive task state (<span class="dr-code">Claimed</span>) before starting execution. Once the task execution is complete, the task status is updated to one of <span class="dr-code">Success</span>, <span class="dr-code">FatalFailure</span> or <span class="dr-code">RetriableFailure</span>. A task can be claimed only if its existing task state is <span class="dr-code">Enqueued</span> (retried tasks go to the <span class="dr-code">Enqueued</span> state as well once they are re-pushed onto SQS).
+                                </p>
+                                <p>
+                                    However, there might be situations where once a long running task starts execution, its heartbeats might fail repeatedly yet the task execution continues. ATF would retry this task by polling it from the store consumer because the heartbeat timeouts would’ve expired. This task can then be claimed by another worker and lead to concurrent execution.&#160;<br />
+                                </p>
+                                <p>
+                                    To avoid this situation, there is a termination logic in the Executor processes whereby an Executor process terminates itself as soon as three consecutive heartbeat calls fail. Each heartbeat timeout is large enough to eclipse three consecutive heartbeat failures. This ensures that the Store Consumer cannot pull such tasks before the termination logic ends them—the second method that helps achieve this guarantee.
+                                </p>
+                                <p>
+                                    <b>Isolation<br /></b> Isolation of lambdas is achieved through dedicated worker clusters, dedicated queues, and dedicated per-lambda scheduling quotas. In addition, isolation across different priorities within the same lambda is likewise achieved through dedicated queues and scheduling bandwidth.
+                                </p>
+                                <p>
+                                    <b>Delivery latency<br /></b> ATF use cases do not require ultra-low task delivery latencies. Task delivery latencies on the order of a couple of seconds are acceptable. Tasks ready for execution are periodically polled by the Store Consumer and this period of polling largely controls the task delivery latency. Using this as a tuning lever, ATF can achieve different delivery latencies as required. Increasing poll frequency reduces task delivery latency and vice versa. Currently, we have calibrated ATF to poll for ready tasks once every two seconds.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="ownership-model">
+                                    <h2 class="dr-article-content__section-title">
+                                        Ownership model
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    ATF is designed to be a self-serve framework for developers at Dropbox. The design is very intentional in driving an ownership model where lambda owners own all aspects of their lambdas’ operations. To promote this, all lambda worker clusters are owned by the lambda owners. They have full control over operations on these clusters, including code deployments and capacity management. Each executor process is bound to one lambda. Owners have the option of deploying multiple lambdas on their worker clusters simply by spawning new executor processes on their hosts.
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="-extending-atf">
+                                    <h2 class="dr-article-content__section-title">
+                                        Extending ATF
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    As described above, ATF provides an infrastructural building block for scheduling asynchronous tasks. With this foundation established, ATF can be extended to support more generic use cases and provide more features as a framework. Following are some examples of what could be built as an extension to ATF.&#160;
+                                </p>
+                                <p>
+                                    <b>Periodic task execution<br /></b> Currently, ATF is a system for one-time task scheduling. Building support for periodic task execution as an extension to this framework would be useful in unlocking new capabilities for our clients.
+                                </p>
+                                <p>
+                                    <b>Better support for task chaining<br /></b> Currently, it is possible to chain tasks on ATF by scheduling a task onto ATF that then schedules other tasks onto ATF during its execution. Although it is possible to do this in the current ATF setup, visibility and control on this chaining is absent at the framework level. Another natural extension here would be to better support task chaining through framework-level visibility and control, to make this use case a first class concept in the ATF model.
+                                </p>
+                                <p>
+                                    <b>Dead letter queues for misbehaving tasks<br /></b> One common source of maintenance overhead we observe on ATF is that some tasks get stuck in infinite retry loops due to occasional bugs in lambda logic. This requires manual intervention from the ATF framework owners in some cases where there are a large number of tasks stuck in such loops, occupying a lot of the scheduling bandwidth in the system. Typical manual actions in response to such a situation include pausing execution of the lambdas with misbehaving tasks, or dropping them outright.
+                                </p>
+                                <p>
+                                    One way to reduce this operational overhead and provide an easy interface for lambda owners to recover from such incidents would be to create dead letter queues filled with such misbehaving tasks. The ATF framework could impose a maximum number of retries before tasks are pushed onto the dead letter queue. We could create and expose tools that make it easy to reschedule tasks from the dead letter queue back into the ATF system, once the associated lambda bugs are fixed.<br />
+                                </p>
+                            </div>
+                            <div class="section aem-GridColumn aem-GridColumn--default--12">
+                                <div class="dr-article-content__section" id="conclusion">
+                                    <h2 class="dr-article-content__section-title">
+                                        Conclusion
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="text parbase aem-GridColumn aem-GridColumn--default--12">
+                                <p>
+                                    We hope this post helps engineers elsewhere to develop better async task frameworks of their own. Many thanks to everyone who worked on this project: Anirudh Jayakumar, Deepak Gupta, Dmitry Kopytkov, Koundinya Muppalla, Peng Kang, Rajiv Desai, Ryan Armstrong, Steve Rodrigues, Thomissa Comellas, Xiaonan Zhang and Yuhuan Du.<br />
+                                    &#160;
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="dr-typography-t5 dr-margin-top-50 dr-article-content__divider" />
+                    <div class="dr-typography-t5"></div>
+                    <div class="dr-typography-t5 dr-margin-top-20">
+                        // Tags<br />
+                        <ul class="dr-unstyled-list dr-margin-top-10 dr-typography-t4">
+                            <li class="dr-container--infrastructure dr-display-inline-block dr-margin-right-10 dr-margin-bottom-10">
+                                <a class="dr-link dr-pill dr-pill--primary dr-link--no-underline" href="https://dropbox.tech/infrastructure">Infrastructure</a>
+                            </li>
+                            <li class="dr-display-inline-block dr-margin-right-10">
+                                <a class="dr-link dr-pill dr-link--no-underline" href="https://dropbox.tech/tag-results.task-scheduling">Task Scheduling</a>
+                            </li>
+                            <li class="dr-display-inline-block dr-margin-right-10">
+                                <a class="dr-link dr-pill dr-link--no-underline" href="https://dropbox.tech/tag-results.async">Async</a>
+                            </li>
+                            <li class="dr-display-inline-block dr-margin-right-10">
+                                <a class="dr-link dr-pill dr-link--no-underline" href="https://dropbox.tech/tag-results.edgestore">Edgestore</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dr-typography-t5 dr-margin-top-20 dr-hide-from-md">
+                        // Copy link<br />
+                        <div class="dr-article-content__social-links-tooltip dr-display-none">
+                            Link copied
+                        </div><button class="dr-button dr-button--link dr-link dr-link--no-underline dr-article-content__copy-link" data-dr-tooltip="Copy link"><img alt="Copy link" class="dr-display-block dr-invert-on-theme-dark" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content/resources/copy.svg" /></button>
+                    </div>
+                    <div class="dr-article-content__social-links">
+                        <ul class="dr-article-content__social-links-list dr-unstyled-list">
+                            <li class="dr-margin-bottom-20">
+                                <div class="dr-article-content__social-links-tooltip dr-typography-t5 dr-display-none">
+                                    Link copied
+                                </div><button class="dr-button dr-display-block dr-link dr-link--no-underline dr-article-content__copy-link dr-button--link" data-dr-tooltip="Copy link" data-dr-tooltip-position="cl" data-dr-tooltip-theme="bw"><img alt="Copy link" class="dr-display-block dr-invert-on-theme-dark" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content/resources/copy.svg" /></button>
+                            </li>
+                            <li class="dr-margin-bottom-20">
+                                <a class="dr-link dr-display-block dr-link--no-underline dr-article-content__share-link dr-article-content__twitter-link" data-dr-tooltip="Share on Twitter" data-dr-tooltip-position="cl" data-dr-tooltip-theme="bw" href="https://twitter.com/intent/tweet/?text=How%20we%20designed%20Dropbox%20ATF%3A%20an%20async%20task%20framework&amp;url=https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" target="_blank"><img alt="Share on Twitter" class="dr-display-block dr-invert-on-theme-dark" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content/resources/twitter.svg" /></a>
+                            </li>
+                            <li class="dr-margin-bottom-20">
+                                <a class="dr-link dr-display-block dr-link--no-underline dr-article-content__share-link dr-article-content__facebook-link" data-dr-tooltip="Share on Facebook" data-dr-tooltip-position="cl" data-dr-tooltip-theme="bw" href="https://facebook.com/sharer/sharer.php?u=https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" target="_blank"><img alt="Share on Facebook" class="dr-display-block dr-invert-on-theme-dark" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content/resources/facebook.svg" /></a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-display-block dr-link--no-underline dr-article-content__share-link dr-article-content__linkedin-link" data-dr-tooltip="Share on Linkedin" data-dr-tooltip-position="cl" data-dr-tooltip-theme="bw" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox&amp;title=How%20we%20designed%20Dropbox%20ATF%3A%20an%20async%20task%20framework&amp;source=https://dropbox.tech/infrastructure/asynchronous-task-scheduling-at-dropbox" target="_blank"><img alt="Share on Linkedin" class="dr-display-block dr-invert-on-theme-dark" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content/resources/linkedin.svg" /></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="aem-Grid aem-Grid--12 aem-Grid--default--12">
+            <div class="plain-html c17-plain-html aem-GridColumn aem-GridColumn--default--12">
+                <div class="knotch_placeholder"></div>
+            </div>
+        </div>
+        <footer class="dr-footer">
+            <div class="dr-container--surface">
+                <section class="dr-container__content dr-footer__container">
+                    <div class="dr-newsletter-subscription__succeed dr-display-none dr-typography-t5">
+                        <hr class="dr-newsletter-subscription__form-divider" />
+                        <div class="dr-margin-bottom-30 dr-margin-top-30">
+                            <!--// Thanks for subscribing.-->
+                            <div class="dr-show-block-from-lg">
+                                <img src="/cms/content/dam/dropbox/tech-blog/en-us/subscribe/thanksforsubscribing_desktop.png" title="subscription__success" alt="subscription__success" />
+                            </div>
+                            <div class="dr-show-block-from-md dr-hide-from-lg dr-hide-from-sm">
+                                <img src="/cms/content/dam/dropbox/tech-blog/en-us/subscribe/thanksforsubscribing_tablet.png" title="subscription__success" alt="subscription__success" />
+                            </div>
+                            <div class="dr-show-block-from-sm dr-hide-from-lg dr-hide-from-md">
+                                <img src="/cms/content/dam/dropbox/tech-blog/en-us/subscribe/thanksforsubscribing_mobile.png" title="subscription__success" alt="subscription__success" />
+                            </div>
+                        </div>
+                        <hr class="dr-newsletter-subscription__form-divider" />
+                    </div>
+                    <form role="form" class="dr-typography-t5 dr-newsletter-subscription__form" novalidate="">
+                        <hr class="dr-newsletter-subscription__form-divider" />
+                        <div class="dr-margin-top-30 dr-margin-bottom-30 dr-margin-md-top-10 dr-margin-md-bottom-10">
+                            // Subscribe to email updates by category
+                        </div>
+                        <div class="dr-margin-left-25">
+                            <p class="dr-newsletter-subscription__topic-error dr-display-none dr-color-tangerine">
+                                Select at least one topic
+                            </p><label class="dr-newsletter-subscription__form-label" for="newsletterForm.application"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.application" name="categories[ ]" type="checkbox" value="Application" data-mid="127814" />Application</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.frontend"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.frontend" name="categories[ ]" type="checkbox" value="Front End" data-mid="127842" />Front End</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.infrastructure"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.infrastructure" name="categories[ ]" type="checkbox" value="Infrastructure" data-mid="127826" />Infrastructure</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.machine-learning"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.machine-learning" name="categories[ ]" type="checkbox" value="Machine Learning" data-mid="127830" />Machine Learning</label><br class="dr-show-block-from-md" />
+                            <label class="dr-newsletter-subscription__form-label" for="newsletterForm.mobile"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.mobile" name="categories[ ]" type="checkbox" value="Mobile" data-mid="127834" />Mobile</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.security"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.security" name="categories[ ]" type="checkbox" value="Security" data-mid="127838" />Security</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.developers"><input class="dr-newsletter-subscription__form-checkbox dr-input" id="newsletterForm.developers" name="categories[ ]" type="checkbox" value="Developers" data-mid="129642" />Developers</label> <label class="dr-newsletter-subscription__form-label" for="newsletterForm.all"><input class="dr-newsletter-subscription__form-checkbox dr-newsletter-subscription__form-checkbox--all dr-input" id="newsletterForm.all" type="checkbox" />All</label>
+                        </div>
+                        <p class="dr-newsletter-subscription__error dr-display-none dr-color-tangerine">
+                            Error occurred!<br />
+                            Please try again later
+                        </p>
+                        <p class="dr-newsletter-subscription__email-error dr-display-none dr-color-tangerine">
+                            Enter a valid address
+                        </p>
+                        <div class="dr-newsletter-subscription__email-container dr-margin-bottom-20 dr-margin-top-40 dr-margin-md-top-0">
+                            <div>
+                                // Type your email address
+                            </div><input autocomplete="off" class="dr-newsletter-subscription__form-input dr-flex-1" name="email" type="email" />
+                            <div class="dr-newsletter-subscription__actions-container">
+                                <div class="dr-newsletter-subscription__loading dr-display-none">
+                                    Submitting...
+                                </div><button type="submit" disabled="disabled" class="dr-newsletter-subscription__form-submit dr-button dr-typography-t5">Subscribe</button>
+                            </div>
+                        </div>
+                        <hr class="dr-newsletter-subscription__form-divider" />
+                    </form>
+                    <div class="dr-grid dr-grid--md-2">
+                        <div>
+                            <a href="https://dropbox.com" target="_blank" class="dr-margin-bottom-20 dr-display-block"><img alt="Dropbox" height="40" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-all/resources/logo_dropbox.svg" width="164" /></a>
+                        </div>
+                        <ul class="dr-footer-links dr-unstyled-list dr-typography-t10 dr-grid dr-grid--2 dr-grid--column-gap-15">
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="http://dropbox.com/jobs" target="_blank">Jobs</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://medium.com/@Dropbox" target="_blank">Medium</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://www.dropbox.com/privacy" target="_blank">Privacy</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://twitter.com/Dropbox" target="_blank">twitter</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://www.dropbox.com/terms" target="_blank">Terms</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://www.instagram.com/dropbox" target="_blank">Instagram</a>
+                            </li>
+                            <li>
+                                <a class="dr-link dr-link--no-underline" href="https://blog.dropbox.com/" target="_blank">Work In Progress</a>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </footer>
+        <div id="u04-snapengage-config" data-snapengage-widget-id="d5c1efed-d0ef-4fca-8c7d-faff398ad272" data-proactive-chat="false" style="display:none;"></div>
+        <script type="text/javascript" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-common/clientlib-cms-common.7f3cf4624fd698d8bfec572c3c993880.js"></script> 
+        <script type="text/javascript" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-all.3230e3eaa6e5a90686710bfde829f620.js"></script> 
+        <script type="text/javascript" src="/cms/etc.clientlibs/settings/wcm/designs/dropbox-tech-blog/clientlib-article-content.2c12dd2925c2dcad6bde22d2ff271137.js"></script> 
+        <script type="application/javascript">
+        <![CDATA[
+        document.body.classList.remove('stormcrow-animate');
+        ]]>
+        </script> <noscript></noscript>
+    </body>
+</html>
