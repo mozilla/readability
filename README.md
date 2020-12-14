@@ -95,23 +95,25 @@ To test local changes to Readability.js, you can use the [automated tests](#test
 
 ## Tests
 
-Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines.
+Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines:
+
+    $ npm run lint
 
 To run the test suite:
 
-    $ mocha test/test-*.js
+    $ npm test
 
 To run a specific test page by its name:
 
-    $ mocha test/test-*.js -g 001
+    $ npm test -- -g 001
 
 To run the test suite in TDD mode:
 
-    $ mocha test/test-*.js -w
+    $ npm test -- -w
 
 Combo time:
 
-    $ mocha test/test-*.js -w -g 001
+    $ npm test -- -w -g 001
 
 ## Benchmarks
 
