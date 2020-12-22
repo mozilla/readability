@@ -60,31 +60,32 @@ function Readability(doc, options) {
                 this.FLAG_WEIGHT_CLASSES |
                 this.FLAG_CLEAN_CONDITIONALLY;
 
-  var logEl;
 
   // Control whether log messages are sent to the console
   if (this._debug) {
-    logEl = function(e) {
-      var rv = e.nodeName + " ";
-      if (e.nodeType == e.TEXT_NODE) {
-        return rv + '("' + e.textContent + '")';
+    let logNode = function(node) {
+      if (node.nodeType == node.TEXT_NODE) {
+        return `${node.nodeName} ("${node.textContent}")`;
       }
-      var classDesc = e.className && ("." + e.className.replace(/ /g, "."));
-      var elDesc = "";
-      if (e.id)
-        elDesc = "(#" + e.id + classDesc + ")";
-      else if (classDesc)
-        elDesc = "(" + classDesc + ")";
-      return rv + elDesc;
+      let attrPairs = Array.from(node.attributes || [], function(attr) {
+        return `${attr.name}="${attr.value}"`;
+      }).join(" ");
+      return `<${node.localName} ${attrPairs}>`;
     };
     this.log = function () {
       if (typeof dump !== "undefined") {
         var msg = Array.prototype.map.call(arguments, function(x) {
-          return (x && x.nodeName) ? logEl(x) : x;
+          return (x && x.nodeName) ? logNode(x) : x;
         }).join(" ");
         dump("Reader: (Readability) " + msg + "\n");
       } else if (typeof console !== "undefined") {
-        var args = ["Reader: (Readability) "].concat(arguments);
+        let args = Array.from(arguments, arg => {
+          if (arg && arg.nodeType == this.ELEMENT_NODE) {
+            return logNode(arg);
+          }
+          return arg;
+        });
+        args.unshift("Reader: (Readability)");
         console.log.apply(console, args);
       }
     };
@@ -883,6 +884,7 @@ Readability.prototype = {
     var pageCacheHtml = page.innerHTML;
 
     while (true) {
+      this.log("Starting grabArticle loop");
       var stripUnlikelyCandidates = this._flagIsActive(this.FLAG_STRIP_UNLIKELYS);
 
       // First, node prepping. Trash nodes that look cruddy (like ones with the
@@ -890,6 +892,8 @@ Readability.prototype = {
       // used inappropriately (as in, where they contain no other block level elements.)
       var elementsToScore = [];
       var node = this._doc.documentElement;
+
+      let shouldRemoveTitleHeader = true;
 
       while (node) {
         var matchString = node.className + " " + node.id;
@@ -902,6 +906,13 @@ Readability.prototype = {
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
+          node = this._removeAndGetNext(node);
+          continue;
+        }
+
+        if (shouldRemoveTitleHeader && this._headerDuplicatesTitle(node)) {
+          this.log("Removing header: ", node.textContent.trim(), this._articleTitle.trim());
+          shouldRemoveTitleHeader = false;
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -2135,14 +2146,30 @@ Readability.prototype = {
    * @return void
   **/
   _cleanHeaders: function(e) {
-    var headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
-    var nodeToRemove = this._findNode(headingNodes, (node) => {
-      var heading = this._getInnerText(node, false);
-      return this._textSimilarity(this._articleTitle, heading) > 0.75 || this._getClassWeight(node) < 0;
+    let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
+    this._removeNodes(headingNodes, function(node) {
+      let shouldRemove = this._getClassWeight(node) < 0;
+      if (shouldRemove) {
+        this.log("Removing header with low class weight:", node);
+      }
+      return shouldRemove;
     });
-    if (nodeToRemove) {
-      this._removeNodes([nodeToRemove]);
+  },
+
+  /**
+   * Check if this node is an H1 or H2 element whose content is mostly
+   * the same as the article title.
+   *
+   * @param Element  the node to check.
+   * @return boolean indicating whether this is a title-like header.
+   */
+  _headerDuplicatesTitle: function(node) {
+    if (node.tagName != "H1" && node.tagName != "H2") {
+      return false;
     }
+    var heading = this._getInnerText(node, false);
+    this.log("Evaluating similarity of header:", heading, this._articleTitle);
+    return this._textSimilarity(this._articleTitle, heading) > 0.75;
   },
 
   _flagIsActive: function(flag) {
