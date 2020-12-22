@@ -63,7 +63,7 @@ function Readability(doc, options) {
 
   // Control whether log messages are sent to the console
   if (this._debug) {
-    function logNode(node) {
+    let logNode = function(node) {
       if (node.nodeType == node.TEXT_NODE) {
         return node.nodeName + ' ("' + node.textContent + '")';
       }
@@ -2156,13 +2156,13 @@ Readability.prototype = {
     });
   },
 
-   /**
-    * CHeck if this node is an H1 or H2 element whose content is mostly
-    * the same as the article title.
-    *
-    * @param Element  the node to check.
-    * @return boolean indicating whether this is a title-like header.
-    */
+  /**
+   * Check if this node is an H1 or H2 element whose content is mostly
+   * the same as the article title.
+   *
+   * @param Element  the node to check.
+   * @return boolean indicating whether this is a title-like header.
+   */
   _headerDuplicatesTitle: function(node) {
     if (node.tagName != "H1" && node.tagName != "H2") {
       return false;
