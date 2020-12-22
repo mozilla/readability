@@ -60,31 +60,32 @@ function Readability(doc, options) {
                 this.FLAG_WEIGHT_CLASSES |
                 this.FLAG_CLEAN_CONDITIONALLY;
 
-  var logEl;
 
   // Control whether log messages are sent to the console
   if (this._debug) {
-    logEl = function(e) {
-      var rv = e.nodeName + " ";
-      if (e.nodeType == e.TEXT_NODE) {
-        return rv + '("' + e.textContent + '")';
+    function logNode(node) {
+      if (node.nodeType == node.TEXT_NODE) {
+        return node.nodeName + ' ("' + node.textContent + '")';
       }
-      var classDesc = e.className && ("." + e.className.replace(/ /g, "."));
-      var elDesc = "";
-      if (e.id)
-        elDesc = "(#" + e.id + classDesc + ")";
-      else if (classDesc)
-        elDesc = "(" + classDesc + ")";
-      return rv + elDesc;
+      return "<" + node.localName + " " + (
+        Array.from(node.attributes, function(attr) {
+          return attr.name + "='" + attr.value + "'";
+        }).join(" ") + ">");
     };
     this.log = function () {
       if (typeof dump !== "undefined") {
         var msg = Array.prototype.map.call(arguments, function(x) {
-          return (x && x.nodeName) ? logEl(x) : x;
+          return (x && x.nodeName) ? logNode(x) : x;
         }).join(" ");
         dump("Reader: (Readability) " + msg + "\n");
       } else if (typeof console !== "undefined") {
-        var args = ["Reader: (Readability) "].concat(arguments);
+        let args = Array.from(arguments, arg => {
+          if (arg && arg.nodeType == this.ELEMENT_NODE) {
+            return logNode(arg);
+          }
+          return arg;
+        });
+        args.unshift("Reader: (Readability)");
         console.log.apply(console, args);
       }
     };
@@ -883,6 +884,7 @@ Readability.prototype = {
     var pageCacheHtml = page.innerHTML;
 
     while (true) {
+      this.log("Starting grabArticle loop");
       var stripUnlikelyCandidates = this._flagIsActive(this.FLAG_STRIP_UNLIKELYS);
 
       // First, node prepping. Trash nodes that look cruddy (like ones with the
