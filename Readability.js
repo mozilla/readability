@@ -65,12 +65,12 @@ function Readability(doc, options) {
   if (this._debug) {
     let logNode = function(node) {
       if (node.nodeType == node.TEXT_NODE) {
-        return node.nodeName + ' ("' + node.textContent + '")';
+        return `${node.nodeName} ("${node.textContent}")`;
       }
-      return "<" + node.localName + " " + (
-        Array.from(node.attributes, function(attr) {
-          return attr.name + "='" + attr.value + "'";
-        }).join(" ") + ">");
+      let attrPairs = Array.from(node.attributes || [], function(attr) {
+        return `${attr.name}="${attr.value}"`;
+      }).join(" ");
+      return `<${node.localName} ${attrPairs}>`;
     };
     this.log = function () {
       if (typeof dump !== "undefined") {
