@@ -893,6 +893,8 @@ Readability.prototype = {
       var elementsToScore = [];
       var node = this._doc.documentElement;
 
+      let shouldRemoveTitleHeader = true;
+
       while (node) {
         var matchString = node.className + " " + node.id;
 
@@ -904,6 +906,13 @@ Readability.prototype = {
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
+          node = this._removeAndGetNext(node);
+          continue;
+        }
+
+        if (shouldRemoveTitleHeader && this._headerDuplicatesTitle(node)) {
+          this.log("Removing header: ", node.textContent.trim(), this._articleTitle.trim());
+          shouldRemoveTitleHeader = false;
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -2137,14 +2146,30 @@ Readability.prototype = {
    * @return void
   **/
   _cleanHeaders: function(e) {
-    var headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
-    var nodeToRemove = this._findNode(headingNodes, (node) => {
-      var heading = this._getInnerText(node, false);
-      return this._textSimilarity(this._articleTitle, heading) > 0.75 || this._getClassWeight(node) < 0;
+    let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
+    this._removeNodes(headingNodes, function(node) {
+      let shouldRemove = this._getClassWeight(node) < 0;
+      if (shouldRemove) {
+        this.log("Removing header with low class weight:", node);
+      }
+      return shouldRemove;
     });
-    if (nodeToRemove) {
-      this._removeNodes([nodeToRemove]);
+  },
+
+   /**
+    * CHeck if this node is an H1 or H2 element whose content is mostly
+    * the same as the article title.
+    *
+    * @param Element  the node to check.
+    * @return boolean indicating whether this is a title-like header.
+    */
+  _headerDuplicatesTitle: function(node) {
+    if (node.tagName != "H1" && node.tagName != "H2") {
+      return false;
     }
+    var heading = this._getInnerText(node, false);
+    this.log("Evaluating similarity of header:", heading, this._articleTitle);
+    return this._textSimilarity(this._articleTitle, heading) > 0.75;
   },
 
   _flagIsActive: function(flag) {
