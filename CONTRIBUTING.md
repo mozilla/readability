@@ -63,7 +63,7 @@ breaking it in future.
 
 ## Steps to release
 
-1. Ensure [CHANGELOG.md](CHANGELOG.md) is up-to-date. ``git log v`npm view . version`...master `` may help with this.
+1. Ensure [CHANGELOG.md](CHANGELOG.md) is up-to-date. ``git log `npm view . version`...master `` may help with this.
 2. Run `npm run release` to create a release, which should:
 2a. `npm version [patch | minor | major]`, depending on the nature of the changes according to
 [semver](https://semver.org/). This will bump the version in `package.json` and `package-lock.json`
