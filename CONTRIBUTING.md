@@ -65,11 +65,11 @@ breaking it in future.
 
 1. Ensure [CHANGELOG.md](CHANGELOG.md) is up-to-date. ``git log `npm view . version`...master `` may help with this.
 2. Run `npm run release` to create a release, which should:
-2a. `npm version [patch | minor | major]`, depending on the nature of the changes according to
+     1. `npm version [patch | minor | major]`, depending on the nature of the changes according to
 [semver](https://semver.org/). This will bump the version in `package.json` and `package-lock.json`
 and create a commit and Git tag for the release.
-2b. `npm publish` to push the release to the npm registry.
-2c. `git push origin head --follow-tags` to push the new commit and tag to GitHub.
+     2. `npm publish` to push the release to the npm registry.
+     3. `git push origin head --follow-tags` to push the new commit and tag to GitHub.
 
 ## Keeping a changelog
 
