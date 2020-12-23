@@ -11,7 +11,7 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
-## [Unreleased]
+## [0.4.0] - 2020-12-23
 
 ### Added
 
