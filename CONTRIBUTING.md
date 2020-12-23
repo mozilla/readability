@@ -1,6 +1,6 @@
 # Contributing
 
-[![Build Status](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/badge.svg)](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/latest)
+Thank you for wanting to help make `readability` better!
 
 For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
 
@@ -8,7 +8,13 @@ Any changes to the main code should be reviewed by an [appropriate Firefox/toolk
 
 To test local changes to Readability.js, you can use the [automated tests](#tests).
 
+This repository is governed by Mozilla's code of conduct and etiquette guidelines. 
+For more details, please read the
+[Mozilla Community Participation Guidelines](https://www.mozilla.org/about/governance/policies/participation/). 
+
 ## Tests
+
+[![Build Status](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/badge.svg)](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/latest)
 
 Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines:
 
