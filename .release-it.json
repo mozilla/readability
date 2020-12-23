@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "@release-it/keep-a-changelog": {
+      "filename": "CHANGELOG.md"
+    }
+  },
+  "github": {
+    "release": false
+  }
+}

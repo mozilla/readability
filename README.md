@@ -85,45 +85,7 @@ good sanitizer libraries out there, use them!
 
 ## Contributing
 
-[![Build Status](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/badge.svg)](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/latest)
-
-For outstanding issues, see the issue list in this repo, as well as this [bug list](https://bugzilla.mozilla.org/buglist.cgi?component=Reader%20Mode&product=Toolkit&bug_status=__open__&limit=0).
-
-Any changes to Readability.js itself should be reviewed by an [appropriate Firefox/toolkit peer](https://wiki.mozilla.org/Modules/Firefox), such as [@gijsk](https://github.com/gijsk), since these changes will be merged to mozilla-central and shipped in Firefox.
-
-To test local changes to Readability.js, you can use the [automated tests](#tests). There's a [node script](https://github.com/mozilla/readability/blob/master/test/generate-testcase.js) to help you create new ones.
-
-## Tests
-
-Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines:
-
-    $ npm run lint
-
-To run the test suite:
-
-    $ npm test
-
-To run a specific test page by its name:
-
-    $ npm test -- -g 001
-
-To run the test suite in TDD mode:
-
-    $ npm test -- -w
-
-Combo time:
-
-    $ npm test -- -w -g 001
-
-## Benchmarks
-
-Benchmarks for all test pages:
-
-    $ npm run perf
-
-Reference benchmark:
-
-    $ npm run perf-reference
+Please see our [Contributing](CONTRIBUTING.md) document.
 
 ## License
 

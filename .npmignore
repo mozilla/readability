@@ -1,4 +1,5 @@
 /benchmarks/
 /test/
 .gitattributes
-.travis.yml
+.release-it.json
+.taskcluster.yml
