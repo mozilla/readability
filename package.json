@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "test": "mocha test/test-*.js",
