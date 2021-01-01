@@ -14,7 +14,7 @@ export function isProbablyReaderable(
   }
 ): boolean;
 
-export class Readability {
+export class Readability<T = string> {
   constructor(
     document: Document,
     options?: {
@@ -24,7 +24,7 @@ export class Readability {
       charThreshold?: number;
       classesToPreserve?: string[];
       keepClasses?: boolean;
-      serializer?: (node: Node) => string;
+      serializer?: (node: Node) => T;
       disableJSONLD?: boolean;
     }
   );
@@ -36,8 +36,8 @@ export class Readability {
     byline: string;
     /** content direction */
     dir: string;
-    /** HTML string of processed article content */
-    content: string;
+    /** HTML of processed article content */
+    content: T;
     /** text content of the article (all HTML removed) */
     textContent: string;
     /** length of an article, in characters */
