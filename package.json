@@ -8,8 +8,6 @@
     "lint": "eslint .",
     "test": "mocha test/test-*.js",
     "generate-testcase": "node test/generate-testcase.js",
-    "perf": "matcha benchmarks/benchmarks.js",
-    "perf-reference": "READABILITY_PERF_REFERENCE=1 matcha --reporter ./benchmarks/benchmark-reporter.js benchmarks/benchmarks.js",
     "release": "release-it"
   },
   "repository": {
@@ -32,7 +30,6 @@
     "htmltidy2": "^0.3.0",
     "js-beautify": "^1.13.0",
     "jsdom": "^13.1",
-    "matcha": "^0.6.0",
     "mocha": "^8.2.0",
     "release-it": "^14.2.2",
     "sinon": "^7.3.2"
