@@ -47,16 +47,6 @@ You can run it using:
 Replacing `slug` with the identifier the test should use, and providing a URL
 to an actual article on which the test should be based.
 
-## Benchmarks
-
-Benchmarks for all test pages:
-
-    $ npm run perf
-
-Reference benchmark:
-
-    $ npm run perf-reference
-
 ## Pull Requests
 
 We're always happy to see pull requests to improve readability.
