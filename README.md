@@ -51,6 +51,24 @@ var article = new Readability(documentClone).parse();
 
 A quick-and-dirty way of figuring out if it's plausible that the contents of a given document are suitable for processing with Readability. It is likely to produce both false positives and false negatives. The reason it exists is to avoid bogging down a time-sensitive process (like loading and showing the user a webpage) with the complex logic in the core of Readability. Improvements to its logic (while not deteriorating its performance) are very welcome.
 
+The `options` object accepts a number of properties, all optional:
+
+* `minContentLength` (number, default `140`): the minimum node content length used to decide if the document is readerable;
+* `minScore` (number, default `20`): the minumum cumulated 'score' used to determine if the document is readerable;
+* `visibilityChecker` (function, default `isNodeVisible`): the function used to determine if a node is visible;
+
+The function returns a boolean corresponding to whether or not we suspect `Readability.parse()` will suceeed at returning an article object. Here's an example:
+
+```js
+/* 
+    Only instantiate Readability  if we suspect 
+    the `parse()` method will produce a meaningful result.
+*/
+if (isProbablyReaderable(document)) {
+    let article = new Readability(document).parse();
+}
+```
+
 ## Node.js usage
 
 Readability is available on npm:
