@@ -2,6 +2,16 @@
 
 A standalone version of the readability library used for Firefox Reader View.
 
+## Installation
+
+Readability is available on npm:
+
+```bash
+npm install @mozilla/readability
+```
+
+You can then `require()` it, or for web-based projects, load the `Readability.js` script from your webpage.
+
 ## Basic usage
 
 To parse a document, you must create a new `Readability` object from a DOM document object, and then call the [`parse()`](#parse) method. Here's an example:
@@ -70,12 +80,6 @@ if (isProbablyReaderable(document)) {
 ```
 
 ## Node.js usage
-
-Readability is available on npm:
-
-```bash
-npm install @mozilla/readability
-```
 
 Since Node.js does not come with its own DOM implementation, we rely on external libraries like [jsdom](https://github.com/jsdom/jsdom). Here's an example using `jsdom` to obtain a DOM document object:
 
