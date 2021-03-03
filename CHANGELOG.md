@@ -11,6 +11,10 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
+## [Unreleased]
+
+- Fix compatibility with DOM implementations where the `childNodes` property is not live.
+
 ## [0.4.1] - 2021-01-13
 
 ### Added
