@@ -1985,7 +1985,7 @@ Readability.prototype = {
 
       for (var j = 0; j < elem.attributes.length; j++) {
         attr = elem.attributes[j];
-        if (attr.name === "src" || attr.name === "srcset") {
+        if (attr.name === "src" || attr.name === "srcset" || attr.name === "alt") {
           continue;
         }
         var copyTo = null;
