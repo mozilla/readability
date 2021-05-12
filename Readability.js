@@ -1778,9 +1778,9 @@ Readability.prototype = {
     var weight = 0;
 
     // If the element is an image and size is big enough, increase weight
-    if (e.tagName === 'IMG') {
+    if (e.tagName === "IMG") {
       if (e.width > 400 && e.height > 400) {
-        weight += 50
+        weight += 50;
       } else if (e.width > 200 && e.height > 200) {
         weight += 25;
       }
