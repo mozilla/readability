@@ -1807,10 +1807,27 @@ Readability.prototype = {
     return weight;
   },
 
+  _contains (parent, child) {
+    if (parent.contains) {
+      return parent.contains(child);
+    }
+
+    // For JSDOM, which does not have contains function
+    let p = child.parentNode;
+    while (p) {
+      if (p === parent) {
+        return true;
+      }
+      p = p.parentNode;
+    }
+
+    return false;
+  },
+
   _getTotalClassWeight: function(node) {
     let weight = this._getClassWeight(node);
     let nextNode = this._getNextNode(node, false);
-    while (nextNode && node.contains(nextNode)) {
+    while (nextNode && this._contains(node, nextNode)) {
       weight += this._getClassWeight(nextNode);
       nextNode = this._getNextNode(nextNode, false);
     }
