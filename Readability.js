@@ -1810,7 +1810,7 @@ Readability.prototype = {
   _getTotalClassWeight: function(node) {
     let weight = this._getClassWeight(node);
 
-    let children = node.getElementsByTagName('*');
+    let children = node.getElementsByTagName("*");
     for (const child of children) {
       weight += this._getClassWeight(child);
     }
