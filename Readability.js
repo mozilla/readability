@@ -390,8 +390,8 @@ Readability.prototype = {
           } else {
             // if the link has multiple children, they should all be preserved
             var container = this._doc.createElement("span");
-            while (link.childNodes.length > 0) {
-              container.appendChild(link.childNodes[0]);
+            while (link.firstChild) {
+              container.appendChild(link.firstChild);
             }
             link.parentNode.replaceChild(container, link);
           }
@@ -1085,10 +1085,9 @@ Readability.prototype = {
         neededToCreateTopCandidate = true;
         // Move everything (not just elements, also text nodes etc.) into the container
         // so we even include text directly in the body:
-        var kids = page.childNodes;
-        while (kids.length) {
-          this.log("Moving child out:", kids[0]);
-          topCandidate.appendChild(kids[0]);
+        while (page.firstChild) {
+          this.log("Moving child out:", page.firstChild);
+          topCandidate.appendChild(page.firstChild);
         }
 
         page.appendChild(topCandidate);
