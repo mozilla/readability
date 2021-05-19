@@ -1218,6 +1218,9 @@ Readability.prototype = {
           }
 
           articleContent.appendChild(sibling);
+          // Fetch children again to make it compatible
+          // with DOM parsers without live collection support.
+          siblings = parentOfTopCandidate.children;
           // siblings is a reference to the children array, and
           // sibling is removed from the array when we call appendChild().
           // As a result, we must revisit this index since the nodes
