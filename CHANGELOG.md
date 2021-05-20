@@ -13,7 +13,8 @@ reasonable).
 
 ## [Unreleased]
 
-- Fix compatibility with DOM implementations where the `childNodes` property is not live.
+- Fix [compatibility with DOM implementations where the `childNodes` property is not live](https://github.com/mozilla/readability/pull/694) ([x2](https://github.com/mozilla/readability/pull/677)).
+- Lazily-loaded image references [will no longer use the `alt` attribute](https://github.com/mozilla/readability/pull/689) to find images.
 
 ## [0.4.1] - 2021-01-13
 
@@ -25,7 +26,7 @@ reasonable).
 
 ### Added
 
-- `isProbablyReaderable` can now take an optional options object to configure it,
+- `isProbablyReaderable` [can now take an optional options object](https://github.com/mozilla/readability/pull/634) to configure it,
 allowing you to specify the minimum content length, minimum score, and how to
 check if nodes are visible.
 
