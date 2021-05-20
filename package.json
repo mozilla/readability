@@ -26,12 +26,12 @@
   "devDependencies": {
     "@release-it/keep-a-changelog": "^2.2.2",
     "chai": "^2.1.*",
-    "eslint": ">=4.2",
+    "eslint": "^7.26.0",
     "htmltidy2": "^0.3.0",
-    "js-beautify": "^1.13.0",
+    "js-beautify": "^1.13.13",
     "jsdom": "^13.1",
-    "mocha": "^8.2.0",
-    "release-it": "^14.2.2",
+    "mocha": "^8.4.0",
+    "release-it": "^14.6.2",
     "sinon": "^7.3.2"
   }
 }
