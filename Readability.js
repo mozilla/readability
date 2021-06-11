@@ -1777,15 +1777,6 @@ Readability.prototype = {
 
     var weight = 0;
 
-    // If the element is an image and size is big enough, increase weight
-    if (e.tagName === "IMG") {
-      if (e.width > 400 && e.height > 400) {
-        weight += 50;
-      } else if (e.width > 200 && e.height > 200) {
-        weight += 25;
-      }
-    }
-
     // Look for a special classname
     if (typeof(e.className) === "string" && e.className !== "") {
       if (this.REGEXPS.negative.test(e.className))
@@ -1802,17 +1793,6 @@ Readability.prototype = {
 
       if (this.REGEXPS.positive.test(e.id))
         weight += 25;
-    }
-
-    return weight;
-  },
-
-  _getTotalClassWeight: function(node) {
-    let weight = this._getClassWeight(node);
-
-    let children = node.getElementsByTagName("*");
-    for (const child of children) {
-      weight += this._getClassWeight(child);
     }
 
     return weight;
@@ -2083,9 +2063,23 @@ Readability.prototype = {
         return false;
       }
 
-      // Calculate the weight of a node based on its own weight
-      // plus its children weight
-      var weight = this._getTotalClassWeight(node);
+      var hasImage = false;
+      if (node.querySelector) {
+        if (node.querySelector("img")) {
+          hasImage = true;
+        }
+      } else {
+        var images = node.getElementsByTagName("img");
+        if (images && images.length > 0) {
+          hasImage = true;
+        }
+      }
+
+      if (hasImage) {
+        return false;
+      }
+
+      var weight = this._getClassWeight(node);
 
       this.log("Cleaning Conditionally", node);
 
