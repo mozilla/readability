@@ -542,11 +542,11 @@ Readability.prototype = {
     // Remove all style tags in head
     this._removeNodes(this._getAllNodesWithTag(doc, ["style"]));
 
+    this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
+
     if (doc.body) {
       this._replaceBrs(doc.body);
     }
-
-    this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
   },
 
   /**
