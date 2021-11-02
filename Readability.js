@@ -1357,72 +1357,74 @@ Readability.prototype = {
   _getJSONLD: function (doc) {
     var scripts = this._getAllNodesWithTag(doc, ["script"]);
 
-    var jsonLdElement = this._findNode(scripts, function(el) {
-      return el.getAttribute("type") === "application/ld+json";
-    });
+    var metadata;
 
-    if (jsonLdElement) {
-      try {
-        // Strip CDATA markers if present
-        var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "");
-        var parsed = JSON.parse(content);
-        var metadata = {};
-        if (
-          !parsed["@context"] ||
-          !parsed["@context"].match(/^https?\:\/\/schema\.org$/)
-        ) {
-          return metadata;
-        }
-
-        if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
-          parsed = parsed["@graph"].find(function(it) {
-            return (it["@type"] || "").match(
-              this.REGEXPS.jsonLdArticleTypes
-            );
-          });
-        }
-
-        if (
-          !parsed ||
-          !parsed["@type"] ||
-          !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)
-        ) {
-          return metadata;
-        }
-        if (typeof parsed.name === "string") {
-          metadata.title = parsed.name.trim();
-        } else if (typeof parsed.headline === "string") {
-          metadata.title = parsed.headline.trim();
-        }
-        if (parsed.author) {
-          if (typeof parsed.author.name === "string") {
-            metadata.byline = parsed.author.name.trim();
-          } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
-            metadata.byline = parsed.author
-              .filter(function(author) {
-                return author && typeof author.name === "string";
-              })
-              .map(function(author) {
-                return author.name.trim();
-              })
-              .join(", ");
+    this._forEachNode(scripts, function(jsonLdElement) {
+      if (!metadata && jsonLdElement.getAttribute("type") === "application/ld+json") {
+        try {
+          // Strip CDATA markers if present
+          var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "");
+          var parsed = JSON.parse(content);
+          if (
+            !parsed["@context"] ||
+            !parsed["@context"].match(/^https?\:\/\/schema\.org$/)
+          ) {
+            return;
           }
+
+          if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
+            parsed = parsed["@graph"].find(function(it) {
+              return (it["@type"] || "").match(
+                this.REGEXPS.jsonLdArticleTypes
+              );
+            });
+          }
+
+          if (
+            !parsed ||
+            !parsed["@type"] ||
+            !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)
+          ) {
+            return;
+          }
+
+          metadata = {};
+
+          if (typeof parsed.name === "string") {
+            metadata.title = parsed.name.trim();
+          } else if (typeof parsed.headline === "string") {
+            metadata.title = parsed.headline.trim();
+          }
+          if (parsed.author) {
+            if (typeof parsed.author.name === "string") {
+              metadata.byline = parsed.author.name.trim();
+            } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
+              metadata.byline = parsed.author
+                .filter(function(author) {
+                  return author && typeof author.name === "string";
+                })
+                .map(function(author) {
+                  return author.name.trim();
+                })
+                .join(", ");
+            }
+          }
+          if (typeof parsed.description === "string") {
+            metadata.excerpt = parsed.description.trim();
+          }
+          if (
+            parsed.publisher &&
+            typeof parsed.publisher.name === "string"
+          ) {
+            metadata.siteName = parsed.publisher.name.trim();
+          }
+          return;
+        } catch (err) {
+          this.log(err.message);
         }
-        if (typeof parsed.description === "string") {
-          metadata.excerpt = parsed.description.trim();
-        }
-        if (
-          parsed.publisher &&
-          typeof parsed.publisher.name === "string"
-        ) {
-          metadata.siteName = parsed.publisher.name.trim();
-        }
-        return metadata;
-      } catch (err) {
-        this.log(err.message);
       }
-    }
-    return {};
+    });
+    return metadata ? metadata : {};
   },
 
   /**
