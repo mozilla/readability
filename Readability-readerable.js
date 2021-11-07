@@ -55,6 +55,21 @@ function isProbablyReaderable(doc, options = {}) {
 
   var nodes = doc.querySelectorAll("p, pre");
 
+  // Get <div> nodes which meets certain criteria them into the `nodes` variable.
+  var set = new Set(nodes);
+  var divs = doc.querySelectorAll("div");
+  if (divs.length) {
+    [].forEach.call(divs, function (node) {
+      // add the parent node of divs that have no child elements and contain a small amount of text
+      if (!node.children.length && node.textContent.length < options.minContentLength) {
+        set.add(node.parentNode);
+      // divs that only contain inline text
+      } else if (![].some.call(node.children, child => !["A", "BR", "SPAN", "PRE"].includes(child.nodeName))) {
+        set.add(node);
+      }
+    });
+  }
+
   // Get <div> nodes which have <br> node(s) and append them into the `nodes` variable.
   // Some articles' DOM structures might look like
   // <div>
@@ -64,12 +79,14 @@ function isProbablyReaderable(doc, options = {}) {
   // </div>
   var brNodes = doc.querySelectorAll("div > br");
   if (brNodes.length) {
-    var set = new Set(nodes);
     [].forEach.call(brNodes, function (node) {
       set.add(node.parentNode);
     });
-    nodes = Array.from(set);
   }
+
+  // rebuild `nodes` list from unique set
+  nodes = Array.from(set);
+
 
   var score = 0;
   // This is a little cheeky, we use the accumulator 'score' to decide what to return from
@@ -89,7 +106,7 @@ function isProbablyReaderable(doc, options = {}) {
       return false;
     }
 
-    var textContentLength = node.textContent.trim().length;
+    var textContentLength = node.textContent.trim().replace(/\s+/g, ' ').length;
     if (textContentLength < options.minContentLength) {
       return false;
     }
