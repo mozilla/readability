@@ -106,7 +106,7 @@ function isProbablyReaderable(doc, options = {}) {
       return false;
     }
 
-    var textContentLength = node.textContent.trim().replace(/\s+/g, ' ').length;
+    var textContentLength = node.textContent.trim().replace(/\s+/g, " ").length;
     if (textContentLength < options.minContentLength) {
       return false;
     }
