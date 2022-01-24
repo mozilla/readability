@@ -897,11 +897,8 @@ Readability.prototype = {
 
       while (node) {
 
-        if(node.tagName === "HTML") {
-          var articleLang = node.getAttribute("lang");
-          if(articleLang) {
-            this._articleLang = articleLang;
-          }
+        if (node.tagName === "HTML") {
+          this._articleLang = node.getAttribute("lang");
         }
 
         var matchString = node.className + " " + node.id;
