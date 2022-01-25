@@ -177,7 +177,7 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       expect(result.dir).eql(expectedMetadata.dir);
     });
 
-    expectedMetadata.lang && it("should extract expected direction", function() {
+    expectedMetadata.lang && it("should extract expected language", function() {
       expect(result.lang).eql(expectedMetadata.lang);
     });
   });
