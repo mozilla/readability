@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" class="no-js" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="license" href="#license" />
+        <link rel="profile" href="https://gmpg.org/xfn/11" />
+        <link rel="shortcut icon" type="image/png" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/img/favicon.png" /><!--[if IE]>
+  <meta name="MSSmartTagsPreventParsing" content="true">
+  <meta http-equiv="imagetoolbar" content="no">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <![endif]-->
+        <!--[if lte IE 8]>
+  <script src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/js/html5.js"></script>
+  <link rel="shortcut icon" type="image/x-icon" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/img/favicon.ico">
+  <link rel="stylesheet" type="text/css" media="all" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/oldIE.css">
+  <![endif]-->
+
+        <style type="text/css">
+        /*<![CDATA[*/
+        @media screen and (min-width: 480px) {
+        #masthead {
+        background-image: url('https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2019/07/nightly-blog-header.jpg');
+        }
+        }
+        /*]]>*/
+        </style>
+        <meta name="title" content="These Weeks in Firefox: Issue 85 – Firefox Nightly News" />
+        <meta name="description" content="Highlights Here's our Firefox Year in Review! Here’s our Performance Year in Review! We've just landed Bug 1553982, which aims to prevent starting an update while another Firefox instance ..." />
+        <meta property="og:site_name" content="Firefox Nightly News" />
+        <meta property="og:url" content="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85" />
+        <meta property="og:title" content="These Weeks in Firefox: Issue 85 – Firefox Nightly News" />
+        <meta property="og:description" content="Highlights Here's our Firefox Year in Review! Here’s our Performance Year in Review! We've just landed Bug 1553982, which aims to prevent starting an update while another Firefox instance ..." />
+        <meta property="twitter:title" content="These Weeks in Firefox: Issue 85 – Firefox Nightly News" />
+        <meta property="twitter:description" content="Highlights Here's our Firefox Year in Review! Here’s our Performance Year in Review! We've just landed Bug 1553982, which aims to prevent starting an update while another Firefox instance ..." />
+        <meta name="twitter:card" content="summary" />
+        <meta property="twitter:image" content="https://blog.nightly.mozilla.org/files/2019/07/nightly-blog-header.jpg" />
+        <title>
+            These Weeks in Firefox: Issue 85 – Firefox Nightly News
+        </title>
+        <meta name="robots" content="max-image-preview:large" />
+        <meta name="blog-name" content="Firefox Nightly News" />
+        <link rel="dns-prefetch" href="//blog.mozilla.org" />
+        <link rel="alternate" type="application/rss+xml" title="Firefox Nightly News » Feed" href="https://blog.nightly.mozilla.org/feed/" />
+        <link rel="alternate" type="application/rss+xml" title="Firefox Nightly News » Comments Feed" href="https://blog.nightly.mozilla.org/comments/feed/" />
+        <link rel="alternate" type="application/rss+xml" title="Firefox Nightly News » These Weeks in Firefox: Issue 85 Comments Feed" href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/feed/" />
+        <link rel="stylesheet" id="wp-block-library-css" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-includes/css/dist/block-library/style.min.css?ver=5.8.2" type="text/css" media="all" />
+        <link rel="stylesheet" id="frontierline-parent-css" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/style.css?ver=5.8.2" type="text/css" media="all" />
+        <link rel="stylesheet" id="frontierline-css" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline-nightly/style.css?ver=1617985132" type="text/css" media="all" />
+        <script type="text/javascript" src="https://blog.mozilla.org/wp-content/mu-plugins/mozilla-custom/ga-snippet.js?ver=.3" id="ga-snippet-js"></script>
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-includes/js/jquery/jquery.min.js?ver=3.6.0" id="jquery-core-js"></script>
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+        <link rel="https://api.w.org/" href="https://blog.nightly.mozilla.org/wp-json/" />
+        <link rel="alternate" type="application/json" href="https://blog.nightly.mozilla.org/wp-json/wp/v2/posts/997" />
+        <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blog.nightly.mozilla.org/xmlrpc.php?rsd" />
+        <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blog.nightly.mozilla.org/wp-includes/wlwmanifest.xml" />
+        <link rel="canonical" href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/" />
+        <link rel="shortlink" href="https://blog.nightly.mozilla.org/?p=997" />
+        <link rel="alternate" type="application/json+oembed" href="https://blog.nightly.mozilla.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.nightly.mozilla.org%2F2020%2F12%2F18%2Fthese-weeks-in-firefox-issue-85%2F" />
+        <link rel="alternate" type="text/xml+oembed" href="https://blog.nightly.mozilla.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.nightly.mozilla.org%2F2020%2F12%2F18%2Fthese-weeks-in-firefox-issue-85%2F&amp;format=xml" />
+        <style>
+        <![CDATA[
+        .cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:3px;}
+        ]]>
+        </style>
+        <style>
+        <![CDATA[
+        .cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:3px;}
+        ]]>
+        </style>
+        <style>
+        <![CDATA[
+        pre.hljs {padding: 5px;}
+        pre.hljs code {}
+        ]]>
+        </style>
+    </head>
+    <body class="post-template-default single single-post postid-997 single-format-standard color-scheme-none pattern-none" data-blogname="Firefox Nightly News">
+        <nav id="nav-global" class="nav-global can-stick">
+            <div class="content">
+                <div class="logo">
+                    <a href="https://www.mozilla.org/?utm_source=blog.nightly.mozilla.org&amp;utm_medium=referral&amp;utm_campaign=blog-nav" rel="external" title="Visit mozilla.org">Mozilla</a>
+                </div>
+                <div class="nav-mozilla">
+                    <span class="toggle" role="button" aria-controls="nav-mozilla-menu" aria-expanded="false" tabindex="0">Menu</span>
+                    <ul class="nav-mozilla-menu" id="nav-mozilla-menu">
+                        <li class="nav-global-twitter">
+                            <a href="https://twitter.com/FirefoxNightly" rel="external">Twitter</a>
+                        </li>
+                        <li class="nav-global-join">
+                            <a href="https://wiki.mozilla.org/Nightly" rel="external">Get Involved</a>
+                        </li>
+                    </ul>
+                    <aside class="nav-global-fxdownload">
+                        <a href="https://www.mozilla.org/firefox/channel/desktop/?utm_source=blog.nightly.mozilla.org&amp;utm_medium=referral&amp;utm_campaign=blog-nav#nightly" rel="external" class="button button-product">Download Firefox Nightly</a>
+                    </aside>
+                </div>
+            </div>
+        </nav>
+        <header id="masthead" class="section">
+            <div class="site-id">
+                <div class="site-title-wrap content">
+                    <a href="https://blog.nightly.mozilla.org/" rel="home" title="Go to the front page">
+                    <h4 id="site-title">
+                        <span>Firefox Nightly News</span>
+                    </h4>
+                    <p id="site-description">
+                        <span>Let's improve quality, build after build!</span>
+                    </p></a>
+                </div>
+            </div>
+        </header>
+        <div class="site-wrap">
+            <nav id="nav-util" class="can-stick has-sidebar">
+                <ul class="content">
+                    <li class="nav-util-sidebar">
+                        <a href="#sidebar" aria-controls="sidebar" id="toggle-sidebar">Explore</a>
+                    </li>
+                    <li class="nav-util-search">
+                        <form id="search" class="fm-search" method="get" action="https://blog.nightly.mozilla.org/" name="search">
+                            <fieldset>
+                                <p>
+                                    <label for="s">Search this site</label> <input type="search" value="" name="s" id="s" /> <button type="submit" class="button button-minor">Search</button>
+                                </p>
+                            </fieldset>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+            <main id="content">
+                <div class="content">
+                    <article id="post-997" class="post post-997 type-post status-publish format-standard hentry category-news">
+                        <header class="entry-header">
+                            <div class="entry-tools">
+                                <div class="categories">
+                                    <b>Categories:</b> <a href="https://blog.nightly.mozilla.org/category/news/" rel="category tag">News</a>
+                                </div>
+                            </div>
+                            <h1 class="entry-title">
+                                These Weeks in Firefox: Issue 85
+                            </h1>
+                            <div class="entry-info">
+                                <address class="vcard">
+                                    <a href="https://blog.nightly.mozilla.org/author/mconleymozilla-com/" title="Posts by Mike Conley" rel="author">Mike Conley</a>
+                                </address><time class="date published" datetime="2020-12-18T16:09:48+00:00">December 18, 2020</time>
+                                <p class="entry-comments">
+                                    <a href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/#comments">2 responses</a>
+                                </p>
+                            </div>
+                        </header>
+                        <div class="entry-content">
+                            <h3>
+                                Highlights
+                            </h3>
+                            <ul>
+                                <li>
+                                    <a href="https://blog.mozilla.org/blog/2020/12/15/our-year-in-review-how-weve-kept-firefox-working-for-you-in-2020/">Here’s our Firefox Year in Review!</a>
+                                </li>
+                                <li>
+                                    <a href="https://blog.mozilla.org/performance/2020/12/15/2020-year-in-review/">Here’s our Performance Year in Review!</a>
+                                </li>
+                                <li>We’ve just landed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1553982">Bug 1553982</a>, which aims to prevent starting an update while another Firefox instance is running (the cause of that about:restartrequired error page you may have seen).
+                                    <ul>
+                                        <li>
+                                            <div id="attachment_994" style="width: 1610px" class="wp-caption aligncenter">
+                                                <a href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_0.png"><img aria-describedby="caption-attachment-994" loading="lazy" class="size-full wp-image-994" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_0.png" alt="The about:restartrequired error page, saying &quot;Sorry. We just need to do one small thing to keep going. Nightly has just been updated in the background. Click Restart Nightly to complete the update. We will restore all your pages, windows and tabs afterwards, so you can be on your way quickly.&quot;, followed by a button to restart Nightly." width="1600" height="805" srcset="https://blog.nightly.mozilla.org/files/2020/12/headlines85_0.png 1600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_0-300x151.png 300w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_0-600x302.png 600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_0-768x386.png 768w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_0-1536x773.png 1536w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_0-1000x503.png 1000w" sizes="(max-width: 1600px) 100vw, 1600px" /></a>
+                                                <p id="caption-attachment-994" class="wp-caption-text">
+                                                    Users who run multiple user profiles concurrently will probably see this less!
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>Also just about to land is <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=353804">Bug 353804</a>, which provides some support for downloading new updates when we already have an update downloaded but haven’t installed it yet. That should prevent many cases of restarting to finish an update and then immediately being notified about another one.
+                                </li>
+                                <li>Thanks to evilpie, users can now <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1650645">import logins from Keepass(XC) into Firefox</a>
+                                </li>
+                                <li>From Firefox 85 it’s now possible to disable tab-to-search on a per-engine basis, by unchecking a search engine in <i>Search Preferences</i>. That will both hide the shortcut button and disable tab-to-search for the engine. (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1681512">Bug 1681512</a>)
+                                </li>
+                                <li>From Firefox 85 it’s also possible to disable tab-to-search globally by unchecking the <i>Search Engines</i> checkbox in the <i>Address Bar Preferences</i>, under <i>Privacy &amp; Security</i>.
+                                </li>
+                                <li>Firefox now supports printing non-contiguous page ranges (e.g. 1-3, 6, 7) – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=499640">Bug 499640</a>
+                                </li>
+                                <li>DevTools and Marionette are now fully Fission compatible! Congratulations to those teams!
+                                    <ul>
+                                        <li>Reminder: Nightly users can help us test Fission by enabling it in about:preferences#experimental, and <a href="https://bugzilla.mozilla.org/enter_bug.cgi?assigned_to=nobody%40mozilla.org&amp;blocked=1561396&amp;bug_ignored=0&amp;bug_severity=--&amp;bug_status=NEW&amp;bug_type=defect&amp;cf_a11y_review_project_flag=---&amp;cf_fission_milestone=---&amp;cf_fx_iteration=---&amp;cf_fx_points=---&amp;cf_root_cause=---&amp;cf_status_firefox83=---&amp;cf_status_firefox84=---&amp;cf_status_firefox85=---&amp;cf_status_firefox86=---&amp;cf_status_firefox_esr78=---&amp;cf_status_thunderbird_esr78=---&amp;cf_tracking_firefox84=---&amp;cf_tracking_firefox85=---&amp;cf_tracking_firefox86=---&amp;cf_tracking_firefox_esr78=---&amp;cf_tracking_firefox_relnote=---&amp;cf_tracking_firefox_sumo=---&amp;cf_tracking_thunderbird_esr78=---&amp;cf_webcompat_priority=---&amp;component=DOM%3A%20Navigation&amp;contenttypemethod=list&amp;contenttypeselection=text%2Fplain&amp;defined_groups=1&amp;filed_via=standard_form&amp;flag_type-203=X&amp;flag_type-37=X&amp;flag_type-41=X&amp;flag_type-607=X&amp;flag_type-721=X&amp;flag_type-737=X&amp;flag_type-787=X&amp;flag_type-799=X&amp;flag_type-800=X&amp;flag_type-803=X&amp;flag_type-846=X&amp;flag_type-855=X&amp;flag_type-863=X&amp;flag_type-864=X&amp;flag_type-930=X&amp;flag_type-936=X&amp;flag_type-937=X&amp;flag_type-945=X&amp;form_name=enter_bug&amp;maketemplate=Remember%20values%20as%20bookmarkable%20template&amp;op_sys=Unspecified&amp;priority=--&amp;product=Core&amp;rep_platform=Unspecified&amp;target_milestone=---&amp;version=unspecified">filing bugs here</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h3>
+                                Friends of the Firefox team
+                            </h3>
+                            <h4>
+                                Introductions/Shout-Outs
+                            </h4>
+                            <ul>
+                                <li>[harry] Amy Churchwell joins the Search &amp; Navigation team today. She transferred internally from Marketing Engineering. Welcome Amy!
+                                </li>
+                            </ul>
+                            <h4>
+                                <a href="https://bugzilla.mozilla.org/buglist.cgi?title=Resolved%20bugs%20(excluding%20employees)&amp;quicksearch=1647931%2C1649618%2C1650645%2C1652412%2C1654217%2C1664768%2C1666831%2C1667061%2C1671579%2C1674806%2C1678173%2C1678372%2C1678616%2C1678865%2C1678866%2C1679252%2C1679412%2C1680931%2C1681213%2C1681554%2C1681642%2C1681948">Resolved bugs (excluding employees)</a>
+                            </h4>
+                            <h4>
+                                Fixed more than one bug
+                            </h4>
+                            <ul>
+                                <li>Masatoshi Kimura [:emk]
+                                </li>
+                                <li>Michelle Goossens [:masterwayz]
+                                </li>
+                                <li>Sonia
+                                </li>
+                                <li>Tim Nguyen :ntim
+                                </li>
+                            </ul>
+                            <h4>
+                                New contributors (🌟 = first patch)
+                            </h4>
+                            <ul>
+                                <li>🌟 Ankush Dua <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1671579">fixed an issue with revoked devtools_page permissions for WebExtensions</a>
+                                </li>
+                                <li>🌟 gero <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1674806">removed the windowtype attribute</a> from dialogs where we didn’t need it anymore
+                                </li>
+                                <li>manekenpix <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1664768">converted some DevTools code</a> to use DOM Promises instead of the defer library
+                                </li>
+                            </ul>
+                            <h3>
+                                Project Updates
+                            </h3>
+                            <h4>
+                                Add-ons / Web Extensions
+                            </h4>
+                            <h5>
+                                Addon Manager &amp; about:addons
+                            </h5>
+                            <ul>
+                                <li>Starting from Firefox 85, Mozilla-signed privileged addons can be installed from a third party website without triggering the “third party addon install doorhanger” (and without having to add new “install” site permission for those hosts, <a href="https://searchfox.org/mozilla-central/rev/23c25cd32a1e87095301273937b4ee162f41e860/browser/app/permissions#24-25">e.g. as we had to do for fpn.firefox.com</a>) – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1681331">Bug 1681331</a>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>Fixed addon startup issue when an extension sideloaded in the profile is updated on disk (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1664144">Bug 1664144</a>)
+                                </li>
+                                <li>Some more small about:addons cleanup from ntim (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678173">Bug 1678173</a>, <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678865">Bug 1678865</a>, <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678866">Bug 1678866</a>). Thanks a lot, ntim!
+                                </li>
+                            </ul>
+                            <p>
+                                &#160;
+                            </p>
+                            <h5>
+                                WebExtensions Framework
+                            </h5>
+                            <ul>
+                                <li>
+                                    <b>Ankush Dua</b> <i>contributed a fix for the devtools optional_permission</i> (the devtools optional_permission can be used by extension, like ABP, that provides a devtools panel as a secondary feature of the addon) – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1671579">Bug 1671579</a>
+                                </li>
+                                <li>Fixed content scripts applied to webpages loaded as subframes of an extension browserAction/pageAction popup when Fission is enabled – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1680877">Bug 1680877</a>
+                                </li>
+                                <li>Fixed addon startup issue when webRequest is moved from permissions to optional_permissions in an addon update (regression from <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1624235">Bug 1624235</a>) – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1637059">Bug 1637059</a>
+                                </li>
+                            </ul>
+                            <h4>
+                                Developer Tools
+                            </h4>
+                            <ul>
+                                <li>
+                                    <b>DevTools Fission</b> <b>M2</b> – Making DevTools Fission compatible DONE.
+                                    <ul>
+                                        <li>
+                                            <div id="attachment_995" style="width: 1610px" class="wp-caption aligncenter">
+                                                <a href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_1.png"><img aria-describedby="caption-attachment-995" loading="lazy" class="size-full wp-image-995" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_1.png" alt="A table showing the total number of remaining bugs for the MVP to make the DevTools Fission-compatible." width="1600" height="192" srcset="https://blog.nightly.mozilla.org/files/2020/12/headlines85_1.png 1600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_1-300x36.png 300w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_1-600x72.png 600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_1-768x92.png 768w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_1-1536x184.png 1536w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_1-1000x120.png 1000w" sizes="(max-width: 1600px) 100vw, 1600px" /></a>
+                                                <p id="caption-attachment-995" class="wp-caption-text">
+                                                    Our DevTools are ready for Fission (out-of-process iframes)!
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <b>Marionette Fission</b> – Making Marionette Fission compatible DONE
+                                    <ul>
+                                        <li>
+                                            <div id="attachment_996" style="width: 1610px" class="wp-caption aligncenter">
+                                                <a href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_2.png"><img aria-describedby="caption-attachment-996" loading="lazy" class="size-full wp-image-996" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/files/2020/12/headlines85_2.png" alt="A table showing the total number of remaining bugs for the MVP to make Marionette Fission-compatible." width="1600" height="189" srcset="https://blog.nightly.mozilla.org/files/2020/12/headlines85_2.png 1600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_2-300x35.png 300w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_2-600x71.png 600w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_2-768x91.png 768w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_2-1536x181.png 1536w, https://blog.nightly.mozilla.org/files/2020/12/headlines85_2-1000x118.png 1000w" sizes="(max-width: 1600px) 100vw, 1600px" /></a>
+                                                <p id="caption-attachment-996" class="wp-caption-text">
+                                                    Marionette, the framework that allows Firefox to be tested with automation, is now Fission compatible too!
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h4>
+                                Fission
+                            </h4>
+                            <ul>
+                                <li>Neil has patches up to <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1682442">improve the behaviour of the tab unloader</a>, and <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1644911">show UI when subframes crash</a>
+                                </li>
+                            </ul>
+                            <h4>
+                                Installer &amp; Updater
+                            </h4>
+                            <ul>
+                                <li>Background updater work is also proceeding, with <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1676296">Bug 1676296</a> landing last week to support managing scheduled tasks in Gecko, and more development still also happening on the background task framework.
+                                </li>
+                            </ul>
+                            <h4>
+                                New Tab Page and Pocket
+                            </h4>
+                            <ul>
+                                <li>We’re running three experiments:
+                                    <ul>
+                                        <li>Newtab Pocket stories in AU and NZ
+                                        </li>
+                                        <li>New signup/login call-to-action in the Pocket doorhanger
+                                        </li>
+                                        <li>We’re testing some changes to newtab story personalization
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h4>
+                                <a href="https://wiki.mozilla.org/Toolkit:Password_Manager">Password Manager</a>
+                            </h4>
+                            <ul>
+                                <li>Dimi fixed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677710">Bug 1677710</a> The password manager code triggers main thread sqlite disk I/O off of the gather-telemetry notification
+                                </li>
+                                <li>And <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678200">Bug 1678200</a> Remove or update probes expiring in Firefox 86: pwmgr.doorhanger_submitted#doorhanger_submitted
+                                </li>
+                                <li>Thanks for Kenrick95 for fixing <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678616">Bug 1678616</a> about:logins menu problem
+                                </li>
+                                <li>2021 Planning underway
+                                </li>
+                            </ul>
+                            <h4>
+                                PDFs &amp; Printing
+                            </h4>
+                            <ul>
+                                <li>mstriemer put a Printing… message in the dialog and hid the popup dialog which showed progress, the cancel button on that dialog caused problems and it looked dated <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1679133">Bug 1679133</a>
+                                </li>
+                                <li>mstriemer hid the print setting that don’t relate to PDFs when a PDF is being printed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1669725">Bug 1669725</a>
+                                </li>
+                                <li>mstriemer updated the form to be disabled when loading a printer’s settings. Sometimes loading a physical printer’s settings can take a few settings and changes could be lost in this time <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1676388">Bug 1676388</a>
+                                </li>
+                                <li>emalysz made a change to avoid updating the preview for some settings that can’t change the preview output <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1676199">Bug 1676199</a>
+                                </li>
+                                <li>sfoster added a paginator to the preview when it’s hovered to show current page, next/prev/first/last buttons <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1654684">Bug 1654684</a>
+                                </li>
+                                <li>emalysz added support for non-contiguous page ranges (ex: 1-3, 6, 7) <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=499640">Bug 499640</a>
+                                </li>
+                                <li>emalysz fixed an issue where the form could get disabled with custom margins interactions <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1674106">Bug 1674106</a>
+                                </li>
+                            </ul>
+                            <h4>
+                                Performance
+                            </h4>
+                            <ul>
+                                <li>emalysz continues to make progress leading the charge migrating us from OS.File to IOUtils
+                                    <ul>
+                                        <li>Shout out to barret for landing necessary changes to IOUtils to support the migration!
+                                        </li>
+                                        <li>Currently investigating <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1679252">a bizarre ts_paint_webext regression</a> caused by one of these conversions
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>emalysz <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1664444">fixed a performance issue with the Screenshots feature</a>, and made it more compatible with Fission
+                                </li>
+                                <li>bigiri has <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1649610">a patch to move SharedDataMap.jsm off of OSFile</a>
+                                </li>
+                                <li>florian’s team has <a href="https://firefox-source-docs.mozilla.org/tools/profiler/markers-guide.html">landed some great documentation</a> for the new profiler marker API
+                                </li>
+                                <li>florian has some new visualization variations up for the BHR dashboard
+                                    <ul>
+                                        <li>
+                                            <a href="http://queze.net/bhr/test/#showFrames=1">showFrames</a>
+                                        </li>
+                                        <li>
+                                            <a href="http://queze.net/bhr/test/#showFrames=1&amp;onlyXulLeaf=1">onlyXulLeaf</a>
+                                        </li>
+                                        <li>
+                                            <a href="http://queze.net/bhr/test/#showFrames=1&amp;onlyXulLeaf=1&amp;skipKnownBugs=1">skipKnownBugs</a>
+                                        </li>
+                                        <li>This BHR dashboard helped identify a hang caused by the password manager code, <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677710">which has been recently fixed</a>! Thanks, dimi!
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>Gijs <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1667237">made the Bookmarks Toolbar initialization occur later in the startup window</a>
+                                </li>
+                                <li>Gijs <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1681169">fixed some flicker</a> that occurred when launching the browser with the Bookmarks Toolbar enabled
+                                </li>
+                                <li>mconley fixed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1673716">an AsyncShutdown hang caused by the about:home startup cache</a>
+                                </li>
+                                <li>mconley <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1651311">re-enabled TART</a>
+                                </li>
+                                <li>dthayer has <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1672789">some fixes</a> and <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678488">polish</a> for <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1680258">the pre-XUL skeleton UI</a>
+                                </li>
+                            </ul>
+                            <h4>
+                                Picture-in-Picture
+                            </h4>
+                            <ul>
+                                <li>We’ve got the green light for another round of MSU students hacking on Picture-in-Picture next semester! mhowell and mtigley will be mentoring them.
+                                </li>
+                                <li>In progress:
+                                    <ul>
+                                        <li>
+                                            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677080">Bug 1677080 – Fullscreen PiP window is affected by switching video source</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1677107">Bug 1677107 – Add Telemetry for tracking multiple PiP support usage</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1681796">Bug 1681796 – Prevent superfluous PictureInPictureParent actors from being associated with each tab</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1680796">Bug 1680796 – Ensure that the tab’s Toolkit:PictureInPicture actor is destroyed before moving to next test</a>
+                                        </li>
+                                        <li>
+                                            <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678390">Bug 1678390 – Prevent Picture-in-Picture windows from opening on top of one another</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h4>
+                                Search and Navigation
+                            </h4>
+                            <ul>
+                                <li>Fixed regressions related to Input Method Editor, in particular loss of the last token (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1673669">Bug 1673669</a>) and race conditions causing the wrong search engine to be used or Search Mode to be lost (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1679697">Bug 1679697</a>, <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1678647">Bug 1678647</a>)
+                                </li>
+                                <li>Introduced a new advanced preference to keep the Address Bar results panel open during IME composition. This provides a better experience for keyboard layouts that don’t open a picker panel. In the future we hope to be able to auto-detect that situation, but in the meanwhile, you can flip <i>browser.urlbar.imeCompositionClosesPanel</i> to false and test the alternative behavior (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1673971">Bug 1673971</a>)
+                                </li>
+                                <li>URL canonization (<a href="about:blank">www.*.com</a>) now uses https by default, the protocol can be customized through the <i>browser.fixup.alternate.protocol</i> advanced pref (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1638215">Bug 1638215</a>)
+                                </li>
+                                <li>Work continued on the weather QuickSuggest experiment, but its release has been moved to January.
+                                </li>
+                                <li>Region.jsm now can use a Geolocation monitor to update without hitting the network (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1663501">Bug 1663501</a>)
+                                </li>
+                                <li>Fixed a bug where search engines were being re-added on startup after their removal, when using a language pack (<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1675624">Bug 1675624</a>)
+                                </li>
+                            </ul>
+                        </div>
+                        <footer class="fx-footer">
+                            <h4>
+                                Bleeding edge browsing
+                            </h4>
+                            <p>
+                                <a href="https://www.mozilla.org/firefox/channel/desktop/#nightly" rel="external" class="button button-product">Download Firefox Nightly</a>
+                            </p>
+                        </footer>
+                    </article><!-- #post -->
+                </div>
+                <nav id="adjacent-posts" class="section nav-paging">
+                    <div class="content">
+                        <p class="nav-paging-prev" role="navigation">
+                            <a href="https://blog.nightly.mozilla.org/2020/12/08/these-weeks-in-firefox-issue-84/"><span class="label">Previous article</span> <strong class="entry-title">These Weeks in Firefox: Issue 84</strong> <time class="date" datetime="2020-12-08T21:46:52+00:00">December 8, 2020</time> <svg class="arrow-left" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 23.62 43">
+                            <defs></defs>
+                            <polyline class="cls-1" points="22.12 1.5 2.12 21.5 22.12 41.5"></polyline></svg></a>
+                        </p>
+                        <p class="nav-paging-next" role="navigation">
+                            <a href="https://blog.nightly.mozilla.org/2021/01/19/these-weeks-in-firefox-issue-86/"><span class="label">Next article</span> <strong class="entry-title">These Weeks in Firefox: Issue 86</strong> <time class="date" datetime="2021-01-19T15:31:24+00:00">January 19, 2021</time> <svg class="arrow-right" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 23.62 43">
+                            <defs></defs>
+                            <polyline class="cls-1" points="1.5 1.5 21.5 21.5 1.5 41.5"></polyline></svg></a>
+                        </p>
+                    </div>
+                </nav>
+                <aside id="related-posts" class="section">
+                    <div class="content">
+                        <div class="in-category">
+                            <h4 class="module-title">
+                                More articles in “News”
+                            </h4>
+                            <ul class="cat-posts">
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/12/17/these-weeks-in-firefox-issue-106/">These Weeks in Firefox: Issue 106</a>
+                                    </h5><time class="date" datetime="2021-12-17T21:43:42+00:00">December 17, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/12/07/these-weeks-in-firefox-issue-105/">These Weeks in Firefox: Issue 105</a>
+                                    </h5><time class="date" datetime="2021-12-07T18:25:11+00:00">December 7, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/11/18/these-weeks-in-firefox-issue-104/">These Weeks in Firefox: Issue 104</a>
+                                    </h5><time class="date" datetime="2021-11-18T19:52:17+00:00">November 18, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/11/10/these-weeks-in-firefox-issue-103/">These Weeks in Firefox: Issue 103</a>
+                                    </h5><time class="date" datetime="2021-11-10T17:47:04+00:00">November 10, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/09/21/these-weeks-in-firefox-issue-100/">These Weeks in Firefox: Issue 100</a>
+                                    </h5><time class="date" datetime="2021-09-21T16:19:58+00:00">September 21, 2021</time>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="popular">
+                            <h4 class="module-title">
+                                Recent articles
+                            </h4>
+                            <ul class="recent-posts">
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/12/17/these-weeks-in-firefox-issue-106/">These Weeks in Firefox: Issue 106</a>
+                                    </h5><time class="date" datetime="2021-12-17T21:43:42+00:00">December 17, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/12/07/these-weeks-in-firefox-issue-105/">These Weeks in Firefox: Issue 105</a>
+                                    </h5><time class="date" datetime="2021-12-07T18:25:11+00:00">December 7, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/11/18/these-weeks-in-firefox-issue-104/">These Weeks in Firefox: Issue 104</a>
+                                    </h5><time class="date" datetime="2021-11-18T19:52:17+00:00">November 18, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/11/10/these-weeks-in-firefox-issue-103/">These Weeks in Firefox: Issue 103</a>
+                                    </h5><time class="date" datetime="2021-11-10T17:47:04+00:00">November 10, 2021</time>
+                                </li>
+                                <li>
+                                    <h5 class="entry-title">
+                                        <a href="https://blog.nightly.mozilla.org/2021/10/21/these-weeks-in-firefox-issue-102/">These Weeks in Firefox: Issue 102</a>
+                                    </h5><time class="date" datetime="2021-10-21T18:22:45+00:00">October 21, 2021</time>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+                <aside id="newsletter-subscribe" class="section">
+                    <form id="newsletter_form" class="content newsletter_form" name="newsletter_form" action="https://www.mozilla.org/en-US/newsletter/" method="post" data-blog="Firefox Nightly News">
+                        <input type="hidden" id="newsletters" name="newsletters" value="mozilla-foundation" /> <input type="hidden" id="source_url" name="source_url" value="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85" />
+                        <div class="form-title">
+                            <h3>
+                                Love the Web?
+                            </h3>
+                            <h4>
+                                Get the Mozilla newsletter and help us keep it open and free.
+                            </h4>
+                        </div>
+                        <div id="form-contents" class="form-contents">
+                            <div id="newsletter_errors" class="newsletter_errors"></div>
+                            <div class="field field-email">
+                                <label for="email">Your e-mail address</label> <input type="email" id="email" name="email" required="" placeholder="yourname@example.com" size="30" />
+                            </div>
+                            <div class="form-details">
+                                <div class="field field-language">
+                                    <label for="lang">Language</label> <select id="lang" name="lang" required="required">
+                                        <option value="de">
+                                            Deutsch
+                                        </option>
+                                        <option value="en" selected="selected">
+                                            English
+                                        </option>
+                                        <option value="es">
+                                            Español
+                                        </option>
+                                        <option value="fr">
+                                            Français
+                                        </option>
+                                        <option value="pl">
+                                            Polski
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="field field-format">
+                                    <label for="format-h"><input checked="checked" id="format-h" name="fmt" value="H" type="radio" /> HTML</label> <label for="format-t"><input id="format-t" name="fmt" value="T" type="radio" /> Text</label>
+                                </div>
+                                <div class="field field-privacy">
+                                    <label for="privacy"><input type="checkbox" id="privacy" name="privacy" required="" /> I’m okay with Mozilla handling my info as explained in this <a href="https://www.mozilla.org/privacy/">Privacy Policy</a>.</label>
+                                </div>
+                            </div>
+                            <div class="form-submit">
+                                <button id="newsletter_submit" type="submit" class="form-button button-dark">Sign up now</button>
+                                <p class="form-details promise">
+                                    <small>We will only send you Mozilla-related information.</small>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="newsletter_thanks" class="thanks">
+                            <h2>
+                                Thanks!
+                            </h2>
+                            <p>
+                                If you haven’t previously confirmed a subscription to a Mozilla-related newsletter you may have to do so. Please check your inbox or your spam filter for an e-mail from us.
+                            </p>
+                        </div>
+                    </form>
+                </aside>
+                <section id="comments" class="section">
+                    <div class="content">
+                        <header class="comments-head">
+                            <h3>
+                                2 comments on “These Weeks in Firefox: Issue 85”
+                            </h3>
+                            <p class="cmt-post">
+                                <a href="#respond">Post a comment</a>
+                            </p>
+                        </header>
+                        <ol id="comment-list" class="comment-list hfeed">
+                            <li id="comment-7443" class="comment even thread-even depth-1 hentry">
+                                <h4 class="entry-title vcard">
+                                    <cite class="author fn">Alan Goodale</cite> <span class="photo"><img alt="" src="https://secure.gravatar.com/avatar/bd81725a781b9e288208c743ae499964?s=60&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/bd81725a781b9e288208c743ae499964?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60" loading="lazy" /></span> <span class="comment-meta">wrote on <a href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/#comment-7443" rel="bookmark" title="Permanent link to this comment by Alan Goodale"><time class="published" datetime="2020-12-24" title="2020-12-24">December 24, 2020 at 3:53 am:</time></a></span>
+                                </h4>
+                                <blockquote class="entry-content">
+                                    <p>
+                                        Enhancement: Are there plans to provide a “collections” functionality for the desktop similar to what was released on Android? I need to be able to group the current instance of tabs into common “themes”. Close and open entire collections (themes) independently, with a single click. Read and update those same tabs, and then close them again with the latest URL of each tab being saved, rather than just the original seed URL. It’s similar to the “Restore previous session” functionality currently under Options\General\Startup, but different in that there would be multiple named “sessions” that could be restored individually, rather than just the one. It would also be helpful if the original seed URL for each tab could still be accessible, perhaps through a right click on the tab, but the latest viewed instance is the most important. Sync to Android would be a very desirable bonus.
+                                    </p>
+                                </blockquote>
+                                <p class="comment-util">
+                                    <a rel="nofollow" class="comment-reply-link" href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/?replytocom=7443#respond" data-commentid="7443" data-postid="997" data-belowelement="comment-7443" data-respondelement="respond" data-replyto="Reply to Alan Goodale" aria-label="Reply to Alan Goodale">Reply</a>
+                                </p>
+                            </li><!-- #comment-## -->
+                            <li id="comment-7588" class="comment odd alt thread-odd thread-alt depth-1 hentry">
+                                <h4 class="entry-title vcard">
+                                    <cite class="author fn">John Doe</cite> <span class="photo"><img alt="" src="https://secure.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=60&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60" loading="lazy" /></span> <span class="comment-meta">wrote on <a href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/#comment-7588" rel="bookmark" title="Permanent link to this comment by John Doe"><time class="published" datetime="2021-02-09" title="2021-02-09">February 9, 2021 at 10:16 pm:</time></a></span>
+                                </h4>
+                                <blockquote class="entry-content">
+                                    <p>
+                                        Thank you for fixing Bug 1553982! I have moved most of my work to another browser due to the need to restart so often but will try Firefox again now.
+                                    </p>
+                                </blockquote>
+                                <p class="comment-util">
+                                    <a rel="nofollow" class="comment-reply-link" href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/?replytocom=7588#respond" data-commentid="7588" data-postid="997" data-belowelement="comment-7588" data-respondelement="respond" data-replyto="Reply to John Doe" aria-label="Reply to John Doe">Reply</a>
+                                </p>
+                            </li><!-- #comment-## -->
+                        </ol>
+                        <div id="respond" class="comment-respond">
+                            <h3 id="reply-title" class="comment-reply-title">
+                                Leave a Reply
+                            </h3>
+                            <p id="cancel-comment-reply">
+                                <a rel="nofollow" id="cancel-comment-reply-link" href="/2020/12/18/these-weeks-in-firefox-issue-85/#respond" style="display:none;">Cancel reply</a>
+                            </p>
+                            <form action="https://blog.nightly.mozilla.org/wp-comments-post.php?wpe-comment-post=mozilla" method="post" id="comment-form" class="comment-form" name="comment-form">
+                                <p class="comment-notes">
+                                    <span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span>
+                                </p>
+                                <p class="comment-form-author">
+                                    <label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" required="required" />
+                                </p>
+                                <p class="comment-form-email">
+                                    <label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" required="required" />
+                                </p>
+                                <p class="comment-form-cookies-consent">
+                                    <input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes" /> <label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label>
+                                </p>
+                                <p id="cmt-ackbar">
+                                    <label for="age">Spamming robots, please fill in this field. Real humans should leave it blank.</label><input type="text" name="age" id="age" size="4" tabindex="-1" />
+                                </p>
+                                <p class="comment-form-comment">
+                                    <label for="comment">Comment</label> 
+                                    <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea>
+                                </p>
+                                <p class="form-submit">
+                                    <input name="submit" type="submit" id="submit" class="button" value="Post Comment" /> <input type="hidden" name="comment_post_ID" value="997" id="comment_post_ID" /> <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
+                                </p>
+                                <p style="display: none;">
+                                    <input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="fe34c49f86" />
+                                </p>
+                                <p style="display: none !important;">
+                                    <label>Δ
+                                    <textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js" name="ak_js" value="169" />
+                                    <script>
+                                    <![CDATA[
+                                    document.getElementById( "ak_js" ).setAttribute( "value", ( new Date() ).getTime() );
+                                    ]]>
+                                    </script>
+                                </p>
+                            </form>
+                        </div><!-- #respond -->
+                    </div>
+                </section>
+            </main>
+            <aside id="sidebar" class="section widgets can-stick">
+                <div class="content">
+                    <aside id="recent-posts-2" class="widget widget_recent_entries">
+                        <h3 class="widget-title">
+                            Recent Posts
+                        </h3>
+                        <ul>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/12/17/these-weeks-in-firefox-issue-106/">These Weeks in Firefox: Issue 106</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/12/07/these-weeks-in-firefox-issue-105/">These Weeks in Firefox: Issue 105</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/11/18/these-weeks-in-firefox-issue-104/">These Weeks in Firefox: Issue 104</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/11/10/these-weeks-in-firefox-issue-103/">These Weeks in Firefox: Issue 103</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/10/21/these-weeks-in-firefox-issue-102/">These Weeks in Firefox: Issue 102</a>
+                            </li>
+                        </ul>
+                    </aside>
+                    <aside id="recent-comments-2" class="widget widget_recent_comments">
+                        <h3 class="widget-title">
+                            Recent Comments
+                        </h3>
+                        <ul id="recentcomments">
+                            <li class="recentcomments">
+                                <span class="comment-author-link">Spanish fan</span> on <a href="https://blog.nightly.mozilla.org/2021/09/21/these-weeks-in-firefox-issue-100/#comment-8151">These Weeks in Firefox: Issue 100</a>
+                            </li>
+                            <li class="recentcomments">
+                                <span class="comment-author-link">Benyamin Limanto</span> on <a href="https://blog.nightly.mozilla.org/2021/09/09/these-weeks-in-firefox-issue-99/#comment-8149">These Weeks in Firefox: Issue 99</a>
+                            </li>
+                            <li class="recentcomments">
+                                <span class="comment-author-link">Steve Reed</span> on <a href="https://blog.nightly.mozilla.org/2021/03/12/these-weeks-in-firefox-issue-89/#comment-7789">These Weeks in Firefox: Issue 89</a>
+                            </li>
+                            <li class="recentcomments">
+                                <span class="comment-author-link">John Doe</span> on <a href="https://blog.nightly.mozilla.org/2020/12/18/these-weeks-in-firefox-issue-85/#comment-7588">These Weeks in Firefox: Issue 85</a>
+                            </li>
+                            <li class="recentcomments">
+                                <span class="comment-author-link">jonzn4SUSE</span> on <a href="https://blog.nightly.mozilla.org/2021/01/19/these-weeks-in-firefox-issue-86/#comment-7550">These Weeks in Firefox: Issue 86</a>
+                            </li>
+                        </ul>
+                    </aside>
+                    <aside id="archives-2" class="widget widget_archive">
+                        <h3 class="widget-title">
+                            Archives
+                        </h3>
+                        <ul>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/12/">December 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/11/">November 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/10/">October 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/09/">September 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/08/">August 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/06/">June 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/05/">May 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/04/">April 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/03/">March 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/02/">February 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2021/01/">January 2021</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/12/">December 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/11/">November 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/10/">October 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/09/">September 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/08/">August 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/07/">July 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/05/">May 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/04/">April 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/03/">March 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2020/02/">February 2020</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/11/">November 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/10/">October 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/09/">September 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/08/">August 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/07/">July 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/06/">June 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/05/">May 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/04/">April 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/03/">March 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/02/">February 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2019/01/">January 2019</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/11/">November 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/10/">October 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/09/">September 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/08/">August 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/07/">July 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/06/">June 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/05/">May 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/04/">April 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/03/">March 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/02/">February 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2018/01/">January 2018</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/12/">December 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/11/">November 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/10/">October 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/09/">September 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/08/">August 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/07/">July 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/06/">June 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/05/">May 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/04/">April 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/03/">March 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/02/">February 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2017/01/">January 2017</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/12/">December 2016</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/11/">November 2016</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/10/">October 2016</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/09/">September 2016</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/08/">August 2016</a>
+                            </li>
+                            <li>
+                                <a href="https://blog.nightly.mozilla.org/2016/07/">July 2016</a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </aside>
+        </div><!-- /.site-wrap -->
+        <footer id="site-info" class="section">
+            <div class="content">
+                <nav class="primary">
+                    <div class="logo">
+                        <a href="https://www.mozilla.org/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Mozilla">Mozilla</a>
+                    </div>
+                    <section class="mozilla">
+                        <h5>
+                            <a href="https://www.mozilla.org/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Mozilla">Mozilla</a>
+                        </h5>
+                        <ul class="mozilla-links">
+                            <li>
+                                <a href="https://www.mozilla.org/about/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="About">About</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/contact/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Contact Us">Contact Us</a>
+                            </li>
+                            <li>
+                                <a href="https://donate.mozilla.org/?presets=50,30,20,10&amp;amount=30&amp;currency=usd&amp;utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" class="donate" data-link-type="footer" data-link-name="Donate">Donate</a>
+                            </li>
+                            <li>
+                                <ul class="social-links">
+                                    <li>
+                                        <a class="twitter" href="https://twitter.com/mozilla" data-link-type="footer" data-link-name="Twitter (@mozilla)">Twitter <span>(@mozilla)</span></a>
+                                    </li>
+                                    <li>
+                                        <a class="instagram" href="https://www.instagram.com/mozillagram/" data-link-type="footer" data-link-name="Instagram (@mozillagram)">Instagram <span>(@mozillagram)</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="firefox">
+                        <h5>
+                            <a href="https://www.mozilla.org/firefox/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Mozilla">Firefox</a>
+                        </h5>
+                        <ul class="firefox-links">
+                            <li>
+                                <a href="https://www.mozilla.org/firefox/new/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Download Firefox">Download Firefox</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/firefox/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Desktop">Desktop</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/firefox/mobile/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Mobile">Mobile</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/firefox/features/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Features">Features</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mozilla.org/firefox/channel/desktop/?utm_source=blog.nightly.mozilla.org&amp;utm_campaign=footer&amp;utm_medium=referral" data-link-type="footer" data-link-name="Beta, Nightly, Developer Edition">Beta, Nightly, Developer Edition</a>
+                            </li>
+                            <li>
+                                <ul class="social-links">
+                                    <li>
+                                        <a class="twitter" href="https://twitter.com/firefox" data-link-type="footer" data-link-name="Twitter (@firefox)">Twitter <span>(@firefox)</span></a>
+                                    </li>
+                                    <li>
+                                        <a class="youtube" href="https://www.youtube.com/firefoxchannel" data-link-type="footer" data-link-name="YouTube (firefoxchannel)">YouTube <span>(firefoxchannel)</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                </nav>
+                <nav class="secondary">
+                    <div class="small-links">
+                        <ul>
+                            <li>
+                                <a rel="nofollow" href="https://www.mozilla.org/privacy/" data-link-type="footer" data-link-name="Privacy">Website Privacy Notice</a>
+                            </li>
+                            <li>
+                                <a rel="nofollow" href="https://www.mozilla.org/privacy/websites/#cookies" data-link-type="footer" data-link-name="Cookies">Cookies</a>
+                            </li>
+                            <li>
+                                <a rel="nofollow" href="https://www.mozilla.org/about/legal/" data-link-type="footer" data-link-name="Legal">Legal</a>
+                            </li>
+                        </ul>
+                        <p class="license">
+                            Visit Mozilla Corporation’s not-for-profit parent, the <a href="https://foundation.mozilla.org" data-link-type="footer" data-link-name="Mozilla Foundation">Mozilla Foundation</a>.
+                        </p>
+                        <p class="license">
+                            Portions of this content are ©1998-2022 by individual contributors. Content available under a <a href="https://www.mozilla.org/foundation/licensing/website-content/" rel="external license">Creative Commons license</a>.
+                        </p>
+                    </div>
+                </nav>
+            </div>
+        </footer><!--[if IE 9]>
+    <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/js/matchMedia.js"></script>
+    <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/js/matchMedia.addListener.js"></scrip>
+  <![endif]-->
+        <link rel="stylesheet" id="hljstheme-css" href="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/plugins/wp-code-highlightjs/styles/tomorrow-night.css?ver=0.6.2" type="text/css" media="all" />
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/js/global.js?ver=2.1" id="global-js"></script> 
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/themes/frontierline/js/basket-client.js?ver=1.1" id="basket-client-js"></script> 
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-includes/js/comment-reply.min.js?ver=5.8.2" id="comment-reply-js"></script> 
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-includes/js/wp-embed.min.js?ver=5.8.2" id="wp-embed-js"></script> 
+        <script type="text/javascript" src="https://3sgkpvh31s44756j71xlti9b-wpengine.netdna-ssl.com/wp-content/plugins/wp-code-highlightjs/highlight.common.pack.js?ver=0.6.2" id="hljs-js"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+        (function($, window) {
+        var init_fn_flag = false;
+        var init_fn = (function() {
+            if (init_fn_flag)
+                return;
+            init_fn_flag = true;
+             hljs.configure({"tabReplace":"    "});
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        });
+        $(document).ready(init_fn);
+        $(window).on("load", init_fn);
+        })(jQuery, window);
+        //]]>
+        </script>
+    </body>
+</html>
