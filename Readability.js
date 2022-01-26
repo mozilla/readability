@@ -896,6 +896,11 @@ Readability.prototype = {
       let shouldRemoveTitleHeader = true;
 
       while (node) {
+
+        if (node.tagName === "HTML") {
+          this._articleLang = node.getAttribute("lang");
+        }
+
         var matchString = node.className + " " + node.id;
 
         if (!this._isProbablyVisible(node)) {
@@ -2263,6 +2268,7 @@ Readability.prototype = {
       title: this._articleTitle,
       byline: metadata.byline || this._articleByline,
       dir: this._articleDir,
+      lang: this._articleLang,
       content: this._serializer(articleContent),
       textContent: textContent,
       length: textContent.length,
