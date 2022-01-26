@@ -49,11 +49,12 @@ Returns an object containing the following properties:
 * `byline`: author metadata;
 * `dir`: content direction;
 * `siteName`: name of the site.
+* `lang`: content language
 
 The `parse()` method works by modifying the DOM. This removes some elements in the web page, which may be undesirable. You can avoid this by passing the clone of the `document` object to the `Readability` constructor:
 
 ```js
-var documentClone = document.cloneNode(true); 
+var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 ```
 
@@ -70,8 +71,8 @@ The `options` object accepts a number of properties, all optional:
 The function returns a boolean corresponding to whether or not we suspect `Readability.parse()` will suceeed at returning an article object. Here's an example:
 
 ```js
-/* 
-    Only instantiate Readability  if we suspect 
+/*
+    Only instantiate Readability  if we suspect
     the `parse()` method will produce a meaningful result.
 */
 if (isProbablyReaderable(document)) {
