@@ -15,6 +15,11 @@ reasonable).
 
 - Fix [compatibility with DOM implementations where the `childNodes` property is not live](https://github.com/mozilla/readability/pull/694) ([x2](https://github.com/mozilla/readability/pull/677)).
 - Lazily-loaded image references [will no longer use the `alt` attribute](https://github.com/mozilla/readability/pull/689) to find images.
+- `parse()` [provides the root element's `lang` attribute](https://github.com/mozilla/readability/pull/721)
+- `isProbablyReadable` [includes article tags](https://github.com/mozilla/readability/pull/724)
+- Improvements to JSON-LD support
+  - [Continue parsing other JSON-LD elements until we find one we can support](https://github.com/mozilla/readability/pull/713)
+  - [Prefer using headline for article title](https://github.com/mozilla/readability/pull/713)
 
 ## [0.4.1] - 2021-01-13
 
