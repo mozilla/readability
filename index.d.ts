@@ -32,18 +32,29 @@ export class Readability<T = string> {
   parse(): null | {
     /** article title */
     title: string;
-    /** author metadata */
-    byline: string;
-    /** content direction */
-    dir: string;
-    /** HTML of processed article content */
+
+    /** HTML string of processed article content */
     content: T;
-    /** text content of the article (all HTML removed) */
+
+    /** text content of the article, with all the HTML tags removed */
     textContent: string;
+
     /** length of an article, in characters */
     length: number;
+
     /** article description, or short excerpt from the content */
     excerpt: string;
+
+    /** author metadata */
+    byline: string;
+
+    /** content direction */
+    dir: string;
+
+    /** name of the site */
     siteName: string;
+
+    /** content language */
+    lang: string;
   };
 }
