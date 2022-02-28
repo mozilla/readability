@@ -1443,6 +1443,9 @@ Readability.prototype = {
         }
       }
     });
+    if (metadata && doc.title) {
+      metadata.title = doc.title;
+    }
     return metadata ? metadata : {};
   },
 
