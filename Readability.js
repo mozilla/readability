@@ -2109,6 +2109,7 @@ Readability.prototype = {
         var embedCount = 0;
         var embeds = this._getAllNodesWithTag(node, ["object", "embed", "iframe"]);
 
+
         for (var i = 0; i < embeds.length; i++) {
           // If this embed has attribute that matches video regex, don't delete it.
           for (var j = 0; j < embeds[i].attributes.length; j++) {
@@ -2129,13 +2130,36 @@ Readability.prototype = {
         var contentLength = this._getInnerText(node).length;
 
         var haveToRemove =
-          (img > 3 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
+          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
           (!isList && li > p) ||
           (input > Math.floor(p/3)) ||
           (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
           (!isList && weight < 25 && linkDensity > 0.2) ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+
+        if (haveToRemove) {
+          // Check for lists of images
+          if (isList) {
+            for (var x = 0; x < node.children.length; x++) {
+              // Check all children, ensure each is a li
+              if (node.children[x].localName == "li") {
+                // Check the li tag (Looking for length > 1, or contents which aren't img/figure)
+                // May also want to check for li tags which contain over 1 image
+                if (node.children[x].children.length > 1) {
+                  return true;
+                }
+              } else {
+                // Expected li tag -- remove this element
+                return true;
+              }
+            }
+            // Allow lists of images to remain, so long as img count doesn't exceed li count
+            if (img > 1 && img <= (li+100)) {
+              return false;
+            }
+          }
+        }
         return haveToRemove;
       }
       return false;
