@@ -2137,6 +2137,24 @@ Readability.prototype = {
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
 
+        if (haveToRemove) {
+          // Check for lists to allow lists of images to remain in the page
+          if (isList) {
+            for (var x = 0; x < node.children.length; x++) {
+              if (node.children[x].localName == "li") {
+                if (node.children[x].children.length > 1) {
+                  return true;
+                }
+              } else {
+                return true;
+              }
+            }
+            li_count = node.getElementsByTagName("li").length;
+            if (img > 1 && img <= (li_count)) {
+              return false;
+            }
+          }
+        }
         return haveToRemove;
       }
       return false;
