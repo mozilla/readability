@@ -2136,20 +2136,16 @@ Readability.prototype = {
           (!isList && weight < 25 && linkDensity > 0.2) ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
-
-        if (haveToRemove) {
-          // Check for lists to allow lists of images to remain in the page
-          if (isList) {
-            for (var x = 0; x < node.children.length; x++) {
-              if (node.children[x].localName == "li") {
-                if (node.children[x].children.length > 1) {
-                  return true;
-                }
-              } else {
-                return true;
-              }
+        // Allow lists of images when images make up most of the content
+        if (isList && haveToRemove) {
+          for (var x = 0; x < node.children.length; x++) {
+            let child = node.children[x];
+            // Don't filter in lis which contain more than one child
+            if (child.localName == "li" && child.children.length > 1) {
+              return haveToRemove;
             }
             li_count = node.getElementsByTagName("li").length;
+            // Allow the list to remain if the img count doesn't exceed the total li count
             if (img > 1 && img <= (li_count)) {
               return false;
             }
