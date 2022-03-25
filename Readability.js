@@ -347,7 +347,10 @@ Readability.prototype = {
     }
 
     for (node = node.firstElementChild; node; node = node.nextElementSibling) {
-      this._cleanClasses(node);
+      if (typeof attr === "string") {
+        var nodeClassNAme = node.getAttribute("class");
+        this._cleanClasses(nodeClassNAme);
+      }
     }
   },
 
