@@ -2136,19 +2136,19 @@ Readability.prototype = {
           (!isList && weight < 25 && linkDensity > 0.2) ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
-        // Allow lists of images when images make up most of the content
+        // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
             let child = node.children[x];
-            // Don't filter in lis which contain more than one child
-            if (child.localName == "li" && child.children.length > 1) {
+            // Don't filter in lists with lis that contain more than one child
+            if (child.children.length > 1) {
               return haveToRemove;
             }
-            li_count = node.getElementsByTagName("li").length;
-            // Allow the list to remain if the img count doesn't exceed the total li count
-            if (img > 1 && img <= (li_count)) {
-              return false;
-            }
+          }
+          li_count = node.getElementsByTagName("li").length;
+          // Only allow the list to remain if every li contains an image
+          if (img == li_count) {
+            return false;
           }
         }
         return haveToRemove;
