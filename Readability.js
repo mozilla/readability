@@ -2202,7 +2202,9 @@ Readability.prototype = {
     return (!node.style || node.style.display != "none")
       && !node.hasAttribute("hidden")
       //check for "fallback-image" so that wikimedia math images are displayed
-      && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1));
+      && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1))
+      // user cannot see element applied with both attribute "aria-modla = true" and "role = dialog"
+      && (!(node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog"));
   },
 
   /**
