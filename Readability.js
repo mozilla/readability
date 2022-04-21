@@ -2140,7 +2140,7 @@ Readability.prototype = {
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
             let child = node.children[x];
-            // Don't filter in lists with lis that contain more than one child
+            // Don't filter in lists with li's that contain more than one child
             if (child.children.length > 1) {
               return haveToRemove;
             }
