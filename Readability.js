@@ -891,7 +891,12 @@ Readability.prototype = {
       // class name "comment", etc), and turn divs into P tags where they have been
       // used inappropriately (as in, where they contain no other block level elements.)
       var elementsToScore = [];
-      var node = this._doc.documentElement;
+      
+      // Start scanning at the element declared to contain the main content if it exists
+      var node = this._doc.querySelector('main, [role=main]');
+      if (!node) {
+        node = this._doc.documentElement;
+      }
 
       let shouldRemoveTitleHeader = true;
 
@@ -929,6 +934,7 @@ Readability.prototype = {
               !this._hasAncestorTag(node, "table") &&
               !this._hasAncestorTag(node, "code") &&
               node.tagName !== "BODY" &&
+              node.tagName !== "HTML" &&
               node.tagName !== "A") {
             this.log("Removing unlikely candidate - " + matchString);
             node = this._removeAndGetNext(node);
