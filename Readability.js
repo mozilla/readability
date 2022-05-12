@@ -904,7 +904,7 @@ Readability.prototype = {
           continue;
         }
 
-        // User is not able to see elements applied with both "aria-modla = true" and "role = dialog"
+        // User is not able to see elements applied with both "aria-modal = true" and "role = dialog"
         if (node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog") {
           node = this._removeAndGetNext(node);
           continue;
@@ -2208,9 +2208,7 @@ Readability.prototype = {
     return (!node.style || node.style.display != "none")
       && !node.hasAttribute("hidden")
       //check for "fallback-image" so that wikimedia math images are displayed
-      && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1))
-      // user can not see element applied with both attribute "aria-modla = true" and "role = dialog"
-      && (!(node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog"));
+      && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1));
   },
 
   /**
