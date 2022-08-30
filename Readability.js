@@ -1642,12 +1642,7 @@ Readability.prototype = {
    * @param Element
   **/
   _removeScripts: function(doc) {
-    this._removeNodes(this._getAllNodesWithTag(doc, ["script"]), function(scriptNode) {
-      scriptNode.nodeValue = "";
-      scriptNode.removeAttribute("src");
-      return true;
-    });
-    this._removeNodes(this._getAllNodesWithTag(doc, ["noscript"]));
+    this._removeNodes(this._getAllNodesWithTag(doc, ["script", "noscript"]));
   },
 
   /**
