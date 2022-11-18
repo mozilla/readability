@@ -20,18 +20,18 @@
     "url": "https://github.com/mozilla/readability/issues"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.0.0"
   },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
-    "@release-it/keep-a-changelog": "^2.2.2",
-    "chai": "^2.1.*",
-    "eslint": "^7.26.0",
-    "htmltidy2": "^0.3.0",
-    "js-beautify": "^1.13.13",
-    "jsdom": "^13.1",
-    "mocha": "^8.4.0",
-    "release-it": "^14.6.2",
-    "sinon": "^7.3.2"
+    "@release-it/keep-a-changelog": "3.1.0",
+    "chai": "4.3.7",
+    "eslint": "8.27.0",
+    "htmltidy2": "1.0.0",
+    "js-beautify": "1.14.7",
+    "jsdom": "20.0.2",
+    "mocha": "10.1.0",
+    "release-it": "15.5.0",
+    "sinon": "14.0.2"
   }
 }
