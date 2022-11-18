@@ -2136,6 +2136,21 @@ Readability.prototype = {
           (!isList && weight < 25 && linkDensity > 0.2) ||
           (weight >= 25 && linkDensity > 0.5) ||
           ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+        // Allow simple lists of images to remain in pages
+        if (isList && haveToRemove) {
+          for (var x = 0; x < node.children.length; x++) {
+            let child = node.children[x];
+            // Don't filter in lists with li's that contain more than one child
+            if (child.children.length > 1) {
+              return haveToRemove;
+            }
+          }
+          li_count = node.getElementsByTagName("li").length;
+          // Only allow the list to remain if every li contains an image
+          if (img == li_count) {
+            return false;
+          }
+        }
         return haveToRemove;
       }
       return false;
