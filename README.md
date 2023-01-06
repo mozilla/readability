@@ -80,6 +80,30 @@ if (isProbablyReaderable(document)) {
 }
 ```
 
+### `REGEXPS`
+
+The object containing the regular expressions used in `Readability` and `isProbablyReaderable`. They are defined below:
+
+* `REGEXPS.unlikelyCandidates`: Regular expressions that signify that a webpage is likely not readerable
+* `REGEXPS.okMaybeItsACandidate`: Regular expressions that signify that a webpage is likely readerable
+* `REGEXPS.positive`: Regular expressions that strongly signify that a webpage is likely readerable
+* `REGEXPS.negative`: Regular expressions that strongly signify that a webpage is likely not readerable
+* `REGEXPS.extraneous`: Regular expressions that match content to be removed from the reader version (e.g. navbars)
+* `REGEXPS.byline`: Regular expressions that match bylines (author data)
+* `REGEXPS.replaceFonts`: Regular expressions that match font tags
+* `REGEXPS.normalize`: 
+* `REGEXPS.videos`: Matches links to video sharing websites, such as YouTube
+* `REGEXPS.shareElements`: Matches social media buttons
+* `REGEXPS.nextLink`: Matches "Next Article" links or buttons
+* `REGEXPS.prevLink`: Matches "Previous Article" links or buttons
+* `REGEXPS.tokenize`: Delimeter used to split webpage for faster processing.
+* `REGEXPS.whitespace`: Matches whitespace
+* `REGEXPS.hasContent`: Matches elements that have content
+* `REGEXPS.hashUrl`: Matches URI fragments
+* `REGEXPS.srcsetUrl`: Matches URLs contained in img srcset attributes
+* `REGEXPS.b64DataUrl`: Matches base64 data URLs
+* `REGEXPS.jsonLdArticleTypes`: Matches article types found in json-ld script tags
+
 ## Node.js usage
 
 Since Node.js does not come with its own DOM implementation, we rely on external libraries like [jsdom](https://github.com/jsdom/jsdom). Here's an example using `jsdom` to obtain a DOM document object:
