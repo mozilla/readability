@@ -58,3 +58,25 @@ export class Readability<T = string> {
     lang: string;
   };
 }
+
+export const REGEXPS: {
+  unlikelyCandidates: RegExp;
+  okMaybeItsACandidate: RegExp;
+  positive: RegExp;
+  negative: RegExp;
+  extraneous: RegExp;
+  byline: RegExp;
+  replaceFonts: RegExp;
+  normalize: RegExp;
+  videos: RegExp;
+  shareElements: RegExp;
+  nextLink: RegExp;
+  prevLink: RegExp;
+  tokenize: RegExp;
+  whitespace: RegExp;
+  hasContent: RegExp;
+  hashUrl: RegExp;
+  srcsetUrl: RegExp;
+  b64DataUrl: RegExp;
+  jsonLdArticleTypes: RegExp;
+}
