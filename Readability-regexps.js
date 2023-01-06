@@ -21,7 +21,7 @@ var REGEXPS = {
   b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
   // See: https://schema.org/Article
   jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
-}
+};
 
 if (typeof module === "object") {
   module.exports = REGEXPS;
