@@ -13,6 +13,7 @@ reasonable).
 
 ## [Unreleased]
 
+- Fixed [`aria-modal` cookie dialogs interfering with readability](https://github.com/mozilla/readability/pull/746)
 - Fixed [lists of images not showing](https://github.com/mozilla/readability/pull/738)
 - [Updated type information for TypeScript](https://github.com/mozilla/readability/pull/734)
 - [Simplify `script` and `noscript` removal](https://github.com/mozilla/readability/pull/762)
