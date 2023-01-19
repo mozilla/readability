@@ -11,6 +11,13 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
+## [Unreleased]
+
+- Fixed [lists of images not showing](https://github.com/mozilla/readability/pull/738)
+- [Updated type information for TypeScript](https://github.com/mozilla/readability/pull/734)
+- [Simplify `script` and `noscript` removal](https://github.com/mozilla/readability/pull/762)
+- [Updated dependencies](https://github.com/mozilla/readability/pull/770)
+
 ## [0.4.2] - 2022-02-09
 
 - Fix [compatibility with DOM implementations where the `childNodes` property is not live](https://github.com/mozilla/readability/pull/694) ([x2](https://github.com/mozilla/readability/pull/677)).
