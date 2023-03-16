@@ -1,6 +1,6 @@
 # Readability.js
 
-A standalone version of the readability library used for Firefox Reader View.
+A standalone version of the readability library used for [Firefox Reader View](https://support.mozilla.org/kb/firefox-reader-view-clutter-free-web-pages).
 
 ## Installation
 
