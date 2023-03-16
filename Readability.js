@@ -54,6 +54,7 @@ function Readability(doc, options) {
     return el.innerHTML;
   };
   this._disableJSONLD = !!options.disableJSONLD;
+  this._allowedVideoRegex = options.allowedVideoRegex || this.REGEXPS.videos;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -1838,13 +1839,13 @@ Readability.prototype = {
       if (isEmbed) {
         // First, check the elements attributes to see if any of them contain youtube or vimeo
         for (var i = 0; i < element.attributes.length; i++) {
-          if (this.REGEXPS.videos.test(element.attributes[i].value)) {
+          if (this._allowedVideoRegex.test(element.attributes[i].value)) {
             return false;
           }
         }
 
         // For embed with <object> tag, check inner HTML as well.
-        if (element.tagName === "object" && this.REGEXPS.videos.test(element.innerHTML)) {
+        if (element.tagName === "object" && this._allowedVideoRegex.test(element.innerHTML)) {
           return false;
         }
       }
@@ -2113,13 +2114,13 @@ Readability.prototype = {
         for (var i = 0; i < embeds.length; i++) {
           // If this embed has attribute that matches video regex, don't delete it.
           for (var j = 0; j < embeds[i].attributes.length; j++) {
-            if (this.REGEXPS.videos.test(embeds[i].attributes[j].value)) {
+            if (this._allowedVideoRegex.test(embeds[i].attributes[j].value)) {
               return false;
             }
           }
 
           // For embed with <object> tag, check inner HTML as well.
-          if (embeds[i].tagName === "object" && this.REGEXPS.videos.test(embeds[i].innerHTML)) {
+          if (embeds[i].tagName === "object" && this._allowedVideoRegex.test(embeds[i].innerHTML)) {
             return false;
           }
 
