@@ -18,6 +18,7 @@ reasonable).
 - [Updated type information for TypeScript](https://github.com/mozilla/readability/pull/734)
 - [Simplify `script` and `noscript` removal](https://github.com/mozilla/readability/pull/762)
 - [Updated dependencies](https://github.com/mozilla/readability/pull/770)
+- [Added allowedVideoRegex option to override the default](https://github.com/mozilla/readability/pull/788)
 
 ## [0.4.2] - 2022-02-09
 
