@@ -1,4 +1,3 @@
-/*eslint-env es6:false*/
 /*
  * Copyright (c) 2010 Arc90 Inc
  *
@@ -74,12 +73,7 @@ function Readability(doc, options) {
       return `<${node.localName} ${attrPairs}>`;
     };
     this.log = function () {
-      if (typeof dump !== "undefined") {
-        var msg = Array.prototype.map.call(arguments, function(x) {
-          return (x && x.nodeName) ? logNode(x) : x;
-        }).join(" ");
-        dump("Reader: (Readability) " + msg + "\n");
-      } else if (typeof console !== "undefined") {
+      if (typeof console !== "undefined") {
         let args = Array.from(arguments, arg => {
           if (arg && arg.nodeType == this.ELEMENT_NODE) {
             return logNode(arg);
@@ -88,6 +82,12 @@ function Readability(doc, options) {
         });
         args.unshift("Reader: (Readability)");
         console.log.apply(console, args);
+      } else if (typeof dump !== "undefined") {
+        /* global dump */
+        var msg = Array.prototype.map.call(arguments, function(x) {
+          return (x && x.nodeName) ? logNode(x) : x;
+        }).join(" ");
+        dump("Reader: (Readability) " + msg + "\n");
       }
     };
   } else {
@@ -2296,5 +2296,6 @@ Readability.prototype = {
 };
 
 if (typeof module === "object") {
+  /* global module */
   module.exports = Readability;
 }

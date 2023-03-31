@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 var JSDOM = require("jsdom").JSDOM;
 var chai = require("chai");
 chai.config.includeStack = true;
