@@ -2147,7 +2147,7 @@ Readability.prototype = {
               return haveToRemove;
             }
           }
-          li_count = node.getElementsByTagName("li").length;
+          let li_count = node.getElementsByTagName("li").length;
           // Only allow the list to remain if every li contains an image
           if (img == li_count) {
             return false;
