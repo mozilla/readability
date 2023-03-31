@@ -11,6 +11,9 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
+## [Unreleased]
+- Fixed [undefined `li_count` variable breaking use of readability in Cloudflare workers](https://github.com/mozilla/readability/issues/791)
+
 ## [0.4.3] - 2023-03-22
 
 - Fixed [`aria-modal` cookie dialogs interfering with readability](https://github.com/mozilla/readability/pull/746)
