@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 var chai = require("chai");
 chai.config.includeStack = true;
 var expect = chai.expect;
