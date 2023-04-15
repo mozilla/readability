@@ -1242,12 +1242,10 @@ Readability.prototype = {
         }
       }
 
-      if (this._debug)
-        this.log("Article content pre-prep: " + articleContent.innerHTML);
+      this.log("Article content pre-prep: " + articleContent.innerHTML);
       // So we have all of the content that we need. Now we clean it up for presentation.
       this._prepArticle(articleContent);
-      if (this._debug)
-        this.log("Article content post-prep: " + articleContent.innerHTML);
+      this.log("Article content post-prep: " + articleContent.innerHTML);
 
       if (neededToCreateTopCandidate) {
         // We already created a fake div thing, and there wouldn't have been any siblings left
@@ -1266,8 +1264,7 @@ Readability.prototype = {
         articleContent.appendChild(div);
       }
 
-      if (this._debug)
-        this.log("Article content after paging: " + articleContent.innerHTML);
+      this.log("Article content after paging: " + articleContent.innerHTML);
 
       var parseSuccessful = true;
 
