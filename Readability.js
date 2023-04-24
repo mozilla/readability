@@ -141,6 +141,9 @@ Readability.prototype = {
     hashUrl: /^#.+/,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
+    // Used in Sindhi, Hawaiian, Chinase, among other languages and vertical writing.
+    // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
+    commas:/\u002C|\u02BB|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
     // See: https://schema.org/Article
     jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
   },
@@ -1030,7 +1033,7 @@ Readability.prototype = {
         contentScore += 1;
 
         // Add points for any commas within this paragraph.
-        contentScore += innerText.split(",").length;
+        contentScore += innerText.split(this.REGEXPS.commas).length;
 
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
