@@ -11,6 +11,9 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
+## [Unreleased]
+- [Expanded comma detection to non-Latin commas](https://github.com/mozilla/readability/pull/796)
+
 ## [0.4.4] - 2023-03-31
 - Fixed [undefined `li_count` variable breaking use of readability in Cloudflare workers](https://github.com/mozilla/readability/issues/791)
 
