@@ -2,7 +2,9 @@
   "title": "Hermitian matrix",
   "byline": "Contributors to Wikimedia projects",
   "dir": "ltr",
+  "lang": "en",
   "excerpt": "In mathematics, a Hermitian matrix (or self-adjoint matrix) is a complex square matrix that is equal to its own conjugate transpose—that is, the element in the i-th row and j-th column is equal to the complex conjugate of the element in the j-th row and i-th column, for all indices i and j:",
   "siteName": "Wikimedia Foundation, Inc.",
+  "publishedTime": "2003-02-28T21:51:08Z",
   "readerable": true
 }
