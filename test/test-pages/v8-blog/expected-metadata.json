@@ -2,6 +2,7 @@
   "title": "standalone WebAssembly binaries using Emscripten · V8",
   "byline": null,
   "dir": null,
+  "lang": "en",
   "excerpt": "Emscripten now supports standalone Wasm files, which do not need JavaScript.",
   "siteName": null,
   "readerable": true
