@@ -1,8 +1,13 @@
+/* eslint-env node */
 "use strict";
 
 module.exports = {
   "parserOptions": {
     "ecmaVersion": 6
+  },
+  "env": {
+    "es6": true,
+    "shared-node-browser": true,
   },
   "rules": {
     // Braces only needed for multi-line arrow function blocks
@@ -146,7 +151,7 @@ module.exports = {
     "no-trailing-spaces": 2,
 
     // No using undeclared variables
-    // "no-undef": 2,
+    "no-undef": 2,
 
     // Error on newline where a semicolon is needed
     "no-unexpected-multiline": 2,

@@ -1,4 +1,3 @@
-/* eslint-env es6:false */
 /*
  * Copyright (c) 2010 Arc90 Inc
  *
@@ -104,5 +103,6 @@ function isProbablyReaderable(doc, options = {}) {
 }
 
 if (typeof module === "object") {
+  /* global module */
   module.exports = isProbablyReaderable;
 }

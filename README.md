@@ -1,6 +1,6 @@
 # Readability.js
 
-A standalone version of the readability library used for Firefox Reader View.
+A standalone version of the readability library used for [Firefox Reader View](https://support.mozilla.org/kb/firefox-reader-view-clutter-free-web-pages).
 
 ## Installation
 
@@ -36,6 +36,7 @@ The `options` object accepts a number of properties, all optional:
 * `keepClasses` (boolean, default `false`): whether to preserve all classes on HTML elements. When set to `false` only classes specified in the `classesToPreserve` array are kept.
 * `disableJSONLD` (boolean, default `false`): when extracting page metadata, Readability gives precendence to Schema.org fields specified in the JSON-LD format. Set this option to `true` to skip JSON-LD parsing.
 * `serializer` (function, default `el => el.innerHTML`) controls how the the `content` property returned by the `parse()` method is produced from the root DOM element. It may be useful to specify the `serializer` as the identity function (`el => el`) to obtain a DOM element instead of a string for `content` if you plan to process it further.
+* `allowedVideoRegex` (RegExp, default `undefined` ): a regular expression that matches video URLs that should be allowed to be included in the article content. If `undefined`, the [default regex](https://github.com/mozilla/readability/blob/8e8ec27cd2013940bc6f3cc609de10e35a1d9d86/Readability.js#L133) is applied.
 
 ### `parse()`
 

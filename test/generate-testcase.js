@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 var debug = false;
 
 var path = require("path");

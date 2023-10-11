@@ -1,6 +1,6 @@
 {
   "name": "@mozilla/readability",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -31,7 +31,7 @@
     "js-beautify": "1.14.7",
     "jsdom": "20.0.2",
     "mocha": "10.1.0",
-    "release-it": "15.5.0",
+    "release-it": "15.10.1",
     "sinon": "14.0.2"
   }
 }

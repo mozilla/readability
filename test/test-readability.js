@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 var JSDOM = require("jsdom").JSDOM;
 var chai = require("chai");
 var sinon = require("sinon");
@@ -221,6 +223,12 @@ describe("Readability API", function() {
       expect(new Readability(doc, {keepClasses: true})._keepClasses).eql(true);
       expect(new Readability(doc, {keepClasses: false})._keepClasses).eql(false);
     });
+
+    it("should accept a allowedVideoRegex option or default it", function() {
+      expect(new Readability(doc)._allowedVideoRegex).eql(Readability.prototype.REGEXPS.videos);
+      const allowedVideoRegex = /\/\/mydomain.com\/.*'/;
+      expect(new Readability(doc, { allowedVideoRegex })._allowedVideoRegex).eql(allowedVideoRegex);
+    });
   });
 
   describe("#parse", function() {
@@ -274,6 +282,22 @@ describe("Readability API", function() {
         serializer: function(el) {
           return xml.serializeToString(el.firstChild);
         }
+      }).parse().content;
+      expect(content).eql(expected_xhtml);
+    });
+
+    it("should use custom video regex sent as option", function() {
+      var dom = new JSDOM(
+        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
+        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>"
+      );
+      var expected_xhtml = "<div id=\"readability-page-1\" class=\"page\">" +
+        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
+        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>" +
+        "</div>";
+      var content = new Readability(dom.window.document, {
+        charThreshold: 20,
+        allowedVideoRegex: /.*mycustomdomain.com.*/
       }).parse().content;
       expect(content).eql(expected_xhtml);
     });
