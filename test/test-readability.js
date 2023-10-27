@@ -182,6 +182,10 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
     expectedMetadata.lang && it("should extract expected language", function() {
       expect(result.lang).eql(expectedMetadata.lang);
     });
+
+    expectedMetadata.publishedTime && it("should extract expected published time", function () {
+      expect(result.publishedTime).eql(expectedMetadata.publishedTime);
+    });
   });
 }
 

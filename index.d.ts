@@ -57,5 +57,8 @@ export class Readability<T = string> {
 
     /** content language */
     lang: string;
+
+    /** published time */
+    publishedTime: string;
   };
 }

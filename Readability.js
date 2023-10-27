@@ -1447,6 +1447,9 @@ Readability.prototype = {
           ) {
             metadata.siteName = parsed.publisher.name.trim();
           }
+          if (typeof parsed.datePublished === "string") {
+            metadata.datePublished = parsed.datePublished.trim();
+          }
           return;
         } catch (err) {
           this.log(err.message);
@@ -1470,7 +1473,7 @@ Readability.prototype = {
     var metaElements = this._doc.getElementsByTagName("meta");
 
     // property is a space-separated list of values
-    var propertyPattern = /\s*(dc|dcterm|og|twitter)\s*:\s*(author|creator|description|title|site_name)\s*/gi;
+    var propertyPattern = /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
     var namePattern = /^\s*(?:(dc|dcterm|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title|site_name)\s*$/i;
@@ -1541,12 +1544,17 @@ Readability.prototype = {
     metadata.siteName = jsonld.siteName ||
                         values["og:site_name"];
 
+    // get article published time
+    metadata.publishedTime = jsonld.datePublished ||
+      values["article:published_time"] || null;
+
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
     metadata.title = this._unescapeHtmlEntities(metadata.title);
     metadata.byline = this._unescapeHtmlEntities(metadata.byline);
     metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
     metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
+    metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
 
     return metadata;
   },
@@ -2293,7 +2301,8 @@ Readability.prototype = {
       textContent: textContent,
       length: textContent.length,
       excerpt: metadata.excerpt,
-      siteName: metadata.siteName || this._articleSiteName
+      siteName: metadata.siteName || this._articleSiteName,
+      publishedTime: metadata.publishedTime
     };
   }
 };
