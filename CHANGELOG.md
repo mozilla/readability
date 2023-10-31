@@ -14,6 +14,7 @@ reasonable).
 ## [Unreleased]
 - [Add published time metadata](https://github.com/mozilla/readability/pull/813)
 - [Expanded comma detection to non-Latin commas](https://github.com/mozilla/readability/pull/796)
+- [Fix detection of elements hidden with style="visibility: hidden"](https://github.com/mozilla/readability/pull/817)
 
 ## [0.4.4] - 2023-03-31
 - Fixed [undefined `li_count` variable breaking use of readability in Cloudflare workers](https://github.com/mozilla/readability/issues/791)
