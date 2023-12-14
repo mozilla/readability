@@ -1853,7 +1853,12 @@ Readability.prototype = {
           return;
         }
       }
-
+      // if it has a sibling with src or srcset, keep image
+      var siblingElement =
+        img.previousElementSibling || noscript.nextElementSibling;
+      if (siblingElement.tagName === "SOURCE") {
+        return;
+      }
       img.parentNode.removeChild(img);
     });
 
