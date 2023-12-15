@@ -6,5 +6,9 @@
   },
   "github": {
     "release": false
+  },
+  "git": {
+    "requireBranch": "main",
+    "pushRepo": "https://github.com/mozilla/readability.git"
   }
 }
