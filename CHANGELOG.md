@@ -11,7 +11,7 @@ may change this output. Patch version increments will only do so in ways that ar
 strict improvements (e.g. from empty strings or exceptions to something more
 reasonable).
 
-## [Unreleased]
+## [0.5.0] - 2023-12-15
 - [Add published time metadata](https://github.com/mozilla/readability/pull/813)
 - [Expanded comma detection to non-Latin commas](https://github.com/mozilla/readability/pull/796)
 - [Fix detection of elements hidden with style="visibility: hidden"](https://github.com/mozilla/readability/pull/817)
