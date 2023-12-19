@@ -1,10 +1,15 @@
 {
   "plugins": {
     "@release-it/keep-a-changelog": {
+      "addUnreleased": true,
       "filename": "CHANGELOG.md"
     }
   },
   "github": {
     "release": false
+  },
+  "git": {
+    "requireBranch": "main",
+    "pushRepo": "https://github.com/mozilla/readability.git"
   }
 }
