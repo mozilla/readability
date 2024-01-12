@@ -8,4 +8,4 @@ node_modules
 .sw?
 *.jar
 *.xpi
-*.vscode
+.vscode
