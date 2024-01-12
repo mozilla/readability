@@ -49,8 +49,9 @@ Returns an object containing the following properties:
 * `excerpt`: article description, or short excerpt from the content;
 * `byline`: author metadata;
 * `dir`: content direction;
-* `siteName`: name of the site.
-* `lang`: content language
+* `siteName`: name of the site;
+* `lang`: content language;
+* `publishedTime`: published time;
 
 The `parse()` method works by modifying the DOM. This removes some elements in the web page, which may be undesirable. You can avoid this by passing the clone of the `document` object to the `Readability` constructor:
 
