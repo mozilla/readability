@@ -54,7 +54,9 @@ reasonable).
 
 ### Added
 
-- `isProbablyReaderable` [can now take an optional options object](https://github.com/mozilla/readability/pull/634) to configure it, allowing you to specify the minimum content length, minimum score, and how to check if nodes are visible.
+- `isProbablyReaderable` [can now take an optional options object](https://github.com/mozilla/readability/pull/634) to configure it,
+allowing you to specify the minimum content length, minimum score, and how to
+check if nodes are visible.
 
 - Better support for [deeply-nested content](https://github.com/mozilla/readability/pull/611).
 
