@@ -1382,7 +1382,7 @@ Readability.prototype = {
           var parsed = JSON.parse(content);
           if (
             !parsed["@context"] ||
-            !parsed["@context"].match(/^https?\:\/\/schema\.org$/)
+            !parsed["@context"].match(/^https?\:\/\/schema\.org\/?$/)
           ) {
             return;
           }

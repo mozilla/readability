@@ -13,12 +13,16 @@ reasonable).
 
 ## [Unreleased]
 
+- [Fix the case that jsonld parse process is ignored when context url include the trailing slash](https://github.com/mozilla/readability/pull/833)
+
 ## [0.5.0] - 2023-12-15
+
 - [Add published time metadata](https://github.com/mozilla/readability/pull/813)
 - [Expanded comma detection to non-Latin commas](https://github.com/mozilla/readability/pull/796)
 - [Fix detection of elements hidden with style="visibility: hidden"](https://github.com/mozilla/readability/pull/817)
 
 ## [0.4.4] - 2023-03-31
+
 - Fixed [undefined `li_count` variable breaking use of readability in Cloudflare workers](https://github.com/mozilla/readability/issues/791)
 
 ## [0.4.3] - 2023-03-22
@@ -69,7 +73,6 @@ check if nodes are visible.
 
 - Elements with roles `menu`, `menubar`, `complementary`, `navigation`, `alert`,
   `alertdialog`, `dialog` will [all be removed](https://github.com/mozilla/readability/pull/619).
-
 
 ## [0.3.0] - 2020-08-05
 
