@@ -710,7 +710,6 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "div");
 
     // replace H1 with H2 as H1 should be only title that is displayed separately
-    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h1"]), "h2");
 
     // Remove extra paragraphs
     this._removeNodes(this._getAllNodesWithTag(articleContent, ["p"]), function (paragraph) {
@@ -2214,7 +2213,7 @@ Readability.prototype = {
    * @return boolean indicating whether this is a title-like header.
    */
   _headerDuplicatesTitle: function(node) {
-    if (node.tagName != "H1" && node.tagName != "H2") {
+    if (node.tagName != "H1") {
       return false;
     }
     var heading = this._getInnerText(node, false);
@@ -2275,6 +2274,7 @@ Readability.prototype = {
     this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h1"]), "h2");
     if (!articleContent)
       return null;
 
