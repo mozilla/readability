@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha test/test-*.js",
+    "test-readability": "mocha test/test-readability.js",
     "generate-testcase": "node test/generate-testcase.js",
     "release": "release-it"
   },

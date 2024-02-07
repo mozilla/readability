@@ -5,12 +5,25 @@ var chai = require("chai");
 var sinon = require("sinon");
 chai.config.includeStack = true;
 var expect = chai.expect;
+var path = require("path");
+var fs = require("fs");
 
 var Readability = require("../index").Readability;
 var JSDOMParser = require("../JSDOMParser");
 var prettyPrint = require("./utils").prettyPrint;
 
 var testPages = require("./utils").getTestPages();
+
+//
+var testcaseRoot = path.join(__dirname, "test-pages");
+var destRoot = path.join(testcaseRoot, process.argv[3]);
+var sourceFile = path.join(destRoot, "source.html");
+if (fs.existsSync(sourceFile)) {
+  testPages = testPages.filter((el) => {
+    return el.dir === process.argv[3];
+  });
+}
+// 
 
 function reformatError(err) {
   var formattedError = new Error(err.message);
