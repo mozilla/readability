@@ -15,13 +15,15 @@ var prettyPrint = require("./utils").prettyPrint;
 var testPages = require("./utils").getTestPages();
 
 //
-var testcaseRoot = path.join(__dirname, "test-pages");
-var destRoot = path.join(testcaseRoot, process.argv[3]);
-var sourceFile = path.join(destRoot, "source.html");
-if (fs.existsSync(sourceFile)) {
-  testPages = testPages.filter((el) => {
-    return el.dir === process.argv[3];
-  });
+if (process.argv.length>3) {
+  var testcaseRoot = path.join(__dirname, "test-pages");
+  var destRoot = path.join(testcaseRoot, process.argv[3]);
+  var sourceFile = path.join(destRoot, "source.html");
+  if (fs.existsSync(sourceFile)) {
+    testPages = testPages.filter((el) => {
+      return el.dir === process.argv[3];
+    });
+  }
 }
 // 
 
