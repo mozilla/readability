@@ -2219,7 +2219,8 @@ Readability.prototype = {
     }
     var heading = this._getInnerText(node, false);
     this.log("Evaluating similarity of header:", heading, this._articleTitle);
-    return this._textSimilarity(this._articleTitle, heading) > 0.75;
+    let similarity =  this._textSimilarity(this._articleTitle, heading);
+    return similarity > 0.95;
   },
 
   _flagIsActive: function(flag) {
