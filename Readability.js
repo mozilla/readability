@@ -915,12 +915,14 @@ Readability.prototype = {
 
         // User is not able to see elements applied with both "aria-modal = true" and "role = dialog"
         if (node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog") {
+          this.log('Removing Modals and Dialogs - ' + matchString)
           node = this._removeAndGetNext(node);
           continue;
         }
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
+          this.log('Removing byline - ' + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -957,6 +959,7 @@ Readability.prototype = {
              node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3" ||
              node.tagName === "H4" || node.tagName === "H5" || node.tagName === "H6") &&
             this._isElementWithoutContent(node)) {
+          this.log("Removing empty node - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -1014,18 +1017,24 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
-        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined")
+        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined") {
+          this.log("NOT SCORING: Element has no parent node - ", matchString);
           return;
+        }
 
         // If this paragraph is less than 25 characters, don't even count it.
         var innerText = this._getInnerText(elementToScore);
-        if (innerText.length < 25)
+        if (innerText.length < 25) {
+          this.log("NOT SCORING: Paragraph too short - ", matchString);
           return;
+        }
 
         // Exclude nodes with no ancestor.
         var ancestors = this._getNodeAncestors(elementToScore, 5);
-        if (ancestors.length === 0)
+        if (ancestors.length === 0) {
+          this.log("NOT SCORING: No ancestors - ", matchString);
           return;
+        }
 
         var contentScore = 0;
 
