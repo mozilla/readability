@@ -936,8 +936,8 @@ Readability.prototype = {
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
-          if (this.REGEXPS.unlikelyCandidates.test(node.tagName) &&
-              !this.REGEXPS.okMaybeItsACandidate.test(node.tagName) &&
+          if (this.REGEXPS.unlikelyCandidates.test(node.tagName.toLowerCase()) &&
+              !this.REGEXPS.okMaybeItsACandidate.test(node.tagName.toLowerCase()) &&
               !this._hasAncestorTag(node, "table") &&
               !this._hasAncestorTag(node, "code") &&
               node.tagName !== "BODY" &&
