@@ -915,14 +915,14 @@ Readability.prototype = {
 
         // User is not able to see elements applied with both "aria-modal = true" and "role = dialog"
         if (node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog") {
-          this.log('Removing Modals and Dialogs - ' + matchString)
+          this.log("Removing Modals and Dialogs - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
-          this.log('Removing byline - ' + matchString);
+          this.log("Removing byline - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -1098,7 +1098,7 @@ Readability.prototype = {
       }
 
       var topCandidate = topCandidates[0] || null;
-      this.log('Top candidate:', topCandidate);
+      this.log("Top candidate: ", topCandidate);
       var neededToCreateTopCandidate = false;
       var parentOfTopCandidate;
 
