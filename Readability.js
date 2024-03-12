@@ -936,8 +936,8 @@ Readability.prototype = {
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
-          if (this.REGEXPS.unlikelyCandidates.test(node.tagName.toLowerCase()) &&
-              !this.REGEXPS.okMaybeItsACandidate.test(node.tagName.toLowerCase()) &&
+          if (this.REGEXPS.unlikelyCandidates.test(node.nodeName.toLowerCase()) &&
+              !this.REGEXPS.okMaybeItsACandidate.test(node.nodeName.toLowerCase()) &&
               !this._hasAncestorTag(node, "table") &&
               !this._hasAncestorTag(node, "code") &&
               node.tagName !== "BODY" &&
@@ -1098,6 +1098,7 @@ Readability.prototype = {
       }
 
       var topCandidate = topCandidates[0] || null;
+      this.log('Top candidate:', topCandidate);
       var neededToCreateTopCandidate = false;
       var parentOfTopCandidate;
 
