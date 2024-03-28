@@ -2151,14 +2151,23 @@ Readability.prototype = {
         var linkDensity = this._getLinkDensity(node);
         var contentLength = this._getInnerText(node).length;
 
+        var linkDensity = this._getLinkDensity(node);
+        var contentLength = this._getInnerText(node).length;
+        var lessParagraphsThanImages = (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure"));
+        var isNotListAndMoreListItemsThanParagraphs = (!isList && li > p);
+        var moreInputsThanPs = (input > Math.floor(p/3));
+        var headingDensityAndContentLengthOff = (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure"));
+        var weightAndLinkDensityIsLow = (!isList && weight < 25 && linkDensity > 0.2);
+        var weightAndLinkDensityTooHigh = (weight >= 25 && linkDensity > 0.5);
+        var embedCountAndContentLengthOff = ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         var haveToRemove =
-          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && li > p) ||
-          (input > Math.floor(p/3)) ||
-          (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
-          (weight >= 25 && linkDensity > 0.5) ||
-          ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+          lessParagraphsThanImages ||
+          isNotListAndMoreListItemsThanParagraphs ||
+          moreInputsThanPs ||
+          headingDensityAndContentLengthOff ||
+          weightAndLinkDensityIsLow ||
+          weightAndLinkDensityTooHigh ||
+          embedCountAndContentLengthOff;
         // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
@@ -2172,6 +2181,30 @@ Readability.prototype = {
           // Only allow the list to remain if every li contains an image
           if (img == li_count) {
             return false;
+          }
+        }
+        if (haveToRemove) {
+          this.log("haveToRemove will remove node", node, 'with value: ', haveToRemove);
+          if (lessParagraphsThanImages) {
+            this.log("lessParagraphsThanImages", node);
+          }
+          if (isNotListAndMoreListItemsThanParagraphs) {
+            this.log("isNotListAndMoreListItemsThanParagraphs", node);
+          }
+          if (moreInputsThanPs) {
+            this.log("moreInputsThanPs", node);
+          }
+          if (headingDensityAndContentLengthOff) {
+            this.log("headingDensityAndContentLengthOff", node);
+          }
+          if (weightAndLinkDensityIsLow) {
+            this.log("weightAndLinkDensityIsLow", node);
+          }
+          if (weightAndLinkDensityTooHigh) {
+            this.log("weightAndLinkDensityTooHigh", node);
+          }
+          if (embedCountAndContentLengthOff) {
+            this.log("embedCountAndContentLengthOff", node);
           }
         }
         return haveToRemove;
