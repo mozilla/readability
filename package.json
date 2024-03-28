@@ -1,6 +1,6 @@
 {
   "name": "@panda01/readability",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "index.js",
   "types": "index.d.ts",
