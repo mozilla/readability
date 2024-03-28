@@ -2157,7 +2157,7 @@ Readability.prototype = {
         var isNotListAndMoreListItemsThanParagraphs = (!isList && li > p);
         var moreInputsThanPs = (input > Math.floor(p/3));
         var headingDensityAndContentLengthOff = (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure"));
-        var weightAndLinkDensityIsLow = (!isList && weight < 25 && linkDensity > 0.2);
+        var weightAndLinkDensityIsLow = (!isList && weight < 25 && linkDensity > 0.25);
         var weightAndLinkDensityTooHigh = (weight >= 25 && linkDensity > 0.5);
         var embedCountAndContentLengthOff = ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         var haveToRemove =
