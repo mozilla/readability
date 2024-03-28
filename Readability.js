@@ -125,8 +125,8 @@ Readability.prototype = {
     unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
     okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
 
-    positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
-    negative: /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
+    positive: /article|body|cda-round-up|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
+    negative: /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|gdpr|masthead|media|meta|outbrain|product|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
     extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby|p-author/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
@@ -143,7 +143,7 @@ Readability.prototype = {
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
     // Commas as used in Latin, Sindhi, Chinese and various other scripts.
     // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
-    commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
+    commas: /[\s\D][\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C][\s\D]/g,
     // See: https://schema.org/Article
     jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
   },
@@ -915,12 +915,14 @@ Readability.prototype = {
 
         // User is not able to see elements applied with both "aria-modal = true" and "role = dialog"
         if (node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog") {
+          this.log("Removing Modals and Dialogs - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
 
         // Check to see if this node is a byline, and remove it if it is.
         if (this._checkByline(node, matchString)) {
+          this.log("Removing byline - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -934,8 +936,8 @@ Readability.prototype = {
 
         // Remove unlikely candidates
         if (stripUnlikelyCandidates) {
-          if (this.REGEXPS.unlikelyCandidates.test(matchString) &&
-              !this.REGEXPS.okMaybeItsACandidate.test(matchString) &&
+          if (this.REGEXPS.unlikelyCandidates.test(node.nodeName.toLowerCase()) &&
+              !this.REGEXPS.okMaybeItsACandidate.test(node.nodeName.toLowerCase()) &&
               !this._hasAncestorTag(node, "table") &&
               !this._hasAncestorTag(node, "code") &&
               node.tagName !== "BODY" &&
@@ -957,6 +959,7 @@ Readability.prototype = {
              node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3" ||
              node.tagName === "H4" || node.tagName === "H5" || node.tagName === "H6") &&
             this._isElementWithoutContent(node)) {
+          this.log("Removing empty node - " + matchString);
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -1014,18 +1017,24 @@ Readability.prototype = {
       **/
       var candidates = [];
       this._forEachNode(elementsToScore, function(elementToScore) {
-        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined")
+        if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined") {
+          this.log("NOT SCORING: Element has no parent node - ", matchString);
           return;
+        }
 
         // If this paragraph is less than 25 characters, don't even count it.
         var innerText = this._getInnerText(elementToScore);
-        if (innerText.length < 25)
+        if (innerText.length < 25) {
+          this.log("NOT SCORING: Paragraph too short - ", matchString);
           return;
+        }
 
         // Exclude nodes with no ancestor.
         var ancestors = this._getNodeAncestors(elementToScore, 5);
-        if (ancestors.length === 0)
+        if (ancestors.length === 0) {
+          this.log("NOT SCORING: No ancestors - ", matchString);
           return;
+        }
 
         var contentScore = 0;
 
@@ -1089,6 +1098,7 @@ Readability.prototype = {
       }
 
       var topCandidate = topCandidates[0] || null;
+      this.log("Top candidate: ", topCandidate);
       var neededToCreateTopCandidate = false;
       var parentOfTopCandidate;
 
@@ -2141,14 +2151,23 @@ Readability.prototype = {
         var linkDensity = this._getLinkDensity(node);
         var contentLength = this._getInnerText(node).length;
 
+        var linkDensity = this._getLinkDensity(node);
+        var contentLength = this._getInnerText(node).length;
+        var lessParagraphsThanImages = (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure"));
+        var isNotListAndMoreListItemsThanParagraphs = (!isList && li > p);
+        var moreInputsThanPs = (input > Math.floor(p/3));
+        var headingDensityAndContentLengthOff = (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure"));
+        var weightAndLinkDensityIsLow = (!isList && weight < 25 && linkDensity > 0.25);
+        var weightAndLinkDensityTooHigh = (weight >= 25 && linkDensity > 0.5);
+        var embedCountAndContentLengthOff = ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         var haveToRemove =
-          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && li > p) ||
-          (input > Math.floor(p/3)) ||
-          (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
-          (weight >= 25 && linkDensity > 0.5) ||
-          ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+          lessParagraphsThanImages ||
+          isNotListAndMoreListItemsThanParagraphs ||
+          moreInputsThanPs ||
+          headingDensityAndContentLengthOff ||
+          weightAndLinkDensityIsLow ||
+          weightAndLinkDensityTooHigh ||
+          embedCountAndContentLengthOff;
         // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
@@ -2162,6 +2181,30 @@ Readability.prototype = {
           // Only allow the list to remain if every li contains an image
           if (img == li_count) {
             return false;
+          }
+        }
+        if (haveToRemove) {
+          this.log("haveToRemove will remove node", node, 'with value: ', haveToRemove);
+          if (lessParagraphsThanImages) {
+            this.log("lessParagraphsThanImages", node);
+          }
+          if (isNotListAndMoreListItemsThanParagraphs) {
+            this.log("isNotListAndMoreListItemsThanParagraphs", node);
+          }
+          if (moreInputsThanPs) {
+            this.log("moreInputsThanPs", node);
+          }
+          if (headingDensityAndContentLengthOff) {
+            this.log("headingDensityAndContentLengthOff", node);
+          }
+          if (weightAndLinkDensityIsLow) {
+            this.log("weightAndLinkDensityIsLow", node);
+          }
+          if (weightAndLinkDensityTooHigh) {
+            this.log("weightAndLinkDensityTooHigh", node);
+          }
+          if (embedCountAndContentLengthOff) {
+            this.log("embedCountAndContentLengthOff", node);
           }
         }
         return haveToRemove;
