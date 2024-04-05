@@ -1967,6 +1967,13 @@ Readability.prototype = {
       }
 
       var sizeInfo = this._getRowAndColumnCount(table);
+
+      if (sizeInfo.columns == 1  || sizeInfo.rows == 1) {
+        // single colum/row tables are commonly used for page layout purposes.
+        table._readabilityDataTable = false;
+        continue;
+      }
+
       if (sizeInfo.rows >= 10 || sizeInfo.columns > 4) {
         table._readabilityDataTable = true;
         continue;
@@ -2096,6 +2103,11 @@ Readability.prototype = {
       }
 
       if (this._hasAncestorTag(node, "code")) {
+        return false;
+      }
+
+      // keep element if it has a data tables
+      if ([...node.getElementsByTagName('table')].some( tbl => tbl._readabilityDataTable)) {
         return false;
       }
 
