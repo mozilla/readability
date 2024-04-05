@@ -14,7 +14,7 @@ For more details, please read the
 
 ## Tests
 
-[![Build Status](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/badge.svg)](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/master/latest)
+[![Build Status](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/main/badge.svg)](https://community-tc.services.mozilla.com/api/github/v1/repository/mozilla/readability/main/latest)
 
 Please run [eslint](http://eslint.org/) as a first check that your changes are valid JS and adhere to our style guidelines:
 
