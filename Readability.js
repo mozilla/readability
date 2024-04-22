@@ -112,7 +112,7 @@ Readability.prototype = {
   DEFAULT_N_TOP_CANDIDATES: 5,
 
   // Element tags to score by default.
-  DEFAULT_TAGS_TO_SCORE: "section,h2,h3,h4,h5,h6,p,td,pre".toUpperCase().split(","),
+  DEFAULT_TAGS_TO_SCORE: "section,h2,h3,h4,h5,h6,p,td,pre,summary,article,header,main".toUpperCase().split(","),
 
   // The default number of chars an article must have in order to return a result
   DEFAULT_CHAR_THRESHOLD: 500,
@@ -122,17 +122,17 @@ Readability.prototype = {
   REGEXPS: {
     // NOTE: These two regular expressions are duplicated in
     // Readability-readerable.js. Please keep both copies in sync.
-    unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
-    okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
+    unlikelyCandidates: /-ad-|ai2html|banner|combx|comment|community|cover-wrap|credentials|date|hide|hidden|disqus|extra|footer|gdpr|legends|nav|paywall|meta|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|share|sharing|yom-remote|byline|topbar|article-meta|brand|tooltip/i,
+    okMaybeItsACandidate: /and|article|body|column|content|main|shadow|header|summary/i,
 
-    positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
-    negative: /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i,
-    extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
-    byline: /byline|author|dateline|writtenby|p-author/i,
+    positive: /article|body|content|entry|header|hentry|h-entry|intro|intro|intro|intro|main|main-article|main-content|page|lead|leading|pagination|primary|post|text|blog|story|summary|strapline/i,
+    negative: /-ad-|affiliate|credentials|controls|date|desktop|hidden|nav|^hid$| hid$| hid |^hid |hide|banner|login|gate|combx|comment|com-|contact|foot|footer|footnote|gdpr|icon|^icon|icons$|icons|masthead|media|meta|paywall|nav|outbrain|promo|related|scroll|share|sharing|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|tooltip|widget|video-player|video|jw-player|jw-aspect|modal|carousel|overlay|byline|brand|disclosure|nav|logo|account|cart|dock/i,
+    extraneous: /print|affiliate|archive|button|comment|controls|discuss|e[\-]?mail|meta|icons|share|reply|all|login|sign|single|utility|icons|nav|video-player|jw-player|modal|video|paidcontent|carousel|overlay|social|topbar|article-meta|onetrust-consent-sdk|logo|account|cart|hamburger|traffic|weather|search/i,
+    byline: /byline|author|dateline|credentials|writtenby|p-author|article-author/i,
     replaceFonts: /<(\/?)font[^>]*>/gi,
     normalize: /\s{2,}/g,
     videos: /\/\/(www\.)?((dailymotion|youtube|youtube-nocookie|player\.vimeo|v\.qq)\.com|(archive|upload\.wikimedia)\.org|player\.twitch\.tv)/i,
-    shareElements: /(\b|_)(share|sharedaddy)(\b|_)/i,
+    shareElements: /(\b|_)(share|sharedaddy|social|sharebar)(\b|_)/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
     tokenize: /\W+/g,
@@ -148,7 +148,10 @@ Readability.prototype = {
     jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
   },
 
-  UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
+  UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog", "nav" ],
+
+  NODES_TO_CLEAN_FIRST: ["object", "embed", "footer", "link", "aside", "nav", ".icons", ".byline", ".sub-nav", ".identity", ".logo", ".video-player", ".jw-player", ".jw-wrapper", ".video", ".byline", ".author", ".dateline", ".credentials", ".writtenby", ".p-author", ".article-author", ".navigation", ".hidden-xs", ".hidden-sm", ".brand", ".modalContent", ".noPrint", ".noprint", ".screenonly", ".breadcrumb", ".breadcrumbs", "amp-iframe", "amp-img", "amp-ad", ".advert", ".ads", ".brand", ".search", ".nav", ".user", ".users", "#onetrust-consent-sdk", "#branding", "#branding-content" ],
+  NODES_TO_CLEAN_SECOND: [ "iframe", "input", "textarea", "select", "button", "svg"],
 
   DIV_TO_P_ELEMS: new Set([ "BLOCKQUOTE", "DL", "DIV", "IMG", "OL", "P", "PRE", "TABLE", "UL" ]),
 
@@ -679,11 +682,9 @@ Readability.prototype = {
     // Clean out junk from the article content
     this._cleanConditionally(articleContent, "form");
     this._cleanConditionally(articleContent, "fieldset");
-    this._clean(articleContent, "object");
-    this._clean(articleContent, "embed");
-    this._clean(articleContent, "footer");
-    this._clean(articleContent, "link");
-    this._clean(articleContent, "aside");
+    this.NODES_TO_CLEAN_FIRST.forEach((el) => {
+      this._clean(articleContent, el);
+    });
 
     // Clean out elements with little content that have "share" in their id/class combinations from final top candidates,
     // which means we don't remove the top candidates even they have "share".
@@ -696,11 +697,9 @@ Readability.prototype = {
       });
     });
 
-    this._clean(articleContent, "iframe");
-    this._clean(articleContent, "input");
-    this._clean(articleContent, "textarea");
-    this._clean(articleContent, "select");
-    this._clean(articleContent, "button");
+    this.NODES_TO_CLEAN_SECOND.forEach((el) => {
+      this._clean(articleContent, el);
+    });
     this._cleanHeaders(articleContent);
 
     // Do these last as the previous stuff may have removed junk
@@ -708,6 +707,13 @@ Readability.prototype = {
     this._cleanConditionally(articleContent, "table");
     this._cleanConditionally(articleContent, "ul");
     this._cleanConditionally(articleContent, "div");
+
+    //scale down h2-h5 because it's too large most of the time (intro's in h2, etc)
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h5"]), "h6");
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h4"]), "h5");
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h3"]), "h4");
+    this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h2"]), "h3");
+    
 
     // replace H1 with H2 as H1 should be only title that is displayed separately
     this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h1"]), "h2");
@@ -756,6 +762,9 @@ Readability.prototype = {
 
     switch (node.tagName) {
       case "DIV":
+      case "MAIN":
+      case "HEADER":
+      case "ARTICLE":
         node.readability.contentScore += 5;
         break;
 
@@ -826,6 +835,8 @@ Readability.prototype = {
   // works the way that it splits both texts into words and then finds words that are unique in second text
   // the result is given by the lower length of unique parts
   _textSimilarity: function(textA, textB) {
+    if (!textA || !textB) return 0;
+    if (Math.abs(textA.length - textB.length) > 25) return 0;
     var tokensA = textA.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
     var tokensB = textB.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
     if (!tokensA.length || !tokensB.length) {
@@ -885,6 +896,11 @@ Readability.prototype = {
       return null;
     }
 
+    var fullArticleText = document.body.innerText;
+    if(fullArticleText.length) {
+      fullArticleText = fullArticleText.split(/[\r\n]+/).filter((el) => el.length > 50);
+    }
+
     var pageCacheHtml = page.innerHTML;
 
     while (true) {
@@ -896,7 +912,7 @@ Readability.prototype = {
       // used inappropriately (as in, where they contain no other block level elements.)
       var elementsToScore = [];
       var node = this._doc.documentElement;
-
+      
       let shouldRemoveTitleHeader = true;
 
       while (node) {
@@ -904,7 +920,7 @@ Readability.prototype = {
         if (node.tagName === "HTML") {
           this._articleLang = node.getAttribute("lang");
         }
-
+        
         var matchString = node.className + " " + node.id;
 
         if (!this._isProbablyVisible(node)) {
@@ -1013,6 +1029,8 @@ Readability.prototype = {
        * A score is determined by things like number of commas, class names, etc. Maybe eventually link density.
       **/
       var candidates = [];
+      var elementsCounter = 0;
+
       this._forEachNode(elementsToScore, function(elementToScore) {
         if (!elementToScore.parentNode || typeof(elementToScore.parentNode.tagName) === "undefined")
           return;
@@ -1026,9 +1044,11 @@ Readability.prototype = {
         var ancestors = this._getNodeAncestors(elementToScore, 5);
         if (ancestors.length === 0)
           return;
+        
+        elementsCounter++;
 
         var contentScore = 0;
-
+        
         // Add a point for the paragraph itself as a base.
         contentScore += 1;
 
@@ -1037,6 +1057,20 @@ Readability.prototype = {
 
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
+      
+        if(innerText.length > 100 && elementsCounter < 10) 
+          fullArticleText.forEach((el) => {
+            if (el.length > 5 && innerText.indexOf(el) != -1) {
+              var extra = Math.max(Math.max(0, 10 * (10 - elementsCounter)), 10);
+              // console.log('add ', extra, innerText);
+              contentScore += extra;
+            }
+          });
+
+        // extra score for headers
+        if(elementToScore.tagName && elementToScore.tagName.length == 2 &&  elementToScore.tagName.toLowerCase().startsWith('h')) {
+          contentScore += 100;
+        }
 
         // Initialize and score ancestors.
         this._forEachNode(ancestors, function(ancestor, level) {
@@ -1546,7 +1580,7 @@ Readability.prototype = {
 
     // get article published time
     metadata.publishedTime = jsonld.datePublished ||
-      values["article:published_time"] || null;
+    values["article:published_time"] || null;
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
@@ -2304,7 +2338,7 @@ Readability.prototype = {
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
       publishedTime: metadata.publishedTime
-    };
+        };
   }
 };
 

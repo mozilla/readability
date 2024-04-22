@@ -22,8 +22,8 @@
 var REGEXPS = {
   // NOTE: These two regular expressions are duplicated in
   // Readability.js. Please keep both copies in sync.
-  unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
-  okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
+  unlikelyCandidates: /-ad-|ai2html|banner|combx|comment|community|cover-wrap|credentials|date|hide|hidden|disqus|extra|footer|gdpr|legends|nav|paywall|meta|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|share|sharing|yom-remote|byline|topbar|article-meta|brand|tooltip/i,
+  okMaybeItsACandidate: /and|article|body|column|content|main|shadow|header|summary/i,
 };
 
 function isNodeVisible(node) {
