@@ -713,7 +713,7 @@ Readability.prototype = {
     this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h4"]), "h5");
     this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h3"]), "h4");
     this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h2"]), "h3");
-    
+
 
     // replace H1 with H2 as H1 should be only title that is displayed separately
     this._replaceNodeTags(this._getAllNodesWithTag(articleContent, ["h1"]), "h2");
@@ -835,8 +835,10 @@ Readability.prototype = {
   // works the way that it splits both texts into words and then finds words that are unique in second text
   // the result is given by the lower length of unique parts
   _textSimilarity: function(textA, textB) {
-    if (!textA || !textB) return 0;
-    if (Math.abs(textA.length - textB.length) > 25) return 0;
+    if (!textA || !textB)
+      return 0;
+    if (Math.abs(textA.length - textB.length) > 25)
+      return 0;
     var tokensA = textA.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
     var tokensB = textB.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
     if (!tokensA.length || !tokensB.length) {
@@ -896,8 +898,8 @@ Readability.prototype = {
       return null;
     }
 
-    var fullArticleText = document.body.innerText;
-    if(fullArticleText.length) {
+    var fullArticleText = this._doc.body.innerText;
+    if (fullArticleText.length) {
       fullArticleText = fullArticleText.split(/[\r\n]+/).filter((el) => el.length > 50);
     }
 
@@ -912,7 +914,7 @@ Readability.prototype = {
       // used inappropriately (as in, where they contain no other block level elements.)
       var elementsToScore = [];
       var node = this._doc.documentElement;
-      
+
       let shouldRemoveTitleHeader = true;
 
       while (node) {
@@ -920,7 +922,7 @@ Readability.prototype = {
         if (node.tagName === "HTML") {
           this._articleLang = node.getAttribute("lang");
         }
-        
+
         var matchString = node.className + " " + node.id;
 
         if (!this._isProbablyVisible(node)) {
@@ -1044,11 +1046,11 @@ Readability.prototype = {
         var ancestors = this._getNodeAncestors(elementToScore, 5);
         if (ancestors.length === 0)
           return;
-        
+
         elementsCounter++;
 
         var contentScore = 0;
-        
+
         // Add a point for the paragraph itself as a base.
         contentScore += 1;
 
@@ -1057,8 +1059,8 @@ Readability.prototype = {
 
         // For every 100 characters in this paragraph, add another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
-      
-        if(innerText.length > 100 && elementsCounter < 10) 
+
+        if (innerText.length > 100 && elementsCounter < 10)
           fullArticleText.forEach((el) => {
             if (el.length > 5 && innerText.indexOf(el) != -1) {
               var extra = Math.max(Math.max(0, 10 * (10 - elementsCounter)), 10);
@@ -1068,7 +1070,7 @@ Readability.prototype = {
           });
 
         // extra score for headers
-        if(elementToScore.tagName && elementToScore.tagName.length == 2 &&  elementToScore.tagName.toLowerCase().startsWith('h')) {
+        if (elementToScore.tagName && elementToScore.tagName.length == 2 && elementToScore.tagName.toLowerCase().startsWith("h")) {
           contentScore += 100;
         }
 
@@ -2338,7 +2340,7 @@ Readability.prototype = {
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
       publishedTime: metadata.publishedTime
-        };
+    };
   }
 };
 
