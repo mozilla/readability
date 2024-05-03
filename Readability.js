@@ -1548,7 +1548,7 @@ Readability.prototype = {
 
     // get article published time
     metadata.publishedTime = jsonld.datePublished ||
-                             values["article:published_time"] || 
+                             values["article:published_time"] ||
                              values["parsely-pub-date"] ||
                              null;
 
