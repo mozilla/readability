@@ -13,6 +13,7 @@ reasonable).
 
 ## [Unreleased]
 
+- [Add Parsely tags as a fallback metadata source](https://github.com/mozilla/readability/pull/865)
 - [Fix the case that jsonld parse process is ignored when context url include the trailing slash](https://github.com/mozilla/readability/pull/833)
 
 ## [0.5.0] - 2023-12-15
