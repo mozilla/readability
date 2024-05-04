@@ -2157,14 +2157,52 @@ Readability.prototype = {
         var linkDensity = this._getLinkDensity(node);
         var contentLength = this._getInnerText(node).length;
 
-        var haveToRemove =
-          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && li > p) ||
-          (input > Math.floor(p/3)) ||
-          (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
-          (weight >= 25 && linkDensity > 0.5) ||
-          ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+        const shouldRemoveNode = () => {
+          if (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) {
+            this.log(`Removing node: img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, 'figure') (img=${img}, p=${p}, node=${node})`);
+            return true;
+          }
+          if (!isList && li > p) {
+            this.log(`Removing node: !isList && li > p (li=${li}, p=${p})`);
+            return true;
+          }
+          if (input > Math.floor(p/3)) {
+            this.log(`Removing node: input > Math.floor(p/3) (input=${input}, p=${p})`);
+            return true;
+          }
+          if (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && linkDensity > 0 && !this._hasAncestorTag(node, "figure")) {
+            this.log(`Removing node: !isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, 'figure') (headingDensity=${headingDensity}, contentLength=${contentLength}, img=${img})`);
+            return true;
+          }
+          if (!isList && weight < 25 && linkDensity > 0.2) {
+            this.log(`Removing node: !isList && weight < 25 && linkDensity > 0.2 (weight=${weight}, linkDensity=${linkDensity})`);
+            return true;
+          }
+          if (weight >= 25 && linkDensity > 0.5) {
+            this.log(`Removing node: weight >= 25 && linkDensity > 0.5 (weight=${weight}, linkDensity=${linkDensity})`);
+            return true;
+          }
+          if ((embedCount === 1 && contentLength < 75) || embedCount > 1) {
+            this.log(`Removing node: (embedCount === 1 && contentLength < 75) || embedCount > 1 (embedCount=${embedCount}, contentLength=${contentLength})`);
+            return true;
+          }
+          if (this._getTextDensity(node, ["SPAN", "LI", "TD"].concat(Array.from(this.DIV_TO_P_ELEMS))) === 0) {
+            this.log("Removing node: textDensity of children === 0");
+            return true;
+          }
+          return false;
+        }
+        
+        var haveToRemove = shouldRemoveNode();
+
+        // var haveToRemove = 
+        //   (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
+        //   (!isList && li > p) ||
+        //   (input > Math.floor(p/3)) ||
+        //   (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
+        //   (!isList && weight < 25 && linkDensity > 0.2) ||
+        //   (weight >= 25 && linkDensity > 0.5) ||
+        //   ((embedCount === 1 && contentLength < 75) || embedCount > 1);
         // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
