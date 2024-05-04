@@ -2337,7 +2337,7 @@ Readability.prototype = {
     if (!articleContent)
       return null;
 
-    //this.log("Grabbed: " + articleContent.innerHTML);
+    this.log("Grabbed: " + articleContent.innerHTML);
 
     this._postProcessContent(articleContent);
 
