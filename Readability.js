@@ -2273,7 +2273,7 @@ Readability.prototype = {
     this._prepDocument();
 
     var metadata = this._getArticleMetadata(jsonLd);
-    this._metadata = metadata
+    this._metadata = metadata;
     this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
