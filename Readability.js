@@ -1476,7 +1476,7 @@ Readability.prototype = {
     var propertyPattern = /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
-    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|weibo:(article|webpage))\s*[\.:]\s*)?(author|creator|description|title|site_name)\s*$/i;
+    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
@@ -1518,7 +1518,8 @@ Readability.prototype = {
                      values["weibo:article:title"] ||
                      values["weibo:webpage:title"] ||
                      values["title"] ||
-                     values["twitter:title"];
+                     values["twitter:title"] ||
+                     values["parsely-title"];
 
     if (!metadata.title) {
       metadata.title = this._getArticleTitle();
@@ -1528,7 +1529,8 @@ Readability.prototype = {
     metadata.byline = jsonld.byline ||
                       values["dc:creator"] ||
                       values["dcterm:creator"] ||
-                      values["author"];
+                      values["author"] ||
+                      values["parsely-author"];
 
     // get description
     metadata.excerpt = jsonld.excerpt ||
@@ -1546,7 +1548,9 @@ Readability.prototype = {
 
     // get article published time
     metadata.publishedTime = jsonld.datePublished ||
-      values["article:published_time"] || null;
+                             values["article:published_time"] ||
+                             values["parsely-pub-date"] ||
+                             null;
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
