@@ -75,7 +75,7 @@ describe("isProbablyReaderable", function () {
       visibilityChecker() {
         called = true;
         return false;
-      }
+      },
     };
     expect(isProbablyReaderable(veryLargeDoc, options)).to.be.false;
     expect(called).to.be.true;
@@ -87,7 +87,7 @@ describe("isProbablyReaderable", function () {
       visibilityChecker() {
         called = true;
         return true;
-      }
+      },
     };
     expect(isProbablyReaderable(veryLargeDoc, options)).to.be.true;
     expect(called).to.be.true;

@@ -145,7 +145,7 @@ Readability.prototype = {
     // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
     commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
     // See: https://schema.org/Article
-    jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
+    jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/,
   },
 
   UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
@@ -166,7 +166,7 @@ Readability.prototype = {
     "DATALIST", "DFN", "EM", "EMBED", "I", "IMG", "INPUT", "KBD", "LABEL",
     "MARK", "MATH", "METER", "NOSCRIPT", "OBJECT", "OUTPUT", "PROGRESS", "Q",
     "RUBY", "SAMP", "SCRIPT", "SELECT", "SMALL", "SPAN", "STRONG", "SUB",
-    "SUP", "TEXTAREA", "TIME", "VAR", "WBR"
+    "SUP", "TEXTAREA", "TIME", "VAR", "WBR",
   ],
 
   // These are the classes that readability sets itself.
@@ -406,7 +406,7 @@ Readability.prototype = {
     });
 
     var medias = this._getAllNodesWithTag(articleContent, [
-      "img", "picture", "figure", "video", "audio", "source"
+      "img", "picture", "figure", "video", "audio", "source",
     ]);
 
     this._forEachNode(medias, function(media) {
@@ -2319,9 +2319,9 @@ Readability.prototype = {
       length: textContent.length,
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
-      publishedTime: metadata.publishedTime
+      publishedTime: metadata.publishedTime,
     };
-  }
+  },
 };
 
 if (typeof module === "object") {

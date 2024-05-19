@@ -87,7 +87,7 @@ function sanitizeSource(html, callbackFn) {
     "indent-spaces": 4,
     "numeric-entities": true,
     "output-xhtml": true,
-    "wrap": 0
+    "wrap": 0,
   }, callbackFn);
 }
 
