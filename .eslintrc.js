@@ -211,6 +211,6 @@ module.exports = {
     "valid-typeof": 2,
 
     // enforce trailing commas
-    "comma-dangle": ["error", "never"],
+    "comma-dangle": ["error", "always"],
   },
 };
