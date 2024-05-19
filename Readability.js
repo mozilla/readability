@@ -149,7 +149,7 @@ Readability.prototype = {
     // used to see if a node's content matches words commonly used for ad blocks or loading indicators
     adWords: /^(ad(vertising|vertisement)?|pub(licité)?|werb(ung)?|广告|Реклама|Anuncio)$/iu,
     loadingWords: /^((loading|正在加载|Загрузка|chargement|cargando)(…|\.\.\.)?)$/iu,
-    },
+  },
 
   // The commented out elements qualify as phrasing content but tend to be
   // removed by readability when put into paragraphs, so we ignore them here.
