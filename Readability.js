@@ -1563,6 +1563,8 @@ Readability.prototype = {
     metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
     metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
 
+    this.log("getArticleMetadata complete", metadata);
+
     return metadata;
   },
 
@@ -2352,7 +2354,7 @@ Readability.prototype = {
     }
 
     var textContent = articleContent.textContent;
-    return {
+    var parsedArticle = {
       title: this._articleTitle,
       byline: metadata.byline || this._articleByline,
       dir: this._articleDir,
@@ -2364,7 +2366,10 @@ Readability.prototype = {
       siteName: metadata.siteName || this._articleSiteName,
       publishedTime: metadata.publishedTime,
     };
-  },
+
+    this.log("parse complete", parsedArticle);
+    return parsedArticle;
+  }
 };
 
 if (typeof module === "object") {
