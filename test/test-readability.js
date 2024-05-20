@@ -281,7 +281,7 @@ describe("Readability API", function() {
       var content = new Readability(dom.window.document, {
         serializer: function(el) {
           return xml.serializeToString(el.firstChild);
-        }
+        },
       }).parse().content;
       expect(content).eql(expected_xhtml);
     });
@@ -297,7 +297,7 @@ describe("Readability API", function() {
         "</div>";
       var content = new Readability(dom.window.document, {
         charThreshold: 20,
-        allowedVideoRegex: /.*mycustomdomain.com.*/
+        allowedVideoRegex: /.*mycustomdomain.com.*/,
       }).parse().content;
       expect(content).eql(expected_xhtml);
     });

@@ -272,7 +272,7 @@
     "meta": true,
     "param": true,
     "source": true,
-    "wbr": true
+    "wbr": true,
   };
 
   var whitespace = [" ", "\t", "\n", "\r"];
@@ -290,7 +290,7 @@
     DOCUMENT_NODE: 9,
     DOCUMENT_TYPE_NODE: 10,
     DOCUMENT_FRAGMENT_NODE: 11,
-    NOTATION_NODE: 12
+    NOTATION_NODE: 12,
   };
 
   function getElementsByTagName(tag) {
@@ -510,7 +510,7 @@
     __proto__: Node.prototype,
 
     nodeName: "#comment",
-    nodeType: Node.COMMENT_NODE
+    nodeType: Node.COMMENT_NODE,
   };
 
   var Text = function () {
@@ -836,7 +836,7 @@
 
       value += " " + styleName + ": " + styleValue + ";";
       this.node.setAttribute("style", value.trim());
-    }
+    },
   };
 
   // For each item in styleMap, define a getter and setter on the style
@@ -1176,7 +1176,7 @@
       }
 
       return doc;
-    }
+    },
   };
 
   // Attach the standard DOM types to the global scope

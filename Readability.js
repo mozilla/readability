@@ -169,7 +169,7 @@ Readability.prototype = {
     "DATALIST", "DFN", "EM", "EMBED", "I", "IMG", "INPUT", "KBD", "LABEL",
     "MARK", "MATH", "METER", "NOSCRIPT", "OBJECT", "OUTPUT", "PROGRESS", "Q",
     "RUBY", "SAMP", "SCRIPT", "SELECT", "SMALL", "SPAN", "STRONG", "SUB",
-    "SUP", "TEXTAREA", "TIME", "VAR", "WBR"
+    "SUP", "TEXTAREA", "TIME", "VAR", "WBR",
   ],
 
   // These are the classes that readability sets itself.
@@ -409,7 +409,7 @@ Readability.prototype = {
     });
 
     var medias = this._getAllNodesWithTag(articleContent, [
-      "img", "picture", "figure", "video", "audio", "source"
+      "img", "picture", "figure", "video", "audio", "source",
     ]);
 
     this._forEachNode(medias, function(media) {
@@ -2362,9 +2362,9 @@ Readability.prototype = {
       length: textContent.length,
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
-      publishedTime: metadata.publishedTime
+      publishedTime: metadata.publishedTime,
     };
-  }
+  },
 };
 
 if (typeof module === "object") {

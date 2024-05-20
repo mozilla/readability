@@ -3,7 +3,7 @@
 
 module.exports = {
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
   },
   "env": {
     "es6": true,
@@ -209,5 +209,8 @@ module.exports = {
 
     // Only check typeof against valid results
     "valid-typeof": 2,
+
+    // enforce trailing commas
+    "comma-dangle": ["error", "always-multiline"],
   },
 };

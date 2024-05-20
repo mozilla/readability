@@ -37,6 +37,6 @@ exports.prettyPrint = function(html) {
     "unescape_strings": false,
     "wrap_line_length": 0,
     "wrap_attributes": "auto",
-    "wrap_attributes_indent_size": 4
+    "wrap_attributes_indent_size": 4,
   });
 };
