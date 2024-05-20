@@ -90,6 +90,10 @@
                     <a href="#id7">Setting up</a><a href="#setting-up" title="Permalink to this headline">¶</a>
                 </h3>
                 <p> We’ll work through an example with three local repositories, although in the real world they’d most likely be on three different computers. First, the <tt><span>public</span></tt> repository is where tested, polished changesets live, and it is where you synchronize with the rest of your team. </p>
+                <div>
+                    <pre>$ hg init public
+</pre>
+                </div>
                 <p> We’ll need two clones where work gets done, <tt><span>test-repo</span></tt> and <tt><span>dev-repo</span></tt>: </p>
                 <div>
                     <pre>$ hg clone public test-repo
@@ -124,6 +128,11 @@ evolve =
 </pre>
                 </div>
                 <p> and add </p>
+                <div>
+                    <pre>[extensions]
+evolve =
+</pre>
+                </div>
                 <p> Keep in mind that in real life, these repositories would probably be on separate computers, so you’d have to login to each one to configure each repository. </p>
                 <p> To start things off, let’s make one public, immutable changeset: </p>
                 <div>
@@ -228,6 +237,11 @@ updating to branch default
 </pre>
                 </div>
                 <p> and add </p>
+                <div>
+                    <pre>[extensions]
+evolve =
+</pre>
+                </div>
                 <p> Then edit Bob’s repository configuration: </p>
                 <div>
                     <pre>$ hg -R bob config --edit --local
@@ -523,6 +537,10 @@ $ hg pull -q -u
                     <p> [figure SG07: 2:e011 now public not obsolete, 4:fe88 now bumped] </p>
                 </blockquote>
                 <p> As usual when there’s trouble in your repository, the solution is to evolve it: </p>
+                <div>
+                    <pre>$ hg evolve --all
+</pre>
+                </div>
                 <p> Figure 8 illustrates Bob’s repository after evolving away the bumped changeset. Ignoring the obsolete changesets, Bob now has a nice, clean, simple history. His amendment of Alice’s bug fix lives on, as changeset 5:227d—albeit with a software-generated commit message. (Bob should probably amend that changeset to improve the commit message.) But the important thing is that his repository no longer has any troubled changesets, thanks to <tt><span>evolve</span></tt>. </p>
                 <blockquote>
                     <p> [figure SG08: 5:227d is new, formerly bumped changeset 4:fe88 now hidden] </p>
