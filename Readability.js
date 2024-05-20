@@ -145,7 +145,10 @@ Readability.prototype = {
     // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
     commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
     // See: https://schema.org/Article
-    jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/
+    jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/,
+    // used to see if a node's content matches words commonly used for ad blocks or loading indicators
+    adWords: /^(ad(vertising|vertisement)?|pub(licité)?|werb(ung)?|广告|Реклама|Anuncio)$/iu,
+    loadingWords: /^((loading|正在加载|Загрузка|chargement|cargando)(…|\.\.\.)?)$/iu,
   },
 
   UNLIKELY_ROLES: [ "menu", "menubar", "complementary", "navigation", "alert", "alertdialog", "dialog" ],
@@ -2154,17 +2157,57 @@ Readability.prototype = {
           embedCount++;
         }
 
-        var linkDensity = this._getLinkDensity(node);
-        var contentLength = this._getInnerText(node).length;
+        var innerText = this._getInnerText(node);
 
-        var haveToRemove =
-          (img > 1 && p / img < 0.5 && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && li > p) ||
-          (input > Math.floor(p/3)) ||
-          (!isList && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && !this._hasAncestorTag(node, "figure")) ||
-          (!isList && weight < 25 && linkDensity > 0.2) ||
-          (weight >= 25 && linkDensity > 0.5) ||
-          ((embedCount === 1 && contentLength < 75) || embedCount > 1);
+        // toss any node whose inner text contains nothing but suspicious words
+        if (this.REGEXPS.adWords.test(innerText) || this.REGEXPS.loadingWords.test(innerText)) {
+          return true;
+        }
+
+        var contentLength = innerText.length;
+        var linkDensity = this._getLinkDensity(node);
+        var textishTags = ["SPAN", "LI", "TD"].concat(Array.from(this.DIV_TO_P_ELEMS));
+        var textDensity = this._getTextDensity(node, textishTags);
+        var isFigureChild = this._hasAncestorTag(node, "figure");
+
+        // apply shadiness checks, then check for exceptions
+        const shouldRemoveNode = () => {
+          const errs = [];
+          if (!isFigureChild && img > 1 && p / img < 0.5) {
+            errs.push(`Bad p to img ratio (img=${img}, p=${p})`);
+          }
+          if (!isList && li > p) {
+            errs.push(`Too many li's outside of a list. (li=${li} > p=${p})`);
+          }
+          if (input > Math.floor(p/3)) {
+            errs.push(`Too many inputs per p. (input=${input}, p=${p})`);
+          }
+          if (!isList && !isFigureChild && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && linkDensity > 0) {
+            errs.push(`Suspiciously short. (headingDensity=${headingDensity}, img=${img}, linkDensity=${linkDensity})`);
+          }
+          if (!isList && weight < 25 && linkDensity > 0.2) {
+            errs.push(`Low weight and a little linky. (linkDensity=${linkDensity})`);
+          }
+          if (weight >= 25 && linkDensity > 0.5) {
+            errs.push(`High weight and mostly links. (linkDensity=${linkDensity})`);
+          }
+          if ((embedCount === 1 && contentLength < 75) || embedCount > 1) {
+            errs.push(`Suspicious embed. (embedCount=${embedCount}, contentLength=${contentLength})`);
+          }
+          if (img === 0 && textDensity === 0) {
+            errs.push(`No useful content. (img=${img}, textDensity=${textDensity})`);
+          }
+
+          if (errs.length > 0) {
+            this.log("Checks failed", errs);
+            return true;
+          }
+
+          return false;
+        };
+
+        var haveToRemove = shouldRemoveNode();
+
         // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
