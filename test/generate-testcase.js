@@ -1,12 +1,13 @@
 /* eslint-env node, mocha */
 
-var debug = false;
+var debug = true;
 
 var path = require("path");
 var fs = require("fs");
 var JSDOM = require("jsdom").JSDOM;
 var prettyPrint = require("./utils").prettyPrint;
 var http = require("http");
+var https = require("https");
 var urlparse = require("url").parse;
 var htmltidy = require("htmltidy2").tidy;
 
@@ -54,36 +55,43 @@ function generateTestcase(slug) {
   });
 }
 
-function fetchSource(url, callbackFn) {
-  if (!url) {
-    console.error("You should pass a URL if the source doesn't exist yet!");
-    process.exit(1);
-    return;
-  }
-  var client = http;
-  if (url.indexOf("https") == 0) {
-    client = require("https");
-  }
+function getWithRedirects(url, cb) {
+  var client = (url.indexOf("https") == 0) ? https : http;
+
   var options = urlparse(url);
   options.headers = { "User-Agent": FFX_UA };
 
-  client.get(options, function (response) {
+  client.get(options, async (response) => {
     if (debug) {
       console.log("STATUS:", response.statusCode);
       console.log("HEADERS:", JSON.stringify(response.headers));
     }
+
+    if(response.statusCode > 300 && response.statusCode <= 303) {
+      if (debug) console.log("following redirect", response.headers.location);
+      await getWithRedirects(response.headers.location, cb);
+    }
+
     response.setEncoding("utf-8");
     var rv = "";
     response.on("data", function (chunk) {
       rv += chunk;
     });
-    response.on("end", function () {
-      if (debug) {
-        console.log("End received");
-      }
-      sanitizeSource(rv, callbackFn);
+
+    response.on("end", function () => {
+      if (debug) console.log("End received");
+      sanitizeSource(rv, cb);
     });
   });
+}
+
+function fetchSource(url, callbackFn) {
+  if (!url) {
+    console.error("You should pass a URL if the source doesn't exist yet!");
+    process.exit(1);
+  }
+
+  getWithRedirects(url, (rv) => sanitizeSource(rv, callbackFn));
 }
 
 function sanitizeSource(html, callbackFn) {

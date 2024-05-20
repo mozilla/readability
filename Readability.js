@@ -1629,6 +1629,14 @@ Readability.prototype = {
             ""
           );
           var parsed = JSON.parse(content);
+
+          // some sites, like ones for academic journals, separate metadata for a journal article or paper from the
+          // site's own metadata. eg: nature has only @context, @type (WebPage), and mainEntity so *all* relevant metadata
+          // would be invisible without this.
+          if (parsed["mainEntity"]) {
+            parsed = parsed["mainEntity"];
+          }
+
           if (
             !parsed["@context"] ||
             !parsed["@context"].match(/^https?\:\/\/schema\.org\/?$/)
@@ -1729,8 +1737,12 @@ Readability.prototype = {
       /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
+<<<<<<< HEAD
     var namePattern =
       /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
+=======
+    var namePattern = /^\s*(?:(prism|citation|dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-_\.:]\s*)?(author|creator|pub-date|publicationDate|publication|description|title|site_name)\s*$/i;
+>>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // Find description tags.
     this._forEachNode(metaElements, function (element) {
@@ -1781,12 +1793,21 @@ Readability.prototype = {
     }
 
     // get author
+<<<<<<< HEAD
     metadata.byline =
       jsonld.byline ||
       values["dc:creator"] ||
       values["dcterm:creator"] ||
       values.author ||
       values["parsely-author"];
+=======
+    metadata.byline = jsonld.byline ||
+                      values["dc:creator"] ||
+                      values["dcterm:creator"] ||
+                      values["author"] ||
+                      values["parsely-author"] ||
+                      values["citation_author"];
+>>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // get description
     metadata.excerpt =
@@ -1803,11 +1824,20 @@ Readability.prototype = {
     metadata.siteName = jsonld.siteName || values["og:site_name"];
 
     // get article published time
+<<<<<<< HEAD
     metadata.publishedTime =
       jsonld.datePublished ||
       values["article:published_time"] ||
       values["parsely-pub-date"] ||
       null;
+=======
+    metadata.publishedTime = jsonld.datePublished ||
+                             values["article:published_time"] ||
+                             values["parsely-pub-date"] ||
+                             values["citation_publication_date"] ||
+                             values["prism:publicationDate"] ||
+                             null;
+>>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
