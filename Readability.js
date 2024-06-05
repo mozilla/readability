@@ -168,8 +168,8 @@ Readability.prototype = {
     "ABBR", "AUDIO", "B", "BDO", "BR", "BUTTON", "CITE", "CODE", "DATA",
     "DATALIST", "DFN", "EM", "EMBED", "I", "IMG", "INPUT", "KBD", "LABEL",
     "MARK", "MATH", "METER", "NOSCRIPT", "OBJECT", "OUTPUT", "PROGRESS", "Q",
-    "RUBY", "SAMP", "SCRIPT", "SELECT", "SMALL", "SPAN", "STRONG", "SUB",
-    "SUP", "TEXTAREA", "TIME", "VAR", "WBR",
+    "RUBY", "S", "SAMP", "SCRIPT", "SELECT", "SMALL", "SPAN", "STRONG", "SUB",
+    "SUP", "TEXTAREA", "TIME", "U", "VAR", "WBR",
   ],
 
   // These are the classes that readability sets itself.
