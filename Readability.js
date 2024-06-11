@@ -2369,7 +2369,7 @@ Readability.prototype = {
 
     this.log("parse complete", parsedArticle);
     return parsedArticle;
-  }
+  },
 };
 
 if (typeof module === "object") {
