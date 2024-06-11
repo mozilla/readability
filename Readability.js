@@ -1645,8 +1645,10 @@ Readability.prototype = {
           }
 
           if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
-            parsed = parsed["@graph"].find(it => {
-              return (it["@type"] || "").match(this.REGEXPS.jsonLdArticleTypes);
+            parsed = parsed["@graph"].find(function(it) {
+              return (it["@type"] || "").match(
+                this.REGEXPS.jsonLdArticleTypes,
+              );
             });
           }
 
@@ -1720,6 +1722,36 @@ Readability.prototype = {
   },
 
   /**
+   * Swaps the "Surname, GivenName" formatted bylines to "GivenName Surname".
+   *
+   * @param {string|string[]} name
+   * @returns Name or names in "GivenName Surname" format
+   */
+  _normalizeByline: function(name) {
+    var result = name;
+
+    if (Array.isArray(name)) {
+      return name.map((n) => this._normalizeByline(n));
+    }
+
+    // handle Surname, GivenName formatting
+    if (name.includes(",")) {
+      const parts = name.split(",").map(part => part.trim());
+      if (parts.length == 2) {
+        result = `${parts[1]} ${parts[0]}`;
+      }
+      if (parts.length > 2) {
+        result = `${parts[1]} ${parts[0]} ${parts.slice(2).join(" ")}`;
+      }
+    }
+
+    // remove things like "By:"
+    result = result.replace(/\w+:/, "");
+
+    return this._unescapeHtmlEntities(result);
+  },
+
+  /**
    * Attempts to get excerpt and byline metadata for the article.
    *
    * @param {Object} jsonld — object containing any metadata that
@@ -1737,12 +1769,7 @@ Readability.prototype = {
       /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
-<<<<<<< HEAD
-    var namePattern =
-      /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
-=======
     var namePattern = /^\s*(?:(prism|citation|dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-_\.:]\s*)?(author|creator|pub-date|publicationDate|publication|description|title|site_name)\s*$/i;
->>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // Find description tags.
     this._forEachNode(metaElements, function (element) {
@@ -1754,6 +1781,7 @@ Readability.prototype = {
       }
       var matches = null;
       var name = null;
+      var result = null;
 
       if (elementProperty) {
         matches = elementProperty.match(propertyPattern);
@@ -1762,7 +1790,7 @@ Readability.prototype = {
           // so we can match below.
           name = matches[0].toLowerCase().replace(/\s/g, "");
           // multiple authors
-          values[name] = content.trim();
+          result = content.trim();
         }
       }
       if (!matches && elementName && namePattern.test(elementName)) {
@@ -1771,8 +1799,23 @@ Readability.prototype = {
           // Convert to lowercase, remove any whitespace, and convert dots
           // to colons so we can match below.
           name = name.toLowerCase().replace(/\s/g, "").replace(/\./g, ":");
-          values[name] = content.trim();
+          result = content.trim();
         }
+      }
+
+      // handle properties which might have multiple distinct values, eg: citation_author
+      if (result) {
+        if (values[name]) {
+          if (Array.isArray(values[name]) && typeof result == "string") {
+            values[name].push(result);
+          }
+          if (typeof values[name] == "string") {
+            values[name] = [values[name], result];
+          }
+        } else {
+          values[name] = result;
+        }
+        this.log(`found metadata: ${name}=${values[name]}`);
       }
     });
 
@@ -1793,21 +1836,12 @@ Readability.prototype = {
     }
 
     // get author
-<<<<<<< HEAD
-    metadata.byline =
-      jsonld.byline ||
-      values["dc:creator"] ||
-      values["dcterm:creator"] ||
-      values.author ||
-      values["parsely-author"];
-=======
     metadata.byline = jsonld.byline ||
                       values["dc:creator"] ||
                       values["dcterm:creator"] ||
-                      values["author"] ||
+                      values.author ||
                       values["parsely-author"] ||
                       values["citation_author"];
->>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // get description
     metadata.excerpt =
@@ -1824,25 +1858,17 @@ Readability.prototype = {
     metadata.siteName = jsonld.siteName || values["og:site_name"];
 
     // get article published time
-<<<<<<< HEAD
-    metadata.publishedTime =
-      jsonld.datePublished ||
-      values["article:published_time"] ||
-      values["parsely-pub-date"] ||
-      null;
-=======
     metadata.publishedTime = jsonld.datePublished ||
                              values["article:published_time"] ||
                              values["parsely-pub-date"] ||
                              values["citation_publication_date"] ||
                              values["prism:publicationDate"] ||
                              null;
->>>>>>> 740ddd3 (WIP: add citation, prism, and dc metadata)
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
     metadata.title = this._unescapeHtmlEntities(metadata.title);
-    metadata.byline = this._unescapeHtmlEntities(metadata.byline);
+    metadata.byline = this._normalizeByline(metadata.byline);
     metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
     metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
     metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
