@@ -495,7 +495,7 @@ Readability.prototype = {
       // could assume it's the full title.
       var headings = this._concatNodeLists(
         doc.getElementsByTagName("h1"),
-        doc.getElementsByTagName("h2")
+        doc.getElementsByTagName("h2"),
       );
       var trimmedTitle = curTitle.trim();
       var match = this._someNode(headings, function(heading) {
@@ -1393,7 +1393,7 @@ Readability.prototype = {
           if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
             parsed = parsed["@graph"].find(function(it) {
               return (it["@type"] || "").match(
-                this.REGEXPS.jsonLdArticleTypes
+                this.REGEXPS.jsonLdArticleTypes,
               );
             });
           }
