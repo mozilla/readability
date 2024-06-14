@@ -54,6 +54,7 @@ function Readability(doc, options) {
   };
   this._disableJSONLD = !!options.disableJSONLD;
   this._allowedVideoRegex = options.allowedVideoRegex || this.REGEXPS.videos;
+  this._linkDensityModifier = options.linkDensityModifier || 0;
 
   // Start with all flags set
   this._flags = this.FLAG_STRIP_UNLIKELYS |
@@ -2185,10 +2186,10 @@ Readability.prototype = {
           if (!isList && !isFigureChild && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && linkDensity > 0) {
             errs.push(`Suspiciously short. (headingDensity=${headingDensity}, img=${img}, linkDensity=${linkDensity})`);
           }
-          if (!isList && weight < 25 && linkDensity > 0.2) {
+          if (!isList && weight < 25 && linkDensity > (0.2 + this._linkDensityModifier)) {
             errs.push(`Low weight and a little linky. (linkDensity=${linkDensity})`);
           }
-          if (weight >= 25 && linkDensity > 0.5) {
+          if (weight >= 25 && linkDensity > (0.5 + this._linkDensityModifier)) {
             errs.push(`High weight and mostly links. (linkDensity=${linkDensity})`);
           }
           if ((embedCount === 1 && contentLength < 75) || embedCount > 1) {
