@@ -8,29 +8,35 @@
                 <a data-type="indexterm" data-primary="monitoring distributed systems" data-secondary="terminology" id="id-DnC1SWFMhD"></a>There’s no uniformly shared vocabulary for discussing all topics related to monitoring. Even within Google, usage of the following terms varies, but the most common interpretations are listed here.
             </p>
             <dl>
+                <dt id="monitoring"> Monitoring </dt>
                 <dd>
                     <p> Collecting, processing, aggregating, and displaying real-time quantitative data about a system, such as query counts and types, error counts and types, processing times, and server lifetimes. </p>
                 </dd>
+                <dt id="white-box-monitoring"> White-box monitoring </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="white-box monitoring" id="id-9nCjSDS4tZILhX"></a>Monitoring based on metrics exposed by the internals of the system, including logs, interfaces like the Java Virtual Machine Profiling Interface, or an HTTP handler that emits internal statistics.
                     </p>
                 </dd>
+                <dt id="black-box-monitoring"> Black-box monitoring </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="black-box monitoring" id="id-zdCxSrSgTWIdhb"></a>Testing externally visible behavior as a user would see it.
                     </p>
                 </dd>
+                <dt id="dashboard"> Dashboard </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="dashboards" data-secondary="defined" id="id-VMCPS2SribIkh4"></a>An application (usually web-based) that provides a summary view of a service’s core metrics. A dashboard may have filters, selectors, and so on, but is prebuilt to expose the metrics most important to its users. The dashboard might also display team information such as ticket queue length, a list of high-priority bugs, the current on-call engineer for a given area of responsibility, or recent pushes.
                     </p>
                 </dd>
+                <dt id="alert"> Alert </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="alerts" data-secondary="defined" id="id-wqC7SvSPUAIVhQ"></a>A notification intended to be read by a human and that is pushed to a system such as a bug or ticket queue, an email alias, or a pager. Respectively, these alerts are classified as <em>tickets</em>, <em>email alerts</em>,<sup><a data-type="noteref" id="id-LvQuvtYS7UvI8h4-marker" href="#id-LvQuvtYS7UvI8h4">22</a></sup> and <em>pages</em>.
                     </p>
                 </dd>
+                <dt id="root-cause"> Root cause </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="root cause" data-secondary="defined" id="id-PnCpSaSKsgIjho"></a>A defect in a software or human system that, if repaired, instills confidence that this event won’t happen again in the same way. A given incident might have multiple root causes: for example, perhaps it was caused by a combination of insufficient process automation, software that crashed on bogus input, <em>and</em> insufficient testing of the script used to generate the configuration. Each of these factors might stand alone as a root cause, and each should be repaired.
@@ -47,6 +53,7 @@
                         </li>
                     </ul>
                 </dd>
+                <dt id="push"> Push </dt>
                 <dd>
                     <p> Any change to a service’s running software or its configuration. </p>
                 </dd>
@@ -58,15 +65,19 @@
                 <a data-type="indexterm" data-primary="monitoring distributed systems" data-secondary="benefits of monitoring" id="id-kVCkSpFnTl"></a>There are many reasons to monitor a system, including:
             </p>
             <dl>
+                <dt id="analyzing-long-term-trends"> Analyzing long-term trends </dt>
                 <dd>
                     <p> How big is my database and how fast is it growing? How quickly is my daily-active user count growing? </p>
                 </dd>
+                <dt id="comparing-over-time-or-experiment-groups"> Comparing over time or experiment groups </dt>
                 <dd>
                     <p> Are queries faster with Acme Bucket of Bytes 2.72 versus Ajax DB 3.14? How much better is my memcache hit rate with an extra node? Is my site slower than it was last week? </p>
                 </dd>
+                <dt id="alerting"> Alerting </dt>
                 <dd>
                     <p> Something is broken, and somebody needs to fix it right now! Or, something might break soon, so somebody should look soon. </p>
                 </dd>
+                <dt id="building-dashboards"> Building dashboards </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="dashboards" data-secondary="benefits of" id="id-rjCXSOS0iDIGT8"></a>Dashboards should answer basic questions about your service, and normally include some form of the four golden signals (discussed in <a data-type="xref" href="#xref_monitoring_golden-signals">The Four Golden Signals</a>).
@@ -174,21 +185,25 @@
                 <a data-type="indexterm" data-primary="monitoring distributed systems" data-secondary="four golden signals of" id="id-ZbCxSMFjU7"></a>The four golden signals of monitoring are latency, traffic, errors, and saturation. If you can only measure four metrics of your user-facing system, focus on these four.
             </p>
             <dl>
+                <dt id="latency"> Latency </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="service latency" data-secondary="monitoring for" id="id-yYCASJS9FKIWUb"></a><a data-type="indexterm" data-primary="latency" data-secondary="monitoring for" id="id-VMCpF2SXFbIwU4"></a><a data-type="indexterm" data-primary="request latency" id="id-rjCeIOSKFDIaU8"></a><a data-type="indexterm" data-primary="user requests" data-secondary="request latency monitoring" id="id-wqCDtvSGFAIMUQ"></a>The time it takes to service a request. It’s important to distinguish between the latency of successful requests and the latency of failed requests. For example, an HTTP 500 error triggered due to loss of connection to a database or other critical backend might be served very quickly; however, as an HTTP 500 error indicates a failed request, factoring 500s into your overall latency might result in misleading calculations. On the other hand, a slow error is even worse than a fast error! Therefore, it’s important to track error latency, as opposed to just filtering out errors.
                     </p>
                 </dd>
+                <dt id="traffic"> Traffic </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="user requests" data-secondary="traffic analysis" id="id-rjCXSOSxtDIaU8"></a><a data-type="indexterm" data-primary="traffic analysis" id="id-wqC4FvSBtAIMUQ"></a>A measure of how much demand is being placed on your system, measured in a high-level system-specific metric. For a web service, this measurement is usually HTTP requests per second, perhaps broken out by the nature of the requests (e.g., static versus dynamic content). For an audio streaming system, this measurement might focus on network I/O rate or concurrent sessions. For a key-value storage system, this measurement might be transactions and retrievals per <span>second</span>.
                     </p>
                 </dd>
+                <dt id="errors"> Errors </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="error rates" id="id-x1C4SjSlTLIMUJ"></a><a data-type="indexterm" data-primary="user requests" data-secondary="monitoring failures" id="id-PnCxFaS0TgIVUo"></a>The rate of requests that fail, either explicitly (e.g., HTTP 500s), implicitly (for example, an HTTP 200 success response, but coupled with the wrong content), or by policy (for example, "If you committed to one-second response times, any request over one second is an error"). Where protocol response codes are insufficient to express all failure conditions, secondary (internal) protocols may be necessary to track partial failure modes. Monitoring these cases can be drastically different: catching HTTP 500s at your load balancer can do a decent job of catching all completely failed requests, while only end-to-end system tests can detect that you’re serving the wrong content.
                     </p>
                 </dd>
+                <dt id="saturation"> Saturation </dt>
                 <dd>
                     <p>
                         <a data-type="indexterm" data-primary="saturation" id="id-OnCNS2S4iDIYU8"></a>How "full" your service is. A measure of your system fraction, emphasizing the resources that are most constrained (e.g., in a memory-constrained system, show memory; in an I/O-constrained system, show I/O). Note that many systems degrade in performance before they achieve 100% utilization, so having a utilization target is essential.
@@ -275,6 +290,7 @@
             </p>
             <p> It’s important that decisions about monitoring be made with long-term goals in mind. Every page that happens today distracts a human from improving the system for tomorrow, so there is often a case for taking a short-term hit to availability or performance in order to improve the long-term outlook for the system. Let’s take a look at two case studies that illustrate this trade-off. </p>
             <section data-type="sect2" id="bigtable-sre-a-tale-of-over-alerting-dbsXtjSM">
+                <h2> Bigtable SRE: A Tale of Over-Alerting </h2>
                 <p>
                     <a data-type="indexterm" id="MDSbig6" data-primary="monitoring distributed systems" data-secondary="case studies"></a><a data-type="indexterm" data-primary="Bigtable" id="id-XmCpFOFytySv"></a>Google’s internal infrastructure is typically offered and measured against a service level objective (SLO; see <a data-type="xref" href="http://fakehost/sre/sre-book/chapters/service-level-objectives">Service Level Objectives</a>). Many years ago, the Bigtable service’s SLO was based on a synthetic well-behaved client’s mean performance. Because of problems in Bigtable and lower layers of the storage stack, the mean performance was driven by a "large" tail: the worst 5% of requests were often significantly slower than the rest.
                 </p>
@@ -283,6 +299,7 @@
                 <p> This strategy gave us enough breathing room to actually fix the longer-term problems in Bigtable and the lower layers of the storage stack, rather than constantly fixing tactical problems. On-call engineers could actually accomplish work when they weren’t being kept up by pages at all hours. Ultimately, temporarily backing off on our alerts allowed us to make faster progress toward a better service. </p>
             </section>
             <section data-type="sect2" id="gmail-predictable-scriptable-responses-from-humans-BVs1h4SD">
+                <h2> Gmail: Predictable, Scriptable Responses from Humans </h2>
                 <p>
                     <a data-type="indexterm" data-primary="Gmail" id="id-XmC9SOFZhySv"></a>In the very early days of Gmail, the service was built on a retrofitted distributed process management system called Workqueue, which was originally created for batch processing of pieces of the search index. Workqueue was "adapted" to long-lived processes and subsequently applied to Gmail, but certain bugs in the relatively opaque codebase in the scheduler proved hard to beat.
                 </p>
@@ -293,6 +310,7 @@
                 </p>
             </section>
             <section data-type="sect2" id="the-long-run-MQsWTMS7">
+                <h2> The Long Run </h2>
                 <p>
                     <a data-type="indexterm" data-primary="monitoring distributed systems" data-secondary="short- vs. long-term availability" id="id-jyCxSoFETNSd"></a>A common theme connects the previous examples of Bigtable and Gmail: a tension between short-term and long-term availability. Often, sheer force of effort can help a rickety system achieve high availability, but this path is usually short-lived and fraught with burnout and dependence on a small number of heroic team members. Taking a controlled, short-term decrease in availability is often a painful, but strategic trade for the long-run stability of the system. It’s important not to think of every page as an event in isolation, but to consider whether the overall <em>level</em> of paging leads toward a healthy, appropriately available system with a healthy, viable team and long-term outlook. We review statistics about page frequency (usually expressed as incidents per shift, where an incident might be composed of a few related pages) in quarterly reports with management, ensuring that decision makers are kept up to date on the pager load and overall health of their teams.
                 </p>

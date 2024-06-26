@@ -289,7 +289,7 @@ describe("Readability API", function() {
     it("should use custom video regex sent as option", function() {
       var dom = new JSDOM(
         "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
-        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>"
+        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>",
       );
       var expected_xhtml = "<div id=\"readability-page-1\" class=\"page\">" +
         "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
