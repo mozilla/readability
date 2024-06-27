@@ -41,6 +41,7 @@ function Readability(doc, options) {
   this._articleDir = null;
   this._articleSiteName = null;
   this._attempts = [];
+  this._metadata = {};
 
   // Configurable options
   this._debug = !!options.debug;
@@ -841,7 +842,7 @@ Readability.prototype = {
   },
 
   _checkByline: function(node, matchString) {
-    if (this._articleByline) {
+    if (this._articleByline || this._metadata.byline) {
       return false;
     }
 
@@ -2332,6 +2333,7 @@ Readability.prototype = {
     this._prepDocument();
 
     var metadata = this._getArticleMetadata(jsonLd);
+    this._metadata = metadata;
     this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
