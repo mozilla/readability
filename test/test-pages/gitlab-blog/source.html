@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html data-n-head-ssr="" lang="en-us" data-n-head="%7B%22lang%22:%7B%22ssr%22:%22en-us%22%7D%7D" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+    <head>
+        <meta data-n-head="ssr" charset="utf-8" />
+        <meta data-n-head="ssr" name="viewport" content="width=device-width,initial-scale=1" />
+        <meta data-n-head="ssr" data-hid="contentSecurityPolicy" http-equiv="Content-Security-Policy" content="default-src 'self' https: http:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http: *.googletagmanager.com; style-src 'self' 'unsafe-inline' https: http: https://fonts.googleapis.com; object-src https: http:; base-uri 'self'; connect-src 'self' https: http: wss: ws: *.google-analytics.com *.analytics.google.com *.googletagmanager.com; frame-src 'self' https: http:; img-src 'self' https: http: data: *.google-analytics.com *.googletagmanager.com; manifest-src 'self'; media-src 'self' https: http:; child-src 'self' blob: https: http:; font-src 'self' https: http: data: https://fonts.gstatic.com;" />
+        <meta data-n-head="ssr" data-hid="formatDetection" name="format-detection" content="telephone=no" />
+        <meta data-n-head="ssr" data-hid="twitter:card" name="twitter:card" content="summary_large_image" />
+        <meta data-n-head="ssr" data-hid="twitter:site" name="twitter:site" content="@GitLab" />
+        <meta data-n-head="ssr" data-hid="msapplication-TileImage" name="msapplication-TileImage" content="/blog/nuxt-images/ico/mstile-144x144.png?cache=20220414" />
+        <meta data-n-head="ssr" data-hid="msapplication-config" name="msapplication-config" content="/blog/nuxt-images/ico/browserconfig.xml" />
+        <meta data-n-head="ssr" data-hid="robots" name="robots" content="index, follow" />
+        <meta data-n-head="ssr" data-hid="og:title" property="og:title" content="3 surprising findings from our 2024 Global DevSecOps Survey" />
+        <meta data-n-head="ssr" data-hid="twitter:title" property="twitter:title" content="3 surprising findings from our 2024 Global DevSecOps Survey" />
+        <meta data-n-head="ssr" data-hid="description" name="description" content="This year, our survey revealed changes in organizations' investment priorities in the wake of AI — and how AI is shaping the way teams work." />
+        <meta data-n-head="ssr" data-hid="og:description" property="og:description" content="This year, our survey revealed changes in organizations' investment priorities in the wake of AI — and how AI is shaping the way teams work." />
+        <meta data-n-head="ssr" data-hid="twitter:description" property="twitter:description" content="This year, our survey revealed changes in organizations' investment priorities in the wake of AI — and how AI is shaping the way teams work." />
+        <meta data-n-head="ssr" data-hid="og:image" property="og:image" content="https://images.ctfassets.net/r9o86ar0p03f/Wz5s9ag9lbHesTOe6DEpF/64e9498cf34ee867e5fa5f6876733782/fy25-global-devsecops-report-blog-image.png?fm=webp&amp;w=820&amp;h=500" />
+        <meta data-n-head="ssr" data-hid="twitter:image" property="twitter:image" content="https://images.ctfassets.net/r9o86ar0p03f/Wz5s9ag9lbHesTOe6DEpF/64e9498cf34ee867e5fa5f6876733782/fy25-global-devsecops-report-blog-image.png?fm=webp&amp;w=820&amp;h=500" />
+        <meta data-n-head="ssr" data-hid="og:url" property="og:url" content="https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" />
+        <meta data-n-head="ssr" data-hid="og:type" property="og:type" content="article" />
+        <title>
+            3 surprising findings from our 2024 Global DevSecOps Survey
+        </title>
+        <link data-n-head="ssr" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,700&amp;display=swap" />
+        <link data-n-head="ssr" rel="shortcut icon" type="image/x-icon" href="/blog/nuxt-images/ico/favicon.ico?cache=20220414" />
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="192x192" href="/blog/nuxt-images/ico/favicon-192x192.png?cache=2022041" />
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="160x160" href="/blog/nuxt-images/ico/favicon-160x160.png?cache=2022041" />
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="96x96" href="/blog/nuxt-images/ico/favicon-96x96.png?cache=2022041" />
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="32x32" href="/blog/nuxt-images/ico/favicon-32x32.png?cache=2022041" />
+        <link data-n-head="ssr" rel="icon" type="image/png" sizes="16x16" href="/blog/nuxt-images/ico/favicon-16x16.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="57x57" href="/blog/nuxt-images/ico/apple-touch-icon-57x57.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="60x60" href="/blog/nuxt-images/ico/apple-touch-icon-60x60.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="72x72" href="/blog/nuxt-images/ico/apple-touch-icon-72x72.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="76x76" href="/blog/nuxt-images/ico/apple-touch-icon-76x76.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="114x114" href="/blog/nuxt-images/ico/apple-touch-icon-114x114.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="120x120" href="/blog/nuxt-images/ico/apple-touch-icon-120x120.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="144x144" href="/blog/nuxt-images/ico/apple-touch-icon-144x144.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="152x152" href="/blog/nuxt-images/ico/apple-touch-icon-152x152.png?cache=2022041" />
+        <link data-n-head="ssr" rel="apple-touch-icon" sizes="180x180" href="/blog/nuxt-images/ico/apple-touch-icon-180x180.png?cache=2022041" />
+        <link data-n-head="ssr" rel="alternate" type="application/atom+xml" title="Blog" href="/atom.xml" />
+        <link data-n-head="ssr" rel="alternate" type="application/atom+xml" title="All Releases" href="/all-releases.xml" />
+        <link data-n-head="ssr" rel="alternate" type="application/atom+xml" title="Security Releases" href="/security-releases.xml" />
+        <link data-n-head="ssr" rel="alternate" type="application/atom+xml" title="Major Releases" href="/releases.xml" />
+        <link data-n-head="ssr" rel="canonical" href="https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" />
+        <link data-n-head="ssr" data-hid="i18n-xd" rel="alternate" href="https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" hreflang="x-default" />
+        <script data-n-head="ssr" data-hid="gtagConsent">
+        <![CDATA[
+        function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",functionality_storage:"denied",region:["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","IS","LI","NO","GB","PE","RU"],wait_for_update:500}),gtag("consent","default",{analytics_storage:"granted",ad_storage:"granted",functionality_storage:"granted",wait_for_update:500}),window.geofeed=a=>{dataLayer.push({event:"OneTrustCountryLoad",oneTrustCountryId:a.country.toString()})}
+        ]]>
+        </script>
+        <script data-n-head="ssr" data-hid="oneTrustSDK" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript" charset="utf-8" data-domain-script="7f944245-c5cd-4eed-a90e-dd955adfdd08"></script>
+        <script data-n-head="ssr" data-hid="oneTrustAutoBlocking" src="https://cdn.cookielaw.org/consent/7f944245-c5cd-4eed-a90e-dd955adfdd08/OtAutoBlock.js" type="text/javascript"></script>
+        <script data-n-head="ssr" data-hid="oneTrustGeolocation" src="https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location/geofeed" type="text/javascript"></script>
+        <script data-n-head="ssr" data-hid="schemaOrg" type="application/ld+json">
+        <![CDATA[
+        {"@context":"http://schema.org","@type":"Organization","name":"GitLab","legalName":"GitLab Inc.","url":"https://about.gitlab.com","logo":"https://gitlab.com/gitlab-com/gitlab-artwork/raw/master/logo/logo.png","foundingDate":"2011","founders":[{"@type":"Person","name":"Sid Sijbrandij"},{"@type":"Person","name":"Dmitriy Zaporozhets"}],"address":{"@type":"PostalAddress","streetAddress":"268 Bush Street #350","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94104","addressCountry":"USA"},"sameAs":["https://www.facebook.com/gitlab","https://twitter.com/gitlab","https://www.linkedin.com/company/gitlab-com","https://www.youtube.com/channel/UCnMGQ8QHMAnVIsI3xJrihhg"]}
+        ]]>
+        </script>
+        <script data-n-head="ssr" data-hid="bizible" src="//cdn.bizible.com/scripts/bizible.js" type="text/javascript"></script>
+        <script data-n-head="ssr" data-hid="munchkin" src="//munchkin.marketo.net/munchkin.js" type="text/javascript"></script>
+        <script data-n-head="ssr" src="https://extend.vimeocdn.com/ga/115027220.js" defer="defer" type="text/javascript"></script>
+        <script data-n-head="ssr" type="application/ld+json">
+        <![CDATA[
+        {"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://about.gitlab.com/blog/"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://about.gitlab.com/blog/categories/insights/"},{"@type":"ListItem","position":3,"name":"3 surprising findings from our 2024 Global DevSecOps Survey","item":"https://about.gitlab.comundefined"}]}
+        ]]>
+        </script>
+        <script data-n-head="ssr" type="application/ld+json">
+        <![CDATA[
+        {"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/"},"headline":"3 surprising findings from our 2024 Global DevSecOps Survey","description":"This year, our survey revealed changes in organizations' investment priorities in the wake of AI — and how AI is shaping the way teams work.","image":"https://images.ctfassets.net/r9o86ar0p03f/Wz5s9ag9lbHesTOe6DEpF/64e9498cf34ee867e5fa5f6876733782/fy25-global-devsecops-report-blog-image.png?fm=webp&w=820&h=500","keywords":["developer survey","DevSecOps","AI/ML","security","news"],"articleSection":"Insights","timeRequired":"5 min read","author":{"@type":"Person","name":"Dave Steer","url":"https://about.gitlab.com/company/team/"},"publisher":{"@type":"Organization","name":"GitLab","logo":{"@type":"ImageObject","url":"https://about.gitlab.com/nuxt-images/open-graph/open-graph-gitlab.png"}},"datePublished":"2024-06-25"}
+        ]]>
+        </script>
+        <script data-n-head="ssr" vmid="data-layer-script" type="text/javascript">
+        //<![CDATA[
+        window.dataLayer=window.dataLayer||[],window.dataLayer.push({category:"insights"}),window.dataLayer.push({tags:'["developer survey","DevSecOps","AI/ML","security","news"]'})
+        //]]>
+        </script>
+        <link rel="preload" href="/blog/b63ee7d.js" as="script" />
+        <link rel="preload" href="/blog/62154c7.js" as="script" />
+        <link rel="preload" href="/blog/css/63b7be9.css" as="style" />
+        <link rel="preload" href="/blog/95f5d35.js" as="script" />
+        <link rel="preload" href="/blog/css/857808e.css" as="style" />
+        <link rel="preload" href="/blog/336b5a2.js" as="script" />
+        <link rel="preload" href="/blog/css/a88f42d.css" as="style" />
+        <link rel="preload" href="/blog/d54d4a2.js" as="script" />
+        <link rel="preload" href="/blog/a8da030.js" as="script" />
+        <link rel="preload" href="/blog/css/ac7bdbe.css" as="style" />
+        <link rel="preload" href="/blog/16c1f05.js" as="script" />
+        <link rel="preload" href="/blog/css/fc5458f.css" as="style" />
+        <link rel="preload" href="/blog/b335556.js" as="script" />
+        <link rel="stylesheet" href="/blog/css/63b7be9.css" />
+        <link rel="stylesheet" href="/blog/css/857808e.css" />
+        <link rel="stylesheet" href="/blog/css/a88f42d.css" />
+        <link rel="stylesheet" href="/blog/css/ac7bdbe.css" />
+        <link rel="stylesheet" href="/blog/css/fc5458f.css" />
+        <link rel="preload" href="/blog/static/1719339200/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/state.js" as="script" />
+        <link rel="preload" href="/blog/static/1719339200/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/payload.js" as="script" />
+        <link rel="preload" href="/blog/static/1719339200/manifest.js" as="script" />
+    </head>
+    <body>
+        <div data-server-rendered="true" id="__nuxt">
+            <!---->
+            <div id="__layout">
+                <div data-fetch-key="0">
+                    <!---->
+                    <div role="main" class="overflow-container" data-v-0c13407a="">
+                        <div class="slp-container container" data-v-db4b02a6="" data-v-5c075fa1="" data-v-0c13407a="">
+                            <div class="wrapper" data-v-db4b02a6="" data-v-5c075fa1="">
+                                <div class="hero" data-v-db4b02a6="" data-v-5c075fa1="">
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-xs slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-1e032b32="">
+                                        <div data-v-e356681a="">
+                                            <span class="breadcrumb" data-v-1e032b32="" data-v-5c075fa1=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.78 4.22a.75.75 0 010 1.06L7.06 8l2.72 2.72a.75.75 0 11-1.06 1.06L5.47 8.53a.75.75 0 010-1.06l3.25-3.25a.75.75 0 011.06 0z"></path></svg></span>
+                                        </div><!---->
+                                    </div><a href="/blog/" data-v-1e032b32=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-1e032b32="">Blog<!----></span></a>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-xs slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-1e032b32="">
+                                        <div data-v-e356681a="">
+                                            <span class="breadcrumb__chevron hide-in-mobile" data-v-1e032b32=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg></span>
+                                        </div><!---->
+                                    </div>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-xs slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-1e032b32="">
+                                        <div data-v-e356681a="">
+                                            <span class="breadcrumb__crumb" data-v-1e032b32=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.78 4.22a.75.75 0 010 1.06L7.06 8l2.72 2.72a.75.75 0 11-1.06 1.06L5.47 8.53a.75.75 0 010-1.06l3.25-3.25a.75.75 0 011.06 0z"></path></svg></span>
+                                        </div><!---->
+                                    </div><a href="/blog/categories/insights/" data-v-1e032b32=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-1e032b32="">Insights<!----></span></a>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-xs slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-1e032b32="">
+                                        <div data-v-e356681a="">
+                                            <span class="breadcrumb__chevron hide-in-mobile" data-v-1e032b32=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg></span>
+                                        </div><!---->
+                                    </div><span class="breadcrumb__crumb breadcrumb__crumb--disabled hide-in-mobile" data-v-1e032b32=""><!----> <a data-v-1e032b32=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-1e032b32="">3 surprising findings from our 2024 Global DevSecOps Survey<!----></span></a> <!----></span>
+                                    <div class="date" data-v-db4b02a6="" data-v-5c075fa1="">
+                                        <span class="slp-text-body2" data-v-19cf63b5="" data-v-5c075fa1="">Published on: June 25, 2024 <!----></span>
+                                        <div class="pill" data-v-db4b02a6="" data-v-5c075fa1="">
+                                            <span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">5 min read <!----></span>
+                                        </div>
+                                    </div>
+                                    <h1 class="slp-text-heading2-bold" data-v-19cf63b5="" data-v-5c075fa1="">
+                                        3 surprising findings from our 2024 Global DevSecOps Survey<!---->
+                                    </h1>
+                                    <p class="slp-text-body1" data-v-19cf63b5="" data-v-5c075fa1="">
+                                        This year, our survey revealed changes in organizations' investment priorities in the wake of AI — and how AI is shaping the way teams work.<!---->
+                                    </p><img src="//images.ctfassets.net/r9o86ar0p03f/Wz5s9ag9lbHesTOe6DEpF/64e9498cf34ee867e5fa5f6876733782/fy25-global-devsecops-report-blog-image.png?fm=webp&amp;w=820&amp;h=500" alt="fy25-global-devsecops-report-blog-image" data-v-db4b02a6="" data-v-5c075fa1="" />
+                                </div>
+                                <div class="information" data-v-db4b02a6="" data-v-5c075fa1="">
+                                    <div class="author" data-v-db4b02a6="" data-v-5c075fa1="">
+                                        <img loading="lazy" src="//images.ctfassets.net/r9o86ar0p03f/4ShxnNt7OPo5KahD1shh95/6f7e55d0dad672e75de1f66b0f410369/dsteer-headshot?fm=webp&amp;w=80&amp;h=80" alt="dsteer-headshot" data-v-db4b02a6="" data-v-5c075fa1="" /> <a href="/blog/authors/dsteer/" class="slp-text-body1" data-v-19cf63b5="" data-v-5c075fa1="">Dave Steer<!----></a>
+                                    </div>
+                                    <div class="tags" data-v-db4b02a6="" data-v-5c075fa1="">
+                                        <a href="/blog/tags/developer-survey/" class="pill" data-v-db4b02a6="" data-v-5c075fa1=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">developer survey<!----></span></a><a href="/blog/tags/DevSecOps/" class="pill" data-v-db4b02a6="" data-v-5c075fa1=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">DevSecOps<!----></span></a><a href="/blog/tags/AI_ML/" class="pill" data-v-db4b02a6="" data-v-5c075fa1=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">AI/ML<!----></span></a><a href="/blog/tags/security/" class="pill" data-v-db4b02a6="" data-v-5c075fa1=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">security<!----></span></a><a href="/blog/tags/news/" class="pill" data-v-db4b02a6="" data-v-5c075fa1=""><span class="slp-text-body3" data-v-19cf63b5="" data-v-5c075fa1="">news<!----></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slp-container" data-v-db4b02a6="" data-v-0c13407a="">
+                            <div class="wrapper" data-v-74bd29c6="" data-v-0c13407a="">
+                                <div class="content" data-v-74bd29c6="">
+                                    <div class="body" data-v-b794d8fe="" data-v-0c13407a="">
+                                        <p>
+                                            This year’s <a href="https://about.gitlab.com/developer-survey/">survey of more than 5,000 DevSecOps professionals worldwide</a> suggests that as organizations adopt new technologies such as AI, they're reevaluating investment priorities and looking more critically at how they can improve the developer experience. Here's a look at three of the more surprising results from this year's survey, and what they could mean for software development, operations, and security teams in 2024 and beyond.
+                                        </p>
+                                        <h2 id="1.-ai-shines-a-light-on-cumbersome-toolchains" tabindex="-1">
+                                            1. AI shines a light on cumbersome toolchains <a class="header-anchor" href="#1.-ai-shines-a-light-on-cumbersome-toolchains"><svg width="24" height="24" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.2426 3.75736C11.4615 2.97631 10.1952 2.97631 9.41416 3.75736L7.99995 5.17157C7.60942 5.56209 6.97626 5.56209 6.58573 5.17157C6.19521 4.78105 6.19521 4.14788 6.58573 3.75736L7.99995 2.34314C9.56205 0.781046 12.0947 0.781046 13.6568 2.34314C15.2189 3.90524 15.2189 6.4379 13.6568 8L12.2426 9.41421C11.8521 9.80473 11.2189 9.80473 10.8284 9.41421C10.4379 9.02369 10.4379 8.39052 10.8284 8L12.2426 6.58578C13.0236 5.80473 13.0236 4.5384 12.2426 3.75736Z" fill="#333333"></path>
+                                            <path d="M10.5355 5.4645C10.926 5.85502 10.926 6.48819 10.5355 6.87871L6.87863 10.5356C6.4881 10.9261 5.85494 10.9261 5.46441 10.5356C5.07389 10.145 5.07389 9.51188 5.46441 9.12135L9.12127 5.4645C9.51179 5.07397 10.145 5.07397 10.5355 5.4645Z" fill="#333333"></path>
+                                            <path d="M3.75742 9.41422C2.97637 10.1953 2.97637 11.4616 3.75742 12.2426C4.53847 13.0237 5.8048 13.0237 6.58584 12.2426L8.00006 10.8284C8.39058 10.4379 9.02375 10.4379 9.41427 10.8284C9.8048 11.219 9.8048 11.8521 9.41427 12.2426L8.00006 13.6569C6.43796 15.219 3.9053 15.219 2.3432 13.6569C0.781107 12.0948 0.781107 9.56211 2.3432 8.00001L3.75742 6.5858C4.14794 6.19527 4.78111 6.19527 5.17163 6.5858C5.56216 6.97632 5.56215 7.60948 5.17163 8.00001L3.75742 9.41422Z" fill="#333333"></path></svg></a>
+                                        </h2>
+                                        <p>
+                                            This year, we looked specifically at how AI might impact DevSecOps teams’ attitudes toward their existing toolchains, and the findings were somewhat surprising. We know AI can help teams simplify software development, but our survey showed that respondents currently using AI might be more frustrated with their toolchains than those not using AI.
+                                        </p>
+                                        <p>
+                                            Nearly three-quarters (74%) of respondents whose organizations are currently using AI for software development said they wanted to consolidate their toolchain, compared to 57% of those who aren’t using AI. However, there wasn’t a significant difference between the two groups in the number of tools respondents reported using. In other words, respondents currently using AI weren’t using more tools but still felt a stronger need to consolidate their toolchain.
+                                        </p>
+                                        <p>
+                                            Why would AI accelerate the desire to consolidate? One explanation could be that different point solutions running different AI models create unmanageable (and unmeasurable) chaos in the software development lifecycle — and that is shedding new light on organizations’ already cumbersome and counterproductive toolchains. As organizations increase their AI investments, there will be a greater need to improve efficiency by consolidating and simplifying toolchain sprawl. Teams get more value from AI when toolchains are smaller, making integrating AI across the entire software development lifecycle easier.
+                                        </p>
+                                        <p>
+                                            One survey respondent identified “too many tools (including AI tools) and context switching” as the biggest challenges in software development in 2024, while another pointed to the “complexity of fragmented landscape of tools across the board.”
+                                        </p>
+                                        <p>
+                                            Another respondent highlighted AI’s opportunities to help teams address toolchain challenges: “AI is growing fast, and our current toolchain can be massively improved with AI integrations. We need to train team members better, so they know how to use AI effectively in their daily work.”
+                                        </p>
+                                        <h2 id="2.-ai-speeds-up-developer-onboarding-%E2%80%94-but-organizations-still-have-concerns" tabindex="-1">
+                                            2. AI speeds up developer onboarding — but organizations still have concerns <a class="header-anchor" href="#2.-ai-speeds-up-developer-onboarding-%E2%80%94-but-organizations-still-have-concerns"><svg width="24" height="24" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.2426 3.75736C11.4615 2.97631 10.1952 2.97631 9.41416 3.75736L7.99995 5.17157C7.60942 5.56209 6.97626 5.56209 6.58573 5.17157C6.19521 4.78105 6.19521 4.14788 6.58573 3.75736L7.99995 2.34314C9.56205 0.781046 12.0947 0.781046 13.6568 2.34314C15.2189 3.90524 15.2189 6.4379 13.6568 8L12.2426 9.41421C11.8521 9.80473 11.2189 9.80473 10.8284 9.41421C10.4379 9.02369 10.4379 8.39052 10.8284 8L12.2426 6.58578C13.0236 5.80473 13.0236 4.5384 12.2426 3.75736Z" fill="#333333"></path>
+                                            <path d="M10.5355 5.4645C10.926 5.85502 10.926 6.48819 10.5355 6.87871L6.87863 10.5356C6.4881 10.9261 5.85494 10.9261 5.46441 10.5356C5.07389 10.145 5.07389 9.51188 5.46441 9.12135L9.12127 5.4645C9.51179 5.07397 10.145 5.07397 10.5355 5.4645Z" fill="#333333"></path>
+                                            <path d="M3.75742 9.41422C2.97637 10.1953 2.97637 11.4616 3.75742 12.2426C4.53847 13.0237 5.8048 13.0237 6.58584 12.2426L8.00006 10.8284C8.39058 10.4379 9.02375 10.4379 9.41427 10.8284C9.8048 11.219 9.8048 11.8521 9.41427 12.2426L8.00006 13.6569C6.43796 15.219 3.9053 15.219 2.3432 13.6569C0.781107 12.0948 0.781107 9.56211 2.3432 8.00001L3.75742 6.5858C4.14794 6.19527 4.78111 6.19527 5.17163 6.5858C5.56216 6.97632 5.56215 7.60948 5.17163 8.00001L3.75742 9.41422Z" fill="#333333"></path></svg></a>
+                                        </h2>
+                                        <p>
+                                            Along with the increase in the number of tools teams use, we noted a significant increase in developer onboarding times in this year’s survey. In 2024, 70% of respondents told us it takes developers in their organization more than a month to onboard and become productive, up from 66% in 2023.
+                                        </p>
+                                        <p>
+                                            While it’s not surprising that AI-powered <a href="%E2%80%8B%E2%80%8Bhttps://about.gitlab.com/blog/2024/04/18/gitlab-duo-chat-now-generally-available/">chat assistants</a> and <a href="https://about.gitlab.com/blog/2024/06/11/top-tips-for-efficient-ai-powered-code-suggestions-with-gitlab-duo/">code suggestions</a>, can help developers onboard faster, the effect we observed in our survey was dramatic: Respondents who use AI for software development were much more likely to say that developer onboarding typically takes less than a month.
+                                        </p>
+                                        <p>
+                                            Despite AI’s clear benefits for developer experience, respondents expressed several concerns about its rapid adoption. Over half (55%) of respondents said introducing AI into the software development lifecycle is risky, and 49% said they fear AI will replace their current role within the next five years.
+                                        </p>
+                                        <p>
+                                            Rachel Stephens, senior analyst at industry analyst firm RedMonk, shared her perspective on these findings: “There is a component of psychological safety and team culture that impacts how people feel about AI. Individuals may be concerned about the security or privacy implications of AI, but their sense of unpreparedness may also stem from a feeling that AI has personal risk to their livelihoods.”
+                                        </p>
+                                        <p>
+                                            Our take is that the value of AI lies in its ability to automate repetitive tasks and behind-the-scenes optimization, empowering teams to focus on high-level problem-solving, innovation, and value creation. It’s about supplementing — not replacing — the human element of software development. One survey respondent summed this up as follows: “Fostering and maintaining creativity while leaning into AI is a challenge we face. We must remember that AI is simply one tool creative people use to cut out the junk that would otherwise impede productivity. It doesn’t replace human creativity.”
+                                        </p>
+                                        <h2 id="3.-the-cloud-becomes-table-stakes" tabindex="-1">
+                                            3. The cloud becomes table stakes <a class="header-anchor" href="#3.-the-cloud-becomes-table-stakes"><svg width="24" height="24" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.2426 3.75736C11.4615 2.97631 10.1952 2.97631 9.41416 3.75736L7.99995 5.17157C7.60942 5.56209 6.97626 5.56209 6.58573 5.17157C6.19521 4.78105 6.19521 4.14788 6.58573 3.75736L7.99995 2.34314C9.56205 0.781046 12.0947 0.781046 13.6568 2.34314C15.2189 3.90524 15.2189 6.4379 13.6568 8L12.2426 9.41421C11.8521 9.80473 11.2189 9.80473 10.8284 9.41421C10.4379 9.02369 10.4379 8.39052 10.8284 8L12.2426 6.58578C13.0236 5.80473 13.0236 4.5384 12.2426 3.75736Z" fill="#333333"></path>
+                                            <path d="M10.5355 5.4645C10.926 5.85502 10.926 6.48819 10.5355 6.87871L6.87863 10.5356C6.4881 10.9261 5.85494 10.9261 5.46441 10.5356C5.07389 10.145 5.07389 9.51188 5.46441 9.12135L9.12127 5.4645C9.51179 5.07397 10.145 5.07397 10.5355 5.4645Z" fill="#333333"></path>
+                                            <path d="M3.75742 9.41422C2.97637 10.1953 2.97637 11.4616 3.75742 12.2426C4.53847 13.0237 5.8048 13.0237 6.58584 12.2426L8.00006 10.8284C8.39058 10.4379 9.02375 10.4379 9.41427 10.8284C9.8048 11.219 9.8048 11.8521 9.41427 12.2426L8.00006 13.6569C6.43796 15.219 3.9053 15.219 2.3432 13.6569C0.781107 12.0948 0.781107 9.56211 2.3432 8.00001L3.75742 6.5858C4.14794 6.19527 4.78111 6.19527 5.17163 6.5858C5.56216 6.97632 5.56215 7.60948 5.17163 8.00001L3.75742 9.41422Z" fill="#333333"></path></svg></a>
+                                        </h2>
+                                        <p>
+                                            In our survey, cloud computing has consistently ranked as a top IT investment priority over the past several years. In 2022, cloud computing ranked number two, after security, and in 2023 it took the top spot — not surprising, given increased pressure on organizations to undergo <a href="https://about.gitlab.com/blog/2023/05/16/lockheed-martin-aws-gitlab/">digital transformation</a>.
+                                        </p>
+                                        <p>
+                                            In 2024, though, cloud computing saw a sharp decrease, ranking at number five. However, at the same time, it’s clear that the cloud continues to be important. In fact, we saw a significant increase in the number of respondents who said they are running 50% or more of their apps in the cloud. This suggests that while the cloud is still mission-critical for many businesses, it’s now “table stakes” — and at the same time, the list of priorities for technical teams and IT leaders continues to grow.
+                                        </p>
+                                        <p>
+                                            According to RedMonk’s Stephens, “We are in a cash-constrained financial environment, and people are having to make prioritization decisions between technology investments — meaning organizations could be reallocating some, but not all, of their digital transformation budgets to things like AI.”
+                                        </p>
+                                        <h2 id="explore-this-year%E2%80%99s-report" tabindex="-1">
+                                            Explore this year’s report <a class="header-anchor" href="#explore-this-year%E2%80%99s-report"><svg width="24" height="24" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.2426 3.75736C11.4615 2.97631 10.1952 2.97631 9.41416 3.75736L7.99995 5.17157C7.60942 5.56209 6.97626 5.56209 6.58573 5.17157C6.19521 4.78105 6.19521 4.14788 6.58573 3.75736L7.99995 2.34314C9.56205 0.781046 12.0947 0.781046 13.6568 2.34314C15.2189 3.90524 15.2189 6.4379 13.6568 8L12.2426 9.41421C11.8521 9.80473 11.2189 9.80473 10.8284 9.41421C10.4379 9.02369 10.4379 8.39052 10.8284 8L12.2426 6.58578C13.0236 5.80473 13.0236 4.5384 12.2426 3.75736Z" fill="#333333"></path>
+                                            <path d="M10.5355 5.4645C10.926 5.85502 10.926 6.48819 10.5355 6.87871L6.87863 10.5356C6.4881 10.9261 5.85494 10.9261 5.46441 10.5356C5.07389 10.145 5.07389 9.51188 5.46441 9.12135L9.12127 5.4645C9.51179 5.07397 10.145 5.07397 10.5355 5.4645Z" fill="#333333"></path>
+                                            <path d="M3.75742 9.41422C2.97637 10.1953 2.97637 11.4616 3.75742 12.2426C4.53847 13.0237 5.8048 13.0237 6.58584 12.2426L8.00006 10.8284C8.39058 10.4379 9.02375 10.4379 9.41427 10.8284C9.8048 11.219 9.8048 11.8521 9.41427 12.2426L8.00006 13.6569C6.43796 15.219 3.9053 15.219 2.3432 13.6569C0.781107 12.0948 0.781107 9.56211 2.3432 8.00001L3.75742 6.5858C4.14794 6.19527 4.78111 6.19527 5.17163 6.5858C5.56216 6.97632 5.56215 7.60948 5.17163 8.00001L3.75742 9.41422Z" fill="#333333"></path></svg></a>
+                                        </h2>
+                                        <p>
+                                            Read the full <a href="https://about.gitlab.com/developer-survey/">2024 Global DevSecOps Report</a> for more insights on AI, security, developer experience, and more.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="share" data-v-74bd29c6="">
+                                    <div class="sticky-container" data-v-74bd29c6="">
+                                        <p class="slp-text-body1-bold" data-v-19cf63b5="" data-v-74bd29c6="">
+                                            Share this article<!---->
+                                        </p>
+                                        <div class="social-icon-links" data-v-74bd29c6="">
+                                            <a href="https://twitter.com/intent/tweet?text=Check%20out%203%20surprising%20findings%20from%20our%202024%20Global%20DevSecOps%20Survey&amp;url=https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" target="_blank" data-toggle="tooltip" title="Share on twitter" data-ga-name="twitter" data-ga-location="body" class="social-link twitter-link twitter-share-button" data-v-74bd29c6="">
+                                            <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-sm slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-74bd29c6="">
+                                                <!---->
+                                                <div data-v-e356681a="">
+                                                    <svg width="16" height="16" viewbox="0 0 16 16" fill="currentcolor" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Light Background" clip-path="url(#clip0_272_4411)">
+                                                        <path id="Vector" d="M9.31264 6.77143L15.1379 0H13.7575L8.69942 5.87954L4.65953 0H0L6.1091 8.8909L0 15.9918H1.38049L6.72197 9.78279L10.9884 15.9918H15.6479L9.3123 6.77143H9.31264ZM7.42187 8.96923L6.80289 8.0839L1.87789 1.03921H3.99824L7.97277 6.7245L8.59175 7.60983L13.7582 14.9998H11.6378L7.42187 8.96957V8.96923Z" stroke="none" fill="currentColor"></path>
+                                                    </g>
+                                                    <defs>
+                                                        <clippath id="clip0_272_4411">
+                                                            <rect width="15.6479" height="16" fill="white"></rect>
+                                                        </clippath>
+                                                    </defs></svg>
+                                                </div>
+                                            </div></a> <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" target="_blank" data-toggle="tooltip" title="GitLab on LinkedIn" data-ga-name="linkedin" data-ga-location="body" class="social-link linkedin-link" data-v-74bd29c6="">
+                                            <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-sm slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-74bd29c6="">
+                                                <!---->
+                                                <div data-v-e356681a="">
+                                                    <svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Group">
+                                                        <path id="Vector" d="M15.4635 0H1.82914C1.17601 0 0.647888 0.515625 0.647888 1.15313V14.8438C0.647888 15.4813 1.17601 16 1.82914 16H15.4635C16.1166 16 16.6479 15.4813 16.6479 14.8469V1.15313C16.6479 0.515625 16.1166 0 15.4635 0ZM5.39476 13.6344H3.01976V5.99687H5.39476V13.6344ZM4.20726 4.95625C3.44476 4.95625 2.82914 4.34062 2.82914 3.58125C2.82914 2.82188 3.44476 2.20625 4.20726 2.20625C4.96664 2.20625 5.58226 2.82188 5.58226 3.58125C5.58226 4.3375 4.96664 4.95625 4.20726 4.95625ZM14.2823 13.6344H11.9104V9.92188C11.9104 9.0375 11.8948 7.89687 10.676 7.89687C9.44164 7.89687 9.25414 8.8625 9.25414 9.85938V13.6344H6.88539V5.99687H9.16039V7.04063H9.19164C9.50726 6.44063 10.2823 5.80625 11.4354 5.80625C13.8385 5.80625 14.2823 7.3875 14.2823 9.44375V13.6344Z" fill="#0A66C2"></path>
+                                                    </g></svg>
+                                                </div>
+                                            </div></a> <a href="https://www.facebook.com/sharer/sharer.php?u=https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" target="_blank" data-toggle="tooltip" title="GitLab on Facebook" data-ga-name="facebook" data-ga-location="body" class="social-link facebook-link" data-v-74bd29c6="">
+                                            <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-sm slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-74bd29c6="">
+                                                <!---->
+                                                <div data-v-e356681a="">
+                                                    <svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Dark Background" clip-path="url(#clip0_57_3285)">
+                                                        <path id="Vector" d="M16.6479 8C16.6479 3.58172 13.0662 0 8.64795 0C4.22967 0 0.647949 3.58172 0.647949 8C0.647949 11.993 3.57342 15.3027 7.39795 15.9028V10.3125H5.3667V8H7.39795V6.2375C7.39795 4.2325 8.59232 3.125 10.4197 3.125C11.2947 3.125 12.2104 3.28125 12.2104 3.28125V5.25H11.2017C10.2079 5.25 9.89795 5.86672 9.89795 6.5V8H12.1167L11.762 10.3125H9.89795V15.9028C13.7225 15.3027 16.6479 11.993 16.6479 8Z" fill="#1877F2"></path>
+                                                    </g>
+                                                    <defs>
+                                                        <clippath id="clip0_57_3285">
+                                                            <rect width="16" height="16" fill="white" transform="translate(0.647949)"></rect>
+                                                        </clippath>
+                                                    </defs></svg>
+                                                </div>
+                                            </div></a> <a href="https://news.ycombinator.com/submitlink?u=https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/&amp;t=Check%20out%203%20surprising%20findings%20from%20our%202024%20Global%20DevSecOps%20Survey" target="_blank" data-toggle="tooltip" title="GitLab on YouTube" data-ga-name="hacker news" data-ga-location="body" class="social-link linkedin-link" data-v-74bd29c6="">
+                                            <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-sm slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-74bd29c6="">
+                                                <!---->
+                                                <div data-v-e356681a="">
+                                                    <svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Group">
+                                                        <path id="Vector" d="M16.6479 0H0.647919V16H16.6479V0Z" fill="#FB651E"></path>
+                                                        <path id="Vector_2" d="M8.10878 9.0465L5.36249 3.90186H6.61758L8.23305 7.15764C8.2579 7.21563 8.2869 7.2757 8.32003 7.33783C8.35317 7.39996 8.38217 7.46417 8.40702 7.53044C8.42359 7.5553 8.43602 7.57808 8.4443 7.59879C8.45259 7.6195 8.46087 7.63814 8.46915 7.65471C8.51058 7.73755 8.54786 7.81833 8.58099 7.89703C8.61413 7.97573 8.64313 8.04822 8.66798 8.1145C8.73426 7.97366 8.80675 7.82247 8.88545 7.66092C8.96415 7.49937 9.04492 7.33162 9.12777 7.15764L10.7681 3.90186H11.9362L9.16505 9.10863V12.4265H8.10878V9.0465Z" fill="white"></path>
+                                                    </g></svg>
+                                                </div>
+                                            </div></a> <a href="https://www.threads.net/intent/post?text=https://about.gitlab.com/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/" data-toggle="tooltip" data-ga-name="threads" data-ga-location="body" class="social-link" data-v-74bd29c6="">
+                                            <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-sm" style="color:#000" data-v-e356681a="" data-v-74bd29c6="">
+                                                <!---->
+                                                <div data-v-e356681a="">
+                                                    <svg width="15" height="16" viewbox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Group">
+                                                        <path id="Vector" d="M7.79511 16H7.79031C5.40311 15.984 3.56791 15.1968 2.33431 13.6608C1.23831 12.2928 0.67191 10.3904 0.65271 8.0064V7.9952C0.67191 5.6096 1.23831 3.7088 2.33591 2.3408C3.56791 0.8032 5.40471 0.016 7.79031 0H7.79511H7.79991C9.63031 0.0128 11.1615 0.4832 12.3503 1.3984C13.4687 2.2592 14.2559 3.4848 14.6895 5.0432L13.3295 5.4224C12.5935 2.7824 10.7311 1.4336 7.79351 1.4128C5.85431 1.4272 4.38711 2.0368 3.43351 3.224C2.54231 4.336 2.08151 5.9424 2.06391 8C2.08151 10.0576 2.54231 11.664 3.43511 12.776C4.38871 13.9648 5.85591 14.5744 7.79511 14.5872C9.54391 14.5744 10.7007 14.1664 11.6623 13.224C12.7599 12.1488 12.7407 10.8288 12.3887 10.0256C12.1823 9.552 11.8063 9.1584 11.2991 8.8592C11.1711 9.76 10.8847 10.4896 10.4431 11.04C9.85271 11.7744 9.01591 12.176 7.95671 12.2336C7.15511 12.2768 6.38231 12.088 5.78391 11.6992C5.07511 11.24 4.66071 10.5392 4.61591 9.7232C4.57271 8.9296 4.88791 8.2 5.50231 7.6688C6.08951 7.1616 6.91511 6.864 7.89111 6.808C8.60951 6.768 9.28311 6.8 9.90391 6.9024C9.82071 6.408 9.65431 6.0144 9.40471 5.7312C9.06231 5.3408 8.53271 5.1424 7.83191 5.1376C7.82551 5.1376 7.81911 5.1376 7.81271 5.1376C7.24951 5.1376 6.48471 5.2928 5.99831 6.0176L4.82711 5.232C5.47991 4.2624 6.53911 3.728 7.81271 3.728C7.82231 3.728 7.83191 3.728 7.84151 3.728C9.97111 3.7408 11.2399 5.0448 11.3663 7.32C11.4383 7.3504 11.5103 7.3824 11.5807 7.4144C12.5743 7.8816 13.3007 8.5888 13.6831 9.4608C14.2143 10.6752 14.2639 12.6544 12.6511 14.2336C11.4175 15.44 9.92151 15.9856 7.79991 16H7.79511ZM8.46391 8.2064C8.30231 8.2064 8.13911 8.2112 7.97111 8.2208C6.74711 8.2896 5.98391 8.8512 6.02711 9.6496C6.07191 10.4864 6.99511 10.8752 7.88311 10.8272C8.69911 10.784 9.76151 10.4656 9.94071 8.3536C9.48951 8.256 8.99511 8.2064 8.46391 8.2064Z" fill="black"></path>
+                                                    </g></svg>
+                                                </div>
+                                            </div></a>
+                                        </div>
+                                        <div class="form_column newsletter-form" data-v-681f9f58="" data-v-74bd29c6="">
+                                            <script src="//page.gitlab.com/js/forms2/js/forms2.min.js" data-v-681f9f58=""></script>
+                                            <div class="form_container" data-v-681f9f58="">
+                                                <div data-v-681f9f58="">
+                                                    <h2 class="form_header slp-text-heading3" data-v-19cf63b5="" data-v-681f9f58="">
+                                                        Sign up for GitLab’s newsletter <!---->
+                                                    </h2>
+                                                    <p class="required_label slp-text-body1" data-v-19cf63b5="" data-v-681f9f58="">
+                                                        All fields required <!---->
+                                                    </p>
+                                                    <form id="mktoForm_1077" class="mktoForm_container" data-v-681f9f58="" name="mktoForm_1077"></form>
+                                                </div>
+                                            </div><!---->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wrapper" data-v-5dcd7740="" data-v-0c13407a="">
+                                <div class="header" data-v-5dcd7740="">
+                                    <h2 class="slp-text-heading2-bold" data-v-19cf63b5="" data-v-5dcd7740="">
+                                        More to explore<!---->
+                                    </h2><a href="/blog/" data-ga-location="resources" data-ga-name="View all blog posts" class="slp-btn header-cta slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740="">View all blog posts
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                        <div data-v-e356681a="">
+                                            <svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg>
+                                        </div><!---->
+                                    </div></a>
+                                </div>
+                                <div class="cards" data-v-5dcd7740="">
+                                    <a data-ga-location="resources" data-ga-name="How we overhauled GitLab navigation" href="/blog/2023/08/15/navigation-research-blog-post/" class="card" data-v-5dcd7740="">
+                                    <div class="category" data-v-5dcd7740="">
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                            <!---->
+                                            <div data-v-e356681a="">
+                                                <svg viewbox="0 0 32 32" fill="currentcolor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M2 31.96V6H4V26.9L8.56 22H28V5C28 3.34 26.66 2 25 2H2V0H25C27.76 0 30 2.24 30 5V24H9.44L2 31.96Z"></path>
+                                                <path d="M24 14H8V6H24V14ZM10 12H22V8H10V12Z"></path>
+                                                <path d="M24 16H8V18H24V16Z"></path></svg>
+                                            </div>
+                                        </div><span class="slp-text-body2" data-v-19cf63b5="" data-v-5dcd7740="">Insights<!----></span>
+                                    </div><img src="//images.ctfassets.net/r9o86ar0p03f/navigation.jpeg/06a9772938fa88f91569c59b9cc52ac2/navigation.jpeg?fm=webp&amp;w=318&amp;h=222" alt="navigation.jpeg" data-v-5dcd7740="" />
+                                    <h4 class="title slp-text-heading5-bold" data-v-19cf63b5="" data-v-5dcd7740="">
+                                        How we overhauled GitLab navigation<!---->
+                                    </h4><button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740="">Read the blog</button>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                        <div data-v-e356681a="">
+                                            <button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg></button>
+                                        </div><!---->
+                                    </div></a><a data-ga-location="resources" data-ga-name="Beautifying our UI: Giving GitLab build features a fresh look" href="/blog/2023/07/05/beautifying-of-our-ui/" class="card" data-v-5dcd7740="">
+                                    <div class="category" data-v-5dcd7740="">
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                            <!---->
+                                            <div data-v-e356681a="">
+                                                <svg viewbox="0 0 32 32" fill="currentcolor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M2 31.96V6H4V26.9L8.56 22H28V5C28 3.34 26.66 2 25 2H2V0H25C27.76 0 30 2.24 30 5V24H9.44L2 31.96Z"></path>
+                                                <path d="M24 14H8V6H24V14ZM10 12H22V8H10V12Z"></path>
+                                                <path d="M24 16H8V18H24V16Z"></path></svg>
+                                            </div>
+                                        </div><span class="slp-text-body2" data-v-19cf63b5="" data-v-5dcd7740="">Insights<!----></span>
+                                    </div><img src="//images.ctfassets.net/r9o86ar0p03f/beautify.jpg/761c3f96cb9f518f84dc5e5d2c05c3bd/beautify.jpg?fm=webp&amp;w=318&amp;h=222" alt="beautify.jpg" data-v-5dcd7740="" />
+                                    <h4 class="title slp-text-heading5-bold" data-v-19cf63b5="" data-v-5dcd7740="">
+                                        Beautifying our UI: Giving GitLab build features a fresh look<!---->
+                                    </h4><button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740="">Read the blog</button>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                        <div data-v-e356681a="">
+                                            <button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg></button>
+                                        </div><!---->
+                                    </div></a><a data-ga-location="resources" data-ga-name="4 best practices leading orgs to release software faster" href="/blog/2023/06/08/best-practices-leading-orgs-to-release-software-faster/" class="card" data-v-5dcd7740="">
+                                    <div class="category" data-v-5dcd7740="">
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                            <!---->
+                                            <div data-v-e356681a="">
+                                                <svg viewbox="0 0 32 32" fill="currentcolor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M2 31.96V6H4V26.9L8.56 22H28V5C28 3.34 26.66 2 25 2H2V0H25C27.76 0 30 2.24 30 5V24H9.44L2 31.96Z"></path>
+                                                <path d="M24 14H8V6H24V14ZM10 12H22V8H10V12Z"></path>
+                                                <path d="M24 16H8V18H24V16Z"></path></svg>
+                                            </div>
+                                        </div><span class="slp-text-body2" data-v-19cf63b5="" data-v-5dcd7740="">Insights<!----></span>
+                                    </div><img src="//images.ctfassets.net/r9o86ar0p03f/2023-devsecops-report-blog-banner2.png/d201c66d9ed387afe491446d19d9b167/2023-devsecops-report-blog-banner2.png?fm=webp&amp;w=318&amp;h=222" alt="2023-devsecops-report-blog-banner2.png" data-v-5dcd7740="" />
+                                    <h4 class="title slp-text-heading5-bold" data-v-19cf63b5="" data-v-5dcd7740="">
+                                        4 best practices leading orgs to release software faster<!---->
+                                    </h4><button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740="">Read the blog</button>
+                                    <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-5dcd7740="">
+                                        <div data-v-e356681a="">
+                                            <button type="button" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-5dcd7740=""><svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg></button>
+                                        </div><!---->
+                                    </div></a>
+                                </div>
+                            </div>
+                            <div class="contact-cta-container" data-v-69f51f80="" data-v-0c13407a="">
+                                <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-md slp-icon--color-color-text-300" style="color:color-text-300" data-v-e356681a="" data-v-69f51f80="">
+                                    <!---->
+                                    <div data-v-e356681a="">
+                                        <svg width="32" height="33" viewbox="0 0 32 33" fill="currentcolor" fill-opacity="0" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_7608_14965)">
+                                            <path d="M4.97144 17.0143C5.80529 19.2113 7.31272 21.0883 9.27801 22.3767C9.56103 22.5663 9.7927 22.823 9.95237 23.1239C10.112 23.4248 10.1947 23.7606 10.1931 24.1013V27.144C10.1914 28.521 10.7363 29.8423 11.7082 30.8178C12.68 31.7933 13.9994 32.3431 15.3763 32.3465V32.3465C16.0595 32.3469 16.736 32.2126 17.3672 31.9512C17.9984 31.6899 18.5719 31.3067 19.0548 30.8234C19.5377 30.3402 19.9206 29.7665 20.1816 29.1352C20.4425 28.5038 20.5764 27.8272 20.5756 27.144V24.1013C20.5744 23.6371 20.73 23.1861 21.0171 22.8214" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M24.7044 7.04123C23.6472 5.41078 22.1807 4.08619 20.4515 3.19968C18.7223 2.31318 16.7908 1.89578 14.8498 1.98915C13.8133 2.03543 12.7888 2.22936 11.8071 2.56507" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M10.1765 24.1012H20.575" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M9.39221 26.8496H21.3585" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M10.0903 29.5979H20.8375" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M11.6615 13.2099C10.4499 12.1377 8.88795 11.5458 7.27009 11.5458C5.65224 11.5458 4.09028 12.1377 2.87872 13.2099" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M7.26612 9.2461C8.33708 9.2461 9.20527 8.37792 9.20527 7.30695C9.20527 6.23599 8.33708 5.3678 7.26612 5.3678C6.19515 5.3678 5.32697 6.23599 5.32697 7.30695C5.32697 8.37792 6.19515 9.2461 7.26612 9.2461Z" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M7.28982 14.9312C10.9618 14.9312 13.9385 11.9545 13.9385 8.28255C13.9385 4.61061 10.9618 1.63391 7.28982 1.63391C3.61787 1.63391 0.641174 4.61061 0.641174 8.28255C0.641174 11.9545 3.61787 14.9312 7.28982 14.9312Z" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M29.076 19.2284C27.8637 18.1526 26.2991 17.5586 24.6783 17.5586C23.0575 17.5586 21.4929 18.1526 20.2805 19.2284" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M24.6801 15.2069C25.751 15.2069 26.6192 14.3387 26.6192 13.2678C26.6192 12.1968 25.751 11.3286 24.6801 11.3286C23.6091 11.3286 22.7409 12.1968 22.7409 13.2678C22.7409 14.3387 23.6091 15.2069 24.6801 15.2069Z" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M24.7013 20.9496C28.3733 20.9496 31.35 17.9729 31.35 14.301C31.35 10.629 28.3733 7.65234 24.7013 7.65234C21.0294 7.65234 18.0527 10.629 18.0527 14.301C18.0527 17.9729 21.0294 20.9496 24.7013 20.9496Z" stroke="currentColor" stroke-width="1.27982" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </g>
+                                        <defs>
+                                            <clippath id="clip0_7608_14965">
+                                                <rect width="31.9954" height="31.9954" fill="white" transform="translate(0 0.990845)"></rect>
+                                            </clippath>
+                                        </defs></svg>
+                                    </div>
+                                </div>
+                                <h3 class="slp-text-heading3-bold" data-v-19cf63b5="" data-v-69f51f80="">
+                                    We want to hear from you<!---->
+                                </h3><span class="slp-text-heading5" data-v-19cf63b5="" data-v-69f51f80="">Enjoyed reading this blog post or have questions or feedback? Share your thoughts by creating a new topic in the GitLab community forum.<!----></span> <a href="https://forum.gitlab.com/new-topic?title=GitLab%20account%20security:%20Verify%20your%20information%20for%20enhanced%20protection&amp;body=&amp;tags=blog-feedback" data-ga-location="contact" data-ga-name="Share your feedback" class="slp-btn slp-btn-tertiary" data-v-52cd803a="" data-v-69f51f80="">Share your feedback
+                                <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-69f51f80="">
+                                    <div data-v-e356681a="">
+                                        <svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg>
+                                    </div><!---->
+                                </div></a>
+                            </div>
+                        </div>
+                        <div class="slp-partial-charcoal-background half-charcoal" data-v-db4b02a6="" data-v-32cbd808="" data-v-0c13407a="">
+                            <div class="slp-container" data-v-db4b02a6="">
+                                <div class="get-started" data-v-db4b02a6="" data-v-32cbd808="">
+                                    <div class="free-trial" data-v-db4b02a6="" data-v-32cbd808="">
+                                        <h4 class="header slp-text-heading4-bold" data-v-19cf63b5="" data-v-32cbd808="">
+                                            Ready to get started?<!---->
+                                        </h4>
+                                        <p class="description slp-text-body1" data-v-19cf63b5="" data-v-32cbd808="">
+                                            See what your team could do with a unified DevSecOps Platform.<!---->
+                                        </p><a href="https://gitlab.com/-/trial_registrations/new?glm_content=default-saas-trial&amp;glm_source=about.gitlab.com" class="slp-btn free-trial-cta slp-btn-secondary" data-v-52cd803a="" data-v-32cbd808="">Get free trial</a>
+                                    </div>
+                                    <div class="guide" data-v-db4b02a6="" data-v-32cbd808="">
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-md slp-icon--color-FFFFFF" style="color:FFFFFF" data-v-e356681a="" data-v-32cbd808="">
+                                            <!---->
+                                            <div data-v-e356681a="">
+                                                <svg viewbox="0 0 32 32" fill="currentcolor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M25 28H8C5.24 28 3 25.76 3 23V0H16.42L25 8.58V28ZM5 2V23C5 24.66 6.34 26 8 26H23V9.42L15.58 2H5Z"></path>
+                                                <path d="M29 32H7V30H27V5H29V32Z"></path>
+                                                <path d="M23 10H15V2H17V8H23V10Z"></path>
+                                                <path d="M19 14H9V16H19V14Z"></path>
+                                                <path d="M19 18H9V20H19V18Z"></path></svg>
+                                            </div>
+                                        </div>
+                                        <p class="description slp-text-body1" data-v-19cf63b5="" data-v-32cbd808="">
+                                            New to GitLab and not sure where to start?<!---->
+                                        </p><a href="/get-started/" class="slp-btn cta-button slp-btn-tertiary" data-v-52cd803a="" data-v-32cbd808="">Get started guide
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-32cbd808="">
+                                            <div data-v-e356681a="">
+                                                <svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg>
+                                            </div><!---->
+                                        </div></a>
+                                    </div>
+                                    <div class="contact" data-v-db4b02a6="" data-v-32cbd808="">
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--size-md slp-icon--color-FFFFFF" style="color:FFFFFF" data-v-e356681a="" data-v-32cbd808="">
+                                            <!---->
+                                            <div data-v-e356681a="">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="37" height="34" viewbox="0 0 37 34" fill="none">
+                                                <path d="M27.3182 10.4546H28.5909C32.5071 10.4546 35.6818 13.6293 35.6818 17.5455V17.5455C35.6818 21.4617 32.5071 24.6364 28.5909 24.6364H27.3182" stroke="currentColor" fill="none" stroke-width="2" stroke-miterlimit="10"></path>
+                                                <path d="M21.8636 31.1818V31.1818C24.8761 31.1818 27.3182 28.7397 27.3182 25.7273V10.3342C27.3182 7.1516 26.0539 4.09935 23.8035 1.84892L22.9545 1H14.2273L13.3784 1.84892C11.1279 4.09935 9.86364 7.1516 9.86364 10.3342V24.6364H8.59091C4.67471 24.6364 1.5 21.4617 1.5 17.5455V15.9091C1.5 12.8966 3.94208 10.4545 6.95455 10.4545V10.4545" stroke="currentColor" fill="none" stroke-width="2" stroke-miterlimit="10"></path>
+                                                <path d="M19.8637 29H16.9546C15.85 29 14.9546 29.8954 14.9546 31C14.9546 32.1046 15.85 33 16.9546 33H19.8637C20.9682 33 21.8637 32.1046 21.8637 31C21.8637 29.8954 20.9682 29 19.8637 29Z" stroke="currentColor" fill="none" stroke-width="2" stroke-miterlimit="10"></path></svg>
+                                            </div>
+                                        </div>
+                                        <p class="description slp-text-body1" data-v-19cf63b5="" data-v-32cbd808="">
+                                            Learn about what GitLab can do for your team<!---->
+                                        </p><a href="/sales/" class="slp-btn cta-button slp-btn-tertiary" data-v-52cd803a="" data-v-32cbd808="">Talk to an expert
+                                        <div role="img" aria-hidden="true" class="slp-icon slp-icon--color-color-text-300" style="color:color-text-300;width:16px;height:16px" data-v-e356681a="" data-v-32cbd808="">
+                                            <div data-v-e356681a="">
+                                                <svg width="16" height="16" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22 4.22a.75.75 0 000 1.06L8.94 8l-2.72 2.72a.75.75 0 101.06 1.06l3.25-3.25a.75.75 0 000-1.06L7.28 4.22a.75.75 0 00-1.06 0z"></path></svg>
+                                            </div><!---->
+                                        </div></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!---->
+                </div>
+            </div>
+        </div>
+        <script defer="defer" src="/blog/static/1719339200/blog/2024/06/25/3-surprising-findings-from-our-2024-global-devsecops-survey/state.js"></script>
+        <script src="/blog/b63ee7d.js" defer="defer"></script>
+        <script src="/blog/d54d4a2.js" defer="defer"></script>
+        <script src="/blog/a8da030.js" defer="defer"></script>
+        <script src="/blog/16c1f05.js" defer="defer"></script>
+        <script src="/blog/b335556.js" defer="defer"></script>
+        <script src="/blog/62154c7.js" defer="defer"></script>
+        <script src="/blog/95f5d35.js" defer="defer"></script>
+        <script src="/blog/336b5a2.js" defer="defer"></script>
+    </body>
+</html>
