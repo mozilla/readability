@@ -11,9 +11,11 @@
     <meta property="twitter:title" content="Twitter property title"/>
     <meta property="og:title" content="Open Graph property title"/>
     <meta name="author" content="Meta name author"/>
-    <meta name="DC.creator" content="Dublin Core name author"/>
-    <meta property="dc:creator" content="Dublin Core property author"/>
-     <meta name="description" content="Meta name description"/>
+    <!-- now that multiple authors are supported, these have to be identical to prevent them from showing up
+         as two separate authors -->
+    <meta name="DC.creator" content="Dublin Core author"/>
+    <meta property="dc:creator" content="Dublin Core author"/>
+    <meta name="description" content="Meta name description"/>
     <meta name="og:description" content="Open Graph name description"/>
     <meta name="twitter:description" content="Twitter name description"/>
     <meta name="DC.description" content="Dublin Core name description"/>

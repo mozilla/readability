@@ -497,7 +497,7 @@ Readability.prototype = {
       // could assume it's the full title.
       var headings = this._concatNodeLists(
         doc.getElementsByTagName("h1"),
-        doc.getElementsByTagName("h2")
+        doc.getElementsByTagName("h2"),
       );
       var trimmedTitle = curTitle.trim();
       var match = this._someNode(headings, function(heading) {
@@ -1369,6 +1369,58 @@ Readability.prototype = {
     });
   },
 
+  _extractJSONLDMetadata: function (parsed) {
+    var metadata = {};
+
+    if (typeof parsed.name === "string" && typeof parsed.headline === "string" && parsed.name !== parsed.headline) {
+      // we have both name and headline element in the JSON-LD. They should both be the same but some websites like aktualne.cz
+      // put their own name into "name" and the article title to "headline" which confuses Readability. So we try to check if either
+      // "name" or "headline" closely matches the html title, and if so, use that one. If not, then we use "name" by default.
+
+      var title = this._getArticleTitle();
+      var nameMatches = this._textSimilarity(parsed.name, title) > 0.75;
+      var headlineMatches = this._textSimilarity(parsed.headline, title) > 0.75;
+
+      if (headlineMatches && !nameMatches) {
+        metadata.title = parsed.headline;
+      } else {
+        metadata.title = parsed.name;
+      }
+    } else if (typeof parsed.name === "string") {
+      metadata.title = parsed.name.trim();
+    } else if (typeof parsed.headline === "string") {
+      metadata.title = parsed.headline.trim();
+    }
+    if (parsed.author) {
+      if (typeof parsed.author.name === "string") {
+        metadata.byline = parsed.author.name.trim();
+      } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
+        metadata.byline = parsed.author
+          .filter(function(author) {
+            return author && typeof author.name === "string";
+          })
+          .map(function(author) {
+            return author.name.trim();
+          })
+          .join(", ");
+      }
+    }
+    if (typeof parsed.description === "string") {
+      metadata.excerpt = parsed.description.trim();
+    }
+    if (
+      parsed.publisher &&
+      typeof parsed.publisher.name === "string"
+    ) {
+      metadata.siteName = parsed.publisher.name.trim();
+    }
+    if (typeof parsed.datePublished === "string") {
+      metadata.datePublished = parsed.datePublished.trim();
+    }
+
+    return metadata;
+  },
+
   /**
    * Try to extract metadata from JSON-LD object.
    * For now, only Schema.org objects of type Article or its subtypes are supported.
@@ -1385,6 +1437,7 @@ Readability.prototype = {
           // Strip CDATA markers if present
           var content = jsonLdElement.textContent.replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "");
           var parsed = JSON.parse(content);
+
           if (
             !parsed["@context"] ||
             !parsed["@context"].match(/^https?\:\/\/schema\.org\/?$/)
@@ -1395,7 +1448,7 @@ Readability.prototype = {
           if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
             parsed = parsed["@graph"].find(function(it) {
               return (it["@type"] || "").match(
-                this.REGEXPS.jsonLdArticleTypes
+                this.REGEXPS.jsonLdArticleTypes,
               );
             });
           }
@@ -1408,60 +1461,44 @@ Readability.prototype = {
             return;
           }
 
-          metadata = {};
+          metadata = this._extractJSONLDMetadata(parsed);
 
-          if (typeof parsed.name === "string" && typeof parsed.headline === "string" && parsed.name !== parsed.headline) {
-            // we have both name and headline element in the JSON-LD. They should both be the same but some websites like aktualne.cz
-            // put their own name into "name" and the article title to "headline" which confuses Readability. So we try to check if either
-            // "name" or "headline" closely matches the html title, and if so, use that one. If not, then we use "name" by default.
+          // some sites, like ones for academic journals, separate metadata for a journal article or paper from the
+          // site's own metadata. eg: nature has only @context, @type (WebPage), and mainEntity so *all* relevant metadata
+          // would be invisible unless we retry using mainEntity.
+          if (parsed["mainEntity"] && Object.keys(metadata).length === 0) {
+            metadata = this._extractJSONLDMetadata(parsed["mainEntity"]);
+          }
 
-            var title = this._getArticleTitle();
-            var nameMatches = this._textSimilarity(parsed.name, title) > 0.75;
-            var headlineMatches = this._textSimilarity(parsed.headline, title) > 0.75;
-
-            if (headlineMatches && !nameMatches) {
-              metadata.title = parsed.headline;
-            } else {
-              metadata.title = parsed.name;
-            }
-          } else if (typeof parsed.name === "string") {
-            metadata.title = parsed.name.trim();
-          } else if (typeof parsed.headline === "string") {
-            metadata.title = parsed.headline.trim();
-          }
-          if (parsed.author) {
-            if (typeof parsed.author.name === "string") {
-              metadata.byline = parsed.author.name.trim();
-            } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
-              metadata.byline = parsed.author
-                .filter(function(author) {
-                  return author && typeof author.name === "string";
-                })
-                .map(function(author) {
-                  return author.name.trim();
-                })
-                .join(", ");
-            }
-          }
-          if (typeof parsed.description === "string") {
-            metadata.excerpt = parsed.description.trim();
-          }
-          if (
-            parsed.publisher &&
-            typeof parsed.publisher.name === "string"
-          ) {
-            metadata.siteName = parsed.publisher.name.trim();
-          }
-          if (typeof parsed.datePublished === "string") {
-            metadata.datePublished = parsed.datePublished.trim();
-          }
-          return;
         } catch (err) {
           this.log(err.message);
         }
       }
     });
     return metadata ? metadata : {};
+  },
+
+  /**
+   * Swaps the "Surname, GivenName" formatted bylines to "GivenName Surname".
+   *
+   * @param {string|string[]} name
+   * @returns Name or names in "GivenName Surname" format
+   */
+  _normalizeByline: function(name) {
+    if (!name) {
+      return name;
+    }
+
+    var result = name;
+
+    if (Array.isArray(name)) {
+      return name.map((n) => this._normalizeByline(n));
+    }
+
+    // remove things like "By:" and "http://"
+    result = result.replace(/\w+:\/{0,2}/, "");
+
+    return this._unescapeHtmlEntities(result);
   },
 
   /**
@@ -1481,7 +1518,12 @@ Readability.prototype = {
     var propertyPattern = /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
-    var namePattern = /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
+    var namePattern = /^\s*(?:(prism|citation|dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-_\.:]\s*)?(author|creator|pub-date|publicationDate|publication|description|title|site_name)\s*$/i;
+
+    // fields which are permitted to have multiple distinct values, eg: byline
+    var byline_properties = [ "dc:creator", "dcterm:creator", "author", "parsely-author", "citation_author"];
+    var multi_props = byline_properties; // concat others here. somewhat pointless atm, but there will be more...
+
 
     // Find description tags.
     this._forEachNode(metaElements, function(element) {
@@ -1493,6 +1535,7 @@ Readability.prototype = {
       }
       var matches = null;
       var name = null;
+      var result = null;
 
       if (elementProperty) {
         matches = elementProperty.match(propertyPattern);
@@ -1501,7 +1544,7 @@ Readability.prototype = {
           // so we can match below.
           name = matches[0].toLowerCase().replace(/\s/g, "");
           // multiple authors
-          values[name] = content.trim();
+          result = content.trim();
         }
       }
       if (!matches && elementName && namePattern.test(elementName)) {
@@ -1510,8 +1553,24 @@ Readability.prototype = {
           // Convert to lowercase, remove any whitespace, and convert dots
           // to colons so we can match below.
           name = name.toLowerCase().replace(/\s/g, "").replace(/\./g, ":");
-          values[name] = content.trim();
+          result = content.trim();
         }
+      }
+
+      if (result) {
+        // handle properties which might have multiple distinct values
+        if (values[name] && multi_props.includes(name)) {
+          if (Array.isArray(values[name]) && typeof result == "string") {
+            values[name].push(result);
+          }
+          if (typeof values[name] == "string" && values[name] !== result) {
+            values[name] = [values[name], result];
+          }
+        } else {
+          values[name] = result;
+        }
+
+        this.log(`found metadata: ${name}=${values[name]}`);
       }
     });
 
@@ -1531,11 +1590,12 @@ Readability.prototype = {
     }
 
     // get author
-    metadata.byline = jsonld.byline ||
-                      values["dc:creator"] ||
-                      values["dcterm:creator"] ||
-                      values["author"] ||
-                      values["parsely-author"];
+    metadata.byline = jsonld.byline;
+    for (const n of byline_properties) {
+      if (metadata.byline)
+        break;
+      metadata.byline = values[n];
+    }
 
     // get description
     metadata.excerpt = jsonld.excerpt ||
@@ -1555,15 +1615,18 @@ Readability.prototype = {
     metadata.publishedTime = jsonld.datePublished ||
                              values["article:published_time"] ||
                              values["parsely-pub-date"] ||
+                             values["citation_publication_date"] ||
+                             values["prism:publicationDate"] ||
                              null;
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
     metadata.title = this._unescapeHtmlEntities(metadata.title);
-    metadata.byline = this._unescapeHtmlEntities(metadata.byline);
+    metadata.byline = this._normalizeByline(metadata.byline);
     metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
     metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
     metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
+    this.log(`getArticleMetadata complete: ${JSON.stringify(metadata)}`);
 
     return metadata;
   },
