@@ -154,8 +154,12 @@ describe("Test JSDOM functionality", function () {
       }
 
       // Check the siblings were updated
-      if (oldNext) {nodeExpect(oldNext.previousSibling, p);}
-      if (oldPrev) {nodeExpect(oldPrev.nextSibling, p);}
+      if (oldNext) {
+        nodeExpect(oldNext.previousSibling, p);
+      }
+      if (oldPrev) {
+        nodeExpect(oldPrev.nextSibling, p);
+      }
 
       // check the array was updated
       nodeExpect(parent.childNodes[i], p);
@@ -197,21 +201,25 @@ describe("Test JSDOM functionality", function () {
       nodeExpect(oldNextEl, replacedNode.nextElementSibling);
       nodeExpect(oldPrev, replacedNode.previousSibling);
       nodeExpect(oldPrevEl, replacedNode.previousElementSibling);
-      if (replacedNode.nextSibling)
-        {nodeExpect(replacedNode.nextSibling.previousSibling, replacedNode);}
-      if (replacedNode.previousSibling)
-        {nodeExpect(replacedNode.previousSibling.nextSibling, replacedNode);}
+      if (replacedNode.nextSibling) {
+        nodeExpect(replacedNode.nextSibling.previousSibling, replacedNode);
+      }
+      if (replacedNode.previousSibling) {
+        nodeExpect(replacedNode.previousSibling.nextSibling, replacedNode);
+      }
       if (replacedAnElement) {
-        if (replacedNode.previousElementSibling)
-          {nodeExpect(
+        if (replacedNode.previousElementSibling) {
+          nodeExpect(
             replacedNode.previousElementSibling.nextElementSibling,
             replacedNode
-          );}
-        if (replacedNode.nextElementSibling)
-          {nodeExpect(
+          );
+        }
+        if (replacedNode.nextElementSibling) {
+          nodeExpect(
             replacedNode.nextElementSibling.previousElementSibling,
             replacedNode
-          );}
+          );
+        }
       }
     }
   });

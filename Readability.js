@@ -584,10 +584,11 @@ Readability.prototype = {
       curTitle = origTitle = doc.title.trim();
 
       // If they had an element with id "title" in their HTML
-      if (typeof curTitle !== "string")
-        {curTitle = origTitle = this._getInnerText(
+      if (typeof curTitle !== "string") {
+        curTitle = origTitle = this._getInnerText(
           doc.getElementsByTagName("title")[0]
-        );}
+        );
+      }
     } catch (e) {
       /* ignore exceptions setting the title. */
     }
@@ -604,8 +605,9 @@ Readability.prototype = {
 
       // If the resulting title is too short (3 words or fewer), remove
       // the first part instead:
-      if (wordCount(curTitle) < 3)
-        {curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, "$1");}
+      if (wordCount(curTitle) < 3) {
+        curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, "$1");
+      }
     } else if (curTitle.indexOf(": ") !== -1) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
@@ -634,7 +636,9 @@ Readability.prototype = {
     } else if (curTitle.length > 150 || curTitle.length < 15) {
       var hOnes = doc.getElementsByTagName("h1");
 
-      if (hOnes.length === 1) {curTitle = this._getInnerText(hOnes[0]);}
+      if (hOnes.length === 1) {
+        curTitle = this._getInnerText(hOnes[0]);
+      }
     }
 
     curTitle = curTitle.trim().replace(this.REGEXPS.normalize, " ");
@@ -728,10 +732,14 @@ Readability.prototype = {
           // If we've hit another <br><br>, we're done adding children to this <p>.
           if (next.tagName == "BR") {
             var nextElem = this._nextNode(next.nextSibling);
-            if (nextElem && nextElem.tagName == "BR") {break;}
+            if (nextElem && nextElem.tagName == "BR") {
+              break;
+            }
           }
 
-          if (!this._isPhrasingContent(next)) {break;}
+          if (!this._isPhrasingContent(next)) {
+            break;
+          }
 
           // Otherwise, make this node a child of the new <p>.
           var sibling = next.nextSibling;
@@ -743,7 +751,9 @@ Readability.prototype = {
           p.removeChild(p.lastChild);
         }
 
-        if (p.parentNode.tagName === "P") {this._setNodeTag(p.parentNode, "DIV");}
+        if (p.parentNode.tagName === "P") {
+          this._setNodeTag(p.parentNode, "DIV");
+        }
       }
     });
   },
@@ -761,7 +771,9 @@ Readability.prototype = {
       replacement.appendChild(node.firstChild);
     }
     node.parentNode.replaceChild(replacement, node);
-    if (node.readability) {replacement.readability = node.readability;}
+    if (node.readability) {
+      replacement.readability = node.readability;
+    }
 
     for (var i = 0; i < node.attributes.length; i++) {
       try {
@@ -859,7 +871,9 @@ Readability.prototype = {
       this._getAllNodesWithTag(articleContent, ["br"]),
       function (br) {
         var next = this._nextNode(br.nextSibling);
-        if (next && next.tagName == "P") {br.parentNode.removeChild(br);}
+        if (next && next.tagName == "P") {
+          br.parentNode.removeChild(br);
+        }
       }
     );
 
@@ -1014,7 +1028,9 @@ Readability.prototype = {
       ancestors = [];
     while (node.parentNode) {
       ancestors.push(node.parentNode);
-      if (maxDepth && ++i === maxDepth) {break;}
+      if (maxDepth && ++i === maxDepth) {
+        break;
+      }
       node = node.parentNode;
     }
     return ancestors;
@@ -1197,16 +1213,21 @@ Readability.prototype = {
         if (
           !elementToScore.parentNode ||
           typeof elementToScore.parentNode.tagName === "undefined"
-        )
-          {return;}
+        ) {
+          return;
+        }
 
         // If this paragraph is less than 25 characters, don't even count it.
         var innerText = this._getInnerText(elementToScore);
-        if (innerText.length < 25) {return;}
+        if (innerText.length < 25) {
+          return;
+        }
 
         // Exclude nodes with no ancestor.
         var ancestors = this._getNodeAncestors(elementToScore, 5);
-        if (ancestors.length === 0) {return;}
+        if (ancestors.length === 0) {
+          return;
+        }
 
         var contentScore = 0;
 
@@ -1225,8 +1246,9 @@ Readability.prototype = {
             !ancestor.tagName ||
             !ancestor.parentNode ||
             typeof ancestor.parentNode.tagName === "undefined"
-          )
-            {return;}
+          ) {
+            return;
+          }
 
           if (typeof ancestor.readability === "undefined") {
             this._initializeNode(ancestor);
@@ -1237,9 +1259,13 @@ Readability.prototype = {
           // - parent:             1 (no division)
           // - grandparent:        2
           // - great grandparent+: ancestor level * 3
-          if (level === 0) {var scoreDivider = 1;}
-          else if (level === 1) {scoreDivider = 2;}
-          else {scoreDivider = level * 3;}
+          if (level === 0) {
+            var scoreDivider = 1;
+          } else if (level === 1) {
+            scoreDivider = 2;
+          } else {
+            scoreDivider = level * 3;
+          }
           ancestor.readability.contentScore += contentScore / scoreDivider;
         });
       });
@@ -1268,8 +1294,9 @@ Readability.prototype = {
             candidateScore > aTopCandidate.readability.contentScore
           ) {
             topCandidates.splice(t, 0, candidate);
-            if (topCandidates.length > this._nbTopCandidates)
-              {topCandidates.pop();}
+            if (topCandidates.length > this._nbTopCandidates) {
+              topCandidates.pop();
+            }
             break;
           }
         }
@@ -1355,7 +1382,9 @@ Readability.prototype = {
             continue;
           }
           var parentScore = parentOfTopCandidate.readability.contentScore;
-          if (parentScore < scoreThreshold) {break;}
+          if (parentScore < scoreThreshold) {
+            break;
+          }
           if (parentScore > lastScore) {
             // Alright! We found a better parent to use.
             topCandidate = parentOfTopCandidate;
@@ -1384,7 +1413,9 @@ Readability.prototype = {
       // that might also be related. Things like preambles, content split by ads
       // that we removed, etc.
       var articleContent = doc.createElement("DIV");
-      if (isPaging) {articleContent.id = "readability-content";}
+      if (isPaging) {
+        articleContent.id = "readability-content";
+      }
 
       var siblingScoreThreshold = Math.max(
         10,
@@ -1419,8 +1450,9 @@ Readability.prototype = {
           if (
             sibling.className === topCandidate.className &&
             topCandidate.className !== ""
-          )
-            {contentBonus += topCandidate.readability.contentScore * 0.2;}
+          ) {
+            contentBonus += topCandidate.readability.contentScore * 0.2;
+          }
 
           if (
             sibling.readability &&
@@ -1470,12 +1502,14 @@ Readability.prototype = {
         }
       }
 
-      if (this._debug)
-        {this.log("Article content pre-prep: " + articleContent.innerHTML);}
+      if (this._debug) {
+        this.log("Article content pre-prep: " + articleContent.innerHTML);
+      }
       // So we have all of the content that we need. Now we clean it up for presentation.
       this._prepArticle(articleContent);
-      if (this._debug)
-        {this.log("Article content post-prep: " + articleContent.innerHTML);}
+      if (this._debug) {
+        this.log("Article content post-prep: " + articleContent.innerHTML);
+      }
 
       if (neededToCreateTopCandidate) {
         // We already created a fake div thing, and there wouldn't have been any siblings left
@@ -1494,8 +1528,9 @@ Readability.prototype = {
         articleContent.appendChild(div);
       }
 
-      if (this._debug)
-        {this.log("Article content after paging: " + articleContent.innerHTML);}
+      if (this._debug) {
+        this.log("Article content after paging: " + articleContent.innerHTML);
+      }
 
       var parseSuccessful = true;
 
@@ -1553,7 +1588,9 @@ Readability.prototype = {
           this._getNodeAncestors(parentOfTopCandidate)
         );
         this._someNode(ancestors, function (ancestor) {
-          if (!ancestor.tagName) {return false;}
+          if (!ancestor.tagName) {
+            return false;
+          }
           var articleDir = ancestor.getAttribute("dir");
           if (articleDir) {
             this._articleDir = articleDir;
@@ -2038,7 +2075,9 @@ Readability.prototype = {
    * @return void
    **/
   _cleanStyles(e) {
-    if (!e || e.tagName.toLowerCase() === "svg") {return;}
+    if (!e || e.tagName.toLowerCase() === "svg") {
+      return;
+    }
 
     // Remove `style` and deprecated presentational attributes
     for (var i = 0; i < this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
@@ -2066,7 +2105,9 @@ Readability.prototype = {
    **/
   _getLinkDensity(element) {
     var textLength = this._getInnerText(element).length;
-    if (textLength === 0) {return 0;}
+    if (textLength === 0) {
+      return 0;
+    }
 
     var linkLength = 0;
 
@@ -2088,22 +2129,32 @@ Readability.prototype = {
    * @return number (Integer)
    **/
   _getClassWeight(e) {
-    if (!this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {return 0;}
+    if (!this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
+      return 0;
+    }
 
     var weight = 0;
 
     // Look for a special classname
     if (typeof e.className === "string" && e.className !== "") {
-      if (this.REGEXPS.negative.test(e.className)) {weight -= 25;}
+      if (this.REGEXPS.negative.test(e.className)) {
+        weight -= 25;
+      }
 
-      if (this.REGEXPS.positive.test(e.className)) {weight += 25;}
+      if (this.REGEXPS.positive.test(e.className)) {
+        weight += 25;
+      }
     }
 
     // Look for a special ID
     if (typeof e.id === "string" && e.id !== "") {
-      if (this.REGEXPS.negative.test(e.id)) {weight -= 25;}
+      if (this.REGEXPS.negative.test(e.id)) {
+        weight -= 25;
+      }
 
-      if (this.REGEXPS.positive.test(e.id)) {weight += 25;}
+      if (this.REGEXPS.positive.test(e.id)) {
+        weight += 25;
+      }
     }
 
     return weight;
@@ -2157,12 +2208,15 @@ Readability.prototype = {
     tagName = tagName.toUpperCase();
     var depth = 0;
     while (node.parentNode) {
-      if (maxDepth > 0 && depth > maxDepth) {return false;}
+      if (maxDepth > 0 && depth > maxDepth) {
+        return false;
+      }
       if (
         node.parentNode.tagName === tagName &&
         (!filterFn || filterFn(node.parentNode))
-      )
-        {return true;}
+      ) {
+        return true;
+      }
       node = node.parentNode;
       depth++;
     }
@@ -2367,7 +2421,9 @@ Readability.prototype = {
    * @return void
    **/
   _cleanConditionally(e, tag) {
-    if (!this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {return;}
+    if (!this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
+      return;
+    }
 
     // Gather counts for other typical elements embedded within.
     // Traverse backwards so we can remove nodes at the same time
@@ -2678,7 +2734,9 @@ Readability.prototype = {
     this._articleTitle = metadata.title;
 
     var articleContent = this._grabArticle();
-    if (!articleContent) {return null;}
+    if (!articleContent) {
+      return null;
+    }
 
     this.log("Grabbed: " + articleContent.innerHTML);
 

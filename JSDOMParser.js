@@ -305,7 +305,9 @@
       var length = node.children.length;
       for (var i = 0; i < length; i++) {
         var child = node.children[i];
-        if (allTags || child.tagName === tag) {elems.push(child);}
+        if (allTags || child.tagName === tag) {
+          elems.push(child);
+        }
         getElems(child);
       }
     }
@@ -348,7 +350,9 @@
       }
 
       var last = this.lastChild;
-      if (last) {last.nextSibling = child;}
+      if (last) {
+        last.nextSibling = child;
+      }
       child.previousSibling = last;
 
       if (child.nodeType === Node.ELEMENT_NODE) {
@@ -376,14 +380,22 @@
         child.parentNode = null;
         var prev = child.previousSibling;
         var next = child.nextSibling;
-        if (prev) {prev.nextSibling = next;}
-        if (next) {next.previousSibling = prev;}
+        if (prev) {
+          prev.nextSibling = next;
+        }
+        if (next) {
+          next.previousSibling = prev;
+        }
 
         if (child.nodeType === Node.ELEMENT_NODE) {
           prev = child.previousElementSibling;
           next = child.nextElementSibling;
-          if (prev) {prev.nextElementSibling = next;}
-          if (next) {next.previousElementSibling = prev;}
+          if (prev) {
+            prev.nextElementSibling = next;
+          }
+          if (next) {
+            next.previousElementSibling = prev;
+          }
           this.children.splice(this.children.indexOf(child), 1);
         }
 
@@ -401,16 +413,21 @@
         throw "replaceChild: node not found";
       } else {
         // This will take care of updating the new node if it was somewhere else before:
-        if (newNode.parentNode) {newNode.parentNode.removeChild(newNode);}
+        if (newNode.parentNode) {
+          newNode.parentNode.removeChild(newNode);
+        }
 
         childNodes[childIndex] = newNode;
 
         // update the new node's sibling properties, and its new siblings' sibling properties
         newNode.nextSibling = oldNode.nextSibling;
         newNode.previousSibling = oldNode.previousSibling;
-        if (newNode.nextSibling) {newNode.nextSibling.previousSibling = newNode;}
-        if (newNode.previousSibling)
-          {newNode.previousSibling.nextSibling = newNode;}
+        if (newNode.nextSibling) {
+          newNode.nextSibling.previousSibling = newNode;
+        }
+        if (newNode.previousSibling) {
+          newNode.previousSibling.nextSibling = newNode;
+        }
 
         newNode.parentNode = this;
 
@@ -421,17 +438,20 @@
             // Both were elements, which makes this easier, we just swap things out:
             newNode.previousElementSibling = oldNode.previousElementSibling;
             newNode.nextElementSibling = oldNode.nextElementSibling;
-            if (newNode.previousElementSibling)
-              {newNode.previousElementSibling.nextElementSibling = newNode;}
-            if (newNode.nextElementSibling)
-              {newNode.nextElementSibling.previousElementSibling = newNode;}
+            if (newNode.previousElementSibling) {
+              newNode.previousElementSibling.nextElementSibling = newNode;
+            }
+            if (newNode.nextElementSibling) {
+              newNode.nextElementSibling.previousElementSibling = newNode;
+            }
             this.children[this.children.indexOf(oldNode)] = newNode;
           } else {
             // Hard way:
             newNode.previousElementSibling = (function () {
               for (var i = childIndex - 1; i >= 0; i--) {
-                if (childNodes[i].nodeType === Node.ELEMENT_NODE)
-                  {return childNodes[i];}
+                if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
+                  return childNodes[i];
+                }
               }
               return null;
             })();
@@ -441,34 +461,41 @@
             } else {
               newNode.nextElementSibling = (function () {
                 for (var i = childIndex + 1; i < childNodes.length; i++) {
-                  if (childNodes[i].nodeType === Node.ELEMENT_NODE)
-                    {return childNodes[i];}
+                  if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
+                    return childNodes[i];
+                  }
                 }
                 return null;
               })();
             }
-            if (newNode.previousElementSibling)
-              {newNode.previousElementSibling.nextElementSibling = newNode;}
-            if (newNode.nextElementSibling)
-              {newNode.nextElementSibling.previousElementSibling = newNode;}
+            if (newNode.previousElementSibling) {
+              newNode.previousElementSibling.nextElementSibling = newNode;
+            }
+            if (newNode.nextElementSibling) {
+              newNode.nextElementSibling.previousElementSibling = newNode;
+            }
 
-            if (newNode.nextElementSibling)
-              {this.children.splice(
+            if (newNode.nextElementSibling) {
+              this.children.splice(
                 this.children.indexOf(newNode.nextElementSibling),
                 0,
                 newNode
-              );}
-            else {this.children.push(newNode);}
+              );
+            } else {
+              this.children.push(newNode);
+            }
           }
         } else if (oldNode.nodeType === Node.ELEMENT_NODE) {
           // new node is not an element node.
           // if the old one was, update its element siblings:
-          if (oldNode.previousElementSibling)
-            {oldNode.previousElementSibling.nextElementSibling =
-              oldNode.nextElementSibling;}
-          if (oldNode.nextElementSibling)
-            {oldNode.nextElementSibling.previousElementSibling =
-              oldNode.previousElementSibling;}
+          if (oldNode.previousElementSibling) {
+            oldNode.previousElementSibling.nextElementSibling =
+              oldNode.nextElementSibling;
+          }
+          if (oldNode.nextElementSibling) {
+            oldNode.nextElementSibling.previousElementSibling =
+              oldNode.previousElementSibling;
+          }
           this.children.splice(this.children.indexOf(oldNode), 1);
 
           // If the old node wasn't an element, neither the new nor the old node was an element,
@@ -572,10 +599,14 @@
     getElementById(id) {
       function getElem(node) {
         var length = node.children.length;
-        if (node.id === id) {return node;}
+        if (node.id === id) {
+          return node;
+        }
         for (var i = 0; i < length; i++) {
           var el = getElem(node.children[i]);
-          if (el) {return el;}
+          if (el) {
+            return el;
+          }
         }
         return null;
       }
@@ -814,13 +845,17 @@
   Style.prototype = {
     getStyle(styleName) {
       var attr = this.node.getAttribute("style");
-      if (!attr) {return undefined;}
+      if (!attr) {
+        return undefined;
+      }
 
       var styles = attr.split(";");
       for (var i = 0; i < styles.length; i++) {
         var style = styles[i].split(":");
         var name = style[0].trim();
-        if (name === styleName) {return style[1].trim();}
+        if (name === styleName) {
+          return style[1].trim();
+        }
       }
 
       return undefined;
@@ -940,7 +975,9 @@
         this.currentChar = n + 1;
       }
 
-      if (!name) {return;}
+      if (!name) {
+        return;
+      }
 
       // After a '=', we should see a '"' for the attribute value
       var c = this.nextChar();
@@ -970,19 +1007,25 @@
       var strBuf = this.strBuf;
       strBuf.length = 0;
       while (whitespace.indexOf(c) == -1 && c !== ">" && c !== "/") {
-        if (c === undefined) {return false;}
+        if (c === undefined) {
+          return false;
+        }
         strBuf.push(c);
         c = this.nextChar();
       }
       var tag = strBuf.join("");
 
-      if (!tag) {return false;}
+      if (!tag) {
+        return false;
+      }
 
       var node = new Element(tag);
 
       // Read Element attributes
       while (c !== "/" && c !== ">") {
-        if (c === undefined) {return false;}
+        if (c === undefined) {
+          return false;
+        }
         while (whitespace.indexOf(this.html[this.currentChar++]) != -1) {
           // Advance cursor to first non-whitespace char.
         }
@@ -1034,7 +1077,9 @@
      */
     discardTo(str) {
       var index = this.html.indexOf(str, this.currentChar) + str.length;
-      if (index === -1) {this.currentChar = this.html.length;}
+      if (index === -1) {
+        this.currentChar = this.html.length;
+      }
       this.currentChar = index;
     },
 
@@ -1057,8 +1102,12 @@
       } else {
         var c = this.nextChar();
         while (c !== ">") {
-          if (c === undefined) {return null;}
-          if (c === '"' || c === "'") {this.readString(c);}
+          if (c === undefined) {
+            return null;
+          }
+          if (c === '"' || c === "'") {
+            this.readString(c);
+          }
           c = this.nextChar();
         }
       }
@@ -1074,7 +1123,9 @@
     readNode() {
       var c = this.nextChar();
 
-      if (c === undefined) {return null;}
+      if (c === undefined) {
+        return null;
+      }
 
       // Read any text as Text node
       var textNode;
@@ -1128,7 +1179,9 @@
 
       // Otherwise, we're looking at an Element node
       var result = this.makeElementNode(this.retPair);
-      if (!result) {return null;}
+      if (!result) {
+        return null;
+      }
 
       var node = this.retPair[0];
       var closed = this.retPair[1];
