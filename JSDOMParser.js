@@ -305,7 +305,7 @@
       var length = node.children.length;
       for (var i = 0; i < length; i++) {
         var child = node.children[i];
-        if (allTags || child.tagName === tag) elems.push(child);
+        if (allTags || child.tagName === tag) {elems.push(child);}
         getElems(child);
       }
     }
@@ -342,13 +342,13 @@
       return this.children[this.children.length - 1] || null;
     },
 
-    appendChild: function (child) {
+    appendChild(child) {
       if (child.parentNode) {
-        child.parentNode.removeChild(child);
+        child.remove();
       }
 
       var last = this.lastChild;
-      if (last) last.nextSibling = child;
+      if (last) {last.nextSibling = child;}
       child.previousSibling = last;
 
       if (child.nodeType === Node.ELEMENT_NODE) {
@@ -362,7 +362,12 @@
       child.parentNode = this;
     },
 
-    removeChild: function (child) {
+    remove() {
+      let parent = this.parentNode;
+      parent.removeChild(this);
+    },
+
+    removeChild(child) {
       var childNodes = this.childNodes;
       var childIndex = childNodes.indexOf(child);
       if (childIndex === -1) {
@@ -371,14 +376,14 @@
         child.parentNode = null;
         var prev = child.previousSibling;
         var next = child.nextSibling;
-        if (prev) prev.nextSibling = next;
-        if (next) next.previousSibling = prev;
+        if (prev) {prev.nextSibling = next;}
+        if (next) {next.previousSibling = prev;}
 
         if (child.nodeType === Node.ELEMENT_NODE) {
           prev = child.previousElementSibling;
           next = child.nextElementSibling;
-          if (prev) prev.nextElementSibling = next;
-          if (next) next.previousElementSibling = prev;
+          if (prev) {prev.nextElementSibling = next;}
+          if (next) {next.previousElementSibling = prev;}
           this.children.splice(this.children.indexOf(child), 1);
         }
 
@@ -389,23 +394,23 @@
       }
     },
 
-    replaceChild: function (newNode, oldNode) {
+    replaceChild(newNode, oldNode) {
       var childNodes = this.childNodes;
       var childIndex = childNodes.indexOf(oldNode);
       if (childIndex === -1) {
         throw "replaceChild: node not found";
       } else {
         // This will take care of updating the new node if it was somewhere else before:
-        if (newNode.parentNode) newNode.parentNode.removeChild(newNode);
+        if (newNode.parentNode) {newNode.parentNode.removeChild(newNode);}
 
         childNodes[childIndex] = newNode;
 
         // update the new node's sibling properties, and its new siblings' sibling properties
         newNode.nextSibling = oldNode.nextSibling;
         newNode.previousSibling = oldNode.previousSibling;
-        if (newNode.nextSibling) newNode.nextSibling.previousSibling = newNode;
+        if (newNode.nextSibling) {newNode.nextSibling.previousSibling = newNode;}
         if (newNode.previousSibling)
-          newNode.previousSibling.nextSibling = newNode;
+          {newNode.previousSibling.nextSibling = newNode;}
 
         newNode.parentNode = this;
 
@@ -417,16 +422,16 @@
             newNode.previousElementSibling = oldNode.previousElementSibling;
             newNode.nextElementSibling = oldNode.nextElementSibling;
             if (newNode.previousElementSibling)
-              newNode.previousElementSibling.nextElementSibling = newNode;
+              {newNode.previousElementSibling.nextElementSibling = newNode;}
             if (newNode.nextElementSibling)
-              newNode.nextElementSibling.previousElementSibling = newNode;
+              {newNode.nextElementSibling.previousElementSibling = newNode;}
             this.children[this.children.indexOf(oldNode)] = newNode;
           } else {
             // Hard way:
             newNode.previousElementSibling = (function () {
               for (var i = childIndex - 1; i >= 0; i--) {
                 if (childNodes[i].nodeType === Node.ELEMENT_NODE)
-                  return childNodes[i];
+                  {return childNodes[i];}
               }
               return null;
             })();
@@ -437,33 +442,33 @@
               newNode.nextElementSibling = (function () {
                 for (var i = childIndex + 1; i < childNodes.length; i++) {
                   if (childNodes[i].nodeType === Node.ELEMENT_NODE)
-                    return childNodes[i];
+                    {return childNodes[i];}
                 }
                 return null;
               })();
             }
             if (newNode.previousElementSibling)
-              newNode.previousElementSibling.nextElementSibling = newNode;
+              {newNode.previousElementSibling.nextElementSibling = newNode;}
             if (newNode.nextElementSibling)
-              newNode.nextElementSibling.previousElementSibling = newNode;
+              {newNode.nextElementSibling.previousElementSibling = newNode;}
 
             if (newNode.nextElementSibling)
-              this.children.splice(
+              {this.children.splice(
                 this.children.indexOf(newNode.nextElementSibling),
                 0,
                 newNode
-              );
-            else this.children.push(newNode);
+              );}
+            else {this.children.push(newNode);}
           }
         } else if (oldNode.nodeType === Node.ELEMENT_NODE) {
           // new node is not an element node.
           // if the old one was, update its element siblings:
           if (oldNode.previousElementSibling)
-            oldNode.previousElementSibling.nextElementSibling =
-              oldNode.nextElementSibling;
+            {oldNode.previousElementSibling.nextElementSibling =
+              oldNode.nextElementSibling;}
           if (oldNode.nextElementSibling)
-            oldNode.nextElementSibling.previousElementSibling =
-              oldNode.previousElementSibling;
+            {oldNode.nextElementSibling.previousElementSibling =
+              oldNode.previousElementSibling;}
           this.children.splice(this.children.indexOf(oldNode), 1);
 
           // If the old node wasn't an element, neither the new nor the old node was an element,
@@ -497,10 +502,10 @@
     get value() {
       return this._value;
     },
-    setValue: function (newValue) {
+    setValue(newValue) {
       this._value = newValue;
     },
-    getEncodedValue: function () {
+    getEncodedValue() {
       return encodeHTML(this._value);
     },
   };
@@ -562,27 +567,27 @@
     nodeType: Node.DOCUMENT_NODE,
     title: "",
 
-    getElementsByTagName: getElementsByTagName,
+    getElementsByTagName,
 
-    getElementById: function (id) {
+    getElementById(id) {
       function getElem(node) {
         var length = node.children.length;
-        if (node.id === id) return node;
+        if (node.id === id) {return node;}
         for (var i = 0; i < length; i++) {
           var el = getElem(node.children[i]);
-          if (el) return el;
+          if (el) {return el;}
         }
         return null;
       }
       return getElem(this);
     },
 
-    createElement: function (tag) {
+    createElement(tag) {
       var node = new Element(tag);
       return node;
     },
 
-    createTextNode: function (text) {
+    createTextNode(text) {
       var node = new Text();
       node.textContent = text;
       return node;
@@ -627,7 +632,7 @@
 
     nodeType: Node.ELEMENT_NODE,
 
-    getElementsByTagName: getElementsByTagName,
+    getElementsByTagName,
 
     get className() {
       return this.getAttribute("class") || "";
@@ -759,7 +764,7 @@
       return text.join("");
     },
 
-    getAttribute: function (name) {
+    getAttribute(name) {
       for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
@@ -769,7 +774,7 @@
       return undefined;
     },
 
-    setAttribute: function (name, value) {
+    setAttribute(name, value) {
       for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
@@ -780,7 +785,7 @@
       this.attributes.push(new Attribute(name, value));
     },
 
-    removeAttribute: function (name) {
+    removeAttribute(name) {
       for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
@@ -790,7 +795,7 @@
       }
     },
 
-    hasAttribute: function (name) {
+    hasAttribute(name) {
       return this.attributes.some(function (attr) {
         return attr.name == name;
       });
@@ -807,21 +812,21 @@
   // style property stay in sync. Readability.js doesn't do many style
   // manipulations, so this should be okay.
   Style.prototype = {
-    getStyle: function (styleName) {
+    getStyle(styleName) {
       var attr = this.node.getAttribute("style");
-      if (!attr) return undefined;
+      if (!attr) {return undefined;}
 
       var styles = attr.split(";");
       for (var i = 0; i < styles.length; i++) {
         var style = styles[i].split(":");
         var name = style[0].trim();
-        if (name === styleName) return style[1].trim();
+        if (name === styleName) {return style[1].trim();}
       }
 
       return undefined;
     },
 
-    setStyle: function (styleName, styleValue) {
+    setStyle(styleName, styleValue) {
       var value = this.node.getAttribute("style") || "";
       var index = 0;
       do {
@@ -876,8 +881,9 @@
   };
 
   JSDOMParser.prototype = {
-    error: function (m) {
+    error(m) {
       if (typeof console !== "undefined") {
+        // eslint-disable-next-line no-console
         console.log("JSDOMParser error: " + m + "\n");
       } else if (typeof dump !== "undefined") {
         /* global dump */
@@ -889,14 +895,14 @@
     /**
      * Look at the next character without advancing the index.
      */
-    peekNext: function () {
+    peekNext() {
       return this.html[this.currentChar];
     },
 
     /**
      * Get the next character and advance the index.
      */
-    nextChar: function () {
+    nextChar() {
       return this.html[this.currentChar++];
     },
 
@@ -904,7 +910,7 @@
      * Called after a quote character is read. This finds the next quote
      * character and returns the text string in between.
      */
-    readString: function (quote) {
+    readString(quote) {
       var str;
       var n = this.html.indexOf(quote, this.currentChar);
       if (n === -1) {
@@ -922,7 +928,7 @@
      * Called when parsing a node. This finds the next name/value attribute
      * pair and adds the result to the attributes list.
      */
-    readAttribute: function (node) {
+    readAttribute(node) {
       var name = "";
 
       var n = this.html.indexOf("=", this.currentChar);
@@ -934,7 +940,7 @@
         this.currentChar = n + 1;
       }
 
-      if (!name) return;
+      if (!name) {return;}
 
       // After a '=', we should see a '"' for the attribute value
       var c = this.nextChar();
@@ -947,8 +953,6 @@
       var value = this.readString(c);
 
       node.attributes.push(new Attribute(name, decodeHTML(value)));
-
-      return;
     },
 
     /**
@@ -959,26 +963,26 @@
      *          the second index is a boolean indicating whether this is a void
      *          Element
      */
-    makeElementNode: function (retPair) {
+    makeElementNode(retPair) {
       var c = this.nextChar();
 
       // Read the Element tag name
       var strBuf = this.strBuf;
       strBuf.length = 0;
       while (whitespace.indexOf(c) == -1 && c !== ">" && c !== "/") {
-        if (c === undefined) return false;
+        if (c === undefined) {return false;}
         strBuf.push(c);
         c = this.nextChar();
       }
       var tag = strBuf.join("");
 
-      if (!tag) return false;
+      if (!tag) {return false;}
 
       var node = new Element(tag);
 
       // Read Element attributes
       while (c !== "/" && c !== ">") {
-        if (c === undefined) return false;
+        if (c === undefined) {return false;}
         while (whitespace.indexOf(this.html[this.currentChar++]) != -1) {
           // Advance cursor to first non-whitespace char.
         }
@@ -1012,7 +1016,7 @@
      *
      * @returns whether input matched string
      */
-    match: function (str) {
+    match(str) {
       var strlen = str.length;
       if (
         this.html.substr(this.currentChar, strlen).toLowerCase() ===
@@ -1028,16 +1032,16 @@
      * Searches the input until a string is found and discards all input up to
      * and including the matched string.
      */
-    discardTo: function (str) {
+    discardTo(str) {
       var index = this.html.indexOf(str, this.currentChar) + str.length;
-      if (index === -1) this.currentChar = this.html.length;
+      if (index === -1) {this.currentChar = this.html.length;}
       this.currentChar = index;
     },
 
     /**
      * Reads child nodes for the given node.
      */
-    readChildren: function (node) {
+    readChildren(node) {
       var child;
       while ((child = this.readNode())) {
         // Don't keep Comment nodes
@@ -1047,14 +1051,14 @@
       }
     },
 
-    discardNextComment: function () {
+    discardNextComment() {
       if (this.match("--")) {
         this.discardTo("-->");
       } else {
         var c = this.nextChar();
         while (c !== ">") {
-          if (c === undefined) return null;
-          if (c === '"' || c === "'") this.readString(c);
+          if (c === undefined) {return null;}
+          if (c === '"' || c === "'") {this.readString(c);}
           c = this.nextChar();
         }
       }
@@ -1067,10 +1071,10 @@
      *
      * @returns the node
      */
-    readNode: function () {
+    readNode() {
       var c = this.nextChar();
 
-      if (c === undefined) return null;
+      if (c === undefined) {return null;}
 
       // Read any text as Text node
       var textNode;
@@ -1124,7 +1128,7 @@
 
       // Otherwise, we're looking at an Element node
       var result = this.makeElementNode(this.retPair);
-      if (!result) return null;
+      if (!result) {return null;}
 
       var node = this.retPair[0];
       var closed = this.retPair[1];
@@ -1164,7 +1168,7 @@
     /**
      * Parses an HTML string and returns a JS implementation of the Document.
      */
-    parse: function (html, url) {
+    parse(html, url) {
       this.html = html;
       var doc = (this.doc = new Document(url));
       this.readChildren(doc);

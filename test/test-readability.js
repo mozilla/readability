@@ -53,13 +53,19 @@ function htmlTransform(str) {
   return str.replace(/\s+/g, " ");
 }
 
-function runTestsWithItems(label, domGenerationFn, source, expectedContent, expectedMetadata) {
-  describe(label, function() {
+function runTestsWithItems(
+  label,
+  domGenerationFn,
+  source,
+  expectedContent,
+  expectedMetadata
+) {
+  describe(label, function () {
     this.timeout(30000);
 
     var result;
 
-    before(function() {
+    before(function () {
       try {
         var doc = domGenerationFn(source);
         // Provide one class name to preserve, which we know appears in a few
@@ -71,11 +77,11 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       }
     });
 
-    it("should return a result object", function() {
+    it("should return a result object", function () {
       expect(result).to.include.keys("content", "title", "excerpt", "byline");
     });
 
-    it("should extract expected content", function() {
+    it("should extract expected content", function () {
       function nodeStr(n) {
         if (!n) {
           return "(no node)";
@@ -114,78 +120,109 @@ function runTestsWithItems(label, domGenerationFn, source, expectedContent, expe
       }
 
       function attributesForNode(node) {
-        return Array.from(node.attributes).map(function(attr) {
-          return attr.name + "=" + attr.value;
-        }).join(",");
+        return Array.from(node.attributes)
+          .map(function (attr) {
+            return attr.name + "=" + attr.value;
+          })
+          .join(",");
       }
-
 
       var actualDOM = domGenerationFn(prettyPrint(result.content));
       var expectedDOM = domGenerationFn(prettyPrint(expectedContent));
-      traverseDOM(function(actualNode, expectedNode) {
-        if (actualNode && expectedNode) {
-          var actualDesc = nodeStr(actualNode);
-          var expectedDesc = nodeStr(expectedNode);
-          if (actualDesc != expectedDesc) {
-            expect(actualDesc, findableNodeDesc(actualNode)).eql(expectedDesc);
-            return false;
-          }
-          // Compare text for text nodes:
-          if (actualNode.nodeType == 3) {
-            var actualText = htmlTransform(actualNode.textContent);
-            var expectedText = htmlTransform(expectedNode.textContent);
-            expect(actualText, findableNodeDesc(actualNode)).eql(expectedText);
-            if (actualText != expectedText) {
+      traverseDOM(
+        function (actualNode, expectedNode) {
+          if (actualNode && expectedNode) {
+            var actualDesc = nodeStr(actualNode);
+            var expectedDesc = nodeStr(expectedNode);
+            if (actualDesc != expectedDesc) {
+              expect(actualDesc, findableNodeDesc(actualNode)).eql(
+                expectedDesc
+              );
               return false;
             }
-          // Compare attributes for element nodes:
-          } else if (actualNode.nodeType == 1) {
-            var actualNodeDesc = attributesForNode(actualNode);
-            var expectedNodeDesc = attributesForNode(expectedNode);
-            var desc = "node " + nodeStr(actualNode) + " attributes (" + actualNodeDesc + ") should match (" + expectedNodeDesc + ") ";
-            expect(actualNode.attributes.length, desc).eql(expectedNode.attributes.length);
-            for (var i = 0; i < actualNode.attributes.length; i++) {
-              var attr = actualNode.attributes[i].name;
-              var actualValue = actualNode.getAttribute(attr);
-              var expectedValue = expectedNode.getAttribute(attr);
-              expect(expectedValue, "node (" + findableNodeDesc(actualNode) + ") attribute " + attr + " should match").eql(actualValue);
+            // Compare text for text nodes:
+            if (actualNode.nodeType == 3) {
+              var actualText = htmlTransform(actualNode.textContent);
+              var expectedText = htmlTransform(expectedNode.textContent);
+              expect(actualText, findableNodeDesc(actualNode)).eql(
+                expectedText
+              );
+              if (actualText != expectedText) {
+                return false;
+              }
+              // Compare attributes for element nodes:
+            } else if (actualNode.nodeType == 1) {
+              var actualNodeDesc = attributesForNode(actualNode);
+              var expectedNodeDesc = attributesForNode(expectedNode);
+              var desc =
+                "node " +
+                nodeStr(actualNode) +
+                " attributes (" +
+                actualNodeDesc +
+                ") should match (" +
+                expectedNodeDesc +
+                ") ";
+              expect(actualNode.attributes.length, desc).eql(
+                expectedNode.attributes.length
+              );
+              for (var i = 0; i < actualNode.attributes.length; i++) {
+                var attr = actualNode.attributes[i].name;
+                var actualValue = actualNode.getAttribute(attr);
+                var expectedValue = expectedNode.getAttribute(attr);
+                expect(
+                  expectedValue,
+                  "node (" +
+                    findableNodeDesc(actualNode) +
+                    ") attribute " +
+                    attr +
+                    " should match"
+                ).eql(actualValue);
+              }
             }
+          } else {
+            expect(
+              nodeStr(actualNode),
+              "Should have a node from both DOMs"
+            ).eql(nodeStr(expectedNode));
+            return false;
           }
-        } else {
-          expect(nodeStr(actualNode), "Should have a node from both DOMs").eql(nodeStr(expectedNode));
-          return false;
-        }
-        return true;
-      }, actualDOM, expectedDOM);
+          return true;
+        },
+        actualDOM,
+        expectedDOM
+      );
     });
 
-    it("should extract expected title", function() {
+    it("should extract expected title", function () {
       expect(result.title).eql(expectedMetadata.title);
     });
 
-    it("should extract expected byline", function() {
+    it("should extract expected byline", function () {
       expect(result.byline).eql(expectedMetadata.byline);
     });
 
-    it("should extract expected excerpt", function() {
+    it("should extract expected excerpt", function () {
       expect(result.excerpt).eql(expectedMetadata.excerpt);
     });
 
-    it("should extract expected site name", function() {
+    it("should extract expected site name", function () {
       expect(result.siteName).eql(expectedMetadata.siteName);
     });
 
-    expectedMetadata.dir && it("should extract expected direction", function() {
-      expect(result.dir).eql(expectedMetadata.dir);
-    });
+    expectedMetadata.dir &&
+      it("should extract expected direction", function () {
+        expect(result.dir).eql(expectedMetadata.dir);
+      });
 
-    expectedMetadata.lang && it("should extract expected language", function() {
-      expect(result.lang).eql(expectedMetadata.lang);
-    });
+    expectedMetadata.lang &&
+      it("should extract expected language", function () {
+        expect(result.lang).eql(expectedMetadata.lang);
+      });
 
-    expectedMetadata.publishedTime && it("should extract expected published time", function () {
-      expect(result.publishedTime).eql(expectedMetadata.publishedTime);
-    });
+    expectedMetadata.publishedTime &&
+      it("should extract expected published time", function () {
+        expect(result.publishedTime).eql(expectedMetadata.publishedTime);
+      });
   });
 }
 
@@ -200,48 +237,60 @@ function removeCommentNodesRecursively(node) {
   }
 }
 
-describe("Readability API", function() {
-  describe("#constructor", function() {
+describe("Readability API", function () {
+  describe("#constructor", function () {
     var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
-    it("should accept a debug option", function() {
+    it("should accept a debug option", function () {
       expect(new Readability(doc)._debug).eql(false);
-      expect(new Readability(doc, {debug: true})._debug).eql(true);
+      expect(new Readability(doc, { debug: true })._debug).eql(true);
     });
 
-    it("should accept a nbTopCandidates option", function() {
+    it("should accept a nbTopCandidates option", function () {
       expect(new Readability(doc)._nbTopCandidates).eql(5);
-      expect(new Readability(doc, {nbTopCandidates: 42})._nbTopCandidates).eql(42);
+      expect(
+        new Readability(doc, { nbTopCandidates: 42 })._nbTopCandidates
+      ).eql(42);
     });
 
-    it("should accept a maxElemsToParse option", function() {
+    it("should accept a maxElemsToParse option", function () {
       expect(new Readability(doc)._maxElemsToParse).eql(0);
-      expect(new Readability(doc, {maxElemsToParse: 42})._maxElemsToParse).eql(42);
+      expect(
+        new Readability(doc, { maxElemsToParse: 42 })._maxElemsToParse
+      ).eql(42);
     });
 
-    it("should accept a keepClasses option", function() {
+    it("should accept a keepClasses option", function () {
       expect(new Readability(doc)._keepClasses).eql(false);
-      expect(new Readability(doc, {keepClasses: true})._keepClasses).eql(true);
-      expect(new Readability(doc, {keepClasses: false})._keepClasses).eql(false);
+      expect(new Readability(doc, { keepClasses: true })._keepClasses).eql(
+        true
+      );
+      expect(new Readability(doc, { keepClasses: false })._keepClasses).eql(
+        false
+      );
     });
 
-    it("should accept a allowedVideoRegex option or default it", function() {
-      expect(new Readability(doc)._allowedVideoRegex).eql(Readability.prototype.REGEXPS.videos);
+    it("should accept a allowedVideoRegex option or default it", function () {
+      expect(new Readability(doc)._allowedVideoRegex).eql(
+        Readability.prototype.REGEXPS.videos
+      );
       const allowedVideoRegex = /\/\/mydomain.com\/.*'/;
-      expect(new Readability(doc, { allowedVideoRegex })._allowedVideoRegex).eql(allowedVideoRegex);
+      expect(
+        new Readability(doc, { allowedVideoRegex })._allowedVideoRegex
+      ).eql(allowedVideoRegex);
     });
   });
 
-  describe("#parse", function() {
+  describe("#parse", function () {
     var exampleSource = testPages[0].source;
 
-    it("shouldn't parse oversized documents as per configuration", function() {
+    it("shouldn't parse oversized documents as per configuration", function () {
       var doc = new JSDOMParser().parse("<html><div>yo</div></html>");
-      expect(function() {
-        new Readability(doc, {maxElemsToParse: 1}).parse();
+      expect(function () {
+        new Readability(doc, { maxElemsToParse: 1 }).parse();
       }).to.Throw("Aborting parsing document; 2 elements found");
     });
 
-    it("should run _cleanClasses with default configuration", function() {
+    it("should run _cleanClasses with default configuration", function () {
       var doc = new JSDOMParser().parse(exampleSource);
       var parser = new Readability(doc);
 
@@ -252,9 +301,9 @@ describe("Readability API", function() {
       expect(parser._cleanClasses.called).eql(true);
     });
 
-    it("should run _cleanClasses when option keepClasses = false", function() {
+    it("should run _cleanClasses when option keepClasses = false", function () {
       var doc = new JSDOMParser().parse(exampleSource);
-      var parser = new Readability(doc, {keepClasses: false});
+      var parser = new Readability(doc, { keepClasses: false });
 
       parser._cleanClasses = sinon.fake();
 
@@ -263,9 +312,9 @@ describe("Readability API", function() {
       expect(parser._cleanClasses.called).eql(true);
     });
 
-    it("shouldn't run _cleanClasses when option keepClasses = true", function() {
+    it("shouldn't run _cleanClasses when option keepClasses = true", function () {
       var doc = new JSDOMParser().parse(exampleSource);
-      var parser = new Readability(doc, {keepClasses: true});
+      var parser = new Readability(doc, { keepClasses: true });
 
       parser._cleanClasses = sinon.fake();
 
@@ -274,26 +323,28 @@ describe("Readability API", function() {
       expect(parser._cleanClasses.called).eql(false);
     });
 
-    it("should use custom content serializer sent as option", function() {
+    it("should use custom content serializer sent as option", function () {
       var dom = new JSDOM("My cat: <img src=''>");
-      var expected_xhtml = "<div xmlns=\"http://www.w3.org/1999/xhtml\" id=\"readability-page-1\" class=\"page\">My cat: <img src=\"\" /></div>";
+      var expected_xhtml =
+        '<div xmlns="http://www.w3.org/1999/xhtml" id="readability-page-1" class="page">My cat: <img src="" /></div>';
       var xml = new dom.window.XMLSerializer();
       var content = new Readability(dom.window.document, {
-        serializer: function(el) {
+        serializer (el) {
           return xml.serializeToString(el.firstChild);
         },
       }).parse().content;
       expect(content).eql(expected_xhtml);
     });
 
-    it("should use custom video regex sent as option", function() {
+    it("should use custom video regex sent as option", function () {
       var dom = new JSDOM(
         "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
-        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>"
+          '<iframe src="https://mycustomdomain.com/some-embeds"></iframe>'
       );
-      var expected_xhtml = "<div id=\"readability-page-1\" class=\"page\">" +
+      var expected_xhtml =
+        '<div id="readability-page-1" class="page">' +
         "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
-        "<iframe src=\"https://mycustomdomain.com/some-embeds\"></iframe>" +
+        '<iframe src="https://mycustomdomain.com/some-embeds"></iframe>' +
         "</div>";
       var content = new Readability(dom.window.document, {
         charThreshold: 20,
@@ -304,28 +355,40 @@ describe("Readability API", function() {
   });
 });
 
-describe("Test pages", function() {
-  testPages.forEach(function(testPage) {
-    describe(testPage.dir, function() {
+describe("Test pages", function () {
+  testPages.forEach(function (testPage) {
+    describe(testPage.dir, function () {
       var uri = "http://fakehost/test/page.html";
 
-      runTestsWithItems("jsdom", function(source) {
-        var doc = new JSDOM(source, {
-          url: uri,
-        }).window.document;
-        removeCommentNodesRecursively(doc);
-        return doc;
-      }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
+      runTestsWithItems(
+        "jsdom",
+        function (source) {
+          var doc = new JSDOM(source, {
+            url: uri,
+          }).window.document;
+          removeCommentNodesRecursively(doc);
+          return doc;
+        },
+        testPage.source,
+        testPage.expectedContent,
+        testPage.expectedMetadata
+      );
 
-      runTestsWithItems("JSDOMParser", function(source) {
-        var parser = new JSDOMParser();
-        var doc = parser.parse(source, uri);
-        if (parser.errorState) {
-          console.error("Parsing this DOM caused errors:", parser.errorState);
-          return null;
-        }
-        return doc;
-      }, testPage.source, testPage.expectedContent, testPage.expectedMetadata);
+      runTestsWithItems(
+        "JSDOMParser",
+        function (source) {
+          var parser = new JSDOMParser();
+          var doc = parser.parse(source, uri);
+          if (parser.errorState) {
+            console.error("Parsing this DOM caused errors:", parser.errorState);
+            return null;
+          }
+          return doc;
+        },
+        testPage.source,
+        testPage.expectedContent,
+        testPage.expectedMetadata
+      );
     });
   });
 });
