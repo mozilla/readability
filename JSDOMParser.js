@@ -25,15 +25,14 @@
  *      document, you must take care to manually update them yourself.
  */
 (function (global) {
-
   // XML only defines these and the numeric ones:
 
   var entityTable = {
-    "lt": "<",
-    "gt": ">",
-    "amp": "&",
-    "quot": '"',
-    "apos": "'",
+    lt: "<",
+    gt: ">",
+    amp: "&",
+    quot: '"',
+    apos: "'",
   };
 
   var reverseEntityTable = {
@@ -45,234 +44,239 @@
   };
 
   function encodeTextContentHTML(s) {
-    return s.replace(/[&<>]/g, function(x) {
+    return s.replace(/[&<>]/g, function (x) {
       return reverseEntityTable[x];
     });
   }
 
   function encodeHTML(s) {
-    return s.replace(/[&<>'"]/g, function(x) {
+    return s.replace(/[&<>'"]/g, function (x) {
       return reverseEntityTable[x];
     });
   }
 
   function decodeHTML(str) {
-    return str.replace(/&(quot|amp|apos|lt|gt);/g, function(match, tag) {
-      return entityTable[tag];
-    }).replace(/&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi, function(match, hex, numStr) {
-      var num = parseInt(hex || numStr, hex ? 16 : 10); // read num
-      return String.fromCharCode(num);
-    });
+    return str
+      .replace(/&(quot|amp|apos|lt|gt);/g, function (match, tag) {
+        return entityTable[tag];
+      })
+      .replace(
+        /&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi,
+        function (match, hex, numStr) {
+          var num = parseInt(hex || numStr, hex ? 16 : 10); // read num
+          return String.fromCharCode(num);
+        }
+      );
   }
 
   // When a style is set in JS, map it to the corresponding CSS attribute
   var styleMap = {
-    "alignmentBaseline": "alignment-baseline",
-    "background": "background",
-    "backgroundAttachment": "background-attachment",
-    "backgroundClip": "background-clip",
-    "backgroundColor": "background-color",
-    "backgroundImage": "background-image",
-    "backgroundOrigin": "background-origin",
-    "backgroundPosition": "background-position",
-    "backgroundPositionX": "background-position-x",
-    "backgroundPositionY": "background-position-y",
-    "backgroundRepeat": "background-repeat",
-    "backgroundRepeatX": "background-repeat-x",
-    "backgroundRepeatY": "background-repeat-y",
-    "backgroundSize": "background-size",
-    "baselineShift": "baseline-shift",
-    "border": "border",
-    "borderBottom": "border-bottom",
-    "borderBottomColor": "border-bottom-color",
-    "borderBottomLeftRadius": "border-bottom-left-radius",
-    "borderBottomRightRadius": "border-bottom-right-radius",
-    "borderBottomStyle": "border-bottom-style",
-    "borderBottomWidth": "border-bottom-width",
-    "borderCollapse": "border-collapse",
-    "borderColor": "border-color",
-    "borderImage": "border-image",
-    "borderImageOutset": "border-image-outset",
-    "borderImageRepeat": "border-image-repeat",
-    "borderImageSlice": "border-image-slice",
-    "borderImageSource": "border-image-source",
-    "borderImageWidth": "border-image-width",
-    "borderLeft": "border-left",
-    "borderLeftColor": "border-left-color",
-    "borderLeftStyle": "border-left-style",
-    "borderLeftWidth": "border-left-width",
-    "borderRadius": "border-radius",
-    "borderRight": "border-right",
-    "borderRightColor": "border-right-color",
-    "borderRightStyle": "border-right-style",
-    "borderRightWidth": "border-right-width",
-    "borderSpacing": "border-spacing",
-    "borderStyle": "border-style",
-    "borderTop": "border-top",
-    "borderTopColor": "border-top-color",
-    "borderTopLeftRadius": "border-top-left-radius",
-    "borderTopRightRadius": "border-top-right-radius",
-    "borderTopStyle": "border-top-style",
-    "borderTopWidth": "border-top-width",
-    "borderWidth": "border-width",
-    "bottom": "bottom",
-    "boxShadow": "box-shadow",
-    "boxSizing": "box-sizing",
-    "captionSide": "caption-side",
-    "clear": "clear",
-    "clip": "clip",
-    "clipPath": "clip-path",
-    "clipRule": "clip-rule",
-    "color": "color",
-    "colorInterpolation": "color-interpolation",
-    "colorInterpolationFilters": "color-interpolation-filters",
-    "colorProfile": "color-profile",
-    "colorRendering": "color-rendering",
-    "content": "content",
-    "counterIncrement": "counter-increment",
-    "counterReset": "counter-reset",
-    "cursor": "cursor",
-    "direction": "direction",
-    "display": "display",
-    "dominantBaseline": "dominant-baseline",
-    "emptyCells": "empty-cells",
-    "enableBackground": "enable-background",
-    "fill": "fill",
-    "fillOpacity": "fill-opacity",
-    "fillRule": "fill-rule",
-    "filter": "filter",
-    "cssFloat": "float",
-    "floodColor": "flood-color",
-    "floodOpacity": "flood-opacity",
-    "font": "font",
-    "fontFamily": "font-family",
-    "fontSize": "font-size",
-    "fontStretch": "font-stretch",
-    "fontStyle": "font-style",
-    "fontVariant": "font-variant",
-    "fontWeight": "font-weight",
-    "glyphOrientationHorizontal": "glyph-orientation-horizontal",
-    "glyphOrientationVertical": "glyph-orientation-vertical",
-    "height": "height",
-    "imageRendering": "image-rendering",
-    "kerning": "kerning",
-    "left": "left",
-    "letterSpacing": "letter-spacing",
-    "lightingColor": "lighting-color",
-    "lineHeight": "line-height",
-    "listStyle": "list-style",
-    "listStyleImage": "list-style-image",
-    "listStylePosition": "list-style-position",
-    "listStyleType": "list-style-type",
-    "margin": "margin",
-    "marginBottom": "margin-bottom",
-    "marginLeft": "margin-left",
-    "marginRight": "margin-right",
-    "marginTop": "margin-top",
-    "marker": "marker",
-    "markerEnd": "marker-end",
-    "markerMid": "marker-mid",
-    "markerStart": "marker-start",
-    "mask": "mask",
-    "maxHeight": "max-height",
-    "maxWidth": "max-width",
-    "minHeight": "min-height",
-    "minWidth": "min-width",
-    "opacity": "opacity",
-    "orphans": "orphans",
-    "outline": "outline",
-    "outlineColor": "outline-color",
-    "outlineOffset": "outline-offset",
-    "outlineStyle": "outline-style",
-    "outlineWidth": "outline-width",
-    "overflow": "overflow",
-    "overflowX": "overflow-x",
-    "overflowY": "overflow-y",
-    "padding": "padding",
-    "paddingBottom": "padding-bottom",
-    "paddingLeft": "padding-left",
-    "paddingRight": "padding-right",
-    "paddingTop": "padding-top",
-    "page": "page",
-    "pageBreakAfter": "page-break-after",
-    "pageBreakBefore": "page-break-before",
-    "pageBreakInside": "page-break-inside",
-    "pointerEvents": "pointer-events",
-    "position": "position",
-    "quotes": "quotes",
-    "resize": "resize",
-    "right": "right",
-    "shapeRendering": "shape-rendering",
-    "size": "size",
-    "speak": "speak",
-    "src": "src",
-    "stopColor": "stop-color",
-    "stopOpacity": "stop-opacity",
-    "stroke": "stroke",
-    "strokeDasharray": "stroke-dasharray",
-    "strokeDashoffset": "stroke-dashoffset",
-    "strokeLinecap": "stroke-linecap",
-    "strokeLinejoin": "stroke-linejoin",
-    "strokeMiterlimit": "stroke-miterlimit",
-    "strokeOpacity": "stroke-opacity",
-    "strokeWidth": "stroke-width",
-    "tableLayout": "table-layout",
-    "textAlign": "text-align",
-    "textAnchor": "text-anchor",
-    "textDecoration": "text-decoration",
-    "textIndent": "text-indent",
-    "textLineThrough": "text-line-through",
-    "textLineThroughColor": "text-line-through-color",
-    "textLineThroughMode": "text-line-through-mode",
-    "textLineThroughStyle": "text-line-through-style",
-    "textLineThroughWidth": "text-line-through-width",
-    "textOverflow": "text-overflow",
-    "textOverline": "text-overline",
-    "textOverlineColor": "text-overline-color",
-    "textOverlineMode": "text-overline-mode",
-    "textOverlineStyle": "text-overline-style",
-    "textOverlineWidth": "text-overline-width",
-    "textRendering": "text-rendering",
-    "textShadow": "text-shadow",
-    "textTransform": "text-transform",
-    "textUnderline": "text-underline",
-    "textUnderlineColor": "text-underline-color",
-    "textUnderlineMode": "text-underline-mode",
-    "textUnderlineStyle": "text-underline-style",
-    "textUnderlineWidth": "text-underline-width",
-    "top": "top",
-    "unicodeBidi": "unicode-bidi",
-    "unicodeRange": "unicode-range",
-    "vectorEffect": "vector-effect",
-    "verticalAlign": "vertical-align",
-    "visibility": "visibility",
-    "whiteSpace": "white-space",
-    "widows": "widows",
-    "width": "width",
-    "wordBreak": "word-break",
-    "wordSpacing": "word-spacing",
-    "wordWrap": "word-wrap",
-    "writingMode": "writing-mode",
-    "zIndex": "z-index",
-    "zoom": "zoom",
+    alignmentBaseline: "alignment-baseline",
+    background: "background",
+    backgroundAttachment: "background-attachment",
+    backgroundClip: "background-clip",
+    backgroundColor: "background-color",
+    backgroundImage: "background-image",
+    backgroundOrigin: "background-origin",
+    backgroundPosition: "background-position",
+    backgroundPositionX: "background-position-x",
+    backgroundPositionY: "background-position-y",
+    backgroundRepeat: "background-repeat",
+    backgroundRepeatX: "background-repeat-x",
+    backgroundRepeatY: "background-repeat-y",
+    backgroundSize: "background-size",
+    baselineShift: "baseline-shift",
+    border: "border",
+    borderBottom: "border-bottom",
+    borderBottomColor: "border-bottom-color",
+    borderBottomLeftRadius: "border-bottom-left-radius",
+    borderBottomRightRadius: "border-bottom-right-radius",
+    borderBottomStyle: "border-bottom-style",
+    borderBottomWidth: "border-bottom-width",
+    borderCollapse: "border-collapse",
+    borderColor: "border-color",
+    borderImage: "border-image",
+    borderImageOutset: "border-image-outset",
+    borderImageRepeat: "border-image-repeat",
+    borderImageSlice: "border-image-slice",
+    borderImageSource: "border-image-source",
+    borderImageWidth: "border-image-width",
+    borderLeft: "border-left",
+    borderLeftColor: "border-left-color",
+    borderLeftStyle: "border-left-style",
+    borderLeftWidth: "border-left-width",
+    borderRadius: "border-radius",
+    borderRight: "border-right",
+    borderRightColor: "border-right-color",
+    borderRightStyle: "border-right-style",
+    borderRightWidth: "border-right-width",
+    borderSpacing: "border-spacing",
+    borderStyle: "border-style",
+    borderTop: "border-top",
+    borderTopColor: "border-top-color",
+    borderTopLeftRadius: "border-top-left-radius",
+    borderTopRightRadius: "border-top-right-radius",
+    borderTopStyle: "border-top-style",
+    borderTopWidth: "border-top-width",
+    borderWidth: "border-width",
+    bottom: "bottom",
+    boxShadow: "box-shadow",
+    boxSizing: "box-sizing",
+    captionSide: "caption-side",
+    clear: "clear",
+    clip: "clip",
+    clipPath: "clip-path",
+    clipRule: "clip-rule",
+    color: "color",
+    colorInterpolation: "color-interpolation",
+    colorInterpolationFilters: "color-interpolation-filters",
+    colorProfile: "color-profile",
+    colorRendering: "color-rendering",
+    content: "content",
+    counterIncrement: "counter-increment",
+    counterReset: "counter-reset",
+    cursor: "cursor",
+    direction: "direction",
+    display: "display",
+    dominantBaseline: "dominant-baseline",
+    emptyCells: "empty-cells",
+    enableBackground: "enable-background",
+    fill: "fill",
+    fillOpacity: "fill-opacity",
+    fillRule: "fill-rule",
+    filter: "filter",
+    cssFloat: "float",
+    floodColor: "flood-color",
+    floodOpacity: "flood-opacity",
+    font: "font",
+    fontFamily: "font-family",
+    fontSize: "font-size",
+    fontStretch: "font-stretch",
+    fontStyle: "font-style",
+    fontVariant: "font-variant",
+    fontWeight: "font-weight",
+    glyphOrientationHorizontal: "glyph-orientation-horizontal",
+    glyphOrientationVertical: "glyph-orientation-vertical",
+    height: "height",
+    imageRendering: "image-rendering",
+    kerning: "kerning",
+    left: "left",
+    letterSpacing: "letter-spacing",
+    lightingColor: "lighting-color",
+    lineHeight: "line-height",
+    listStyle: "list-style",
+    listStyleImage: "list-style-image",
+    listStylePosition: "list-style-position",
+    listStyleType: "list-style-type",
+    margin: "margin",
+    marginBottom: "margin-bottom",
+    marginLeft: "margin-left",
+    marginRight: "margin-right",
+    marginTop: "margin-top",
+    marker: "marker",
+    markerEnd: "marker-end",
+    markerMid: "marker-mid",
+    markerStart: "marker-start",
+    mask: "mask",
+    maxHeight: "max-height",
+    maxWidth: "max-width",
+    minHeight: "min-height",
+    minWidth: "min-width",
+    opacity: "opacity",
+    orphans: "orphans",
+    outline: "outline",
+    outlineColor: "outline-color",
+    outlineOffset: "outline-offset",
+    outlineStyle: "outline-style",
+    outlineWidth: "outline-width",
+    overflow: "overflow",
+    overflowX: "overflow-x",
+    overflowY: "overflow-y",
+    padding: "padding",
+    paddingBottom: "padding-bottom",
+    paddingLeft: "padding-left",
+    paddingRight: "padding-right",
+    paddingTop: "padding-top",
+    page: "page",
+    pageBreakAfter: "page-break-after",
+    pageBreakBefore: "page-break-before",
+    pageBreakInside: "page-break-inside",
+    pointerEvents: "pointer-events",
+    position: "position",
+    quotes: "quotes",
+    resize: "resize",
+    right: "right",
+    shapeRendering: "shape-rendering",
+    size: "size",
+    speak: "speak",
+    src: "src",
+    stopColor: "stop-color",
+    stopOpacity: "stop-opacity",
+    stroke: "stroke",
+    strokeDasharray: "stroke-dasharray",
+    strokeDashoffset: "stroke-dashoffset",
+    strokeLinecap: "stroke-linecap",
+    strokeLinejoin: "stroke-linejoin",
+    strokeMiterlimit: "stroke-miterlimit",
+    strokeOpacity: "stroke-opacity",
+    strokeWidth: "stroke-width",
+    tableLayout: "table-layout",
+    textAlign: "text-align",
+    textAnchor: "text-anchor",
+    textDecoration: "text-decoration",
+    textIndent: "text-indent",
+    textLineThrough: "text-line-through",
+    textLineThroughColor: "text-line-through-color",
+    textLineThroughMode: "text-line-through-mode",
+    textLineThroughStyle: "text-line-through-style",
+    textLineThroughWidth: "text-line-through-width",
+    textOverflow: "text-overflow",
+    textOverline: "text-overline",
+    textOverlineColor: "text-overline-color",
+    textOverlineMode: "text-overline-mode",
+    textOverlineStyle: "text-overline-style",
+    textOverlineWidth: "text-overline-width",
+    textRendering: "text-rendering",
+    textShadow: "text-shadow",
+    textTransform: "text-transform",
+    textUnderline: "text-underline",
+    textUnderlineColor: "text-underline-color",
+    textUnderlineMode: "text-underline-mode",
+    textUnderlineStyle: "text-underline-style",
+    textUnderlineWidth: "text-underline-width",
+    top: "top",
+    unicodeBidi: "unicode-bidi",
+    unicodeRange: "unicode-range",
+    vectorEffect: "vector-effect",
+    verticalAlign: "vertical-align",
+    visibility: "visibility",
+    whiteSpace: "white-space",
+    widows: "widows",
+    width: "width",
+    wordBreak: "word-break",
+    wordSpacing: "word-spacing",
+    wordWrap: "word-wrap",
+    writingMode: "writing-mode",
+    zIndex: "z-index",
+    zoom: "zoom",
   };
 
   // Elements that can be self-closing
   var voidElems = {
-    "area": true,
-    "base": true,
-    "br": true,
-    "col": true,
-    "command": true,
-    "embed": true,
-    "hr": true,
-    "img": true,
-    "input": true,
-    "link": true,
-    "meta": true,
-    "param": true,
-    "source": true,
-    "wbr": true,
+    area: true,
+    base: true,
+    br: true,
+    col: true,
+    command: true,
+    embed: true,
+    hr: true,
+    img: true,
+    input: true,
+    link: true,
+    meta: true,
+    param: true,
+    source: true,
+    wbr: true,
   };
 
   var whitespace = [" ", "\t", "\n", "\r"];
@@ -296,13 +300,12 @@
   function getElementsByTagName(tag) {
     tag = tag.toUpperCase();
     var elems = [];
-    var allTags = (tag === "*");
+    var allTags = tag === "*";
     function getElems(node) {
       var length = node.children.length;
       for (var i = 0; i < length; i++) {
         var child = node.children[i];
-        if (allTags || (child.tagName === tag))
-          elems.push(child);
+        if (allTags || child.tagName === tag) elems.push(child);
         getElems(child);
       }
     }
@@ -345,14 +348,15 @@
       }
 
       var last = this.lastChild;
-      if (last)
-        last.nextSibling = child;
+      if (last) last.nextSibling = child;
       child.previousSibling = last;
 
       if (child.nodeType === Node.ELEMENT_NODE) {
-        child.previousElementSibling = this.children[this.children.length - 1] || null;
+        child.previousElementSibling =
+          this.children[this.children.length - 1] || null;
         this.children.push(child);
-        child.previousElementSibling && (child.previousElementSibling.nextElementSibling = child);
+        child.previousElementSibling &&
+          (child.previousElementSibling.nextElementSibling = child);
       }
       this.childNodes.push(child);
       child.parentNode = this;
@@ -367,18 +371,14 @@
         child.parentNode = null;
         var prev = child.previousSibling;
         var next = child.nextSibling;
-        if (prev)
-          prev.nextSibling = next;
-        if (next)
-          next.previousSibling = prev;
+        if (prev) prev.nextSibling = next;
+        if (next) next.previousSibling = prev;
 
         if (child.nodeType === Node.ELEMENT_NODE) {
           prev = child.previousElementSibling;
           next = child.nextElementSibling;
-          if (prev)
-            prev.nextElementSibling = next;
-          if (next)
-            next.previousElementSibling = prev;
+          if (prev) prev.nextElementSibling = next;
+          if (next) next.previousElementSibling = prev;
           this.children.splice(this.children.indexOf(child), 1);
         }
 
@@ -396,16 +396,14 @@
         throw "replaceChild: node not found";
       } else {
         // This will take care of updating the new node if it was somewhere else before:
-        if (newNode.parentNode)
-          newNode.parentNode.removeChild(newNode);
+        if (newNode.parentNode) newNode.parentNode.removeChild(newNode);
 
         childNodes[childIndex] = newNode;
 
         // update the new node's sibling properties, and its new siblings' sibling properties
         newNode.nextSibling = oldNode.nextSibling;
         newNode.previousSibling = oldNode.previousSibling;
-        if (newNode.nextSibling)
-          newNode.nextSibling.previousSibling = newNode;
+        if (newNode.nextSibling) newNode.nextSibling.previousSibling = newNode;
         if (newNode.previousSibling)
           newNode.previousSibling.nextSibling = newNode;
 
@@ -425,7 +423,7 @@
             this.children[this.children.indexOf(oldNode)] = newNode;
           } else {
             // Hard way:
-            newNode.previousElementSibling = (function() {
+            newNode.previousElementSibling = (function () {
               for (var i = childIndex - 1; i >= 0; i--) {
                 if (childNodes[i].nodeType === Node.ELEMENT_NODE)
                   return childNodes[i];
@@ -433,9 +431,10 @@
               return null;
             })();
             if (newNode.previousElementSibling) {
-              newNode.nextElementSibling = newNode.previousElementSibling.nextElementSibling;
+              newNode.nextElementSibling =
+                newNode.previousElementSibling.nextElementSibling;
             } else {
-              newNode.nextElementSibling = (function() {
+              newNode.nextElementSibling = (function () {
                 for (var i = childIndex + 1; i < childNodes.length; i++) {
                   if (childNodes[i].nodeType === Node.ELEMENT_NODE)
                     return childNodes[i];
@@ -449,23 +448,27 @@
               newNode.nextElementSibling.previousElementSibling = newNode;
 
             if (newNode.nextElementSibling)
-              this.children.splice(this.children.indexOf(newNode.nextElementSibling), 0, newNode);
-            else
-              this.children.push(newNode);
+              this.children.splice(
+                this.children.indexOf(newNode.nextElementSibling),
+                0,
+                newNode
+              );
+            else this.children.push(newNode);
           }
         } else if (oldNode.nodeType === Node.ELEMENT_NODE) {
           // new node is not an element node.
           // if the old one was, update its element siblings:
           if (oldNode.previousElementSibling)
-            oldNode.previousElementSibling.nextElementSibling = oldNode.nextElementSibling;
+            oldNode.previousElementSibling.nextElementSibling =
+              oldNode.nextElementSibling;
           if (oldNode.nextElementSibling)
-            oldNode.nextElementSibling.previousElementSibling = oldNode.previousElementSibling;
+            oldNode.nextElementSibling.previousElementSibling =
+              oldNode.previousElementSibling;
           this.children.splice(this.children.indexOf(oldNode), 1);
 
           // If the old node wasn't an element, neither the new nor the old node was an element,
           // and the children array and its members shouldn't need any updating.
         }
-
 
         oldNode.parentNode = null;
         oldNode.previousSibling = null;
@@ -494,10 +497,10 @@
     get value() {
       return this._value;
     },
-    setValue: function(newValue) {
+    setValue: function (newValue) {
       this._value = newValue;
     },
-    getEncodedValue: function() {
+    getEncodedValue: function () {
       return encodeHTML(this._value);
     },
   };
@@ -564,12 +567,10 @@
     getElementById: function (id) {
       function getElem(node) {
         var length = node.children.length;
-        if (node.id === id)
-          return node;
+        if (node.id === id) return node;
         for (var i = 0; i < length; i++) {
           var el = getElem(node.children[i]);
-          if (el)
-            return el;
+          if (el) return el;
         }
         return null;
       }
@@ -594,8 +595,10 @@
         var href = baseElements[0] && baseElements[0].getAttribute("href");
         if (href) {
           try {
-            this._baseURI = (new URL(href, this._baseURI)).href;
-          } catch (ex) {/* Just fall back to documentURI */}
+            this._baseURI = new URL(href, this._baseURI).href;
+          } catch (ex) {
+            /* Just fall back to documentURI */
+          }
         }
       }
       return this._baseURI;
@@ -683,7 +686,7 @@
               var attr = child.attributes[j];
               // the attribute value will be HTML escaped.
               var val = attr.getEncodedValue();
-              var quote = (val.indexOf('"') === -1 ? '"' : "'");
+              var quote = val.indexOf('"') === -1 ? '"' : "'";
               arr.push(" " + attr.name + "=" + quote + val + quote);
             }
 
@@ -713,24 +716,24 @@
       var parser = new JSDOMParser();
       var node = parser.parse(html);
       var i;
-      for (i = this.childNodes.length; --i >= 0;) {
+      for (i = this.childNodes.length; --i >= 0; ) {
         this.childNodes[i].parentNode = null;
       }
       this.childNodes = node.childNodes;
       this.children = node.children;
-      for (i = this.childNodes.length; --i >= 0;) {
+      for (i = this.childNodes.length; --i >= 0; ) {
         this.childNodes[i].parentNode = this;
       }
     },
 
     set textContent(text) {
       // clear parentNodes for existing children
-      for (var i = this.childNodes.length; --i >= 0;) {
+      for (var i = this.childNodes.length; --i >= 0; ) {
         this.childNodes[i].parentNode = null;
       }
 
       var node = new Text();
-      this.childNodes = [ node ];
+      this.childNodes = [node];
       this.children = [];
       node.textContent = text;
       node.parentNode = this;
@@ -757,7 +760,7 @@
     },
 
     getAttribute: function (name) {
-      for (var i = this.attributes.length; --i >= 0;) {
+      for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
           return attr.value;
@@ -767,7 +770,7 @@
     },
 
     setAttribute: function (name, value) {
-      for (var i = this.attributes.length; --i >= 0;) {
+      for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
           attr.setValue(value);
@@ -778,7 +781,7 @@
     },
 
     removeAttribute: function (name) {
-      for (var i = this.attributes.length; --i >= 0;) {
+      for (var i = this.attributes.length; --i >= 0; ) {
         var attr = this.attributes[i];
         if (attr.name === name) {
           this.attributes.splice(i, 1);
@@ -806,15 +809,13 @@
   Style.prototype = {
     getStyle: function (styleName) {
       var attr = this.node.getAttribute("style");
-      if (!attr)
-        return undefined;
+      if (!attr) return undefined;
 
       var styles = attr.split(";");
       for (var i = 0; i < styles.length; i++) {
         var style = styles[i].split(":");
         var name = style[0].trim();
-        if (name === styleName)
-          return style[1].trim();
+        if (name === styleName) return style[1].trim();
       }
 
       return undefined;
@@ -826,9 +827,12 @@
       do {
         var next = value.indexOf(";", index) + 1;
         var length = next - index - 1;
-        var style = (length > 0 ? value.substr(index, length) : value.substr(index));
+        var style =
+          length > 0 ? value.substr(index, length) : value.substr(index);
         if (style.substr(0, style.indexOf(":")).trim() === styleName) {
-          value = value.substr(0, index).trim() + (next ? " " + value.substr(next).trim() : "");
+          value =
+            value.substr(0, index).trim() +
+            (next ? " " + value.substr(next).trim() : "");
           break;
         }
         index = next;
@@ -872,7 +876,7 @@
   };
 
   JSDOMParser.prototype = {
-    error: function(m) {
+    error: function (m) {
       if (typeof console !== "undefined") {
         console.log("JSDOMParser error: " + m + "\n");
       } else if (typeof dump !== "undefined") {
@@ -930,8 +934,7 @@
         this.currentChar = n + 1;
       }
 
-      if (!name)
-        return;
+      if (!name) return;
 
       // After a '=', we should see a '"' for the attribute value
       var c = this.nextChar();
@@ -963,22 +966,19 @@
       var strBuf = this.strBuf;
       strBuf.length = 0;
       while (whitespace.indexOf(c) == -1 && c !== ">" && c !== "/") {
-        if (c === undefined)
-          return false;
+        if (c === undefined) return false;
         strBuf.push(c);
         c = this.nextChar();
       }
       var tag = strBuf.join("");
 
-      if (!tag)
-        return false;
+      if (!tag) return false;
 
       var node = new Element(tag);
 
       // Read Element attributes
       while (c !== "/" && c !== ">") {
-        if (c === undefined)
-          return false;
+        if (c === undefined) return false;
         while (whitespace.indexOf(this.html[this.currentChar++]) != -1) {
           // Advance cursor to first non-whitespace char.
         }
@@ -1014,7 +1014,10 @@
      */
     match: function (str) {
       var strlen = str.length;
-      if (this.html.substr(this.currentChar, strlen).toLowerCase() === str.toLowerCase()) {
+      if (
+        this.html.substr(this.currentChar, strlen).toLowerCase() ===
+        str.toLowerCase()
+      ) {
         this.currentChar += strlen;
         return true;
       }
@@ -1027,8 +1030,7 @@
      */
     discardTo: function (str) {
       var index = this.html.indexOf(str, this.currentChar) + str.length;
-      if (index === -1)
-        this.currentChar = this.html.length;
+      if (index === -1) this.currentChar = this.html.length;
       this.currentChar = index;
     },
 
@@ -1045,22 +1047,19 @@
       }
     },
 
-    discardNextComment: function() {
+    discardNextComment: function () {
       if (this.match("--")) {
         this.discardTo("-->");
       } else {
         var c = this.nextChar();
         while (c !== ">") {
-          if (c === undefined)
-            return null;
-          if (c === '"' || c === "'")
-            this.readString(c);
+          if (c === undefined) return null;
+          if (c === '"' || c === "'") this.readString(c);
           c = this.nextChar();
         }
       }
       return new Comment();
     },
-
 
     /**
      * Reads the next child node from the input. If we're reading a closing
@@ -1071,8 +1070,7 @@
     readNode: function () {
       var c = this.nextChar();
 
-      if (c === undefined)
-        return null;
+      if (c === undefined) return null;
 
       // Read any text as Text node
       var textNode;
@@ -1081,7 +1079,10 @@
         textNode = new Text();
         var n = this.html.indexOf("<", this.currentChar);
         if (n === -1) {
-          textNode.innerHTML = this.html.substring(this.currentChar, this.html.length);
+          textNode.innerHTML = this.html.substring(
+            this.currentChar,
+            this.html.length
+          );
           this.currentChar = this.html.length;
         } else {
           textNode.innerHTML = this.html.substring(this.currentChar, n);
@@ -1098,7 +1099,7 @@
         }
         textNode = new Text();
         textNode.textContent = this.html.substring(this.currentChar, endChar);
-        this.currentChar = endChar + ("]]>").length;
+        this.currentChar = endChar + "]]>".length;
         return textNode;
       }
 
@@ -1123,8 +1124,7 @@
 
       // Otherwise, we're looking at an Element node
       var result = this.makeElementNode(this.retPair);
-      if (!result)
-        return null;
+      if (!result) return null;
 
       var node = this.retPair[0];
       var closed = this.retPair[1];
@@ -1135,7 +1135,12 @@
         this.readChildren(node);
         var closingTag = "</" + node._matchingTag + ">";
         if (!this.match(closingTag)) {
-          this.error("expected '" + closingTag + "' and got " + this.html.substr(this.currentChar, closingTag.length));
+          this.error(
+            "expected '" +
+              closingTag +
+              "' and got " +
+              this.html.substr(this.currentChar, closingTag.length)
+          );
           return null;
         }
       }
@@ -1161,13 +1166,13 @@
      */
     parse: function (html, url) {
       this.html = html;
-      var doc = this.doc = new Document(url);
+      var doc = (this.doc = new Document(url));
       this.readChildren(doc);
 
       // If this is an HTML document, remove root-level children except for the
       // <html> node
       if (doc.documentElement) {
-        for (var i = doc.childNodes.length; --i >= 0;) {
+        for (var i = doc.childNodes.length; --i >= 0; ) {
           var child = doc.childNodes[i];
           if (child !== doc.documentElement) {
             doc.removeChild(child);
@@ -1188,10 +1193,10 @@
 
   // Attach JSDOMParser to the global scope
   global.JSDOMParser = JSDOMParser;
-
 })(this);
 
 if (typeof module === "object") {
+  /* eslint-disable-next-line no-redeclare */
   /* global module */
   module.exports = this.JSDOMParser;
 }
