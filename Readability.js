@@ -448,7 +448,7 @@ Readability.prototype = {
         } else if (this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION")) {
           var child = node.children[0];
           for (var i = 0; i < node.attributes.length; i++) {
-            child.setAttribute(node.attributes[i].name, node.attributes[i].value);
+            child.setAttributeNode(node.attributes[i].cloneNode());
           }
           node.parentNode.replaceChild(child, node);
           node = child;
@@ -650,16 +650,7 @@ Readability.prototype = {
       replacement.readability = node.readability;
 
     for (var i = 0; i < node.attributes.length; i++) {
-      try {
-        replacement.setAttribute(node.attributes[i].name, node.attributes[i].value);
-      } catch (ex) {
-        /* it's possible for setAttribute() to throw if the attribute name
-         * isn't a valid XML Name. Such attributes can however be parsed from
-         * source in HTML docs, see https://github.com/whatwg/html/issues/4275,
-         * so we can hit them here and then throw. We don't care about such
-         * attributes so we ignore them.
-         */
-      }
+      replacement.setAttributeNode(node.attributes[i].cloneNode());
     }
     return replacement;
   },
