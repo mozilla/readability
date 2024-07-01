@@ -190,7 +190,7 @@ if (process.argv.length < 3) {
     "Need at least a destination slug and potentially a URL (if the slug doesn't have source)."
   );
   process.exit(0);
-  throw "Abort";
+  throw new Error("Abort");
 }
 
 if (process.argv[2] === "all") {

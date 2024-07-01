@@ -433,9 +433,7 @@ Readability.prototype = {
     var classesToPreserve = this._classesToPreserve;
     var className = (node.getAttribute("class") || "")
       .split(/\s+/)
-      .filter(function (cls) {
-        return classesToPreserve.indexOf(cls) != -1;
-      })
+      .filter(cls => classesToPreserve.includes(cls))
       .join(" ");
 
     if (className) {
@@ -608,7 +606,7 @@ Readability.prototype = {
       if (wordCount(curTitle) < 3) {
         curTitle = origTitle.replace(/[^\|\-\\\/>»]*[\|\-\\\/>»](.*)/gi, "$1");
       }
-    } else if (curTitle.indexOf(": ") !== -1) {
+    } else if (curTitle.includes(": ")) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
       var headings = this._concatNodeLists(
@@ -716,7 +714,7 @@ Readability.prototype = {
       while ((next = this._nextNode(next)) && next.tagName == "BR") {
         replaced = true;
         var brSibling = next.nextSibling;
-        next.parentNode.removeChild(next);
+        next.remove();
         next = brSibling;
       }
 
@@ -748,7 +746,7 @@ Readability.prototype = {
         }
 
         while (p.lastChild && this._isWhitespace(p.lastChild)) {
-          p.removeChild(p.lastChild);
+          p.lastChild.remove();
         }
 
         if (p.parentNode.tagName === "P") {
@@ -872,7 +870,7 @@ Readability.prototype = {
       function (br) {
         var next = this._nextNode(br.nextSibling);
         if (next && next.tagName == "P") {
-          br.parentNode.removeChild(br);
+          br.remove();
         }
       }
     );
@@ -949,7 +947,7 @@ Readability.prototype = {
 
   _removeAndGetNext(node) {
     var nextNode = this._getNextNode(node, true);
-    node.parentNode.removeChild(node);
+    node.remove();
     return nextNode;
   },
 
@@ -1011,7 +1009,7 @@ Readability.prototype = {
 
     if (
       (rel === "author" ||
-        (itemprop && itemprop.indexOf("author") !== -1) ||
+        (itemprop && itemprop.includes("author")) ||
         this.REGEXPS.byline.test(matchString)) &&
       this._isValidByline(node.textContent)
     ) {
@@ -1043,6 +1041,7 @@ Readability.prototype = {
    * @param page a document to run upon. Needs to be a full document, complete with body.
    * @return Element
    **/
+  /* eslint-disable-next-line complexity */
   _grabArticle(page) {
     this.log("**** grabArticle ****");
     var doc = this._doc;
@@ -1154,7 +1153,7 @@ Readability.prototype = {
           continue;
         }
 
-        if (this.DEFAULT_TAGS_TO_SCORE.indexOf(node.tagName) !== -1) {
+        if (this.DEFAULT_TAGS_TO_SCORE.includes(node.tagName)) {
           elementsToScore.push(node);
         }
 
@@ -1175,7 +1174,7 @@ Readability.prototype = {
               }
             } else if (p !== null) {
               while (p.lastChild && this._isWhitespace(p.lastChild)) {
-                p.removeChild(p.lastChild);
+                p.lastChild.remove();
               }
               p = null;
             }
@@ -1481,7 +1480,7 @@ Readability.prototype = {
         if (append) {
           this.log("Appending node:", sibling);
 
-          if (this.ALTER_TO_DIV_EXCEPTIONS.indexOf(sibling.nodeName) === -1) {
+          if (!this.ALTER_TO_DIV_EXCEPTIONS.includes(sibling.nodeName)) {
             // We have a node that isn't a common block level element, like a form or td tag.
             // Turn it into a div so it doesn't get filtered out later by accident.
             this.log("Altering sibling:", sibling, "to div.");
@@ -1542,6 +1541,7 @@ Readability.prototype = {
       var textLength = this._getInnerText(articleContent, true).length;
       if (textLength < this._charThreshold) {
         parseSuccessful = false;
+        // eslint-disable-next-line no-unsanitized/property
         page.innerHTML = pageCacheHtml;
 
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
@@ -1903,7 +1903,7 @@ Readability.prototype = {
         }
       }
 
-      img.parentNode.removeChild(img);
+      img.remove();
     });
 
     // Next find noscript and try to extract its image
@@ -1911,6 +1911,11 @@ Readability.prototype = {
     this._forEachNode(noscripts, function (noscript) {
       // Parse content of noscript and make sure it only contains image
       var tmp = doc.createElement("div");
+      // We're running in the document context, and using unmodified
+      // document contents, so doing this should be safe.
+      // (Also we heavily discourage people from allowing script to
+      // run at all in this document...)
+      // eslint-disable-next-line no-unsanitized/property
       tmp.innerHTML = noscript.innerHTML;
       if (!this._isSingleImage(tmp)) {
         return;
@@ -2020,7 +2025,7 @@ Readability.prototype = {
   _isPhrasingContent(node) {
     return (
       node.nodeType === this.TEXT_NODE ||
-      this.PHRASING_ELEMS.indexOf(node.tagName) !== -1 ||
+      this.PHRASING_ELEMS.includes(node.tagName) ||
       ((node.tagName === "A" ||
         node.tagName === "DEL" ||
         node.tagName === "INS") &&
@@ -2084,7 +2089,7 @@ Readability.prototype = {
       e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
     }
 
-    if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.indexOf(e.tagName) !== -1) {
+    if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.includes(e.tagName)) {
       e.removeAttribute("width");
       e.removeAttribute("height");
     }
@@ -2169,7 +2174,7 @@ Readability.prototype = {
    * @return void
    **/
   _clean(e, tag) {
-    var isEmbed = ["object", "embed", "iframe"].indexOf(tag) !== -1;
+    var isEmbed = ["object", "embed", "iframe"].includes(tag);
 
     this._removeNodes(this._getAllNodesWithTag(e, [tag]), function (element) {
       // Allow youtube and vimeo videos through as people usually want to see those.
@@ -2360,7 +2365,7 @@ Readability.prototype = {
         // also check for "null" to work around https://github.com/jsdom/jsdom/issues/2580
         if (
           (elem.src || (elem.srcset && elem.srcset != "null")) &&
-          elem.className.toLowerCase().indexOf("lazy") === -1
+          !elem.className.toLowerCase().includes("lazy")
         ) {
           return;
         }
@@ -2681,7 +2686,7 @@ Readability.prototype = {
   },
 
   _isProbablyVisible(node) {
-    // Have to null-check node.style and node.className.indexOf to deal with SVG and MathML nodes.
+    // Have to null-check node.style and node.className.includes to deal with SVG and MathML nodes.
     return (
       (!node.style || node.style.display != "none") &&
       (!node.style || node.style.visibility != "hidden") &&
@@ -2690,8 +2695,8 @@ Readability.prototype = {
       (!node.hasAttribute("aria-hidden") ||
         node.getAttribute("aria-hidden") != "true" ||
         (node.className &&
-          node.className.indexOf &&
-          node.className.indexOf("fallback-image") !== -1))
+          node.className.includes &&
+          node.className.includes("fallback-image")))
     );
   },
 

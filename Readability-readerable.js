@@ -28,7 +28,7 @@ var REGEXPS = {
 };
 
 function isNodeVisible(node) {
-  // Have to null-check node.style and node.className.indexOf to deal with SVG and MathML nodes.
+  // Have to null-check node.style and node.className.includes to deal with SVG and MathML nodes.
   return (
     (!node.style || node.style.display != "none") &&
     !node.hasAttribute("hidden") &&
@@ -36,8 +36,8 @@ function isNodeVisible(node) {
     (!node.hasAttribute("aria-hidden") ||
       node.getAttribute("aria-hidden") != "true" ||
       (node.className &&
-        node.className.indexOf &&
-        node.className.indexOf("fallback-image") !== -1))
+        node.className.includes &&
+        node.className.includes("fallback-image")))
   );
 }
 

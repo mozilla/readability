@@ -329,7 +329,7 @@ describe("Readability API", function () {
         '<div xmlns="http://www.w3.org/1999/xhtml" id="readability-page-1" class="page">My cat: <img src="" /></div>';
       var xml = new dom.window.XMLSerializer();
       var content = new Readability(dom.window.document, {
-        serializer (el) {
+        serializer(el) {
           return xml.serializeToString(el.firstChild);
         },
       }).parse().content;

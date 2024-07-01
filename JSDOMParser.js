@@ -368,53 +368,57 @@
 
     remove() {
       let parent = this.parentNode;
-      parent.removeChild(this);
+      if (!parent) {
+        // We were already detached so there's nothing to do.
+        return this;
+      }
+      var childNodes = parent.childNodes;
+      var childIndex = childNodes.indexOf(this);
+      if (childIndex === -1) {
+        throw new Error("removeChild: node not found");
+      }
+      this.parentNode = null;
+      var prev = this.previousSibling;
+      var next = this.nextSibling;
+      if (prev) {
+        prev.nextSibling = next;
+      }
+      if (next) {
+        next.previousSibling = prev;
+      }
+      childNodes.splice(childIndex, 1);
+
+      if (this.nodeType === Node.ELEMENT_NODE) {
+        prev = this.previousElementSibling;
+        next = this.nextElementSibling;
+        if (prev) {
+          prev.nextElementSibling = next;
+        }
+        if (next) {
+          next.previousElementSibling = prev;
+        }
+        parent.children.splice(parent.children.indexOf(this), 1);
+      }
+
+      this.previousSibling = this.nextSibling = null;
+      this.previousElementSibling = this.nextElementSibling = null;
+
+      return this;
     },
 
     removeChild(child) {
-      var childNodes = this.childNodes;
-      var childIndex = childNodes.indexOf(child);
-      if (childIndex === -1) {
-        throw "removeChild: node not found";
-      } else {
-        child.parentNode = null;
-        var prev = child.previousSibling;
-        var next = child.nextSibling;
-        if (prev) {
-          prev.nextSibling = next;
-        }
-        if (next) {
-          next.previousSibling = prev;
-        }
-
-        if (child.nodeType === Node.ELEMENT_NODE) {
-          prev = child.previousElementSibling;
-          next = child.nextElementSibling;
-          if (prev) {
-            prev.nextElementSibling = next;
-          }
-          if (next) {
-            next.previousElementSibling = prev;
-          }
-          this.children.splice(this.children.indexOf(child), 1);
-        }
-
-        child.previousSibling = child.nextSibling = null;
-        child.previousElementSibling = child.nextElementSibling = null;
-
-        return childNodes.splice(childIndex, 1)[0];
-      }
+      return child.remove();
     },
 
     replaceChild(newNode, oldNode) {
       var childNodes = this.childNodes;
       var childIndex = childNodes.indexOf(oldNode);
       if (childIndex === -1) {
-        throw "replaceChild: node not found";
+        throw new Error("replaceChild: node not found");
       } else {
         // This will take care of updating the new node if it was somewhere else before:
         if (newNode.parentNode) {
-          newNode.parentNode.removeChild(newNode);
+          newNode.remove();
         }
 
         childNodes[childIndex] = newNode;
@@ -722,7 +726,7 @@
               var attr = child.attributes[j];
               // the attribute value will be HTML escaped.
               var val = attr.getEncodedValue();
-              var quote = val.indexOf('"') === -1 ? '"' : "'";
+              var quote = !val.includes('"') ? '"' : "'";
               arr.push(" " + attr.name + "=" + quote + val + quote);
             }
 
@@ -1006,7 +1010,7 @@
       // Read the Element tag name
       var strBuf = this.strBuf;
       strBuf.length = 0;
-      while (whitespace.indexOf(c) == -1 && c !== ">" && c !== "/") {
+      while (!whitespace.includes(c) && c !== ">" && c !== "/") {
         if (c === undefined) {
           return false;
         }
@@ -1026,7 +1030,7 @@
         if (c === undefined) {
           return false;
         }
-        while (whitespace.indexOf(this.html[this.currentChar++]) != -1) {
+        while (whitespace.includes(this.html[this.currentChar++])) {
           // Advance cursor to first non-whitespace char.
         }
         this.currentChar--;
@@ -1133,6 +1137,9 @@
         --this.currentChar;
         textNode = new Text();
         var n = this.html.indexOf("<", this.currentChar);
+        // We're not expecting XSS type exploitation inside JSDOMParser,
+        // we just have to implement innerHTML stuff...
+        /* eslint-disable no-unsanitized/property */
         if (n === -1) {
           textNode.innerHTML = this.html.substring(
             this.currentChar,
@@ -1143,6 +1150,7 @@
           textNode.innerHTML = this.html.substring(this.currentChar, n);
           this.currentChar = n;
         }
+        /* eslint-enable no-unsanitized/property */
         return textNode;
       }
 
@@ -1232,7 +1240,7 @@
         for (var i = doc.childNodes.length; --i >= 0; ) {
           var child = doc.childNodes[i];
           if (child !== doc.documentElement) {
-            doc.removeChild(child);
+            child.remove();
           }
         }
       }
