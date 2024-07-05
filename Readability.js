@@ -1864,15 +1864,15 @@ Readability.prototype = {
    * @param Element
    **/
   _isSingleImage(node) {
-    if (node.tagName === "IMG") {
-      return true;
+    while (node) {
+      if (node.tagName === "IMG") {
+        return true;
+      } else if (node.children.length !== 1 || node.textContent.trim() !== "") {
+        return false;
+      }
+      node = node.children[0];
     }
-
-    if (node.children.length !== 1 || node.textContent.trim() !== "") {
-      return false;
-    }
-
-    return this._isSingleImage(node.children[0]);
+    return false;
   },
 
   /**
