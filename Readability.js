@@ -1867,7 +1867,8 @@ Readability.prototype = {
     while (node) {
       if (node.tagName === "IMG") {
         return true;
-      } else if (node.children.length !== 1 || node.textContent.trim() !== "") {
+      }
+      if (node.children.length !== 1 || node.textContent.trim() !== "") {
         return false;
       }
       node = node.children[0];
