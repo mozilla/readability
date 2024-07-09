@@ -1892,6 +1892,9 @@ Readability.prototype = {
     var noscripts = Array.from(doc.getElementsByTagName("noscript"));
     this._forEachNode(noscripts, function (noscript) {
       // Parse content of noscript and make sure it only contains image
+      if (!this._isSingleImage(noscript)) {
+        return;
+      }
       var tmp = doc.createElement("div");
       // We're running in the document context, and using unmodified
       // document contents, so doing this should be safe.
@@ -1899,9 +1902,6 @@ Readability.prototype = {
       // run at all in this document...)
       // eslint-disable-next-line no-unsanitized/property
       tmp.innerHTML = noscript.innerHTML;
-      if (!this._isSingleImage(tmp)) {
-        return;
-      }
 
       // If noscript has previous sibling and it only contains image,
       // replace it with noscript content. However we also keep old
