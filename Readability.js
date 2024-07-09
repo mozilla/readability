@@ -393,21 +393,6 @@ Readability.prototype = {
     return Array.prototype.every.call(nodeList, fn, this);
   },
 
-  /**
-   * Concat all nodelists passed as arguments.
-   *
-   * @return ...NodeList
-   * @return Array
-   */
-  _concatNodeLists() {
-    var slice = Array.prototype.slice;
-    var args = slice.call(arguments);
-    var nodeLists = args.map(function (list) {
-      return slice.call(list);
-    });
-    return Array.prototype.concat.apply([], nodeLists);
-  },
-
   _getAllNodesWithTag(node, tagNames) {
     if (node.querySelectorAll) {
       return node.querySelectorAll(tagNames.join(","));
@@ -609,10 +594,7 @@ Readability.prototype = {
     } else if (curTitle.includes(": ")) {
       // Check if we have an heading containing this exact string, so we
       // could assume it's the full title.
-      var headings = this._concatNodeLists(
-        doc.getElementsByTagName("h1"),
-        doc.getElementsByTagName("h2")
-      );
+      var headings = this._getAllNodesWithTag(doc, ["h1", "h2"]);
       var trimmedTitle = curTitle.trim();
       var match = this._someNode(headings, function (heading) {
         return heading.textContent.trim() === trimmedTitle;
