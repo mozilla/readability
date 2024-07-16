@@ -1617,9 +1617,22 @@ Readability.prototype = {
         return htmlEscapeMap[tag];
       })
       .replace(
-        /&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi,
+        /&#(?:x([0-9a-f]+)|([0-9]+));/gi,
         function (_, hex, numStr) {
           var num = parseInt(hex || numStr, hex ? 16 : 10);
+          
+          // these character references are replaced by a conforming HTML parser
+          if (num == 0 || num > 0x10FFFF || (num >= 0xD800 && num <= 0xDFFF)) {
+            num = 0xFFFD;
+          }
+          
+          // code points beyond the BMP must be converted to a surrogate pair when using String.fromCharCode
+          if (num > 0xFFFF) {
+            var high = 0xD800 + (((num - 0x10000) & 0xFFC00) >> 10);
+            var low = 0xDC00 + ((num - 0x10000) & 0x3FF);
+            return String.fromCharCode(high) + String.fromCharCode(low);
+          }
+
           return String.fromCharCode(num);
         }
       );
