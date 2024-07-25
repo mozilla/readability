@@ -68,14 +68,7 @@
           num = 0xfffd;
         }
 
-        // code points beyond the BMP must be converted to a surrogate pair when using String.fromCharCode
-        if (num > 0xffff) {
-          var high = 0xd800 + (((num - 0x10000) & 0xffc00) >> 10);
-          var low = 0xdc00 + ((num - 0x10000) & 0x3ff);
-          return String.fromCharCode(high) + String.fromCharCode(low);
-        }
-
-        return String.fromCharCode(num);
+        return String.fromCodePoint(num);
       });
   }
 
