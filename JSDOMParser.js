@@ -60,13 +60,16 @@
       .replace(/&(quot|amp|apos|lt|gt);/g, function (match, tag) {
         return entityTable[tag];
       })
-      .replace(
-        /&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi,
-        function (match, hex, numStr) {
-          var num = parseInt(hex || numStr, hex ? 16 : 10); // read num
-          return String.fromCharCode(num);
+      .replace(/&#(?:x([0-9a-f]+)|([0-9]+));/gi, function (match, hex, numStr) {
+        var num = parseInt(hex || numStr, hex ? 16 : 10);
+
+        // these character references are replaced by a conforming HTML parser
+        if (num == 0 || num > 0x10ffff || (num >= 0xd800 && num <= 0xdfff)) {
+          num = 0xfffd;
         }
-      );
+
+        return String.fromCodePoint(num);
+      });
   }
 
   // When a style is set in JS, map it to the corresponding CSS attribute

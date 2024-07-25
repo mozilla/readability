@@ -1616,13 +1616,16 @@ Readability.prototype = {
       .replace(/&(quot|amp|apos|lt|gt);/g, function (_, tag) {
         return htmlEscapeMap[tag];
       })
-      .replace(
-        /&#(?:x([0-9a-z]{1,4})|([0-9]{1,4}));/gi,
-        function (_, hex, numStr) {
-          var num = parseInt(hex || numStr, hex ? 16 : 10);
-          return String.fromCharCode(num);
+      .replace(/&#(?:x([0-9a-f]+)|([0-9]+));/gi, function (_, hex, numStr) {
+        var num = parseInt(hex || numStr, hex ? 16 : 10);
+
+        // these character references are replaced by a conforming HTML parser
+        if (num == 0 || num > 0x10ffff || (num >= 0xd800 && num <= 0xdfff)) {
+          num = 0xfffd;
         }
-      );
+
+        return String.fromCodePoint(num);
+      });
   },
 
   /**
