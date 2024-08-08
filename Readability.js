@@ -1525,29 +1525,18 @@ Readability.prototype = {
         // eslint-disable-next-line no-unsanitized/property
         page.innerHTML = pageCacheHtml;
 
+        this._attempts.push({
+          articleContent,
+          textLength,
+        });
+
         if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
           this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
-          this._attempts.push({
-            articleContent,
-            textLength,
-          });
         } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
           this._removeFlag(this.FLAG_WEIGHT_CLASSES);
-          this._attempts.push({
-            articleContent,
-            textLength,
-          });
         } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
           this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
-          this._attempts.push({
-            articleContent,
-            textLength,
-          });
         } else {
-          this._attempts.push({
-            articleContent,
-            textLength,
-          });
           // No luck after removing flags, just return the longest text we found during the different loops
           this._attempts.sort(function (a, b) {
             return b.textLength - a.textLength;
