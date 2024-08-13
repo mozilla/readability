@@ -1647,7 +1647,7 @@ Readability.prototype = {
           }
 
           if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
-            parsed = parsed["@graph"].find(function (it) {
+            parsed = parsed["@graph"].find((it) => {
               return (it["@type"] || "").match(this.REGEXPS.jsonLdArticleTypes);
             });
           }
