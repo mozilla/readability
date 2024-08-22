@@ -988,14 +988,14 @@ Readability.prototype = {
   _isValidByline(node, matchString) {
     var rel = node.getAttribute("rel");
     var itemprop = node.getAttribute("itemprop");
-    var byline = node.textContent.trim();
+    var bylineLength = node.textContent.trim().length;
 
     return (
       (rel === "author" ||
         (itemprop && itemprop.includes("author")) ||
         this.REGEXPS.byline.test(matchString)) &&
-      !!byline.length &&
-      byline.length < 100
+      !!bylineLength &&
+      bylineLength < 100
     );
   },
 
