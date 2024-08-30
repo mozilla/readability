@@ -303,5 +303,19 @@
             <p> A healthy monitoring and alerting pipeline is simple and easy to reason about. It focuses primarily on symptoms for paging, reserving cause-oriented heuristics to serve as aids to debugging problems. Monitoring symptoms is easier the further "up" your stack you monitor, though monitoring saturation and performance of subsystems such as databases often must be performed directly on the subsystem itself. Email alerts are of very limited value and tend to easily become overrun with noise; instead, you should favor a dashboard that monitors all ongoing subcritical problems for the sort of information that typically ends up in email alerts. A dashboard might also be paired with a log, in order to analyze historical correlations. </p>
             <p> Over the long haul, achieving a successful on-call rotation and product includes choosing to alert on symptoms or imminent real problems, adapting your targets to goals that are actually achievable, and making sure that your monitoring supports rapid diagnosis. </p>
         </section>
+        <div data-type="footnotes">
+            <p data-type="footnote" id="id-LvQuvtYS7UvI8h4">
+                <sup><a href="#id-LvQuvtYS7UvI8h4-marker">22</a></sup>Sometimes known as "alert spam," as they are rarely read or acted on.
+            </p>
+            <p data-type="footnote" id="id-QQLuAIXFxCz">
+                <sup><a href="#id-QQLuAIXFxCz-marker">23</a></sup>If 1% of your requests are 50x the average, it means that the rest of your requests are about twice as fast as the average. But if you’re not measuring your distribution, the idea that most of your requests are near the mean is just hopeful thinking.
+            </p>
+            <p data-type="footnote" id="id-a82udF8IBfx">
+                <sup><a href="#id-a82udF8IBfx-marker">24</a></sup>See <em>Applying Cardiac Alarm Management Techniques to Your On-Call</em> <a data-type="xref" href="http://fakehost/sre/sre-book/chapters/bibliography#Hol14" target="_blank">[Hol14]</a> for an example of alert fatigue in another context.
+            </p>
+            <p data-type="footnote" id="id-0vYuEFpSjSMtLfG">
+                <sup><a href="#id-0vYuEFpSjSMtLfG-marker">25</a></sup>Zero-redundancy (<em>N</em> + 0) situations count as imminent, as do "nearly full" parts of your service! For more details about the concept of redundancy, see <a href="https://en.wikipedia.org/wiki/N%2B1_redundancy" target="_blank"><em>https://en.wikipedia.org/wiki/N%2B1_redundancy</em></a>.
+            </p>
+        </div>
     </section>
 </div>
