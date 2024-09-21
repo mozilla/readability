@@ -2360,19 +2360,25 @@ Readability.prototype = {
    * or hight is 1, just might as well remove it.
    */
   _maybeRemoveImgSrc(elem) {
-    if (!elem.src) return;
+    if (!elem.src) {
+      return;
+    }
 
     var parts = this.REGEXPS.b64DataUrl.exec(elem.src);
     if (parts != null) {  // base64 encoded
       // Make sure it's not SVG, because SVG can have a meaningful image in under 133 bytes.
-      if (parts[1] === "image/svg+xml") return;
+      if (parts[1] === "image/svg+xml") {
+        return;
+      }
       // Here we assume if image is less than 100 bytes (or 133B after encoded to base64)
       // it will be too small, therefore it might be placeholder image.
       var b64starts = elem.src.search(/base64\s*/i) + 7;
       var b64length = elem.src.length - b64starts;
-      if (b64length >= 133) return;
-    } else {  // not base64 encoded
-      if (!this.REGEXPS.lazyImgSrc.test(elem.src)) return;
+      if (b64length >= 133) {
+        return;
+      }
+    } else if (!this.REGEXPS.lazyImgSrc.test(elem.src)) {
+      return;
     }
 
     if (this._fixLazyImage(elem, true)) {  // src could be removed
