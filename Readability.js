@@ -978,27 +978,25 @@ Readability.prototype = {
     return 1 - distanceB;
   },
 
-  _checkByline(node, matchString) {
-    if (this._articleByline || this._metadata.byline) {
-      return false;
-    }
+  /**
+   * Checks whether an element node contains a valid byline
+   *
+   * @param node {Element}
+   * @param matchString {string}
+   * @return boolean
+   */
+  _isValidByline(node, matchString) {
+    var rel = node.getAttribute("rel");
+    var itemprop = node.getAttribute("itemprop");
+    var bylineLength = node.textContent.trim().length;
 
-    if (node.getAttribute !== undefined) {
-      var rel = node.getAttribute("rel");
-      var itemprop = node.getAttribute("itemprop");
-    }
-
-    if (
+    return (
       (rel === "author" ||
         (itemprop && itemprop.includes("author")) ||
         this.REGEXPS.byline.test(matchString)) &&
-      this._isValidByline(node.textContent)
-    ) {
-      this._articleByline = node.textContent.trim();
-      return true;
-    }
-
-    return false;
+      !!bylineLength &&
+      bylineLength < 100
+    );
   },
 
   _getNodeAncestors(node, maxDepth) {
@@ -1073,8 +1071,13 @@ Readability.prototype = {
           continue;
         }
 
-        // Check to see if this node is a byline, and remove it if it is.
-        if (this._checkByline(node, matchString)) {
+        // If we don't have a byline yet check to see if this node is a byline; if it is store the byline and remove the node.
+        if (
+          !this._articleByline &&
+          !this._metadata.byline &&
+          this._isValidByline(node, matchString)
+        ) {
+          this._articleByline = node.textContent.trim();
           node = this._removeAndGetNext(node);
           continue;
         }
@@ -1571,22 +1574,6 @@ Readability.prototype = {
         return articleContent;
       }
     }
-  },
-
-  /**
-   * Check whether the input string could be a byline.
-   * This verifies that the input is a string, and that the length
-   * is less than 100 chars.
-   *
-   * @param possibleByline {string} - a string to check whether its a byline.
-   * @return Boolean - whether the input string is a byline.
-   */
-  _isValidByline(byline) {
-    if (typeof byline == "string" || byline instanceof String) {
-      byline = byline.trim();
-      return !!byline.length && byline.length < 100;
-    }
-    return false;
   },
 
   /**
