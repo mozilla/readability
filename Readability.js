@@ -832,20 +832,20 @@ Readability.prototype = {
     );
 
     // Remove extra paragraphs
-    // At this point, nasty iframes have been removed; only embedded video
-    // ones remain.
-    var contentTags = ["img", "embed", "object", "iframe"];
     this._removeNodes(
       this._getAllNodesWithTag(articleContent, ["p"]),
       function (paragraph) {
-        // We use an array reduction here so the counts of elements are summed
-        // without anyone having to make further code edits if the list of
-        // content tags is changed.
-        var totalCount = contentTags.reduce(function (total, tag) {
-          return total + paragraph.getElementsByTagName(tag).length;
-        }, 0);
-
-        return totalCount === 0 && !this._getInnerText(paragraph, false);
+        // At this point, nasty iframes have been removed; only embedded video
+        // ones remain.
+        var contentElementCount = this._getAllNodesWithTag(paragraph, [
+          "img",
+          "embed",
+          "object",
+          "iframe",
+        ]).length;
+        return (
+          contentElementCount === 0 && !this._getInnerText(paragraph, false)
+        );
       }
     );
 
