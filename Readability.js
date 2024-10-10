@@ -64,6 +64,8 @@ function Readability(doc, options) {
   this._disableJSONLD = !!options.disableJSONLD;
   this._allowedVideoRegex = options.allowedVideoRegex || this.REGEXPS.videos;
   this._linkDensityModifier = options.linkDensityModifier || 0;
+  // If true, will always overwrite img src with found data-src attribute.
+  this._overwriteImgSrc = !!options.overwriteImgSrc;
 
   // Start with all flags set
   this._flags =
@@ -107,6 +109,10 @@ function Readability(doc, options) {
     this.log = function () {};
   }
 }
+
+// Helper: OR multiple regexps to one.
+_combineRegExps = (...regexps) =>
+    new RegExp(regexps.map(regexp => regexp.source).join("|"))
 
 Readability.prototype = {
   FLAG_STRIP_UNLIKELYS: 0x1,
@@ -172,6 +178,15 @@ Readability.prototype = {
       /^(ad(vertising|vertisement)?|pub(licité)?|werb(ung)?|广告|Реклама|Anuncio)$/iu,
     loadingWords:
       /^((loading|正在加载|Загрузка|chargement|cargando)(…|\.\.\.)?)$/iu,
+    // used to identify img data-src attribute:
+    imgSrcset:
+      /\.(jpg|jpeg|png|webp)\s+\d/,
+    imgSrc: _combineRegExps(
+      /^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/,
+      /^\s*https?:\/\/\S+=(jpg|jpeg|png|webp)\S*\s*$/),
+    // used to identify lazy img src (aka placeholder)
+    lazyImgSrc:
+      /svg\s+(width|height)=['"]?1(px)?['"]?\s+/
   },
 
   UNLIKELY_ROLES: [
@@ -2286,85 +2301,97 @@ Readability.prototype = {
     }
   },
 
+  /**
+   * Look for the first data-src like property. If found, convert image/figure
+   * element into image that can be loaded without JS, and return true.
+   * Otherwise return false.
+   */
+  _fixLazyImage(elem, dry_run) {
+    for (var j = 0; j < elem.attributes.length; j++) {
+      attr = elem.attributes[j];
+      if (
+        attr.name === "src" ||
+        attr.name === "srcset" ||
+        attr.name === "alt"
+      ) {
+        continue;
+      }
+      var copyTo = null;
+      if (this.REGEXPS.imgSrcset.test(attr.value)) {
+        copyTo = "srcset";
+      } else if (this.REGEXPS.imgSrc.test(attr.value)) {
+        copyTo = "src";
+      }
+      if (copyTo) {
+        if (!dry_run) {
+          //if this is an img or picture, set the attribute directly
+          if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
+            elem.setAttribute(copyTo, attr.value);
+          } else if (
+            elem.tagName === "FIGURE" &&
+            !this._getAllNodesWithTag(elem, ["img", "picture"]).length
+          ) {
+            //if the item is a <figure> that does not contain an image or picture, create
+            //one and place it inside the figure see the nytimes-3 testcase for an example
+            var img = this._doc.createElement("img");
+            img.setAttribute(copyTo, attr.value);
+            elem.appendChild(img);
+          }
+        }
+        return true;
+      }
+    }
+    return false;
+  },
+
+  /**
+   * In some sites (e.g. Kotaku, Wechat), they put 1px square image as data uri (base64
+   * or not) in the src attribute. So, here we check if the data uri is too short, width
+   * or hight is 1, just might as well remove it.
+   */
+  _maybeRemoveImgSrc(elem) {
+    if (!elem.src) {
+      return;
+    }
+
+    var parts = this.REGEXPS.b64DataUrl.exec(elem.src);
+    if (parts != null) {  // base64 encoded
+      // Make sure it's not SVG, because SVG can have a meaningful image in under 133 bytes.
+      if (parts[1] === "image/svg+xml") {
+        return;
+      }
+      // Here we assume if image is less than 100 bytes (or 133B after encoded to base64)
+      // it will be too small, therefore it might be placeholder image.
+      var b64starts = elem.src.search(/base64\s*/i) + 7;
+      var b64length = elem.src.length - b64starts;
+      if (b64length >= 133) {
+        return;
+      }
+    } else if (!this.REGEXPS.lazyImgSrc.test(elem.src)) {
+      return;
+    }
+
+    if (this._fixLazyImage(elem, true)) {  // src could be removed
+      elem.removeAttribute("src");
+    }
+  },
+
   /* convert images and figures that have properties like data-src into images that can be loaded without JS */
   _fixLazyImages(root) {
     this._forEachNode(
       this._getAllNodesWithTag(root, ["img", "picture", "figure"]),
       function (elem) {
-        // In some sites (e.g. Kotaku), they put 1px square image as base64 data uri in the src attribute.
-        // So, here we check if the data uri is too short, just might as well remove it.
-        if (elem.src && this.REGEXPS.b64DataUrl.test(elem.src)) {
-          // Make sure it's not SVG, because SVG can have a meaningful image in under 133 bytes.
-          var parts = this.REGEXPS.b64DataUrl.exec(elem.src);
-          if (parts[1] === "image/svg+xml") {
+        if (!this._overwriteImgSrc) {  // overwrite is conditional, not forced
+          this._maybeRemoveImgSrc(elem);
+          // also check for "null" to work around https://github.com/jsdom/jsdom/issues/2580
+          if (
+            (elem.src || (elem.srcset && elem.srcset != "null")) &&
+            !elem.className.toLowerCase().includes("lazy")
+          ) {
             return;
           }
-
-          // Make sure this element has other attributes which contains image.
-          // If it doesn't, then this src is important and shouldn't be removed.
-          var srcCouldBeRemoved = false;
-          for (var i = 0; i < elem.attributes.length; i++) {
-            var attr = elem.attributes[i];
-            if (attr.name === "src") {
-              continue;
-            }
-
-            if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-              srcCouldBeRemoved = true;
-              break;
-            }
-          }
-
-          // Here we assume if image is less than 100 bytes (or 133B after encoded to base64)
-          // it will be too small, therefore it might be placeholder image.
-          if (srcCouldBeRemoved) {
-            var b64starts = elem.src.search(/base64\s*/i) + 7;
-            var b64length = elem.src.length - b64starts;
-            if (b64length < 133) {
-              elem.removeAttribute("src");
-            }
-          }
         }
-
-        // also check for "null" to work around https://github.com/jsdom/jsdom/issues/2580
-        if (
-          (elem.src || (elem.srcset && elem.srcset != "null")) &&
-          !elem.className.toLowerCase().includes("lazy")
-        ) {
-          return;
-        }
-
-        for (var j = 0; j < elem.attributes.length; j++) {
-          attr = elem.attributes[j];
-          if (
-            attr.name === "src" ||
-            attr.name === "srcset" ||
-            attr.name === "alt"
-          ) {
-            continue;
-          }
-          var copyTo = null;
-          if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
-            copyTo = "srcset";
-          } else if (/^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/.test(attr.value)) {
-            copyTo = "src";
-          }
-          if (copyTo) {
-            //if this is an img or picture, set the attribute directly
-            if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
-              elem.setAttribute(copyTo, attr.value);
-            } else if (
-              elem.tagName === "FIGURE" &&
-              !this._getAllNodesWithTag(elem, ["img", "picture"]).length
-            ) {
-              //if the item is a <figure> that does not contain an image or picture, create one and place it inside the figure
-              //see the nytimes-3 testcase for an example
-              var img = this._doc.createElement("img");
-              img.setAttribute(copyTo, attr.value);
-              elem.appendChild(img);
-            }
-          }
-        }
+        this._fixLazyImage(elem, false);
       }
     );
   },
