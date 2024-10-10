@@ -835,14 +835,17 @@ Readability.prototype = {
     this._removeNodes(
       this._getAllNodesWithTag(articleContent, ["p"]),
       function (paragraph) {
-        var imgCount = paragraph.getElementsByTagName("img").length;
-        var embedCount = paragraph.getElementsByTagName("embed").length;
-        var objectCount = paragraph.getElementsByTagName("object").length;
-        // At this point, nasty iframes have been removed, only remain embedded video ones.
-        var iframeCount = paragraph.getElementsByTagName("iframe").length;
-        var totalCount = imgCount + embedCount + objectCount + iframeCount;
-
-        return totalCount === 0 && !this._getInnerText(paragraph, false);
+        // At this point, nasty iframes have been removed; only embedded video
+        // ones remain.
+        var contentElementCount = this._getAllNodesWithTag(paragraph, [
+          "img",
+          "embed",
+          "object",
+          "iframe",
+        ]).length;
+        return (
+          contentElementCount === 0 && !this._getInnerText(paragraph, false)
+        );
       }
     );
 
