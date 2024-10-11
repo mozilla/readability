@@ -196,7 +196,7 @@ Readability.prototype = {
     "UL",
   ]),
 
-  ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P"],
+  ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P", "OL", "UL"],
 
   PRESENTATIONAL_ATTRIBUTES: [
     "align",
