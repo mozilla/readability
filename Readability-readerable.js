@@ -22,16 +22,23 @@
 var REGEXPS = {
   // NOTE: These two regular expressions are duplicated in
   // Readability.js. Please keep both copies in sync.
-  unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
+  unlikelyCandidates:
+    /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
   okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
 };
 
 function isNodeVisible(node) {
-  // Have to null-check node.style and node.className.indexOf to deal with SVG and MathML nodes.
-  return (!node.style || node.style.display != "none")
-    && !node.hasAttribute("hidden")
+  // Have to null-check node.style and node.className.includes to deal with SVG and MathML nodes.
+  return (
+    (!node.style || node.style.display != "none") &&
+    !node.hasAttribute("hidden") &&
     //check for "fallback-image" so that wikimedia math images are displayed
-    && (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || (node.className && node.className.indexOf && node.className.indexOf("fallback-image") !== -1));
+    (!node.hasAttribute("aria-hidden") ||
+      node.getAttribute("aria-hidden") != "true" ||
+      (node.className &&
+        node.className.includes &&
+        node.className.includes("fallback-image")))
+  );
 }
 
 /**
@@ -49,7 +56,11 @@ function isProbablyReaderable(doc, options = {}) {
     options = { visibilityChecker: options };
   }
 
-  var defaultOptions = { minScore: 20, minContentLength: 140, visibilityChecker: isNodeVisible };
+  var defaultOptions = {
+    minScore: 20,
+    minContentLength: 140,
+    visibilityChecker: isNodeVisible,
+  };
   options = Object.assign(defaultOptions, options);
 
   var nodes = doc.querySelectorAll("p, pre, article");
@@ -79,8 +90,10 @@ function isProbablyReaderable(doc, options = {}) {
     }
 
     var matchString = node.className + " " + node.id;
-    if (REGEXPS.unlikelyCandidates.test(matchString) &&
-        !REGEXPS.okMaybeItsACandidate.test(matchString)) {
+    if (
+      REGEXPS.unlikelyCandidates.test(matchString) &&
+      !REGEXPS.okMaybeItsACandidate.test(matchString)
+    ) {
       return false;
     }
 
@@ -103,6 +116,7 @@ function isProbablyReaderable(doc, options = {}) {
 }
 
 if (typeof module === "object") {
+  /* eslint-disable-next-line no-redeclare */
   /* global module */
   module.exports = isProbablyReaderable;
 }
