@@ -47,6 +47,10 @@ You can run it using:
 Replacing `slug` with the identifier the test should use, and providing a URL
 to an actual article on which the test should be based.
 
+On macOS, you may need to make the `tidy` binary executable before that script will succeed. If you see an `EACCES` error when running that script, try:
+
+    $ chmod +x ./node_modules/htmltidy2/bin/darwin/tidy
+
 ## Pull Requests
 
 We're always happy to see pull requests to improve readability.
