@@ -28,6 +28,7 @@ reasonable).
 - [Include Jekyll footnotes in output](https://github.com/mozilla/readability/pull/907)
 - [Handle schema.org context objects](https://github.com/mozilla/readability/pull/940)
 - [Fix invalid attributes breaking parsing](https://github.com/mozilla/readability/pull/918)
+- [Include article:author metadata](https://github.com/mozilla/readability/pull/942)
 
 ## [0.5.0] - 2023-12-15
 
