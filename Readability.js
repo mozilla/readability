@@ -1629,10 +1629,16 @@ Readability.prototype = {
             ""
           );
           var parsed = JSON.parse(content);
-          if (
-            !parsed["@context"] ||
-            !parsed["@context"].match(/^https?\:\/\/schema\.org\/?$/)
-          ) {
+
+          var schemaDotOrgRegex = /^https?\:\/\/schema\.org\/?$/;
+          var matches =
+            (typeof parsed["@context"] === "string" &&
+              parsed["@context"].match(schemaDotOrgRegex)) ||
+            (typeof parsed["@context"] === "object" &&
+              typeof parsed["@context"]["@vocab"] == "string" &&
+              parsed["@context"]["@vocab"].match(schemaDotOrgRegex));
+
+          if (!matches) {
             return;
           }
 
