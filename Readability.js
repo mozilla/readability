@@ -1740,7 +1740,7 @@ Readability.prototype = {
 
     // property is a space-separated list of values
     var propertyPattern =
-      /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|article:author|creator|description|published_time|title|site_name)\s*/gi;
+      /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
 
     // name is a single value
     var namePattern =
