@@ -542,6 +542,10 @@
     getEncodedValue() {
       return encodeHTML(this._value);
     },
+    // Cheat horribly. This is fine for our usecases.
+    cloneNode() {
+      return this;
+    },
   };
 
   var Comment = function () {
@@ -821,6 +825,10 @@
         }
       }
       this.attributes.push(new Attribute(name, value));
+    },
+
+    setAttributeNode(node) {
+      this.setAttribute(node.name, node.value);
     },
 
     removeAttribute(name) {

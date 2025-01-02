@@ -1,6 +1,7 @@
 /* eslint-env node, mocha */
 
 var JSDOM = require("jsdom").JSDOM;
+var xmlNameValidator = require("xml-name-validator").name;
 var chai = require("chai");
 var sinon = require("sinon");
 chai.config.includeStack = true;
@@ -121,14 +122,17 @@ function runTestsWithItems(
 
       function attributesForNode(node) {
         return Array.from(node.attributes)
+          .filter(function (attr) {
+            return xmlNameValidator(attr.name);
+          })
           .map(function (attr) {
             return attr.name + "=" + attr.value;
-          })
-          .join(",");
+          });
       }
 
       var actualDOM = domGenerationFn(prettyPrint(result.content));
       var expectedDOM = domGenerationFn(prettyPrint(expectedContent));
+
       traverseDOM(
         function (actualNode, expectedNode) {
           if (actualNode && expectedNode) {
@@ -152,21 +156,21 @@ function runTestsWithItems(
               }
               // Compare attributes for element nodes:
             } else if (actualNode.nodeType == 1) {
-              var actualNodeDesc = attributesForNode(actualNode);
-              var expectedNodeDesc = attributesForNode(expectedNode);
+              var actualNodeAttributes = attributesForNode(actualNode);
+              var expectedNodeAttributes = attributesForNode(expectedNode);
               var desc =
                 "node " +
                 nodeStr(actualNode) +
                 " attributes (" +
-                actualNodeDesc +
+                actualNodeAttributes.join(",") +
                 ") should match (" +
-                expectedNodeDesc +
-                ") ";
-              expect(actualNode.attributes.length, desc).eql(
-                expectedNode.attributes.length
+                expectedNodeAttributes.join(",") +
+                ") 1";
+              expect(actualNodeAttributes.length, desc).eql(
+                expectedNodeAttributes.length
               );
-              for (var i = 0; i < actualNode.attributes.length; i++) {
-                var attr = actualNode.attributes[i].name;
+              for (var i = 0; i < actualNodeAttributes.length; i++) {
+                var attr = actualNodeAttributes[i].name;
                 var actualValue = actualNode.getAttribute(attr);
                 var expectedValue = expectedNode.getAttribute(attr);
                 expect(
