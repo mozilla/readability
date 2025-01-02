@@ -433,6 +433,20 @@ Readability.prototype = {
   },
 
   /**
+   * Tests whether a string is a URL or not.
+   *
+   * @param {string} str The string to test
+   * @return {boolean} true if str is a URL, false if not
+   */
+  _isUrl(str) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  /**
    * Converts each <a> and <img> uri in the given element to an absolute URI,
    * ignoring #ref URIs.
    *
@@ -1771,13 +1785,20 @@ Readability.prototype = {
       metadata.title = this._getArticleTitle();
     }
 
+    const articleAuthor =
+      typeof values["article:author"] === "string" &&
+      !this._isUrl(values["article:author"])
+        ? values["article:author"]
+        : undefined;
+
     // get author
     metadata.byline =
       jsonld.byline ||
       values["dc:creator"] ||
       values["dcterm:creator"] ||
       values.author ||
-      values["parsely-author"];
+      values["parsely-author"] ||
+      articleAuthor;
 
     // get description
     metadata.excerpt =
