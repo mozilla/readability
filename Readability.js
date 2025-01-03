@@ -940,6 +940,10 @@ Readability.prototype = {
    * (and its kids) are going away, and we want the next node over.
    *
    * Calling this in a loop will traverse the DOM depth-first.
+   *
+   * @param {Element} node
+   * @param {boolean} ignoreSelfAndKids
+   * @return {Element}
    */
   _getNextNode(node, ignoreSelfAndKids) {
     // First check for kids if those aren't being ignored
@@ -1079,7 +1083,20 @@ Readability.prototype = {
           !this._metadata.byline &&
           this._isValidByline(node, matchString)
         ) {
-          this._articleByline = node.textContent.trim();
+          // Find child node matching [itemprop="name"] and use that if it exists for a more accurate author name byline
+          var endOfSearchMarkerNode = this._getNextNode(node, true);
+          var next = this._getNextNode(node);
+          var itemPropNameNode = null;
+          while (next && next != endOfSearchMarkerNode) {
+            var itemprop = next.getAttribute("itemprop");
+            if (itemprop && itemprop.includes("name")) {
+              itemPropNameNode = next;
+              break;
+            } else {
+              next = this._getNextNode(next);
+            }
+          }
+          this._articleByline = (itemPropNameNode ?? node).textContent.trim();
           node = this._removeAndGetNext(node);
           continue;
         }
