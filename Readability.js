@@ -1087,18 +1087,17 @@ Readability.prototype = {
           // Find child node matching [itemprop="name"] and use that if it exists for a more accurate author name byline
           var endOfSearchMarkerNode = this._getNextNode(node, true);
           var next = this._getNextNode(node);
-          var itemPropNameAttrValue = null;
+          var itemPropNameNode = null;
           while (next && next != endOfSearchMarkerNode) {
             var itemprop = next.getAttribute("itemprop");
             if (itemprop && itemprop.includes("name")) {
-              itemPropNameAttrValue = next.textContent.trim();
+              itemPropNameNode = next;
               break;
             } else {
               next = this._getNextNode(next);
             }
           }
-          this._articleByline =
-            itemPropNameAttrValue ?? node.textContent.trim();
+          this._articleByline = (itemPropNameNode ?? node).textContent.trim();
           node = this._removeAndGetNext(node);
           continue;
         }
