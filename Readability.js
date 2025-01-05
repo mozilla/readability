@@ -433,6 +433,20 @@ Readability.prototype = {
   },
 
   /**
+   * Tests whether a string is a URL or not.
+   *
+   * @param {string} str The string to test
+   * @return {boolean} true if str is a URL, false if not
+   */
+  _isUrl(str) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  /**
    * Converts each <a> and <img> uri in the given element to an absolute URI,
    * ignoring #ref URIs.
    *
@@ -538,10 +552,7 @@ Readability.prototype = {
         ) {
           var child = node.children[0];
           for (var i = 0; i < node.attributes.length; i++) {
-            child.setAttribute(
-              node.attributes[i].name,
-              node.attributes[i].value
-            );
+            child.setAttributeNode(node.attributes[i].cloneNode());
           }
           node.parentNode.replaceChild(child, node);
           node = child;
@@ -755,19 +766,7 @@ Readability.prototype = {
     }
 
     for (var i = 0; i < node.attributes.length; i++) {
-      try {
-        replacement.setAttribute(
-          node.attributes[i].name,
-          node.attributes[i].value
-        );
-      } catch (ex) {
-        /* it's possible for setAttribute() to throw if the attribute name
-         * isn't a valid XML Name. Such attributes can however be parsed from
-         * source in HTML docs, see https://github.com/whatwg/html/issues/4275,
-         * so we can hit them here and then throw. We don't care about such
-         * attributes so we ignore them.
-         */
-      }
+      replacement.setAttributeNode(node.attributes[i].cloneNode());
     }
     return replacement;
   },
@@ -1646,10 +1645,16 @@ Readability.prototype = {
             ""
           );
           var parsed = JSON.parse(content);
-          if (
-            !parsed["@context"] ||
-            !parsed["@context"].match(/^https?\:\/\/schema\.org\/?$/)
-          ) {
+
+          var schemaDotOrgRegex = /^https?\:\/\/schema\.org\/?$/;
+          var matches =
+            (typeof parsed["@context"] === "string" &&
+              parsed["@context"].match(schemaDotOrgRegex)) ||
+            (typeof parsed["@context"] === "object" &&
+              typeof parsed["@context"]["@vocab"] == "string" &&
+              parsed["@context"]["@vocab"].match(schemaDotOrgRegex));
+
+          if (!matches) {
             return;
           }
 
@@ -1797,13 +1802,20 @@ Readability.prototype = {
       metadata.title = this._getArticleTitle();
     }
 
+    const articleAuthor =
+      typeof values["article:author"] === "string" &&
+      !this._isUrl(values["article:author"])
+        ? values["article:author"]
+        : undefined;
+
     // get author
     metadata.byline =
       jsonld.byline ||
       values["dc:creator"] ||
       values["dcterm:creator"] ||
       values.author ||
-      values["parsely-author"];
+      values["parsely-author"] ||
+      articleAuthor;
 
     // get description
     metadata.excerpt =

@@ -15,7 +15,20 @@ reasonable).
 
 - [Add Parsely tags as a fallback metadata source](https://github.com/mozilla/readability/pull/865)
 - [Fix the case that jsonld parse process is ignored when context url include the trailing slash](https://github.com/mozilla/readability/pull/833)
+- [Improve data table support](https://github.com/mozilla/readability/pull/858)
 - [Fixed situations where short paragraphs of legitimate content would be excluded](https://github.com/mozilla/readability/pull/867)
+- [Add an option to modify link density value](https://github.com/mozilla/readability/pull/874)
+- [Byline metadata should lead to not deleting lookalike non-byline content](https://github.com/mozilla/readability/pull/869)
+- [Avoid removing headers on gitlab](https://github.com/mozilla/readability/pull/885)
+- [Improved HTML character unescaping](https://github.com/mozilla/readability/pull/896)
+- Various performance improvements: [#894](https://github.com/mozilla/readability/pull/894),
+  [#892](https://github.com/mozilla/readability/pull/892), [#893](https://github.com/mozilla/readability/pull/893),
+  [#915](https://github.com/mozilla/readability/pull/915),
+- [Fix broken JSONLD context handling](https://github.com/mozilla/readability/pull/902)
+- [Include Jekyll footnotes in output](https://github.com/mozilla/readability/pull/907)
+- [Handle schema.org context objects](https://github.com/mozilla/readability/pull/940)
+- [Fix invalid attributes breaking parsing](https://github.com/mozilla/readability/pull/918)
+- [Include article:author metadata](https://github.com/mozilla/readability/pull/942)
 
 ## [0.5.0] - 2023-12-15
 
