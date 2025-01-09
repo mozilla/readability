@@ -32,33 +32,33 @@ export class Readability<T = string> {
 
   parse(): null | {
     /** article title */
-    title: string;
+    title: string | null | undefined;
 
     /** HTML string of processed article content */
-    content: T;
+    content: T | null | undefined;
 
     /** text content of the article, with all the HTML tags removed */
-    textContent: string;
+    textContent: string | null | undefined;
 
     /** length of an article, in characters */
-    length: number;
+    length: number | null | undefined;
 
     /** article description, or short excerpt from the content */
-    excerpt: string;
+    excerpt: string | null | undefined;
 
     /** author metadata */
-    byline: string;
+    byline: string | null | undefined;
 
     /** content direction */
-    dir: string;
+    dir: string | null | undefined;
 
     /** name of the site */
-    siteName: string;
+    siteName: string | null | undefined;
 
     /** content language */
-    lang: string;
+    lang: string | null | undefined;
 
     /** published time */
-    publishedTime: string;
+    publishedTime: string | null | undefined;
   };
 }
