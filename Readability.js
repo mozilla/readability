@@ -1646,6 +1646,18 @@ Readability.prototype = {
           );
           var parsed = JSON.parse(content);
 
+          if (Array.isArray(parsed)) {
+            parsed = parsed.find(it => {
+              return (
+                it["@type"] &&
+                it["@type"].match(this.REGEXPS.jsonLdArticleTypes)
+              );
+            });
+            if (!parsed) {
+              return;
+            }
+          }
+
           var schemaDotOrgRegex = /^https?\:\/\/schema\.org\/?$/;
           var matches =
             (typeof parsed["@context"] === "string" &&
