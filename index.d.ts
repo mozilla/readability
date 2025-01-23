@@ -27,6 +27,7 @@ export class Readability<T = string> {
       serializer?: (node: Node) => T;
       disableJSONLD?: boolean;
       allowedVideoRegex?: RegExp;
+      tagsToPreserve?: string[];
     }
   );
 

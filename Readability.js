@@ -64,6 +64,7 @@ function Readability(doc, options) {
   this._disableJSONLD = !!options.disableJSONLD;
   this._allowedVideoRegex = options.allowedVideoRegex || this.REGEXPS.videos;
   this._linkDensityModifier = options.linkDensityModifier || 0;
+  this._tagsToPreserve = options.tagsToPreserve || [];
 
   // Start with all flags set
   this._flags =
@@ -1156,7 +1157,11 @@ Readability.prototype = {
           continue;
         }
 
-        if (this.DEFAULT_TAGS_TO_SCORE.includes(node.tagName)) {
+        const tagsToScore = [
+          ...this.DEFAULT_TAGS_TO_SCORE,
+          ...this._tagsToPreserve,
+        ];
+        if (tagsToScore.includes(node.tagName)) {
           elementsToScore.push(node);
         }
 
