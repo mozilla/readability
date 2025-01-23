@@ -282,6 +282,14 @@ describe("Readability API", function () {
         new Readability(doc, { allowedVideoRegex })._allowedVideoRegex
       ).eql(allowedVideoRegex);
     });
+
+    it("should accept a tagsToPreserve option", function () {
+      expect(new Readability(doc)._tagsToPreserve).eql([]);
+      expect(
+        new Readability(doc, { tagsToPreserve: ["my-custom-tag"] })
+          ._tagsToPreserve
+      ).eql(["my-custom-tag"]);
+    });
   });
 
   describe("#parse", function () {
@@ -353,6 +361,22 @@ describe("Readability API", function () {
       var content = new Readability(dom.window.document, {
         charThreshold: 20,
         allowedVideoRegex: /.*mycustomdomain.com.*/,
+      }).parse().content;
+      expect(content).eql(expected_xhtml);
+    });
+
+    it("should use custom tags to preserve sent as option", function () {
+      var dom = new JSDOM(
+        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
+          "<my-custom-tag><p>My Custom Tag</p></my-custom-tag>"
+      );
+      var expected_xhtml =
+        '<div id="readability-page-1" class="page">' +
+        "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
+        "<my-custom-tag><p>My Custom Tag</p></my-custom-tag>" +
+        "</div>";
+      var content = new Readability(dom.window.document, {
+        tagsToPreserve: ["my-custom-tag"],
       }).parse().content;
       expect(content).eql(expected_xhtml);
     });
