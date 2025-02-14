@@ -32,7 +32,7 @@
     "htmltidy2": "1.0.0",
     "js-beautify": "1.14.7",
     "jsdom": "20.0.2",
-    "mocha": "10.1.0",
+    "mocha": "10.8.2",
     "prettier": "^3.3.2",
     "release-it": "17.0.1",
     "sinon": "14.0.2",
