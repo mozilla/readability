@@ -139,7 +139,8 @@ Readability.prototype = {
     // Readability-readerable.js. Please keep both copies in sync.
     unlikelyCandidates:
       /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
-    okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
+    okMaybeItsACandidate:
+      /and|article|body|column|content|main|mathjax|shadow/i,
 
     positive:
       /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
@@ -2696,12 +2697,13 @@ Readability.prototype = {
       (!node.style || node.style.display != "none") &&
       (!node.style || node.style.visibility != "hidden") &&
       !node.hasAttribute("hidden") &&
-      //check for "fallback-image" so that wikimedia math images are displayed
+      // Check for Wikimedia math images (fallback-image) and MathJax
       (!node.hasAttribute("aria-hidden") ||
         node.getAttribute("aria-hidden") != "true" ||
         (node.className &&
           node.className.includes &&
-          node.className.includes("fallback-image")))
+          node.className.includes("fallback-image")) ||
+        node.tagName == "mjx-math")
     );
   },
 
