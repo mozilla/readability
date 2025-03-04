@@ -600,7 +600,7 @@ Readability.prototype = {
 
       // If the resulting title is too short, remove the first part instead:
       if (wordCount(curTitle) < 3) {
-        curTitle = origTitle.replace(/^[^\|\-\\\/>»]*[\|\-\\\/>»]/gi, "");
+        curTitle = origTitle.replace(/^[^\|\-\–\—\\\/>»]*[\|\-\\\/>»]/gi, "");
       }
     } else if (curTitle.includes(": ")) {
       // Check if we have an heading containing this exact string, so we
