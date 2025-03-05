@@ -2697,13 +2697,12 @@ Readability.prototype = {
       (!node.style || node.style.display != "none") &&
       (!node.style || node.style.visibility != "hidden") &&
       !node.hasAttribute("hidden") &&
-      // Check for Wikimedia math images (fallback-image) and MathJax
+      //check for "fallback-image" so that wikimedia math images are displayed
       (!node.hasAttribute("aria-hidden") ||
         node.getAttribute("aria-hidden") != "true" ||
         (node.className &&
           node.className.includes &&
-          node.className.includes("fallback-image")) ||
-        node.tagName == "mjx-math")
+          node.className.includes("fallback-image")))
     );
   },
 
