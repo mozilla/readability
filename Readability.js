@@ -593,14 +593,14 @@ Readability.prototype = {
     }
 
     // If there's a separator in the title, first remove the final part
-    if (/ [\|\-\\\/>»] /.test(curTitle)) {
+    if (/ [\|\-\–\—\\\/>»] /.test(curTitle)) {
       titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
-      let allSeparators = Array.from(origTitle.matchAll(/ [\|\-\\\/>»] /gi));
+      let allSeparators = Array.from(origTitle.matchAll(/ [\|\-\–\—\\\/>»] /gi));
       curTitle = origTitle.substring(0, allSeparators.pop().index);
 
       // If the resulting title is too short, remove the first part instead:
       if (wordCount(curTitle) < 3) {
-        curTitle = origTitle.replace(/^[^\|\-\–\—\\\/>»]*[\|\-\\\/>»]/gi, "");
+        curTitle = origTitle.replace(/^[^\|\-\–\—\\\/>»]*[\|\-\–\—\\\/>»]/gi, "");
       }
     } else if (curTitle.includes(": ")) {
       // Check if we have an heading containing this exact string, so we
@@ -642,7 +642,7 @@ Readability.prototype = {
       curTitleWordCount <= 4 &&
       (!titleHadHierarchicalSeparators ||
         curTitleWordCount !=
-          wordCount(origTitle.replace(/[\|\-\\\/>»]+/g, "")) - 1)
+          wordCount(origTitle.replace(/[\|\-\–\—\\\/>»]+/g, "")) - 1)
     ) {
       curTitle = origTitle;
     }
