@@ -594,10 +594,10 @@ Readability.prototype = {
 
     // If there's a separator in the title, first remove the final part
     const titleSeparators = "-–—|\\\\/>»";
-    if (new RegExp(` [${titleSeparators}] `).test(curTitle)) {
-      titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
+    if (new RegExp(`\\s[${titleSeparators}]\\s`).test(curTitle)) {
+      titleHadHierarchicalSeparators = /\s[\\\/>»]\s/.test(curTitle);
       let allSeparators = Array.from(
-        origTitle.matchAll(new RegExp(` [${titleSeparators}] `, "gi"))
+        origTitle.matchAll(new RegExp(`\\s[${titleSeparators}]\\s`, "gi"))
       );
       curTitle = origTitle.substring(0, allSeparators.pop().index);
 
@@ -649,7 +649,7 @@ Readability.prototype = {
       (!titleHadHierarchicalSeparators ||
         curTitleWordCount !=
           wordCount(
-            origTitle.replace(new RegExp(`[${titleSeparators}]+`, "g"), "")
+            origTitle.replace(new RegExp(`\\s[${titleSeparators}]\\s`, "g"), "")
           ) -
             1)
     ) {
