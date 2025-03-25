@@ -45,7 +45,7 @@ You can run it using:
     $ node test/generate-testcase.js slug https://example.com/article
 
 Replacing `slug` with the identifier the test should use, and providing a URL
-to an actual article on which the test should be based.
+to an actual article on which the test should be based. If your test case involves dynamic content, you can save the page to disk and pass the file as a `file://` URL.
 
 On macOS, you may need to make the `tidy` binary executable before that script will succeed. If you see an `EACCES` error when running that script, try:
 

@@ -7,7 +7,7 @@ var fs = require("fs");
 var JSDOM = require("jsdom").JSDOM;
 var prettyPrint = require("./utils").prettyPrint;
 var http = require("http");
-var urlparse = require("url").parse;
+let { parse: urlparse, fileURLToPath } = require("url");
 var htmltidy = require("htmltidy2").tidy;
 
 var { Readability, isProbablyReaderable } = require("../index");
@@ -28,18 +28,9 @@ function generateTestcase(slug) {
       var sourceFile = path.join(destRoot, "source.html");
       fs.exists(sourceFile, function (exists) {
         if (exists) {
-          fs.readFile(
-            sourceFile,
-            { encoding: "utf-8" },
-            function (readFileErr, data) {
-              if (readFileErr) {
-                console.error("Source existed but couldn't be read?");
-                process.exit(1);
-                return;
-              }
-              onResponseReceived(null, data, destRoot);
-            }
-          );
+          fetchLocalSource(sourceFile, function (data) {
+            onResponseReceived(null, data, destRoot);
+          });
         } else {
           fetchSource(argURL, function (fetchErr, data) {
             onResponseReceived(fetchErr, data, destRoot);
@@ -60,29 +51,54 @@ function fetchSource(url, callbackFn) {
     process.exit(1);
     return;
   }
-  var client = http;
-  if (url.indexOf("https") == 0) {
-    client = require("https");
-  }
-  var options = urlparse(url);
-  options.headers = { "User-Agent": FFX_UA };
-
-  client.get(options, function (response) {
-    if (debug) {
-      console.log("STATUS:", response.statusCode);
-      console.log("HEADERS:", JSON.stringify(response.headers));
+  if (url.indexOf("http") == 0) {
+    var client = http;
+    if (url.indexOf("https") == 0) {
+      client = require("https");
     }
-    response.setEncoding("utf-8");
-    var rv = "";
-    response.on("data", function (chunk) {
-      rv += chunk;
-    });
-    response.on("end", function () {
+    var options = urlparse(url);
+    options.headers = { "User-Agent": FFX_UA };
+
+    client.get(options, function (response) {
       if (debug) {
-        console.log("End received");
+        console.log("STATUS:", response.statusCode);
+        console.log("HEADERS:", JSON.stringify(response.headers));
       }
-      sanitizeSource(rv, callbackFn);
+      response.setEncoding("utf-8");
+      var rv = "";
+      response.on("data", function (chunk) {
+        rv += chunk;
+      });
+      response.on("end", function () {
+        if (debug) {
+          console.log("End received");
+        }
+        sanitizeSource(rv, callbackFn);
+      });
     });
+  } else if (url.indexOf("file://") == 0) {
+    sourceFile = fileURLToPath(url);
+    fs.exists(sourceFile, function (exists) {
+      if (exists) {
+        fetchLocalSource(sourceFile, function (data) {
+          sanitizeSource(data, callbackFn);
+        });
+      } else {
+        console.error("File doesn't exist!");
+        process.exit(1);
+      }
+    });
+  }
+}
+
+function fetchLocalSource(sourceFile, callbackFn) {
+  fs.readFile(sourceFile, { encoding: "utf-8" }, function (readFileErr, data) {
+    if (readFileErr) {
+      console.error("Source existed but couldn't be read?");
+      process.exit(1);
+      return;
+    }
+    callbackFn(data);
   });
 }
 
@@ -94,6 +110,7 @@ function sanitizeSource(html, callbackFn) {
       "indent-spaces": 4,
       "numeric-entities": true,
       "output-xhtml": true,
+      "custom-tags": "blocklevel",
       wrap: 0,
     },
     callbackFn
