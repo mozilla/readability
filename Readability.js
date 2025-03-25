@@ -593,23 +593,18 @@ Readability.prototype = {
     }
 
     // If there's a separator in the title, first remove the final part
-    const titleSeparators = /\|\-–—\\\/>»/;
-    if (new RegExp(`\\s[${titleSeparators.source}]\\s`).test(curTitle)) {
+    const titleSeparators = /\|\-–—\\\/>»/.source;
+    if (new RegExp(`\\s[${titleSeparators}]\\s`).test(curTitle)) {
       titleHadHierarchicalSeparators = /\s[\\\/>»]\s/.test(curTitle);
       let allSeparators = Array.from(
-        origTitle.matchAll(
-          new RegExp(`\\s[${titleSeparators.source}]\\s`, "gi")
-        )
+        origTitle.matchAll(new RegExp(`\\s[${titleSeparators}]\\s`, "gi"))
       );
       curTitle = origTitle.substring(0, allSeparators.pop().index);
 
       // If the resulting title is too short, remove the first part instead:
       if (wordCount(curTitle) < 3) {
         curTitle = origTitle.replace(
-          new RegExp(
-            `^[^${titleSeparators.source}]*[${titleSeparators.source}]`,
-            "gi"
-          ),
+          new RegExp(`^[^${titleSeparators}]*[${titleSeparators}]`, "gi"),
           ""
         );
       }
@@ -654,10 +649,7 @@ Readability.prototype = {
       (!titleHadHierarchicalSeparators ||
         curTitleWordCount !=
           wordCount(
-            origTitle.replace(
-              new RegExp(`\\s[${titleSeparators.source}]\\s`, "g"),
-              ""
-            )
+            origTitle.replace(new RegExp(`\\s[${titleSeparators}]\\s`, "g"), "")
           ) -
             1)
     ) {
