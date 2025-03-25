@@ -7,7 +7,7 @@ var fs = require("fs");
 var JSDOM = require("jsdom").JSDOM;
 var prettyPrint = require("./utils").prettyPrint;
 var http = require("http");
-var urlparse = require("url").parse;
+let { parse: urlparse, fileURLToPath } = require("url");
 var htmltidy = require("htmltidy2").tidy;
 
 var { Readability, isProbablyReaderable } = require("../index");
@@ -77,7 +77,7 @@ function fetchSource(url, callbackFn) {
       });
     });
   } else if (url.indexOf("file://") == 0) {
-    sourceFile = url.replace("file://", "");
+    sourceFile = fileURLToPath(url);
     fs.exists(sourceFile, function (exists) {
       if (exists) {
         fetchLocalSource(sourceFile, function (data) {
