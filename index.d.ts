@@ -62,3 +62,39 @@ export class Readability<T = string> {
     publishedTime: string | null | undefined;
   };
 }
+
+// Assuming Article is the return type of Readability.prototype.parse()
+export type Article = ReturnType<Readability['parse']>;
+
+export interface ReadabilityOptions {
+  debug?: boolean; // Whether to output debug messages. Defaults to `false`.
+  maxElemsToScan?: number;
+  /**
+   * An object of callback functions that can be used to extend Readability's behavior.
+   * Currently, no specific callbacks are detailed or widely used.
+   * It's treated as a generic object (`Record<string, unknown>`).
+   */
+  callbacks?: Record<string, unknown>;
+  url?: string; // The base URL for resolving relative URLs. defaults to the document's `baseURI`.
+  keepClasses?: boolean;
+  /**
+   * An array of class names to preserve. If `keepClasses` is `true`,
+   * only classes in this array will be kept. Defaults to an empty array.
+   */
+  classesToPreserve?: string[];
+/**
+   * A function that serializes an HTML element into a string.
+   * Defaults to `el => el.innerHTML`. This is used to get the content
+   * of the parsed article.
+   * @param el The HTMLElement to serialize.
+   * @returns The HTML string representation of the element's content.
+   */
+  serializer?: (el: Node) => string;
+  /**
+   * When `true`, Readability skips some browser-specific operations
+   * (e.g., scroll behavior modification) that might be problematic in
+   * non-browser environments like JSDOM. Defaults to `false`.
+   */
+  headless?: boolean;
+}
+
