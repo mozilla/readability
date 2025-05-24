@@ -1,6 +1,6 @@
 /**
  * Decides whether or not the document is reader-able without parsing the whole thing.
- * @return {boolean} Whether or not we suspect Readability.parse() will suceeed at returning an article object.
+ * @return {boolean} Whether or not we suspect Readability.parse() will succeed at returning an article object.
  */
 export function isProbablyReaderable(
   document: Document,
@@ -14,20 +14,82 @@ export function isProbablyReaderable(
   }
 ): boolean;
 
+export interface ReadabilityOptions {
+  /**
+   * Whether to output debug messages. Defaults to `false`.
+   */
+  debug?: boolean;
+  /**
+   * The maximum number of elements to parse. If the document exceeds this,
+   * Readability will stop processing. Useful for performance on very large documents.
+   * Defaults to 0 (no limit).
+   */
+  maxElemsToParse?: number;
+  /**
+   * The number of top candidate nodes to consider when determining the main article content.
+   * A higher number might lead to better results but could increase processing time.
+   * Defaults to 5.
+   */
+  nbTopCandidates?: number;
+  /**
+   * The minimum number of characters required for a text node to be considered
+   * significant and included in the article content.
+   * Defaults to 500.
+   */
+  charThreshold?: number;
+  /**
+   * An array of class names to preserve. If `keepClasses` is `true`,
+   * only classes in this array will be kept. Defaults to an empty array.
+   */
+  classesToPreserve?: string[];
+  /**
+   * If `true`, Readability will retain the original class names of elements
+   * in the parsed article content. If `classesToPreserve` is also set,
+   * only those specified classes will be kept. Defaults to `false`.
+   */
+  keepClasses?: boolean;
+  /**
+   * A function that serializes an HTML element into a string.
+   * Defaults to `el => el.innerHTML`. This is used to get the content
+   * of the parsed article.
+   * @param el The Node to serialize.
+   * @returns The HTML string representation of the element's content.
+   */
+  serializer?: (el: Node) => string;
+  /**
+   * If `true`, Readability will not attempt to parse or extract
+   * JSON-LD structured data from the document. Defaults to `false`.
+   */
+  disableJSONLD?: boolean;
+  /**
+   * A regular expression used to validate video URLs. Only videos
+   * matching this regex will be included in the parsed content.
+   * Defaults to a regex that allows common video embedding platforms.
+   */
+  allowedVideoRegex?: RegExp;
+  /**
+   * A modifier applied to the link density score of an element.
+   * This influences how Readability judges the main content area,
+   * potentially helping with documents that have many or few links.
+   * Defaults to 1.
+   */
+  linkDensityModifier?: number;
+  /**
+   * An object of callback functions that can be used to extend Readability's behavior.
+   * Currently, no specific callbacks are detailed or widely used.
+   * It's treated as a generic object (`Record<string, unknown>`).
+   */
+  callbacks?: Record<string, unknown>;
+  /**
+   * The base URL for resolving relative URLs. defaults to the document's `baseURI`.
+   */
+  url?: string;
+}
+
 export class Readability<T = string> {
   constructor(
     document: Document,
-    options?: {
-      debug?: boolean;
-      maxElemsToParse?: number;
-      nbTopCandidates?: number;
-      charThreshold?: number;
-      classesToPreserve?: string[];
-      keepClasses?: boolean;
-      serializer?: (node: Node) => T;
-      disableJSONLD?: boolean;
-      allowedVideoRegex?: RegExp;
-    }
+    options?: ReadabilityOptions
   );
 
   parse(): null | {
@@ -65,36 +127,4 @@ export class Readability<T = string> {
 
 // Assuming Article is the return type of Readability.prototype.parse()
 export type Article = ReturnType<Readability['parse']>;
-
-export interface ReadabilityOptions {
-  debug?: boolean; // Whether to output debug messages. Defaults to `false`.
-  maxElemsToScan?: number;
-  /**
-   * An object of callback functions that can be used to extend Readability's behavior.
-   * Currently, no specific callbacks are detailed or widely used.
-   * It's treated as a generic object (`Record<string, unknown>`).
-   */
-  callbacks?: Record<string, unknown>;
-  url?: string; // The base URL for resolving relative URLs. defaults to the document's `baseURI`.
-  keepClasses?: boolean;
-  /**
-   * An array of class names to preserve. If `keepClasses` is `true`,
-   * only classes in this array will be kept. Defaults to an empty array.
-   */
-  classesToPreserve?: string[];
-/**
-   * A function that serializes an HTML element into a string.
-   * Defaults to `el => el.innerHTML`. This is used to get the content
-   * of the parsed article.
-   * @param el The HTMLElement to serialize.
-   * @returns The HTML string representation of the element's content.
-   */
-  serializer?: (el: Node) => string;
-  /**
-   * When `true`, Readability skips some browser-specific operations
-   * (e.g., scroll behavior modification) that might be problematic in
-   * non-browser environments like JSDOM. Defaults to `false`.
-   */
-  headless?: boolean;
-}
 
