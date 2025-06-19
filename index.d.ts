@@ -80,10 +80,6 @@ export interface ReadabilityOptions {
    * It's treated as a generic object (`Record<string, unknown>`).
    */
   callbacks?: Record<string, unknown>;
-  /**
-   * The base URL for resolving relative URLs. defaults to the document's `baseURI`.
-   */
-  url?: string;
 }
 
 export class Readability<T = string> {
