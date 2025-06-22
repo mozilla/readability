@@ -74,12 +74,6 @@ export interface ReadabilityOptions {
    * Defaults to 1.
    */
   linkDensityModifier?: number;
-  /**
-   * An object of callback functions that can be used to extend Readability's behavior.
-   * Currently, no specific callbacks are detailed or widely used.
-   * It's treated as a generic object (`Record<string, unknown>`).
-   */
-  callbacks?: Record<string, unknown>;
 }
 
 export class Readability<T = string> {
