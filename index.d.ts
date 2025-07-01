@@ -14,7 +14,7 @@ export function isProbablyReaderable(
   }
 ): boolean;
 
-export interface ReadabilityOptions {
+export interface ReadabilityOptions<T = string> {
   /**
    * Whether to output debug messages. Defaults to `false`.
    */
@@ -49,13 +49,14 @@ export interface ReadabilityOptions {
    */
   keepClasses?: boolean;
   /**
-   * A function that serializes an HTML element into a string.
-   * Defaults to `el => el.innerHTML`. This is used to get the content
-   * of the parsed article.
+   * A function that serializes an HTML element into a string or another representation.
+   * Defaults to `el => el.innerHTML`. This is used to get the content of the parsed article.
+   * An identity function (`el => el`) may be useful for returning a DOM element as-is
+   * for further processing.
    * @param el The Node to serialize.
    * @returns The HTML string representation of the element's content.
    */
-  serializer?: (el: Node) => string;
+  serializer?: (el: Node) => T;
   /**
    * If `true`, Readability will not attempt to parse or extract
    * JSON-LD structured data from the document. Defaults to `false`.
@@ -79,7 +80,7 @@ export interface ReadabilityOptions {
 export class Readability<T = string> {
   constructor(
     document: Document,
-    options?: ReadabilityOptions
+    options?: ReadabilityOptions<T>
   );
 
   parse(): null | {
