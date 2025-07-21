@@ -1855,7 +1855,7 @@ Readability.prototype = {
     metadata.siteName = jsonld.siteName || values["og:site_name"];
 
     // get image thumbnail
-    metadata.image = values["og:image"] || values["image"] || values["twitter:image"];
+    metadata.image = values["og:image"] || values.image || values["twitter:image"];
 
     // get favicon
     // metadata.favicon = this._getArticleFavicon()
