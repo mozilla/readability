@@ -1771,7 +1771,7 @@ Readability.prototype = {
 
     // property is a space-separated list of values
     var propertyPattern =
-      /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
+      /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|image:alt|image|published_time|title|site_name)\s*/gi;
 
     // name is a single value
     var namePattern =
@@ -1853,6 +1853,12 @@ Readability.prototype = {
 
     // get site name
     metadata.siteName = jsonld.siteName || values["og:site_name"];
+
+    // get image thumbnail
+    metadata.image = values["og:image"] || values["image"] || values["twitter:image"];
+
+    // get favicon
+    // metadata.favicon = this._getArticleFavicon()
 
     // get article published time
     metadata.publishedTime =
@@ -2784,6 +2790,7 @@ Readability.prototype = {
       length: textContent.length,
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
+      image: metadata.image,
       publishedTime: metadata.publishedTime,
     };
   },
