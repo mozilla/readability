@@ -455,23 +455,6 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris(articleContent) {
-    var baseURI = this._doc.baseURI;
-    var documentURI = this._doc.documentURI;
-    function toAbsoluteURI(uri) {
-      // Leave hash links alone if the base URI matches the document URI:
-      if (baseURI == documentURI && uri.charAt(0) == "#") {
-        return uri;
-      }
-
-      // Otherwise, resolve against base URI:
-      try {
-        return new URL(uri, baseURI).href;
-      } catch (ex) {
-        // Something went wrong, just return the original:
-      }
-      return uri;
-    }
-
     var links = this._getAllNodesWithTag(articleContent, ["a"]);
     this._forEachNode(links, function (link) {
       var href = link.getAttribute("href");
@@ -495,7 +478,7 @@ Readability.prototype = {
             link.parentNode.replaceChild(container, link);
           }
         } else {
-          link.setAttribute("href", toAbsoluteURI(href));
+          link.setAttribute("href", this._toAbsoluteURI(href));
         }
       }
     });
@@ -515,19 +498,17 @@ Readability.prototype = {
       var srcset = media.getAttribute("srcset");
 
       if (src) {
-        media.setAttribute("src", toAbsoluteURI(src));
+        media.setAttribute("src", this._toAbsoluteURI(src));
       }
 
       if (poster) {
-        media.setAttribute("poster", toAbsoluteURI(poster));
+        media.setAttribute("poster", this._toAbsoluteURI(poster));
       }
 
       if (srcset) {
         var newSrcset = srcset.replace(
           this.REGEXPS.srcsetUrl,
-          function (_, p1, p2, p3) {
-            return toAbsoluteURI(p1) + (p2 || "") + p3;
-          }
+          (_, p1, p2, p3) => this._toAbsoluteURI(p1) + (p2 || "") + p3
         );
 
         media.setAttribute("srcset", newSrcset);
@@ -1774,7 +1755,7 @@ Readability.prototype = {
 
     // property is a space-separated list of values
     var propertyPattern =
-      /\s*(article|dc|dcterms|og|twitter)\s*:\s*(author|creator|description|image:alt|image|published_time|modified|title|site_name)\s*/gi;
+      /^\s*(article|dc|dcterms|og|twitter)\s*:\s*(author|creator|description|image|published_time|modified|title|site_name)\s*$/i;
 
     // name is a single value
     var namePattern =
@@ -1930,20 +1911,21 @@ Readability.prototype = {
    **/
   _toAbsoluteURI(uri) {
 
-    // stop processing if uri is empty
-    if(uri === ""){
+    const baseURI = this._doc.baseURI;
+    const documentURI = this._doc.documentURI;
+
+    // Leave hash links alone if the base URI matches the document URI:
+    if (baseURI === documentURI && uri.charAt(0) === "#") {
       return uri;
     }
 
-    // try to parse into URL object
-    var absolute_uri = URL.parse(uri, this._doc.baseURI);
-    if(!absolute_uri){
-      // parsing failed, return original URI
-      return uri;
+    // Otherwise, resolve against base URI:
+    try {
+      return new URL(uri, baseURI).href;
+    } catch (ex) {
+      // Something went wrong, just return the original:
     }
-
-    // parsing worked, return absolute URI
-    return absolute_uri.href;
+    return uri;
   },
 
   /**
