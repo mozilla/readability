@@ -828,6 +828,7 @@ Readability.prototype = {
     this._clean(articleContent, "select");
     this._clean(articleContent, "button");
     this._cleanHeaders(articleContent);
+    this._cleanHeadingPermalinks(articleContent);
 
     // Do these last as the previous stuff may have removed junk
     // that will affect these
@@ -2716,6 +2717,49 @@ Readability.prototype = {
     );
   },
 
+
+  /**
+   * Replace permalink icons in headings with a visible "#".
+   *
+   * @param Element node
+   * @return void
+   */
+
+  // Six out of 1957 tests error
+  _cleanHeadingPermalinks(node) {
+    if (!node || node.nodeType !== 1) {
+      return;
+    }
+
+    // Get all heading nodes
+    const headingNodes = this._getAllNodesWithTag(node, [
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+    ]);
+
+    this._forEachNode(headingNodes, (heading) => {
+      // Get all <a> tags in this heading
+      const links = this._getAllNodesWithTag(heading, ["a"]);
+
+      this._forEachNode(links, (link) => {
+        if (!link.hasAttribute("href")) {
+          return;
+        }
+
+        // Get all <svg> tags inside this link
+        const svgs = this._getAllNodesWithTag(link, ["svg"]);
+
+        this._forEachNode(svgs, (svg) => {
+          svg.replaceWith(node.ownerDocument.createTextNode("#"));
+        });
+      });
+    });
+  },
+  
   /**
    * Runs readability.
    *
