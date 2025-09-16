@@ -223,6 +223,127 @@ describe("Test JSDOM functionality", function () {
       }
     }
   });
+
+  it("should have a working insertBefore", function () {
+    var doc = new JSDOMParser().parse(BASETESTCASE);
+    var body = doc.body;
+    var foo = doc.getElementById("foo");
+    var p = doc.getElementsByTagName("p")[0];
+    var form = doc.getElementsByTagName("form")[0];
+
+    // Insert in the middle
+    var newEl = doc.createElement("hr");
+    body.insertBefore(newEl, foo);
+    nodeExpect(p.nextSibling, newEl);
+    nodeExpect(newEl.nextSibling, foo);
+    nodeExpect(foo.previousSibling, newEl);
+    nodeExpect(newEl.previousSibling, p);
+    nodeExpect(p.nextElementSibling, newEl);
+    nodeExpect(newEl.nextElementSibling, foo);
+    nodeExpect(foo.previousElementSibling, newEl);
+    nodeExpect(newEl.previousElementSibling, p);
+    expect(body.childNodes.length).eql(4);
+    expect(body.children.length).eql(4);
+
+    // Insert at the end (ref = null)
+    var newEl2 = doc.createElement("hr");
+    body.insertBefore(newEl2, null);
+    nodeExpect(body.lastChild, newEl2);
+    nodeExpect(form.nextSibling, newEl2);
+    nodeExpect(newEl2.previousSibling, form);
+    expect(body.childNodes.length).eql(5);
+    expect(body.children.length).eql(5);
+
+    // Insert at the beginning
+    var newEl3 = doc.createElement("hr");
+    body.insertBefore(newEl3, p);
+    nodeExpect(body.firstChild, newEl3);
+    nodeExpect(newEl3.nextSibling, p);
+    nodeExpect(p.previousSibling, newEl3);
+    expect(body.childNodes.length).eql(6);
+    expect(body.children.length).eql(6);
+  });
+
+  it("should have a working createDocumentFragment", function () {
+    var doc = new JSDOMParser().parse(BASETESTCASE);
+    var body = doc.body;
+    var fragment = doc.createDocumentFragment();
+    expect(fragment.nodeType).eql(fragment.DOCUMENT_FRAGMENT_NODE);
+    expect(fragment.nodeName).eql("#document-fragment");
+
+    var p = doc.getElementsByTagName("p")[0];
+    var foo = doc.getElementById("foo");
+
+    fragment.appendChild(p);
+    fragment.appendChild(foo);
+
+    expect(p.parentNode).eql(fragment);
+    expect(foo.parentNode).eql(fragment);
+    expect(fragment.childNodes.length).eql(2);
+    expect(fragment.children.length).eql(2);
+    expect(body.childNodes.length).eql(1); // only form is left
+
+    body.appendChild(fragment);
+    expect(body.childNodes.length).eql(3);
+    expect(p.parentNode).eql(body);
+    expect(foo.parentNode).eql(body);
+    expect(fragment.childNodes.length).eql(0);
+  });
+
+  it("should handle moving an existing child with insertBefore", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p><p>C</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+    var pC = div.children[2];
+
+    // Move C before B
+    div.insertBefore(pC, pB);
+
+    // Check final state
+    expect(div.children.length).eql(3);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pC);
+    nodeExpect(div.children[2], pB);
+
+    // Check pointers on A
+    nodeExpect(pA.previousSibling, null);
+    nodeExpect(pA.nextSibling, pC);
+
+    // Check pointers on C
+    nodeExpect(pC.previousSibling, pA);
+    nodeExpect(pC.nextSibling, pB);
+
+    // Check pointers on B
+    nodeExpect(pB.previousSibling, pC);
+    nodeExpect(pB.nextSibling, null);
+  });
+
+  it("should correctly handle sibling pointers on remove()", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p>Some text<p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var textNode = div.childNodes[1];
+    var pB = div.children[1];
+
+    // Check initial state
+    nodeExpect(pA.nextElementSibling, pB);
+    nodeExpect(pB.previousElementSibling, pA);
+    expect(textNode.nextElementSibling).eql(undefined);
+
+    // Remove the text node
+    textNode.remove();
+
+    // Check element sibling pointers are updated
+    nodeExpect(pA.nextElementSibling, pB);
+    nodeExpect(pB.previousElementSibling, pA);
+
+    // Check the removed node's properties
+    nodeExpect(textNode.parentNode, null);
+    nodeExpect(textNode.nextSibling, null);
+    nodeExpect(textNode.previousSibling, null);
+    expect(textNode.nextElementSibling).eql(undefined);
+  });
 });
 
 describe("Test HTML escaping", function () {

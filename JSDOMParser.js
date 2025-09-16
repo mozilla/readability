@@ -347,26 +347,111 @@
       return this.children[this.children.length - 1] || null;
     },
 
+    _insertNodesBefore(nodes, referenceNode) {
+      if (!nodes.length) {
+        return;
+      }
+
+      // Detach nodes from their previous parents.
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].parentNode) {
+          nodes[i].remove();
+        }
+      }
+
+      var refIndex = referenceNode
+        ? this.childNodes.indexOf(referenceNode)
+        : -1;
+      if (referenceNode && refIndex === -1) {
+        throw new Error("insertBefore: reference node not found");
+      }
+
+      // Find the element reference node.
+      var refElem = referenceNode;
+      while (refElem && refElem.nodeType !== Node.ELEMENT_NODE) {
+        refElem = refElem.nextSibling;
+      }
+
+      // Store the previous siblings before we modify the DOM.
+      var prevSibling = referenceNode
+        ? referenceNode.previousSibling
+        : this.lastChild;
+      var prevElem = refElem
+        ? refElem.previousElementSibling
+        : this.lastElementChild;
+
+      // Insert nodes into childNodes.
+      var insertionPoint = refIndex === -1 ? this.childNodes.length : refIndex;
+      Array.prototype.splice.apply(
+        this.childNodes,
+        [insertionPoint, 0].concat(nodes)
+      );
+
+      // Update parentNode and sibling pointers for the new nodes.
+      for (var j = 0; j < nodes.length; j++) {
+        var node = nodes[j];
+        node.parentNode = this;
+        node.previousSibling = prevSibling;
+        if (prevSibling) {
+          prevSibling.nextSibling = node;
+        }
+        prevSibling = node;
+      }
+      var lastInsertedNode = nodes[nodes.length - 1];
+      lastInsertedNode.nextSibling = referenceNode;
+      if (referenceNode) {
+        referenceNode.previousSibling = lastInsertedNode;
+      }
+
+      // Filter for element nodes and update children array and pointers.
+      var elementsToInsert = [];
+      for (var k = 0; k < nodes.length; k++) {
+        if (nodes[k].nodeType === Node.ELEMENT_NODE) {
+          elementsToInsert.push(nodes[k]);
+        }
+      }
+
+      if (elementsToInsert.length) {
+        var refElemIndex = refElem ? this.children.indexOf(refElem) : -1;
+        var elemInsertionPoint =
+          refElemIndex === -1 ? this.children.length : refElemIndex;
+        Array.prototype.splice.apply(
+          this.children,
+          [elemInsertionPoint, 0].concat(elementsToInsert)
+        );
+
+        for (var l = 0; l < elementsToInsert.length; l++) {
+          var elem = elementsToInsert[l];
+          elem.previousElementSibling = prevElem;
+          if (prevElem) {
+            prevElem.nextElementSibling = elem;
+          }
+          prevElem = elem;
+        }
+        var lastInsertedElem = elementsToInsert[elementsToInsert.length - 1];
+        lastInsertedElem.nextElementSibling = refElem;
+        if (refElem) {
+          refElem.previousElementSibling = lastInsertedElem;
+        }
+      }
+    },
+
     appendChild(child) {
-      if (child.parentNode) {
-        child.remove();
-      }
+      var nodes =
+        child.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ? Array.from(child.childNodes)
+          : [child];
+      this._insertNodesBefore(nodes, null);
+      return child;
+    },
 
-      var last = this.lastChild;
-      if (last) {
-        last.nextSibling = child;
-      }
-      child.previousSibling = last;
-
-      if (child.nodeType === Node.ELEMENT_NODE) {
-        child.previousElementSibling =
-          this.children[this.children.length - 1] || null;
-        this.children.push(child);
-        child.previousElementSibling &&
-          (child.previousElementSibling.nextElementSibling = child);
-      }
-      this.childNodes.push(child);
-      child.parentNode = this;
+    insertBefore(newNode, referenceNode) {
+      var nodes =
+        newNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ? Array.from(newNode.childNodes)
+          : [newNode];
+      this._insertNodesBefore(nodes, referenceNode);
+      return newNode;
     },
 
     remove() {
@@ -401,10 +486,10 @@
           next.previousElementSibling = prev;
         }
         parent.children.splice(parent.children.indexOf(this), 1);
+        this.previousElementSibling = this.nextElementSibling = null;
       }
 
       this.previousSibling = this.nextSibling = null;
-      this.previousElementSibling = this.nextElementSibling = null;
 
       return this;
     },
@@ -414,110 +499,16 @@
     },
 
     replaceChild(newNode, oldNode) {
-      var childNodes = this.childNodes;
-      var childIndex = childNodes.indexOf(oldNode);
-      if (childIndex === -1) {
-        throw new Error("replaceChild: node not found");
-      } else {
-        // This will take care of updating the new node if it was somewhere else before:
-        if (newNode.parentNode) {
-          newNode.remove();
-        }
-
-        childNodes[childIndex] = newNode;
-
-        // update the new node's sibling properties, and its new siblings' sibling properties
-        newNode.nextSibling = oldNode.nextSibling;
-        newNode.previousSibling = oldNode.previousSibling;
-        if (newNode.nextSibling) {
-          newNode.nextSibling.previousSibling = newNode;
-        }
-        if (newNode.previousSibling) {
-          newNode.previousSibling.nextSibling = newNode;
-        }
-
-        newNode.parentNode = this;
-
-        // Now deal with elements before we clear out those values for the old node,
-        // because it can help us take shortcuts here:
-        if (newNode.nodeType === Node.ELEMENT_NODE) {
-          if (oldNode.nodeType === Node.ELEMENT_NODE) {
-            // Both were elements, which makes this easier, we just swap things out:
-            newNode.previousElementSibling = oldNode.previousElementSibling;
-            newNode.nextElementSibling = oldNode.nextElementSibling;
-            if (newNode.previousElementSibling) {
-              newNode.previousElementSibling.nextElementSibling = newNode;
-            }
-            if (newNode.nextElementSibling) {
-              newNode.nextElementSibling.previousElementSibling = newNode;
-            }
-            this.children[this.children.indexOf(oldNode)] = newNode;
-          } else {
-            // Hard way:
-            newNode.previousElementSibling = (function () {
-              for (var i = childIndex - 1; i >= 0; i--) {
-                if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
-                  return childNodes[i];
-                }
-              }
-              return null;
-            })();
-            if (newNode.previousElementSibling) {
-              newNode.nextElementSibling =
-                newNode.previousElementSibling.nextElementSibling;
-            } else {
-              newNode.nextElementSibling = (function () {
-                for (var i = childIndex + 1; i < childNodes.length; i++) {
-                  if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
-                    return childNodes[i];
-                  }
-                }
-                return null;
-              })();
-            }
-            if (newNode.previousElementSibling) {
-              newNode.previousElementSibling.nextElementSibling = newNode;
-            }
-            if (newNode.nextElementSibling) {
-              newNode.nextElementSibling.previousElementSibling = newNode;
-            }
-
-            if (newNode.nextElementSibling) {
-              this.children.splice(
-                this.children.indexOf(newNode.nextElementSibling),
-                0,
-                newNode
-              );
-            } else {
-              this.children.push(newNode);
-            }
-          }
-        } else if (oldNode.nodeType === Node.ELEMENT_NODE) {
-          // new node is not an element node.
-          // if the old one was, update its element siblings:
-          if (oldNode.previousElementSibling) {
-            oldNode.previousElementSibling.nextElementSibling =
-              oldNode.nextElementSibling;
-          }
-          if (oldNode.nextElementSibling) {
-            oldNode.nextElementSibling.previousElementSibling =
-              oldNode.previousElementSibling;
-          }
-          this.children.splice(this.children.indexOf(oldNode), 1);
-
-          // If the old node wasn't an element, neither the new nor the old node was an element,
-          // and the children array and its members shouldn't need any updating.
-        }
-
-        oldNode.parentNode = null;
-        oldNode.previousSibling = null;
-        oldNode.nextSibling = null;
-        if (oldNode.nodeType === Node.ELEMENT_NODE) {
-          oldNode.previousElementSibling = null;
-          oldNode.nextElementSibling = null;
-        }
-        return oldNode;
+      if (oldNode.parentNode !== this) {
+        throw new Error(
+          "replaceChild: node to be replaced is not a child of this node"
+        );
       }
+      // Insert the new node(s) before the node to be replaced.
+      this.insertBefore(newNode, oldNode);
+      // Now, remove the old node.
+      oldNode.remove();
+      return oldNode;
     },
 
     __JSDOMParser__: true,
@@ -557,6 +548,17 @@
 
     nodeName: "#comment",
     nodeType: Node.COMMENT_NODE,
+  };
+
+  var DocumentFragment = function () {
+    this.childNodes = [];
+    this.children = [];
+  };
+
+  DocumentFragment.prototype = {
+    __proto__: Node.prototype,
+    nodeName: "#document-fragment",
+    nodeType: Node.DOCUMENT_FRAGMENT_NODE,
   };
 
   var Text = function () {
@@ -633,6 +635,10 @@
       var node = new Text();
       node.textContent = text;
       return node;
+    },
+
+    createDocumentFragment() {
+      return new DocumentFragment();
     },
 
     get baseURI() {
@@ -1264,6 +1270,7 @@
   global.Node = Node;
   global.Comment = Comment;
   global.Document = Document;
+  global.DocumentFragment = DocumentFragment;
   global.Element = Element;
   global.Text = Text;
 
