@@ -223,6 +223,206 @@ describe("Test JSDOM functionality", function () {
       }
     }
   });
+
+  it("should have a working insertBefore", function () {
+    var doc = new JSDOMParser().parse(BASETESTCASE);
+    var body = doc.body;
+    var foo = doc.getElementById("foo");
+    var p = doc.getElementsByTagName("p")[0];
+    var form = doc.getElementsByTagName("form")[0];
+
+    // Insert in the middle
+    var newEl = doc.createElement("hr");
+    body.insertBefore(newEl, foo);
+    nodeExpect(p.nextSibling, newEl);
+    nodeExpect(newEl.nextSibling, foo);
+    nodeExpect(foo.previousSibling, newEl);
+    nodeExpect(newEl.previousSibling, p);
+    nodeExpect(p.nextElementSibling, newEl);
+    nodeExpect(newEl.nextElementSibling, foo);
+    nodeExpect(foo.previousElementSibling, newEl);
+    nodeExpect(newEl.previousElementSibling, p);
+    expect(body.childNodes.length).eql(4);
+    expect(body.children.length).eql(4);
+
+    // Insert at the end (ref = null)
+    var newEl2 = doc.createElement("hr");
+    body.insertBefore(newEl2, null);
+    nodeExpect(body.lastChild, newEl2);
+    nodeExpect(form.nextSibling, newEl2);
+    nodeExpect(newEl2.previousSibling, form);
+    expect(body.childNodes.length).eql(5);
+    expect(body.children.length).eql(5);
+
+    // Insert at the beginning
+    var newEl3 = doc.createElement("hr");
+    body.insertBefore(newEl3, p);
+    nodeExpect(body.firstChild, newEl3);
+    nodeExpect(newEl3.nextSibling, p);
+    nodeExpect(p.previousSibling, newEl3);
+    expect(body.childNodes.length).eql(6);
+    expect(body.children.length).eql(6);
+  });
+
+  it("should correctly handle mixed element/text siblings on insertBefore", function () {
+    // Insert between a text node and an element node
+    var html1 = "<div><p>A</p>Some Text<span>B</span></div>";
+    var doc1 = new JSDOMParser().parse(html1);
+    var div1 = doc1.getElementsByTagName("div")[0];
+    var pA1 = doc1.getElementsByTagName("p")[0];
+    var textNode1 = div1.childNodes[1];
+    var spanB1 = doc1.getElementsByTagName("span")[0];
+    var newEl1 = doc1.createElement("hr");
+    div1.insertBefore(newEl1, spanB1);
+    nodeExpect(newEl1.previousSibling, textNode1);
+    nodeExpect(newEl1.previousElementSibling, pA1);
+    nodeExpect(newEl1.nextSibling, spanB1);
+    nodeExpect(newEl1.nextElementSibling, spanB1);
+    nodeExpect(pA1.nextElementSibling, newEl1);
+    nodeExpect(spanB1.previousElementSibling, newEl1);
+
+    // Insert between an element node and a text node
+    var html2 = "<div><p>A</p><span>B</span>Some Text</div>";
+    var doc2 = new JSDOMParser().parse(html2);
+    var div2 = doc2.getElementsByTagName("div")[0];
+    var pA2 = doc2.getElementsByTagName("p")[0];
+    var spanB2 = doc2.getElementsByTagName("span")[0];
+    var textNode2 = div2.childNodes[2];
+    var newEl2 = doc2.createElement("hr");
+    div2.insertBefore(newEl2, textNode2);
+    nodeExpect(newEl2.previousSibling, spanB2);
+    nodeExpect(newEl2.previousElementSibling, spanB2);
+    nodeExpect(newEl2.nextSibling, textNode2);
+    expect(newEl2.nextElementSibling).to.be.null;
+    nodeExpect(pA2.nextElementSibling, spanB2);
+    nodeExpect(spanB2.nextElementSibling, newEl2);
+  });
+
+  it("should throw an error when inserting before a non-child", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var p = doc.createElement("p");
+    var unconnected = doc.createElement("span");
+
+    expect(function () {
+      div.insertBefore(p, unconnected);
+    }).to.Throw("insertBefore: reference node not found");
+  });
+
+  it("should have a working createDocumentFragment", function () {
+    var doc = new JSDOMParser().parse(BASETESTCASE);
+    var body = doc.body;
+    var fragment = doc.createDocumentFragment();
+    expect(fragment.nodeType).eql(fragment.DOCUMENT_FRAGMENT_NODE);
+    expect(fragment.nodeName).eql("#document-fragment");
+
+    var p = doc.getElementsByTagName("p")[0];
+    var foo = doc.getElementById("foo");
+
+    fragment.appendChild(p);
+    fragment.appendChild(foo);
+
+    expect(p.parentNode).eql(fragment);
+    expect(foo.parentNode).eql(fragment);
+    expect(fragment.childNodes.length).eql(2);
+    expect(fragment.children.length).eql(2);
+    expect(body.childNodes.length).eql(1); // only form is left
+
+    body.appendChild(fragment);
+    expect(body.childNodes.length).eql(3);
+    expect(p.parentNode).eql(body);
+    expect(foo.parentNode).eql(body);
+    expect(fragment.childNodes.length).eql(0);
+  });
+
+  it("should handle moving an existing child with insertBefore", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p><p>C</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+    var pC = div.children[2];
+
+    // Move C before B
+    div.insertBefore(pC, pB);
+
+    // Check final state
+    expect(div.children.length).eql(3);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pC);
+    nodeExpect(div.children[2], pB);
+
+    // Check pointers on A
+    nodeExpect(pA.previousSibling, null);
+    nodeExpect(pA.nextSibling, pC);
+
+    // Check pointers on C
+    nodeExpect(pC.previousSibling, pA);
+    nodeExpect(pC.nextSibling, pB);
+
+    // Check pointers on B
+    nodeExpect(pB.previousSibling, pC);
+    nodeExpect(pB.nextSibling, null);
+  });
+
+  it("should handle inserting a node before itself as a no-op", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+
+    // Try to insert B before B.
+    div.insertBefore(pB, pB);
+
+    // Check that the DOM remains unchanged.
+    expect(div.children.length).eql(2);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pB);
+    nodeExpect(pA.nextSibling, pB);
+    nodeExpect(pB.previousSibling, pA);
+  });
+
+  it("should handle replacing a node with itself as a no-op", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+
+    // Try to replace B with B.
+    div.replaceChild(pB, pB);
+
+    // Check that the DOM remains unchanged.
+    expect(div.children.length).eql(2);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pB);
+    nodeExpect(pA.nextSibling, pB);
+    nodeExpect(pB.previousSibling, pA);
+  });
+
+  it("should correctly handle sibling pointers on remove()", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p>Some text<p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var textNode = div.childNodes[1];
+    var pB = div.children[1];
+
+    // Check initial state
+    nodeExpect(pA.nextElementSibling, pB);
+    nodeExpect(pB.previousElementSibling, pA);
+    expect(textNode.nextElementSibling).eql(undefined);
+
+    // Remove the text node
+    textNode.remove();
+
+    // Check element sibling pointers are updated
+    nodeExpect(pA.nextElementSibling, pB);
+    nodeExpect(pB.previousElementSibling, pA);
+
+    // Check the removed node's properties
+    nodeExpect(textNode.parentNode, null);
+    nodeExpect(textNode.nextSibling, null);
+    nodeExpect(textNode.previousSibling, null);
+    expect(textNode.nextElementSibling).eql(undefined);
+  });
 });
 
 describe("Test HTML escaping", function () {
