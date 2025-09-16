@@ -319,6 +319,23 @@ describe("Test JSDOM functionality", function () {
     nodeExpect(pB.nextSibling, null);
   });
 
+  it("should handle replacing a node with itself as a no-op", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+
+    // Try to replace B with B.
+    div.replaceChild(pB, pB);
+
+    // Check that the DOM remains unchanged.
+    expect(div.children.length).eql(2);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pB);
+    nodeExpect(pA.nextSibling, pB);
+    nodeExpect(pB.previousSibling, pA);
+  });
+
   it("should correctly handle sibling pointers on remove()", function () {
     var doc = new JSDOMParser().parse("<div><p>A</p>Some text<p>B</p></div>");
     var div = doc.getElementsByTagName("div")[0];

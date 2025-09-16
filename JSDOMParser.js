@@ -499,6 +499,9 @@
     },
 
     replaceChild(newNode, oldNode) {
+      if (newNode === oldNode) {
+        return oldNode;
+      }
       if (oldNode.parentNode !== this) {
         throw new Error(
           "replaceChild: node to be replaced is not a child of this node"
