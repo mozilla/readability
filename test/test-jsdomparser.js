@@ -264,6 +264,17 @@ describe("Test JSDOM functionality", function () {
     expect(body.children.length).eql(6);
   });
 
+  it("should throw an error when inserting before a non-child", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var p = doc.createElement("p");
+    var unconnected = doc.createElement("span");
+
+    expect(function () {
+      div.insertBefore(p, unconnected);
+    }).to.Throw("insertBefore: reference node not found");
+  });
+
   it("should have a working createDocumentFragment", function () {
     var doc = new JSDOMParser().parse(BASETESTCASE);
     var body = doc.body;
@@ -317,6 +328,23 @@ describe("Test JSDOM functionality", function () {
     // Check pointers on B
     nodeExpect(pB.previousSibling, pC);
     nodeExpect(pB.nextSibling, null);
+  });
+
+  it("should handle inserting a node before itself as a no-op", function () {
+    var doc = new JSDOMParser().parse("<div><p>A</p><p>B</p></div>");
+    var div = doc.getElementsByTagName("div")[0];
+    var pA = div.children[0];
+    var pB = div.children[1];
+
+    // Try to insert B before B.
+    div.insertBefore(pB, pB);
+
+    // Check that the DOM remains unchanged.
+    expect(div.children.length).eql(2);
+    nodeExpect(div.children[0], pA);
+    nodeExpect(div.children[1], pB);
+    nodeExpect(pA.nextSibling, pB);
+    nodeExpect(pB.previousSibling, pA);
   });
 
   it("should handle replacing a node with itself as a no-op", function () {

@@ -347,7 +347,19 @@
       return this.children[this.children.length - 1] || null;
     },
 
-    _insertNodesBefore(nodes, referenceNode) {
+    /**
+     * The workhorse for all node insertion operations. The public methods
+     * (`appendChild()`, `insertBefore()`, `replaceChild()`) are thin wrappers
+     * around this.
+     *
+     * @private
+     * @param {Node[]} nodes - An array of nodes to insert. It is assumed that
+     *   these nodes are distinct, and are not children of this object.
+     * @param {Number} index - A valid index to insert `nodes` at, or -1 to
+     *   indicate insertion as the last children.
+     * @returns {void}
+     */
+    _insertNodesAtIndex(nodes, index) {
       if (!nodes.length) {
         return;
       }
@@ -359,29 +371,15 @@
         }
       }
 
-      var refIndex = referenceNode
-        ? this.childNodes.indexOf(referenceNode)
-        : -1;
-      if (referenceNode && refIndex === -1) {
-        throw new Error("insertBefore: reference node not found");
-      }
+      var afterSibling = index === -1 ? null : this.childNodes[index];
 
-      // Find the element reference node.
-      var refElem = referenceNode;
-      while (refElem && refElem.nodeType !== Node.ELEMENT_NODE) {
-        refElem = refElem.nextSibling;
-      }
-
-      // Store the previous siblings before we modify the DOM.
-      var prevSibling = referenceNode
-        ? referenceNode.previousSibling
+      // Store the previous sibling before we modify the DOM.
+      var prevSibling = afterSibling
+        ? afterSibling.previousSibling
         : this.lastChild;
-      var prevElem = refElem
-        ? refElem.previousElementSibling
-        : this.lastElementChild;
 
       // Insert nodes into childNodes.
-      var insertionPoint = refIndex === -1 ? this.childNodes.length : refIndex;
+      var insertionPoint = index === -1 ? this.childNodes.length : index;
       Array.prototype.splice.apply(
         this.childNodes,
         [insertionPoint, 0].concat(nodes)
@@ -398,9 +396,9 @@
         prevSibling = node;
       }
       var lastInsertedNode = nodes[nodes.length - 1];
-      lastInsertedNode.nextSibling = referenceNode;
-      if (referenceNode) {
-        referenceNode.previousSibling = lastInsertedNode;
+      lastInsertedNode.nextSibling = afterSibling;
+      if (afterSibling) {
+        afterSibling.previousSibling = lastInsertedNode;
       }
 
       // Filter for element nodes and update children array and pointers.
@@ -412,9 +410,22 @@
       }
 
       if (elementsToInsert.length) {
-        var refElemIndex = refElem ? this.children.indexOf(refElem) : -1;
+        // Find the next element sibling to use as an insertion reference.
+        // This is done after `childNodes` is modified, as the forward
+        // traversal from `afterSibling` remains valid.
+        var afterElem = afterSibling;
+        while (afterElem && afterElem.nodeType !== Node.ELEMENT_NODE) {
+          afterElem = afterElem.nextSibling;
+        }
+
+        // Store the previous element sibling before more DOM modifications.
+        var prevElem = afterElem
+          ? afterElem.previousElementSibling
+          : this.lastElementChild;
+
+        var afterElemIndex = afterElem ? this.children.indexOf(afterElem) : -1;
         var elemInsertionPoint =
-          refElemIndex === -1 ? this.children.length : refElemIndex;
+          afterElemIndex === -1 ? this.children.length : afterElemIndex;
         Array.prototype.splice.apply(
           this.children,
           [elemInsertionPoint, 0].concat(elementsToInsert)
@@ -429,9 +440,9 @@
           prevElem = elem;
         }
         var lastInsertedElem = elementsToInsert[elementsToInsert.length - 1];
-        lastInsertedElem.nextElementSibling = refElem;
-        if (refElem) {
-          refElem.previousElementSibling = lastInsertedElem;
+        lastInsertedElem.nextElementSibling = afterElem;
+        if (afterElem) {
+          afterElem.previousElementSibling = lastInsertedElem;
         }
       }
     },
@@ -441,16 +452,23 @@
         child.nodeType === Node.DOCUMENT_FRAGMENT_NODE
           ? Array.from(child.childNodes)
           : [child];
-      this._insertNodesBefore(nodes, null);
+      this._insertNodesAtIndex(nodes, -1);
       return child;
     },
 
     insertBefore(newNode, referenceNode) {
+      if (newNode === referenceNode) {
+        return newNode;
+      }
       var nodes =
         newNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
           ? Array.from(newNode.childNodes)
           : [newNode];
-      this._insertNodesBefore(nodes, referenceNode);
+      var index = referenceNode ? this.childNodes.indexOf(referenceNode) : -1;
+      if (referenceNode && index === -1) {
+        throw new Error("insertBefore: reference node not found");
+      }
+      this._insertNodesAtIndex(nodes, index);
       return newNode;
     },
 
@@ -477,13 +495,13 @@
       childNodes.splice(childIndex, 1);
 
       if (this.nodeType === Node.ELEMENT_NODE) {
-        prev = this.previousElementSibling;
-        next = this.nextElementSibling;
-        if (prev) {
-          prev.nextElementSibling = next;
+        var prevElem = this.previousElementSibling;
+        var nextElem = this.nextElementSibling;
+        if (prevElem) {
+          prevElem.nextElementSibling = nextElem;
         }
-        if (next) {
-          next.previousElementSibling = prev;
+        if (nextElem) {
+          nextElem.previousElementSibling = prevElem;
         }
         parent.children.splice(parent.children.indexOf(this), 1);
         this.previousElementSibling = this.nextElementSibling = null;
