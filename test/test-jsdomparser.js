@@ -264,6 +264,40 @@ describe("Test JSDOM functionality", function () {
     expect(body.children.length).eql(6);
   });
 
+  it("should correctly handle mixed element/text siblings on insertBefore", function () {
+    // Insert between a text node and an element node
+    var html1 = "<div><p>A</p>Some Text<span>B</span></div>";
+    var doc1 = new JSDOMParser().parse(html1);
+    var div1 = doc1.getElementsByTagName("div")[0];
+    var pA1 = doc1.getElementsByTagName("p")[0];
+    var textNode1 = div1.childNodes[1];
+    var spanB1 = doc1.getElementsByTagName("span")[0];
+    var newEl1 = doc1.createElement("hr");
+    div1.insertBefore(newEl1, spanB1);
+    nodeExpect(newEl1.previousSibling, textNode1);
+    nodeExpect(newEl1.previousElementSibling, pA1);
+    nodeExpect(newEl1.nextSibling, spanB1);
+    nodeExpect(newEl1.nextElementSibling, spanB1);
+    nodeExpect(pA1.nextElementSibling, newEl1);
+    nodeExpect(spanB1.previousElementSibling, newEl1);
+
+    // Insert between an element node and a text node
+    var html2 = "<div><p>A</p><span>B</span>Some Text</div>";
+    var doc2 = new JSDOMParser().parse(html2);
+    var div2 = doc2.getElementsByTagName("div")[0];
+    var pA2 = doc2.getElementsByTagName("p")[0];
+    var spanB2 = doc2.getElementsByTagName("span")[0];
+    var textNode2 = div2.childNodes[2];
+    var newEl2 = doc2.createElement("hr");
+    div2.insertBefore(newEl2, textNode2);
+    nodeExpect(newEl2.previousSibling, spanB2);
+    nodeExpect(newEl2.previousElementSibling, spanB2);
+    nodeExpect(newEl2.nextSibling, textNode2);
+    expect(newEl2.nextElementSibling).to.be.null;
+    nodeExpect(pA2.nextElementSibling, spanB2);
+    nodeExpect(spanB2.nextElementSibling, newEl2);
+  });
+
   it("should throw an error when inserting before a non-child", function () {
     var doc = new JSDOMParser().parse("<div><p>A</p></div>");
     var div = doc.getElementsByTagName("div")[0];

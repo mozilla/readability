@@ -1205,7 +1205,7 @@ Readability.prototype = {
               if (fragment.firstChild) {
                 var p = doc.createElement("p");
                 p.appendChild(fragment);
-                node.insertBefore(p, childNode);
+                node.insertBefore(p, nextSibling);
               }
             }
             childNode = nextSibling;
