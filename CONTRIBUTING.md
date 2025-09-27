@@ -47,9 +47,17 @@ You can run it using:
 Replacing `slug` with the identifier the test should use, and providing a URL
 to an actual article on which the test should be based. If your test case involves dynamic content, you can save the page to disk and pass the file as a `file://` URL.
 
-On macOS, you may need to make the `tidy` binary executable before that script will succeed. If you see an `EACCES` error when running that script, try:
+You may need to make the `tidy` binary executable before that script will succeed. If you see an `EACCES` error when running that script, try:
 
+    # On MacOS
     $ chmod +x ./node_modules/htmltidy2/bin/darwin/tidy
+    
+    # On Linux, the linuxXX may change depending on your platform
+    # The specific path may change depending on the node tools you use
+    $ chmod +x ./node_modules/htmltidy2/bin/linux64/tidy
+    
+
+    
 
 ## Pull Requests
 
