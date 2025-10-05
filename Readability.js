@@ -815,10 +815,29 @@ Readability.prototype = {
 
     this._forEachNode(articleContent.children, function (topCandidate) {
       this._cleanMatchedNodes(topCandidate, function (node, matchString) {
-        return (
+        var shouldRemove =
           this.REGEXPS.shareElements.test(matchString) &&
-          node.textContent.length < shareElementThreshold
-        );
+          node.textContent.length < shareElementThreshold;
+
+        // Fix for issue #986: Don't remove divs that contain h2 headings with meaningful content,
+        // even if they match share elements criteria. This prevents Wikipedia h2 headings from
+        // being removed along with their parent divs.
+        if (shouldRemove && node.tagName === "DIV") {
+          var h2Elements = this._getAllNodesWithTag(node, ["h2"]);
+          for (var i = 0; i < h2Elements.length; i++) {
+            var h2Text = this._getInnerText(h2Elements[i], false).trim();
+            if (h2Text.length) {
+              this.log(
+                "Preserving div with h2 heading despite share elements criteria:",
+                node,
+                h2Text
+              );
+              return false;
+            }
+          }
+        }
+
+        return shouldRemove;
       });
     });
 
@@ -2513,6 +2532,23 @@ Readability.prototype = {
       var contentScore = 0;
 
       if (weight + contentScore < 0) {
+        // Fix for issue #986: Don't remove divs that contain h2 headings with meaningful content,
+        // even if the div has negative class weight (e.g., contains "share" in class name).
+        // This prevents Wikipedia h2 headings from being removed along with their parent divs.
+        if (tag === "DIV") {
+          var h2Elements = this._getAllNodesWithTag(node, ["h2"]);
+          for (var i = 0; i < h2Elements.length; i++) {
+            var h2Text = this._getInnerText(h2Elements[i], false).trim();
+            if (h2Text.length) {
+              this.log(
+                "Preserving div with h2 heading despite negative class weight:",
+                node,
+                h2Text
+              );
+              return false;
+            }
+          }
+        }
         return true;
       }
 
@@ -2540,18 +2576,18 @@ Readability.prototype = {
           "iframe",
         ]);
 
-        for (var i = 0; i < embeds.length; i++) {
+        for (var k = 0; k < embeds.length; k++) {
           // If this embed has attribute that matches video regex, don't delete it.
-          for (var j = 0; j < embeds[i].attributes.length; j++) {
-            if (this._allowedVideoRegex.test(embeds[i].attributes[j].value)) {
+          for (var j = 0; j < embeds[k].attributes.length; j++) {
+            if (this._allowedVideoRegex.test(embeds[k].attributes[j].value)) {
               return false;
             }
           }
 
           // For embed with <object> tag, check inner HTML as well.
           if (
-            embeds[i].tagName === "object" &&
-            this._allowedVideoRegex.test(embeds[i].innerHTML)
+            embeds[k].tagName === "object" &&
+            this._allowedVideoRegex.test(embeds[k].innerHTML)
           ) {
             return false;
           }
@@ -2636,6 +2672,24 @@ Readability.prototype = {
 
         var haveToRemove = shouldRemoveNode();
 
+        // Fix for issue #986: Don't remove divs that contain h2 headings with meaningful content,
+        // even if they fail other cleaning criteria. This prevents Wikipedia h2 headings from
+        // being removed along with their parent divs.
+        if (haveToRemove && tag === "DIV") {
+          var h2Elements2 = this._getAllNodesWithTag(node, ["h2"]);
+          for (var m = 0; m < h2Elements2.length; m++) {
+            var h2Text2 = this._getInnerText(h2Elements2[m], false).trim();
+            if (h2Text2.length) {
+              this.log(
+                "Preserving div with h2 heading despite cleaning criteria:",
+                node,
+                h2Text2
+              );
+              return false;
+            }
+          }
+        }
+
         // Allow simple lists of images to remain in pages
         if (isList && haveToRemove) {
           for (var x = 0; x < node.children.length; x++) {
@@ -2686,6 +2740,24 @@ Readability.prototype = {
     let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
     this._removeNodes(headingNodes, function (node) {
       let shouldRemove = this._getClassWeight(node) < 0;
+
+      // Fix for issue #986: Preserve h2 headings that contain meaningful content,
+      // even if their parent div contains extra links like "edit" or "talk".
+      // This prevents Wikipedia h2 headings from being incorrectly removed.
+      if (shouldRemove && node.tagName === "H2") {
+        // Check if the h2 has meaningful text content (more than just whitespace)
+        let headingText = this._getInnerText(node, false).trim();
+        if (headingText.length) {
+          // Preserve h2 headings with actual content, regardless of parent container class weights
+          shouldRemove = false;
+          this.log(
+            "Preserving h2 heading with content despite negative class weight:",
+            node,
+            headingText
+          );
+        }
+      }
+
       if (shouldRemove) {
         this.log("Removing header with low class weight:", node);
       }
