@@ -164,7 +164,7 @@ Readability.prototype = {
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
     // Commas as used in Latin, Sindhi, Chinese and various other scripts.
     // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
-    commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
+    commas: /[\s\D][\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C][\s\D]/g,
     // See: https://schema.org/Article
     jsonLdArticleTypes:
       /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/,
