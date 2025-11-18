@@ -677,6 +677,15 @@ Readability.prototype = {
     }
 
     this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
+
+    // Fix for issue #986: Remove Wikipedia edit section links that cause headings
+    // to be improperly removed. These spans contain "edit" links and add negative
+    // weight to otherwise good headings.
+    this._forEachNode(this._getAllNodesWithTag(doc, ["span"]), function (span) {
+      if (span.className && span.className.includes("mw-editsection")) {
+        span.remove();
+      }
+    });
   },
 
   /**
@@ -2540,18 +2549,18 @@ Readability.prototype = {
           "iframe",
         ]);
 
-        for (var i = 0; i < embeds.length; i++) {
+        for (var k = 0; k < embeds.length; k++) {
           // If this embed has attribute that matches video regex, don't delete it.
-          for (var j = 0; j < embeds[i].attributes.length; j++) {
-            if (this._allowedVideoRegex.test(embeds[i].attributes[j].value)) {
+          for (var j = 0; j < embeds[k].attributes.length; j++) {
+            if (this._allowedVideoRegex.test(embeds[k].attributes[j].value)) {
               return false;
             }
           }
 
           // For embed with <object> tag, check inner HTML as well.
           if (
-            embeds[i].tagName === "object" &&
-            this._allowedVideoRegex.test(embeds[i].innerHTML)
+            embeds[k].tagName === "object" &&
+            this._allowedVideoRegex.test(embeds[k].innerHTML)
           ) {
             return false;
           }
