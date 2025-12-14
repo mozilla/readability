@@ -5,8 +5,14 @@ For more details, please read the
 [Mozilla Community Participation Guidelines](https://www.mozilla.org/about/governance/policies/participation/). 
 
 ## How to Report
-For more information on how to report violations of the Community Participation Guidelines, please read our '[How to Report](https://www.mozilla.org/about/governance/policies/participation/reporting/)' page.
-
+For more information on how to report violations of the Community Participation Guidelines, please read our '[How to Report](https://www.mozilla.org/about/governance/policies/participation/reporting/https://www.mozilla.org/about/governance/policies/participation/reporting/)https://www.mozilla.org/about/governance/policies/participation/reporting/)' page.
+/*
+    Only instantiate Readability  if we suspect
+    the `parse()` method will produce a meaningful result.
+*/
+if (isProbablyReaderable(document)) {
+    let article = new Readability(document).parse();
+}
 <!--
 ## Project Specific Etiquette
 
