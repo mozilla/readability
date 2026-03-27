@@ -2693,10 +2693,101 @@ Readability.prototype = {
    **/
   _cleanHeaders(e) {
     let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
+    const isPunctuationOnly = function (text) {
+      return !!text && /^[\s\[\]\(\){}#*¶·•:;|/\\\-.,!?'"`~_+=<>]+$/.test(text);
+    };
+    const getNodeText = function (node) {
+      if (!node) {
+        return "";
+      }
+      return node.textContent ? node.textContent.trim() : "";
+    };
+    const isLowValueNode = function (node, hasOtherMeaningfulText) {
+      let text = getNodeText.call(this, node);
+      if (!text) {
+        return true;
+      }
+      if (isPunctuationOnly(text)) {
+        return true;
+      }
+      return hasOtherMeaningfulText && text.length <= 1;
+    };
+    const collectTextNodes = function (node, texts) {
+      if (!node) {
+        return;
+      }
+      if (node.nodeType === this.TEXT_NODE) {
+        let text = getNodeText.call(this, node);
+        if (text) {
+          texts.push(text);
+        }
+        return;
+      }
+      if (node.nodeType !== this.ELEMENT_NODE || !node.childNodes) {
+        return;
+      }
+      for (let i = 0; i < node.childNodes.length; i++) {
+        collectTextNodes.call(this, node.childNodes[i], texts);
+      }
+    };
+    const headerHasLongMeaningfulText = function (heading) {
+      let texts = [];
+      collectTextNodes.call(this, heading, texts);
+      for (let i = 0; i < texts.length; i++) {
+        if (!isPunctuationOnly(texts[i]) && texts[i].length > 1) {
+          return true;
+        }
+      }
+      return false;
+    };
+    const getMeaningfulHeaderText = function (heading) {
+      let hasOtherMeaningfulText = headerHasLongMeaningfulText.call(this, heading);
+      let meaningfulParts = [];
+
+      for (let i = 0; i < heading.childNodes.length; i++) {
+        let child = heading.childNodes[i];
+        if (isLowValueNode.call(this, child, hasOtherMeaningfulText)) {
+          continue;
+        }
+
+        let childTexts = [];
+        collectTextNodes.call(this, child, childTexts);
+        for (let j = 0; j < childTexts.length; j++) {
+          let text = childTexts[j];
+          if (!isLowValueNode.call(this, { textContent: text }, hasOtherMeaningfulText)) {
+            meaningfulParts.push(text);
+          }
+        }
+      }
+
+      return meaningfulParts.join(" ").replace(this.REGEXPS.normalize, " ").trim();
+    };
+    const hasSemanticAnchorChild = function (heading) {
+      if (!heading || !heading.childNodes) {
+        return false;
+      }
+      for (let i = 0; i < heading.childNodes.length; i++) {
+        let child = heading.childNodes[i];
+        if (child.nodeType !== this.ELEMENT_NODE) {
+          continue;
+        }
+        if ((child.id || child.getAttribute("name")) && getNodeText.call(this, child)) {
+          return true;
+        }
+      }
+      return false;
+    };
     this._removeNodes(headingNodes, function (node) {
-      let shouldRemove = this._getClassWeight(node) < 0;
+      let meaningfulText = getMeaningfulHeaderText.call(this, node);
+      let shouldPreserveWithMeaningfulText =
+        meaningfulText.length > 0 && hasSemanticAnchorChild.call(this, node);
+      let shouldRemove =
+        this._getClassWeight(node) < 0 && !shouldPreserveWithMeaningfulText;
       if (shouldRemove) {
-        this.log("Removing header with low class weight:", node);
+        this.log(
+          "Removing header with low class weight and no meaningful text:",
+          node
+        );
       }
       return shouldRemove;
     });
