@@ -80,4 +80,106 @@ describe("keepOriginalTitleHeaders option", function () {
     expect(result.content).to.include("<h1>" + bodyHeading + "</h1>");
     expect(result.content).to.not.include("<h2>" + bodyHeading);
   });
+
+  it("when true, prepends clones of document-level H1 outside the extracted subtree (before post-processing)", function () {
+    var titleText = "Readability External Hero H1 Title Option Test 9x4m";
+    var long =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do " +
+      "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
+      "minim veniam, quis nostrud exercitation ullamco laboris nisi ut " +
+      "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
+      "in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+    var source =
+      "<!DOCTYPE html><html><head><title>" +
+      titleText +
+      "</title></head><body><main>" +
+      '<section class="hero"><h1 class="hero-title">' +
+      titleText +
+      "</h1></section>" +
+      "<article><p>" +
+      long +
+      "</p><p>" +
+      long +
+      "</p></article>" +
+      "</main></body></html>";
+
+    var doc = new JSDOM(source, { url: "http://example.com/article" }).window
+      .document;
+    var result = new Readability(doc, {
+      keepOriginalTitleHeaders: true,
+    }).parse();
+
+    expect(result.content).to.include("<h1>" + titleText + "</h1>");
+    expect(result.content.indexOf("<h1>" + titleText)).to.be.lessThan(
+      result.content.indexOf('id="readability-page-1"')
+    );
+    expect(result.title).to.eql(titleText);
+  });
+
+  it("when true, does not prepend H1 that appear after grabbed content in document order", function () {
+    var titleText =
+      "Readability Article Title After Hero Ignore Later H1 Test 9x5p";
+    var sidebarHeading = "Sidebar Or Footer H1 Must Not Prepend 9x5q";
+    var long =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do " +
+      "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
+      "minim veniam, quis nostrud exercitation ullamco laboris nisi ut " +
+      "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
+      "in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+    var source =
+      "<!DOCTYPE html><html><head><title>" +
+      titleText +
+      "</title></head><body><main>" +
+      "<article><p>" +
+      long +
+      "</p><p>" +
+      long +
+      "</p></article>" +
+      "<aside><h1>" +
+      sidebarHeading +
+      "</h1><p>" +
+      long +
+      "</p></aside>" +
+      "</main></body></html>";
+
+    var doc = new JSDOM(source, { url: "http://example.com/article" }).window
+      .document;
+    var result = new Readability(doc, {
+      keepOriginalTitleHeaders: true,
+    }).parse();
+
+    expect(result.content).to.not.include(sidebarHeading);
+    expect(result.title).to.eql(titleText);
+  });
+
+  it("when false, does not prepend hero H1 from outside the extracted subtree", function () {
+    var titleText =
+      "Readability External Hero H1 Absent When Option False Test 9x4n";
+    var long =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do " +
+      "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
+      "minim veniam, quis nostrud exercitation ullamco laboris nisi ut " +
+      "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
+      "in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+    var source =
+      "<!DOCTYPE html><html><head><title>" +
+      titleText +
+      "</title></head><body><main>" +
+      '<section class="hero"><h1 class="hero-title">' +
+      titleText +
+      "</h1></section>" +
+      "<article><p>" +
+      long +
+      "</p><p>" +
+      long +
+      "</p></article>" +
+      "</main></body></html>";
+
+    var doc = new JSDOM(source, { url: "http://example.com/article" }).window
+      .document;
+    var result = new Readability(doc).parse();
+
+    expect(result.content).to.not.include("<h1");
+    expect(result.title).to.eql(titleText);
+  });
 });

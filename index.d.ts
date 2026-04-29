@@ -78,7 +78,10 @@ export interface ReadabilityOptions<T = string> {
   /**
    * If `true`, the first in-article heading that closely matches the article
    * title is kept, and H1 tags in the extracted content are not rewritten to H2.
-   * Defaults to `false`.
+   * When `true`, also prepends clones of those `h1` elements that lie outside the
+   * extracted subtree **and** precede the grabbed content in document order (for example
+   * hero titles), captured before extraction so they still run through post-processing
+   * (relative URL fixes, etc.). Defaults to `false`.
    */
   keepOriginalTitleHeaders?: boolean;
 }

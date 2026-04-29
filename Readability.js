@@ -68,6 +68,11 @@ function Readability(doc, options) {
    * If true, keep the first in-article H1/H2 that duplicates the article title
    * and leave H1 tags in the extracted content. Defaults to false (strip the
    * duplicate title header and normalize remaining H1 elements to H2).
+   * When true, also prepend clones of document `h1` nodes that lie outside the
+   * extracted subtree and precede the grabbed content in document order (for example
+   * hero headings); snapshots are taken before `_grabArticle` because extraction
+   * mutates the DOM. Those clones are inserted before `_postProcessContent` so they
+   * receive URI fixes and class cleanup.
    */
   this._keepOriginalTitleHeaders = !!options.keepOriginalTitleHeaders;
 
@@ -2717,6 +2722,76 @@ Readability.prototype = {
     return this._textSimilarity(this._articleTitle, heading) > 0.75;
   },
 
+  /**
+   * Assign stable preorder indices (depth-first, element-only) so we can compare what
+   * appeared before extracted content while `_grabArticle` still sees the original tree.
+   *
+   * @param Element root
+   * @param {{ i: number }} counterHolder mutable `{ i }` counter.
+   */
+  _documentPreorderWalk(root, counterHolder) {
+    if (!root || root.nodeType !== this.ELEMENT_NODE) {
+      return;
+    }
+    this._elementPreorderIndex.set(root, counterHolder.i++);
+    var child = root.firstElementChild;
+    while (child) {
+      this._documentPreorderWalk(child, counterHolder);
+      child = child.nextElementSibling;
+    }
+  },
+
+  /**
+   * Prepend `h1` clones that existed elsewhere on the page before extraction (hero,
+   * etc.), in document order. Snapshots pair each original node with its clone because
+   * `_grabArticle` may remove or move originals. Only headings whose preorder index is
+   * strictly before the earliest preorder among nodes inside `articleContent` are kept
+   * ("before grabbed content").
+   *
+   * @param Element articleContent root returned by `_grabArticle`.
+   * @param Array<{original: Element, clone: Element, preorder?: number}> snapshots from before grab.
+   */
+  _prependExternalH1HeadingsBeforePostProcess(articleContent, snapshots) {
+    if (!snapshots || !snapshots.length) {
+      return;
+    }
+
+    var minPreorderInGrabbed = Infinity;
+    var descendants = articleContent.querySelectorAll("*");
+    for (var j = 0; j < descendants.length; j++) {
+      var grabbedPo = this._elementPreorderIndex.get(descendants[j]);
+      if (grabbedPo !== undefined) {
+        minPreorderInGrabbed = Math.min(minPreorderInGrabbed, grabbedPo);
+      }
+    }
+
+    var fragment = this._doc.createDocumentFragment();
+
+    for (var i = 0; i < snapshots.length; i++) {
+      var entry = snapshots[i];
+      if (articleContent.contains(entry.original)) {
+        continue;
+      }
+      if (!this._isProbablyVisible(entry.original)) {
+        continue;
+      }
+      if (
+        entry.preorder === undefined ||
+        minPreorderInGrabbed === Infinity ||
+        entry.preorder >= minPreorderInGrabbed
+      ) {
+        continue;
+      }
+      fragment.appendChild(entry.clone);
+    }
+
+    if (!fragment.childNodes.length) {
+      return;
+    }
+
+    articleContent.insertBefore(fragment, articleContent.firstChild);
+  },
+
   _flagIsActive(flag) {
     return (this._flags & flag) > 0;
   },
@@ -2778,12 +2853,37 @@ Readability.prototype = {
     this._metadata = metadata;
     this._articleTitle = metadata.title;
 
+    var prefgrabH1Snapshots = null;
+    if (this._keepOriginalTitleHeaders) {
+      this._elementPreorderIndex = new WeakMap();
+      var preorderCounter = { i: 0 };
+      this._documentPreorderWalk(this._doc.documentElement, preorderCounter);
+
+      prefgrabH1Snapshots = Array.from(
+        this._doc.getElementsByTagName("h1"),
+        function (h) {
+          return {
+            original: h,
+            clone: h.cloneNode(true),
+            preorder: this._elementPreorderIndex.get(h),
+          };
+        }.bind(this)
+      );
+    }
+
     var articleContent = this._grabArticle();
     if (!articleContent) {
       return null;
     }
 
     this.log("Grabbed: " + articleContent.innerHTML);
+
+    if (prefgrabH1Snapshots) {
+      this._prependExternalH1HeadingsBeforePostProcess(
+        articleContent,
+        prefgrabH1Snapshots
+      );
+    }
 
     this._postProcessContent(articleContent);
 
