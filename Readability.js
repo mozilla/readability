@@ -104,7 +104,7 @@ function Readability(doc, options) {
       }
     };
   } else {
-    this.log = function () {};
+    this.log = function () { };
   }
 }
 
@@ -649,10 +649,10 @@ Readability.prototype = {
       curTitleWordCount <= 4 &&
       (!titleHadHierarchicalSeparators ||
         curTitleWordCount !=
-          wordCount(
-            origTitle.replace(new RegExp(`\\s[${titleSeparators}]\\s`, "g"), "")
-          ) -
-            1)
+        wordCount(
+          origTitle.replace(new RegExp(`\\s[${titleSeparators}]\\s`, "g"), "")
+        ) -
+        1)
     ) {
       curTitle = origTitle;
     }
@@ -1141,9 +1141,9 @@ Readability.prototype = {
           if (this.UNLIKELY_ROLES.includes(node.getAttribute("role"))) {
             this.log(
               "Removing content with role " +
-                node.getAttribute("role") +
-                " - " +
-                matchString
+              node.getAttribute("role") +
+              " - " +
+              matchString
             );
             node = this._removeAndGetNext(node);
             continue;
@@ -1358,7 +1358,7 @@ Readability.prototype = {
         for (var i = 1; i < topCandidates.length; i++) {
           if (
             topCandidates[i].readability.contentScore /
-              topCandidate.readability.contentScore >=
+            topCandidate.readability.contentScore >=
             0.75
           ) {
             alternativeCandidateAncestors.push(
@@ -1458,36 +1458,21 @@ Readability.prototype = {
         var sibling = siblings[s];
         var append = false;
 
-        this.log(
-          "Looking at sibling node:",
-          sibling,
-          sibling.readability
-            ? "with score " + sibling.readability.contentScore
-            : ""
-        );
-        this.log(
-          "Sibling has score",
-          sibling.readability ? sibling.readability.contentScore : "Unknown"
-        );
+        this.log("Looking at sibling node:", sibling, sibling.readability ? ("with score " + sibling.readability.contentScore) : "");
+        this.log("Sibling has score", sibling.readability ? sibling.readability.contentScore : "Unknown");
 
         if (sibling === topCandidate) {
           append = true;
         } else {
           var contentBonus = 0;
 
-          // Give a bonus if sibling nodes and top candidates have the example same classname
-          if (
-            sibling.className === topCandidate.className &&
-            topCandidate.className !== ""
-          ) {
+          // Give a bonus if sibling nodes and top candidates have the same classname
+          if (sibling.className === topCandidate.className && topCandidate.className !== "") {
             contentBonus += topCandidate.readability.contentScore * 0.2;
           }
 
-          if (
-            sibling.readability &&
-            sibling.readability.contentScore + contentBonus >=
-              siblingScoreThreshold
-          ) {
+          if (sibling.readability &&
+            ((sibling.readability.contentScore + contentBonus) >= siblingScoreThreshold)) {
             append = true;
           } else if (sibling.nodeName === "P") {
             var linkDensity = this._getLinkDensity(sibling);
@@ -1496,36 +1481,21 @@ Readability.prototype = {
 
             if (nodeLength > 80 && linkDensity < 0.25) {
               append = true;
-            } else if (
-              nodeLength < 80 &&
-              nodeLength > 0 &&
-              linkDensity === 0 &&
-              nodeContent.search(/\.( |$)/) !== -1
-            ) {
+            } else if (nodeLength < 80 && nodeLength > 0 && linkDensity === 0 &&
+              nodeContent.search(/\.( |$)/) !== -1) {
               append = true;
             }
           }
         }
 
         if (append) {
-          this.log("Appending node:", sibling);
-
           if (!this.ALTER_TO_DIV_EXCEPTIONS.includes(sibling.nodeName)) {
-            // We have a node that isn't a common block level element, like a form or td tag.
-            // Turn it into a div so it doesn't get filtered out later by accident.
-            this.log("Altering sibling:", sibling, "to div.");
-
             sibling = this._setNodeTag(sibling, "DIV");
           }
 
           articleContent.appendChild(sibling);
-          // Fetch children again to make it compatible
-          // with DOM parsers without live collection support.
+          // Siblings array is live, so re-grab it and adjust index
           siblings = parentOfTopCandidate.children;
-          // siblings is a reference to the children array, and
-          // sibling is removed from the array when we call appendChild().
-          // As a result, we must revisit this index since the nodes
-          // have been shifted.
           s -= 1;
           sl -= 1;
         }
@@ -1843,7 +1813,7 @@ Readability.prototype = {
 
     const articleAuthor =
       typeof values["article:author"] === "string" &&
-      !this._isUrl(values["article:author"])
+        !this._isUrl(values["article:author"])
         ? values["article:author"]
         : undefined;
 
@@ -2031,8 +2001,8 @@ Readability.prototype = {
       !node.textContent.trim().length &&
       (!node.children.length ||
         node.children.length ==
-          node.getElementsByTagName("br").length +
-            node.getElementsByTagName("hr").length)
+        node.getElementsByTagName("br").length +
+        node.getElementsByTagName("hr").length)
     );
   },
 
