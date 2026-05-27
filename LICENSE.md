@@ -1,5 +1,3 @@
-Copyright (c) 2010 Arc90 Inc
-
 
                                  Apache License
                            Version 2.0, January 2004
@@ -189,7 +187,7 @@ Copyright (c) 2010 Arc90 Inc
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2010 Arc90 Inc
+   Copyright [yyyy] [name of copyright owner]
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
