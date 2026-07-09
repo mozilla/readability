@@ -1,0 +1,22 @@
+<div id="readability-page-1" class="page"><article>
+    
+    <p>
+      The JSON-LD specification allows the <code>@type</code> property to be
+      either a single string (<code>"NewsArticle"</code>) or an array of strings
+      (<code>["NewsArticle", "Article"]</code>). Readability must correctly
+      extract metadata in both cases.
+    </p>
+    <p>
+      This page tests that when <code>@type</code> is an array, Readability
+      still reads the article title, byline, excerpt, site name, and
+      published time from the JSON-LD block. Without the fix, Readability
+      silently discards the entire JSON-LD object and returns <code>null</code>
+      for all metadata fields.
+    </p>
+    <p>
+      The root cause is that <code>Array.prototype.match</code> does not exist,
+      so calling <code>type.match(regex)</code> on an array throws a
+      <code>TypeError</code> that the existing try/catch swallows, leaving the
+      metadata object unpopulated.
+    </p>
+  </article></div>

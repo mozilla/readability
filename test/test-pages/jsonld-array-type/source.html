@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Array Type Test Article | Example Site</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["NewsArticle", "Article"],
+    "name": "Array Type Test Article",
+    "headline": "Array Type Test Article",
+    "description": "A test article whose JSON-LD @type is an array rather than a plain string.",
+    "datePublished": "2024-06-01",
+    "author": {
+      "@type": "Person",
+      "name": "Test Author"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Example Publisher"
+    }
+  }
+  </script>
+</head>
+<body>
+  <article>
+    <h1>Array Type Test Article</h1>
+    <p>
+      The JSON-LD specification allows the <code>@type</code> property to be
+      either a single string (<code>"NewsArticle"</code>) or an array of strings
+      (<code>["NewsArticle", "Article"]</code>). Readability must correctly
+      extract metadata in both cases.
+    </p>
+    <p>
+      This page tests that when <code>@type</code> is an array, Readability
+      still reads the article title, byline, excerpt, site name, and
+      published time from the JSON-LD block. Without the fix, Readability
+      silently discards the entire JSON-LD object and returns <code>null</code>
+      for all metadata fields.
+    </p>
+    <p>
+      The root cause is that <code>Array.prototype.match</code> does not exist,
+      so calling <code>type.match(regex)</code> on an array throws a
+      <code>TypeError</code> that the existing try/catch swallows, leaving the
+      metadata object unpopulated.
+    </p>
+  </article>
+</body>
+</html>

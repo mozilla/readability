@@ -1659,6 +1659,17 @@ Readability.prototype = {
     var scripts = this._getAllNodesWithTag(doc, ["script"]);
 
     var metadata;
+    var self = this;
+
+    // @type can be a string or an array of strings per the JSON-LD spec.
+    function matchesArticleType(type) {
+      var types = Array.isArray(type) ? type : [type].filter(Boolean);
+      return types.some(function (t) {
+        return (
+          typeof t === "string" && !!t.match(self.REGEXPS.jsonLdArticleTypes)
+        );
+      });
+    }
 
     this._forEachNode(scripts, function (jsonLdElement) {
       if (
@@ -1675,10 +1686,7 @@ Readability.prototype = {
 
           if (Array.isArray(parsed)) {
             parsed = parsed.find(it => {
-              return (
-                it["@type"] &&
-                it["@type"].match(this.REGEXPS.jsonLdArticleTypes)
-              );
+              return matchesArticleType(it["@type"]);
             });
             if (!parsed) {
               return;
@@ -1699,14 +1707,14 @@ Readability.prototype = {
 
           if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
             parsed = parsed["@graph"].find(it => {
-              return (it["@type"] || "").match(this.REGEXPS.jsonLdArticleTypes);
+              return matchesArticleType(it["@type"]);
             });
           }
 
           if (
             !parsed ||
             !parsed["@type"] ||
-            !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)
+            !matchesArticleType(parsed["@type"])
           ) {
             return;
           }

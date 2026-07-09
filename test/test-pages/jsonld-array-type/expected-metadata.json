@@ -1,0 +1,9 @@
+{
+  "title": "Array Type Test Article",
+  "byline": "Test Author",
+  "dir": null,
+  "excerpt": "A test article whose JSON-LD @type is an array rather than a plain string.",
+  "siteName": "Example Publisher",
+  "publishedTime": "2024-06-01",
+  "readerable": true
+}
