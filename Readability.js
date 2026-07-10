@@ -259,6 +259,7 @@ Readability.prototype = {
     "SUP",
     "TEXTAREA",
     "TIME",
+    "U",
     "VAR",
     "WBR",
   ],

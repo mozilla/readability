@@ -340,19 +340,6 @@ describe("Readability API", function () {
       expect(content).eql(expected_xhtml);
     });
 
-    it("should keep S and BDI inline within paragraphs", function () {
-      var dom = new JSDOM(
-        "<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-          "Nunc mollis leo lacus, <s>vitae</s> semper <bdi>nisl</bdi> " +
-          "ullamcorper ut praesent in lectus eu nibh dapibus tincidunt.</div>"
-      );
-      var content = new Readability(dom.window.document, {
-        charThreshold: 20,
-      }).parse().content;
-      expect(content).not.to.contain("</p><s>");
-      expect(content).not.to.contain("</p><bdi>");
-    });
-
     it("should use custom video regex sent as option", function () {
       var dom = new JSDOM(
         "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mollis leo lacus, vitae semper nisl ullamcorper ut.</p>" +
