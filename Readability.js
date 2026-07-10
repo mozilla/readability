@@ -1907,6 +1907,47 @@ Readability.prototype = {
     return false;
   },
 
+  _removeDeeplyNestedImageDivs() {
+    var doc = this._doc;
+    var nodes = Array.from(this._getAllNodesWithTag(doc, ["img"]));
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      var parent = node.parentNode;
+      while (parent.tagName === "DIV" && !node.previousElementSibling) {
+        // If we've only got an image and potentially a noscript after it, with
+        // no other non-whitespace text content, we can unwrap the div.
+
+        // First check sibling elements. If there's a non-noscript el, or
+        // more stuff after that, we can't unwrap.
+        if (
+          node.nextElementSibling &&
+          (node.nextElementSibling.tagName !== "NOSCRIPT" ||
+            node.nextElementSibling.nextElementSibling)
+        ) {
+          break;
+        }
+        // Next, check for non-whitespace text content siblings.
+        let hasNoRealTextContent = !this._someNode(
+          parent.childNodes,
+          function (node) {
+            return (
+              node.nodeType === this.TEXT_NODE &&
+              this.REGEXPS.hasContent.test(node.textContent)
+            );
+          }
+        );
+        if (!hasNoRealTextContent) {
+          break;
+        }
+        while (parent.firstElementChild) {
+          parent.parentNode.insertBefore(parent.firstElementChild, parent);
+        }
+        parent.remove();
+        parent = node.parentNode;
+      }
+    }
+  },
+
   /**
    * Find all <noscript> that are located after <img> nodes, and which contain only one
    * <img> element. Replace the first image with the image from inside the <noscript> tag,
@@ -2756,6 +2797,7 @@ Readability.prototype = {
     }
 
     // Unwrap image from noscript
+    this._removeDeeplyNestedImageDivs();
     this._unwrapNoscriptImages(this._doc);
 
     // Extract JSON-LD metadata before removing scripts
