@@ -1475,7 +1475,7 @@ Readability.prototype = {
         } else {
           var contentBonus = 0;
 
-          // Give a bonus if sibling nodes and top candidates have the example same classname
+          // Give a bonus if sibling nodes and top candidates have the same classname
           if (
             sibling.className === topCandidate.className &&
             topCandidate.className !== ""
@@ -1508,24 +1508,13 @@ Readability.prototype = {
         }
 
         if (append) {
-          this.log("Appending node:", sibling);
-
           if (!this.ALTER_TO_DIV_EXCEPTIONS.includes(sibling.nodeName)) {
-            // We have a node that isn't a common block level element, like a form or td tag.
-            // Turn it into a div so it doesn't get filtered out later by accident.
-            this.log("Altering sibling:", sibling, "to div.");
-
             sibling = this._setNodeTag(sibling, "DIV");
           }
 
           articleContent.appendChild(sibling);
-          // Fetch children again to make it compatible
-          // with DOM parsers without live collection support.
+          // Siblings array is live, so re-grab it and adjust index
           siblings = parentOfTopCandidate.children;
-          // siblings is a reference to the children array, and
-          // sibling is removed from the array when we call appendChild().
-          // As a result, we must revisit this index since the nodes
-          // have been shifted.
           s -= 1;
           sl -= 1;
         }
