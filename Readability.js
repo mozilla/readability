@@ -455,23 +455,6 @@ Readability.prototype = {
    * @return void
    */
   _fixRelativeUris(articleContent) {
-    var baseURI = this._doc.baseURI;
-    var documentURI = this._doc.documentURI;
-    function toAbsoluteURI(uri) {
-      // Leave hash links alone if the base URI matches the document URI:
-      if (baseURI == documentURI && uri.charAt(0) == "#") {
-        return uri;
-      }
-
-      // Otherwise, resolve against base URI:
-      try {
-        return new URL(uri, baseURI).href;
-      } catch (ex) {
-        // Something went wrong, just return the original:
-      }
-      return uri;
-    }
-
     var links = this._getAllNodesWithTag(articleContent, ["a"]);
     this._forEachNode(links, function (link) {
       var href = link.getAttribute("href");
@@ -495,7 +478,7 @@ Readability.prototype = {
             link.parentNode.replaceChild(container, link);
           }
         } else {
-          link.setAttribute("href", toAbsoluteURI(href));
+          link.setAttribute("href", this._toAbsoluteURI(href));
         }
       }
     });
@@ -515,19 +498,17 @@ Readability.prototype = {
       var srcset = media.getAttribute("srcset");
 
       if (src) {
-        media.setAttribute("src", toAbsoluteURI(src));
+        media.setAttribute("src", this._toAbsoluteURI(src));
       }
 
       if (poster) {
-        media.setAttribute("poster", toAbsoluteURI(poster));
+        media.setAttribute("poster", this._toAbsoluteURI(poster));
       }
 
       if (srcset) {
         var newSrcset = srcset.replace(
           this.REGEXPS.srcsetUrl,
-          function (_, p1, p2, p3) {
-            return toAbsoluteURI(p1) + (p2 || "") + p3;
-          }
+          (_, p1, p2, p3) => this._toAbsoluteURI(p1) + (p2 || "") + p3
         );
 
         media.setAttribute("srcset", newSrcset);
@@ -1764,6 +1745,9 @@ Readability.prototype = {
           if (typeof parsed.datePublished === "string") {
             metadata.datePublished = parsed.datePublished.trim();
           }
+          if (typeof parsed.dateModified === "string") {
+            metadata.dateModified = parsed.dateModified.trim();
+          }
         } catch (err) {
           this.log(err.message);
         }
@@ -1787,11 +1771,11 @@ Readability.prototype = {
 
     // property is a space-separated list of values
     var propertyPattern =
-      /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
+      /^\s*(article|dc|dcterms|og|twitter)\s*:\s*(author|creator|description|image|published_time|modified|title|site_name)\s*$/i;
 
     // name is a single value
     var namePattern =
-      /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
+      /^\s*(?:(dc|dcterms|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
 
     // Find description tags.
     this._forEachNode(metaElements, function (element) {
@@ -1829,7 +1813,7 @@ Readability.prototype = {
     metadata.title =
       jsonld.title ||
       values["dc:title"] ||
-      values["dcterm:title"] ||
+      values["dcterms:title"] ||
       values["og:title"] ||
       values["weibo:article:title"] ||
       values["weibo:webpage:title"] ||
@@ -1851,7 +1835,7 @@ Readability.prototype = {
     metadata.byline =
       jsonld.byline ||
       values["dc:creator"] ||
-      values["dcterm:creator"] ||
+      values["dcterms:creator"] ||
       values.author ||
       values["parsely-author"] ||
       articleAuthor;
@@ -1860,7 +1844,7 @@ Readability.prototype = {
     metadata.excerpt =
       jsonld.excerpt ||
       values["dc:description"] ||
-      values["dcterm:description"] ||
+      values["dcterms:description"] ||
       values["og:description"] ||
       values["weibo:article:description"] ||
       values["weibo:webpage:description"] ||
@@ -1870,12 +1854,25 @@ Readability.prototype = {
     // get site name
     metadata.siteName = jsonld.siteName || values["og:site_name"];
 
+    // get image thumbnail
+    metadata.image = values["og:image"] || values.image || values["twitter:image"];
+
+    // get favicon
+    metadata.favicon = this._getArticleFavicon()
+
     // get article published time
     metadata.publishedTime =
       jsonld.datePublished ||
       values["article:published_time"] ||
       values["parsely-pub-date"] ||
       null;
+
+    // get modified date
+    metadata.modifiedTime =
+        jsonld.dateModified ||
+        values["article:modified_time"] ||
+        values["dcterms:modified"] ||
+        null;
 
     // in many sites the meta value is escaped with HTML entities,
     // so here we need to unescape it
@@ -1884,8 +1881,67 @@ Readability.prototype = {
     metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
     metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
     metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
+    metadata.modifiedTime = this._unescapeHtmlEntities(metadata.modifiedTime);
 
     return metadata;
+  },
+
+  /**
+   * Trying to extract the favicon from the page
+   **/
+  _getArticleFavicon() {
+
+    // string to return
+    var favicon = "";
+
+    // find all ink tags
+    var metaElements = this._doc.getElementsByTagName("link");
+
+    // iterate over tags.
+    this._forEachNode(metaElements, function (element) {
+
+      // make sure the type is correct and element contains a href attribute
+      var rel = element.hasAttribute("rel") ? element.getAttribute("rel") : "";
+      if (rel === "icon" && element.hasAttribute("href")) {
+        favicon = element.getAttribute("href");
+
+        var type = element.hasAttribute("type") ? element.getAttribute("type") : "";
+        if(type === "image/svg+xml")
+        {
+          // svg wins as best quality format
+          return this._toAbsoluteURI(favicon);
+        }
+
+        // what is missing here is an algorithm which compares all href and selects the "best" size
+      }
+    });
+
+    // make sure to return an absolute URI
+    return this._toAbsoluteURI(favicon);
+  },
+
+  /**
+   * Convert a relative to an absolute URI
+   *
+   * @param {string} uri
+   **/
+  _toAbsoluteURI(uri) {
+
+    const baseURI = this._doc.baseURI;
+    const documentURI = this._doc.documentURI;
+
+    // Leave hash links alone if the base URI matches the document URI:
+    if (baseURI === documentURI && uri.charAt(0) === "#") {
+      return uri;
+    }
+
+    // Otherwise, resolve against base URI:
+    try {
+      return new URL(uri, baseURI).href;
+    } catch (ex) {
+      // Something went wrong, just return the original:
+    }
+    return uri;
   },
 
   /**
@@ -2800,7 +2856,10 @@ Readability.prototype = {
       length: textContent.length,
       excerpt: metadata.excerpt,
       siteName: metadata.siteName || this._articleSiteName,
+      image: metadata.image,
+      favicon: metadata.favicon,
       publishedTime: metadata.publishedTime,
+      modifiedTime: metadata.modifiedTime,
     };
   },
 };

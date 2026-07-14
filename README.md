@@ -53,6 +53,9 @@ Returns an object containing the following properties:
 * `siteName`: name of the site;
 * `lang`: content language;
 * `publishedTime`: published time;
+* `modifiedTime`: modified time;
+* `favicon`: site favicon as URI, SVG format if available;
+* `image`: URI to article image, extracted from metadata;
 
 The `parse()` method works by modifying the DOM. This removes some elements in the web page, which may be undesirable. You can avoid this by passing the clone of the `document` object to the `Readability` constructor:
 
