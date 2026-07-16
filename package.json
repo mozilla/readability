@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/mozilla/readability",
   "devDependencies": {
-    "@release-it/keep-a-changelog": "7.0.0",
+    "@release-it/keep-a-changelog": "7.1.0",
     "chai": "4.3.7",
     "eslint": "8.57.0",
     "eslint-plugin-mozilla": "^3.7.4",
@@ -32,9 +32,9 @@
     "htmltidy2": "1.0.0",
     "js-beautify": "1.14.7",
     "jsdom": "20.0.2",
-    "mocha": "10.8.2",
+    "mocha": "11.7.6",
     "prettier": "^3.3.2",
-    "release-it": "19.0.4",
+    "release-it": "20.2.1",
     "sinon": "14.0.2",
     "xml-name-validator": "^5.0.0"
   }
