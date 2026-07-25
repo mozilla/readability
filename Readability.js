@@ -160,6 +160,7 @@ Readability.prototype = {
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     hashUrl: /^#.+/,
+    httpUrl: /https?:\/\/[^\s<>"')\]]+/g,
     srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
     b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
     // Commas as used in Latin, Sindhi, Chinese and various other scripts.
@@ -1307,10 +1308,12 @@ Readability.prototype = {
 
         // Scale the final candidates score based on link density. Good content
         // should have a relatively small link density (5% or less) and be mostly
-        // unaffected by this operation.
+        // unaffected by this operation. Plain-text URLs are counted here
+        // so a block that is mostly URLs (e.g. an endnote/citation dump)
+        // can't outscore genuine article prose.
         var candidateScore =
           candidate.readability.contentScore *
-          (1 - this._getLinkDensity(candidate));
+          (1 - this._getLinkDensity(candidate, true));
         candidate.readability.contentScore = candidateScore;
 
         this.log("Candidate:", candidate, "with score " + candidateScore);
@@ -2140,7 +2143,7 @@ Readability.prototype = {
    * @param Element
    * @return number (float)
    **/
-  _getLinkDensity(element) {
+  _getLinkDensity(element, includePlainTextUrls) {
     var textLength = this._getInnerText(element).length;
     if (textLength === 0) {
       return 0;
@@ -2154,6 +2157,17 @@ Readability.prototype = {
       var coefficient = href && this.REGEXPS.hashUrl.test(href) ? 0.3 : 1;
       linkLength += this._getInnerText(linkNode).length * coefficient;
     });
+
+    // Optionally count plain-text URLs (e.g. citation sections) as links.
+    // Used when scoring a candidates so actual article content is
+    // given precedence over a list of links.
+    if (includePlainTextUrls) {
+      var innerText = this._getInnerText(element);
+      var urls = innerText.match(this.REGEXPS.httpUrl) || [];
+      urls.forEach(function (url) {
+        linkLength += url.length;
+      });
+    }
 
     return linkLength / textLength;
   },
