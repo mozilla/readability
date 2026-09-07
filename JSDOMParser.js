@@ -743,6 +743,14 @@
       this.setAttribute("srcset", str);
     },
 
+    get lang() {
+      return this.getAttribute("lang") || "";
+    },
+
+    set lang(str) {
+      this.setAttribute("lang", str);
+    },
+
     get nodeName() {
       return this.tagName;
     },

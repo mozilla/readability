@@ -122,6 +122,15 @@ describe("Test JSDOM functionality", function () {
     expect(foo.id).eql(foo.getAttribute("id"));
   });
 
+  it("should have a working lang accessor", function () {
+    var link = baseDoc.getElementsByTagName("a")[0];
+    expect(link.lang).eql("");
+    link.setAttribute("lang", "en-US");
+    expect(link.lang).eql("en-US");
+    link.lang = "fr";
+    expect(link.getAttribute("lang")).eql("fr");
+  });
+
   it("should have a working replaceChild", function () {
     var parent = baseDoc.getElementsByTagName("div")[0];
     var p = baseDoc.createElement("p");
