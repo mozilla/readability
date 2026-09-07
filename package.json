@@ -1,6 +1,6 @@
 {
   "name": "@slax-lab/readability",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "A standalone version of the readability library used for Firefox Reader View.",
   "main": "index.js",
   "types": "index.d.ts",
