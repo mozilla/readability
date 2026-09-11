@@ -13,6 +13,8 @@ reasonable).
 
 ## [Unreleased]
 
+- Treat `u`, `s`, and `bdi` as phrasing content so they stay inline in paragraphs ([#997](https://github.com/mozilla/readability/issues/997))
+
 ## [0.6.0] - 2025-03-03
 
 - [Add Parsely tags as a fallback metadata source](https://github.com/mozilla/readability/pull/865)

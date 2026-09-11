@@ -223,6 +223,7 @@ Readability.prototype = {
     "ABBR",
     "AUDIO",
     "B",
+    "BDI",
     "BDO",
     "BR",
     "BUTTON",
@@ -247,6 +248,7 @@ Readability.prototype = {
     "PROGRESS",
     "Q",
     "RUBY",
+    "S",
     "SAMP",
     "SCRIPT",
     "SELECT",
@@ -257,6 +259,7 @@ Readability.prototype = {
     "SUP",
     "TEXTAREA",
     "TIME",
+    "U",
     "VAR",
     "WBR",
   ],
@@ -739,6 +742,15 @@ Readability.prototype = {
           }
 
           if (!this._isPhrasingContent(next)) {
+            break;
+          }
+
+          // Don't pull in nodes that contain <br>s; those chains become
+          // paragraphs next, and nesting them is invalid HTML.
+          if (
+            next.nodeType === this.ELEMENT_NODE &&
+            next.getElementsByTagName("br").length
+          ) {
             break;
           }
 
