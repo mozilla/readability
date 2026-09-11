@@ -745,13 +745,21 @@ Readability.prototype = {
             break;
           }
 
-          // Don't pull in nodes that contain <br>s; those chains become
-          // paragraphs next, and nesting them is invalid HTML.
-          if (
-            next.nodeType === this.ELEMENT_NODE &&
-            next.getElementsByTagName("br").length
-          ) {
-            break;
+          // Don't pull in nodes that contain a <br><br> chain; those
+          // become paragraphs next, and nesting them is invalid HTML.
+          if (next.nodeType === this.ELEMENT_NODE) {
+            var nestedBrs = next.getElementsByTagName("br");
+            var hasBrChain = false;
+            for (var i = 0; i < nestedBrs.length; i++) {
+              var after = this._nextNode(nestedBrs[i].nextSibling);
+              if (after && after.tagName == "BR") {
+                hasBrChain = true;
+                break;
+              }
+            }
+            if (hasBrChain) {
+              break;
+            }
           }
 
           // Otherwise, make this node a child of the new <p>.
