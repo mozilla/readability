@@ -600,13 +600,13 @@ Readability.prototype = {
       let allSeparators = Array.from(
         origTitle.matchAll(new RegExp(`\\s[${titleSeparators}]\\s`, "gi"))
       );
+      let firstSeparator = allSeparators[0];
       curTitle = origTitle.substring(0, allSeparators.pop().index);
 
       // If the resulting title is too short, remove the first part instead:
       if (wordCount(curTitle) < 3) {
-        curTitle = origTitle.replace(
-          new RegExp(`^[^${titleSeparators}]*[${titleSeparators}]`, "gi"),
-          ""
+        curTitle = origTitle.substring(
+          firstSeparator.index + firstSeparator[0].length
         );
       }
     } else if (curTitle.includes(": ")) {
