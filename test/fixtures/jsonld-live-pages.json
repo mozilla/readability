@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://www.bbcgoodfood.com/recipes/brilliant-banana-loaf",
+    "title": "Banana bread",
+    "date": "2025-03-31T18:10:12+01:00",
+    "htmlTitle": "Banana bread recipe | Good Food",
+    "blocks": [
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": "How to make banana loaf"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "@id": "https://www.bbcgoodfood.com/recipes/brilliant-banana-loaf#Recipe",
+        "name": "Banana bread",
+        "headline": "Banana bread",
+        "datePublished": "2025-03-31T18:10:12+01:00",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://www.bbcgoodfood.com/recipes/brilliant-banana-loaf"
+        }
+      },
+      {
+        "@context": "https://schema.org/",
+        "@type": "BreadcrumbList"
+      },
+      {
+        "@context": "https://schema.org/",
+        "@id": "https://www.bbcgoodfood.com/recipes/brilliant-banana-loaf#Recipe"
+      }
+    ]
+  },
+  {
+    "url": "https://www.allrecipes.com/recipe/20144/banana-banana-bread/",
+    "title": "Banana Banana Bread",
+    "date": "2000-07-11T13:40:38-04:00",
+    "htmlTitle": "Banana Banana Bread Recipe (with Video)",
+    "blocks": [
+      [
+        {
+          "@context": "http://schema.org",
+          "@type": [
+            "Recipe",
+            "NewsArticle"
+          ],
+          "name": "Banana Banana Bread",
+          "headline": "Banana Banana Bread",
+          "datePublished": "2000-07-11T13:40:38-04:00",
+          "mainEntityOfPage": {
+            "@type": [
+              "WebPage"
+            ],
+            "@id": "https://www.allrecipes.com/recipe/20144/banana-banana-bread/",
+            "name": "Banana Banana Bread"
+          }
+        }
+      ]
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "title": "Primary Article Title",
+  "byline": "Jane Doe",
+  "dir": null,
+  "lang": "en",
+  "excerpt": "An article whose publish date should be picked from @graph.",
+  "siteName": "Example News",
+  "publishedTime": "2026-09-08T11:26:35.000Z",
+  "readerable": true
+}

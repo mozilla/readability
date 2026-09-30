@@ -165,9 +165,8 @@ Readability.prototype = {
     // Commas as used in Latin, Sindhi, Chinese and various other scripts.
     // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
     commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
-    // See: https://schema.org/Article
-    jsonLdArticleTypes:
-      /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/,
+    // Accept any non-empty JSON-LD type; selection happens separately.
+    jsonLdArticleTypes: /.+/,
     // used to see if a node's content matches words commonly used for ad blocks or loading indicators
     adWords:
       /^(ad(vertising|vertisement)?|pub(licité)?|werb(ung)?|广告|Реклама|Anuncio)$/iu,
@@ -1650,126 +1649,183 @@ Readability.prototype = {
       });
   },
 
-  /**
-   * Try to extract metadata from JSON-LD object.
-   * For now, only Schema.org objects of type Article or its subtypes are supported.
-   * @return Object with any metadata that could be extracted (possibly none)
-   */
+  /** Select JSON-LD metadata across scripts, arrays, and graphs. */
+  _jsonLdTypeMatches(type) {
+    var types = Array.isArray(type) ? type : [type];
+    return types.some(
+      value =>
+        typeof value === "string" &&
+        this.REGEXPS.jsonLdArticleTypes.test(value.trim())
+    );
+  },
+
   _getJSONLD(doc) {
-    var scripts = this._getAllNodesWithTag(doc, ["script"]);
+    var candidates = [];
+    var schema = /^https?:\/\/schema\.org\/?$/;
+    function isSchema(context, inheritedSchema = false) {
+      if (Array.isArray(context)) {
+        // Context entries apply in order; later vocabularies replace earlier ones.
+        return context.reduce(
+          (activeSchema, entry) => isSchema(entry, activeSchema),
+          inheritedSchema
+        );
+      }
+      if (typeof context === "string") {
+        // Remote contexts are not fetched. Only known Schema.org URLs qualify.
+        return schema.test(context);
+      }
+      if (!context || typeof context !== "object") {
+        return false;
+      }
+      if (Object.prototype.hasOwnProperty.call(context, "@vocab")) {
+        return (
+          typeof context["@vocab"] === "string" &&
+          schema.test(context["@vocab"])
+        );
+      }
+      // Language and term definitions do not replace the active vocabulary.
+      return inheritedSchema;
+    }
+    var collect = (node, inheritedSchema = false) => {
+      if (Array.isArray(node)) {
+        node.forEach(item => collect(item, inheritedSchema));
+        return;
+      }
+      if (!node || typeof node !== "object") {
+        return;
+      }
+      var schemaContext =
+        node["@context"] === undefined
+          ? inheritedSchema
+          : isSchema(node["@context"], inheritedSchema);
+      if (schemaContext && this._jsonLdTypeMatches(node["@type"])) {
+        candidates.push(node);
+      }
+      if (Array.isArray(node["@graph"])) {
+        collect(node["@graph"], schemaContext);
+      }
+    };
+    this._forEachNode(this._getAllNodesWithTag(doc, ["script"]), script => {
+      if (script.getAttribute("type") !== "application/ld+json") {
+        return;
+      }
+      try {
+        collect(
+          JSON.parse(
+            script.textContent.replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, "")
+          )
+        );
+      } catch (err) {
+        this.log(err.message);
+      }
+    });
 
-    var metadata;
-
-    this._forEachNode(scripts, function (jsonLdElement) {
+    var pageURLs = new Set();
+    var normalize = value => {
+      try {
+        var url = new URL(value, doc.baseURI);
+        url.hash = "";
+        return url.href;
+      } catch {
+        return null;
+      }
+    };
+    var documentURL = normalize(doc.documentURI);
+    if (documentURL) {
+      pageURLs.add(documentURL);
+    }
+    this._forEachNode(this._getAllNodesWithTag(doc, ["link"]), link => {
       if (
-        !metadata &&
-        jsonLdElement.getAttribute("type") === "application/ld+json"
+        (link.getAttribute("rel") || "")
+          .toLowerCase()
+          .split(/\s+/)
+          .includes("canonical")
       ) {
-        try {
-          // Strip CDATA markers if present
-          var content = jsonLdElement.textContent.replace(
-            /^\s*<!\[CDATA\[|\]\]>\s*$/g,
-            ""
-          );
-          var parsed = JSON.parse(content);
-
-          if (Array.isArray(parsed)) {
-            parsed = parsed.find(it => {
-              return (
-                it["@type"] &&
-                it["@type"].match(this.REGEXPS.jsonLdArticleTypes)
-              );
-            });
-            if (!parsed) {
-              return;
-            }
-          }
-
-          var schemaDotOrgRegex = /^https?\:\/\/schema\.org\/?$/;
-          var matches =
-            (typeof parsed["@context"] === "string" &&
-              parsed["@context"].match(schemaDotOrgRegex)) ||
-            (typeof parsed["@context"] === "object" &&
-              typeof parsed["@context"]["@vocab"] == "string" &&
-              parsed["@context"]["@vocab"].match(schemaDotOrgRegex));
-
-          if (!matches) {
-            return;
-          }
-
-          if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
-            parsed = parsed["@graph"].find(it => {
-              return (it["@type"] || "").match(this.REGEXPS.jsonLdArticleTypes);
-            });
-          }
-
-          if (
-            !parsed ||
-            !parsed["@type"] ||
-            !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)
-          ) {
-            return;
-          }
-
-          metadata = {};
-
-          if (
-            typeof parsed.name === "string" &&
-            typeof parsed.headline === "string" &&
-            parsed.name !== parsed.headline
-          ) {
-            // we have both name and headline element in the JSON-LD. They should both be the same but some websites like aktualne.cz
-            // put their own name into "name" and the article title to "headline" which confuses Readability. So we try to check if either
-            // "name" or "headline" closely matches the html title, and if so, use that one. If not, then we use "name" by default.
-
-            var title = this._getArticleTitle();
-            var nameMatches = this._textSimilarity(parsed.name, title) > 0.75;
-            var headlineMatches =
-              this._textSimilarity(parsed.headline, title) > 0.75;
-
-            if (headlineMatches && !nameMatches) {
-              metadata.title = parsed.headline;
-            } else {
-              metadata.title = parsed.name;
-            }
-          } else if (typeof parsed.name === "string") {
-            metadata.title = parsed.name.trim();
-          } else if (typeof parsed.headline === "string") {
-            metadata.title = parsed.headline.trim();
-          }
-          if (parsed.author) {
-            if (typeof parsed.author.name === "string") {
-              metadata.byline = parsed.author.name.trim();
-            } else if (
-              Array.isArray(parsed.author) &&
-              parsed.author[0] &&
-              typeof parsed.author[0].name === "string"
-            ) {
-              metadata.byline = parsed.author
-                .filter(function (author) {
-                  return author && typeof author.name === "string";
-                })
-                .map(function (author) {
-                  return author.name.trim();
-                })
-                .join(", ");
-            }
-          }
-          if (typeof parsed.description === "string") {
-            metadata.excerpt = parsed.description.trim();
-          }
-          if (parsed.publisher && typeof parsed.publisher.name === "string") {
-            metadata.siteName = parsed.publisher.name.trim();
-          }
-          if (typeof parsed.datePublished === "string") {
-            metadata.datePublished = parsed.datePublished.trim();
-          }
-        } catch (err) {
-          this.log(err.message);
+        var href = link.getAttribute("href");
+        var canonicalURL = href && normalize(href);
+        if (canonicalURL) {
+          pageURLs.add(canonicalURL);
         }
       }
     });
-    return metadata ? metadata : {};
+    var matchesPage = value => {
+      if (Array.isArray(value)) {
+        return value.some(matchesPage);
+      }
+      var reference =
+        typeof value === "string"
+          ? value
+          : value && (value["@id"] === undefined ? value.url : value["@id"]);
+      return (
+        typeof reference === "string" && pageURLs.has(normalize(reference))
+      );
+    };
+    var dated = candidates.filter(
+      node =>
+        typeof node.datePublished === "string" && node.datePublished.trim()
+    );
+    var parsed =
+      dated.find(node => matchesPage(node.mainEntityOfPage)) || dated[0];
+    if (!parsed) {
+      // Without a date, require an explicit association with this page.
+      parsed = candidates.find(node => matchesPage(node.mainEntityOfPage));
+    }
+    if (!parsed) {
+      return {};
+    }
+    var metadata = {};
+
+    if (
+      typeof parsed.name === "string" &&
+      typeof parsed.headline === "string" &&
+      parsed.name !== parsed.headline
+    ) {
+      // we have both name and headline element in the JSON-LD. They should both be the same but some websites like aktualne.cz
+      // put their own name into "name" and the article title to "headline" which confuses Readability. So we try to check if either
+      // "name" or "headline" closely matches the html title, and if so, use that one. If not, then we use "name" by default.
+
+      var title = this._getArticleTitle();
+      var nameMatches = this._textSimilarity(parsed.name, title) > 0.75;
+      var headlineMatches = this._textSimilarity(parsed.headline, title) > 0.75;
+
+      if (headlineMatches && !nameMatches) {
+        metadata.title = parsed.headline;
+      } else {
+        metadata.title = parsed.name;
+      }
+    } else if (typeof parsed.name === "string") {
+      metadata.title = parsed.name.trim();
+    } else if (typeof parsed.headline === "string") {
+      metadata.title = parsed.headline.trim();
+    }
+    if (parsed.author) {
+      if (typeof parsed.author.name === "string") {
+        metadata.byline = parsed.author.name.trim();
+      } else if (
+        Array.isArray(parsed.author) &&
+        parsed.author[0] &&
+        typeof parsed.author[0].name === "string"
+      ) {
+        metadata.byline = parsed.author
+          .filter(function (author) {
+            return author && typeof author.name === "string";
+          })
+          .map(function (author) {
+            return author.name.trim();
+          })
+          .join(", ");
+      }
+    }
+    if (typeof parsed.description === "string") {
+      metadata.excerpt = parsed.description.trim();
+    }
+    if (parsed.publisher && typeof parsed.publisher.name === "string") {
+      metadata.siteName = parsed.publisher.name.trim();
+    }
+    if (typeof parsed.datePublished === "string") {
+      metadata.datePublished = parsed.datePublished.trim();
+    }
+    return metadata;
   },
 
   /**

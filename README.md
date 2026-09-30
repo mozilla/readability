@@ -61,6 +61,39 @@ var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 ```
 
+#### JSON-LD metadata selection
+
+Unless `disableJSONLD` is set, Readability collects Schema.org entities with a
+non-empty string type (including types in an `@type` array) from JSON-LD scripts,
+top-level arrays, and `@graph` arrays. Context array entries apply in order:
+a later `@vocab` replaces the active vocabulary, and `null` resets it. Language
+and term definitions preserve the inherited vocabulary, including in graph
+children. Remote contexts are not fetched; an unrecognized context URL is
+conservatively treated as non-Schema.org until a later supported context
+establishes Schema.org again. It selects one entity's metadata:
+
+1. The first entity with a non-empty string `datePublished` whose
+   `mainEntityOfPage` matches the document URL or a canonical link.
+2. Otherwise, the first entity with a non-empty string `datePublished`.
+3. If no entity has a date, the first entity whose `mainEntityOfPage` matches.
+4. Otherwise, no JSON-LD metadata is used.
+
+Page references can be URL strings, objects containing `@id`, objects containing
+`url` when `@id` is absent, or arrays of these forms. Relative references resolve
+against the document's base URI; fragments are ignored when comparing URLs.
+Selection follows script and array order and does not search nested properties
+such as reviews. It does not resolve references to other JSON-LD nodes.
+
+The selected entity's fields take precedence over the existing HTML metadata
+fallbacks. Missing fields are not filled from other JSON-LD entities.
+`publishedTime` is `null` when neither the selected entity nor the supported HTML
+metadata provides a publication time. Dates are not validated or converted.
+
+This is a heuristic: when multiple dated entities have no distinguishing page
+association, the first may describe something other than the main content.
+Undated entities without a matching page association are skipped, even when they
+contain a title, author, or description.
+
 ### `isProbablyReaderable(document, options)`
 
 A quick-and-dirty way of figuring out if it's plausible that the contents of a given document are suitable for processing with Readability. It is likely to produce both false positives and false negatives. The reason it exists is to avoid bogging down a time-sensitive process (like loading and showing the user a webpage) with the complex logic in the core of Readability. Improvements to its logic (while not deteriorating its performance) are very welcome.
