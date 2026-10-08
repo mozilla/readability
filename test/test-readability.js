@@ -357,6 +357,145 @@ describe("Readability API", function () {
       expect(content).eql(expected_xhtml);
     });
   });
+
+  describe("title comparison with non-Latin scripts", function () {
+    // Each title is deliberately short enough (<= 4 words) for
+    // _getArticleTitle to keep the whole <title> text, and differentTitle
+    // shares no words with any of them.
+    var titles = {
+      ASCII: "The quick brown fox",
+      "accented Latin": "Café résumé naïve",
+      "decomposed accents": "Café résumé naïve",
+      Cyrillic: "Быстрая коричневая лиса",
+      CJK: "快速的棕色狐狸",
+      Arabic: "الثعلب البني السريع",
+      "Arabic with diacritics": "الثَّعْلَبُ البُنِّيُّ السَّرِيعُ",
+      Hebrew: "שועל חום מהיר",
+      Devanagari: "तेज़ भूरी लोमड़ी",
+    };
+    var differentTitle = "Lorem ipsum dolor";
+    var paragraph =
+      "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do " +
+      "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
+      "minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip " +
+      "ex ea commodo consequat. Duis aute irure dolor in reprehenderit in " +
+      "voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>";
+    var parsers = {
+      jsdom: source => new JSDOM(source).window.document,
+      JSDOMParser: source => new JSDOMParser().parse(source),
+    };
+
+    describe("tokenizer", function () {
+      var tokenize = text =>
+        text
+          .toLowerCase()
+          .split(Readability.prototype.REGEXPS.tokenize)
+          .filter(Boolean);
+
+      it("should split ASCII text on anything but letters, digits and _", function () {
+        expect(tokenize("Foo, bar-baz_qux! 42?")).eql([
+          "foo",
+          "bar",
+          "baz_qux",
+          "42",
+        ]);
+      });
+
+      it("should not split words in non-Latin scripts", function () {
+        expect(tokenize("Быстрая, коричневая лиса.")).eql([
+          "быстрая",
+          "коричневая",
+          "лиса",
+        ]);
+        expect(tokenize("שועל חום מהיר")).eql(["שועל", "חום", "מהיר"]);
+        expect(tokenize("快速的棕色狐狸，12")).eql(["快速的棕色狐狸", "12"]);
+      });
+
+      it("should keep combining marks inside words", function () {
+        expect(tokenize(titles["decomposed accents"])).eql([
+          "café",
+          "résumé",
+          "naïve",
+        ]);
+        expect(tokenize(titles["Arabic with diacritics"])).to.have.lengthOf(3);
+        expect(tokenize(titles.Devanagari)).to.have.lengthOf(3);
+      });
+    });
+
+    describe("#_textSimilarity", function () {
+      var readability = new Readability(
+        new JSDOMParser().parse("<html><div>yo</div></html>")
+      );
+
+      Object.keys(titles).forEach(function (script) {
+        it(`should compare ${script} text by its words`, function () {
+          var title = titles[script];
+          expect(readability._textSimilarity(title, title)).eql(1);
+          expect(readability._textSimilarity(title, differentTitle)).eql(0);
+          expect(readability._textSimilarity(differentTitle, title)).eql(0);
+          expect(
+            readability._textSimilarity(title + " - Example Site", title)
+          ).eql(1);
+        });
+      });
+
+      it("should ignore case and punctuation in non-Latin text", function () {
+        expect(
+          readability._textSimilarity(
+            "Быстрая коричневая лиса",
+            "быстрая, коричневая лиса!"
+          )
+        ).eql(1);
+      });
+    });
+
+    Object.keys(parsers).forEach(function (parserName) {
+      describe(`duplicate title heading removal (${parserName})`, function () {
+        Object.keys(titles).forEach(function (script) {
+          it(`should remove an <h1> repeating the ${script} title`, function () {
+            var title = titles[script];
+            var source =
+              `<html><head><title>${title} - Example Site</title></head>` +
+              `<body><article><h1>${title}</h1>` +
+              paragraph.repeat(3) +
+              "</article></body></html>";
+            var result = new Readability(parsers[parserName](source)).parse();
+            expect(result.title).eql(`${title} - Example Site`);
+            expect(result.content).to.not.include(title);
+            expect(result.content).to.include("Lorem ipsum dolor sit amet");
+          });
+        });
+
+        it("should keep a heading that is not the title", function () {
+          var heading = "Другой заголовок статьи";
+          var source =
+            "<html><head><title>Быстрая коричневая лиса - Example Site</title></head>" +
+            `<body><article><h1>${heading}</h1>` +
+            paragraph.repeat(3) +
+            "</article></body></html>";
+          var result = new Readability(parsers[parserName](source)).parse();
+          expect(result.content).to.include(heading);
+        });
+      });
+    });
+
+    it("should use the JSON-LD headline matching a non-Latin title", function () {
+      var source =
+        "<html><head><title>Быстрая коричневая лиса</title>" +
+        '<script type="application/ld+json">' +
+        JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          name: "Название сайта",
+          headline: "Быстрая коричневая лиса",
+        }) +
+        "</script></head><body><article>" +
+        paragraph.repeat(3) +
+        "</article></body></html>";
+      var result = new Readability(new JSDOM(source).window.document).parse();
+      expect(result.title).eql("Быстрая коричневая лиса");
+    });
+  });
 });
 
 describe("Test pages", function () {

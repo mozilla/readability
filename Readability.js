@@ -156,7 +156,9 @@ Readability.prototype = {
     shareElements: /(\b|_)(share|sharedaddy)(\b|_)/i,
     nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
     prevLink: /(prev|earl|old|new|<|«)/i,
-    tokenize: /\W+/g,
+    // Split on anything that isn't a letter, combining mark, number or
+    // underscore in any script (unlike \W, which only knows about ASCII).
+    tokenize: /[^\p{L}\p{M}\p{N}_]+/gu,
     whitespace: /^\s*$/,
     hasContent: /\S$/,
     hashUrl: /^#.+/,
