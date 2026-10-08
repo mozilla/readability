@@ -13,6 +13,8 @@ reasonable).
 
 ## [Unreleased]
 
+- Fix title similarity checks (duplicate title heading removal, JSON-LD name/headline matching) for non-ASCII titles, e.g. Cyrillic, CJK, Arabic and Hebrew
+
 ## [0.6.0] - 2025-03-03
 
 - [Add Parsely tags as a fallback metadata source](https://github.com/mozilla/readability/pull/865)
