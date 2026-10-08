@@ -122,6 +122,52 @@ describe("Test JSDOM functionality", function () {
     expect(foo.id).eql(foo.getAttribute("id"));
   });
 
+  describe("lang property reflection", function () {
+    ["en", "PT-br", ""].forEach(function (language) {
+      it(
+        "should read the parsed lang attribute " + JSON.stringify(language),
+        function () {
+          var doc = new JSDOMParser().parse(
+            '<html lang="' + language + '"><body></body></html>'
+          );
+          expect(doc.documentElement.lang).eql(language);
+        }
+      );
+    });
+
+    it("should return an empty string when lang is missing", function () {
+      var doc = new JSDOMParser().parse("<html><body></body></html>");
+      expect(doc.documentElement.lang).eql("");
+    });
+
+    it("should keep the property and attribute in sync", function () {
+      var doc = new JSDOMParser().parse('<html lang="en"><body></body></html>');
+      doc.documentElement.lang = "fr";
+      expect(doc.documentElement.getAttribute("lang")).eql("fr");
+      doc.documentElement.setAttribute("lang", "de");
+      expect(doc.documentElement.lang).eql("de");
+      doc.documentElement.removeAttribute("lang");
+      expect(doc.documentElement.lang).eql("");
+    });
+
+    it("should reflect a child element's own language", function () {
+      var doc = new JSDOMParser().parse(
+        '<html lang="en"><body><div></div><p lang="es"></p></body></html>'
+      );
+      expect(doc.getElementsByTagName("div")[0].lang).eql("");
+      expect(doc.getElementsByTagName("p")[0].lang).eql("es");
+    });
+
+    it("should update and serialize lang on a created element", function () {
+      var doc = new JSDOMParser().parse("<html><body></body></html>");
+      var element = doc.createElement("div");
+      element.lang = "it";
+      expect(element.getAttribute("lang")).eql("it");
+      doc.body.appendChild(element);
+      expect(doc.body.innerHTML).eql('<div lang="it"></div>');
+    });
+  });
+
   it("should have a working replaceChild", function () {
     var parent = baseDoc.getElementsByTagName("div")[0];
     var p = baseDoc.createElement("p");

@@ -719,6 +719,14 @@
       this.setAttribute("id", str);
     },
 
+    get lang() {
+      return this.getAttribute("lang") || "";
+    },
+
+    set lang(str) {
+      this.setAttribute("lang", str);
+    },
+
     get href() {
       return this.getAttribute("href") || "";
     },
