@@ -677,6 +677,50 @@ Readability.prototype = {
     }
 
     this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
+
+    this._removeMediaWikiEditLinks(doc);
+  },
+
+  /**
+   * MediaWiki (e.g. Wikipedia) puts "[edit]" links next to section headings,
+   * inside a wrapper like <div class="mw-heading"><h2>…</h2><span
+   * class="mw-editsection">…</span></div>. That link makes the wrapper look
+   * like a link-heavy block, so it gets removed together with the heading.
+   * Only headings are visited here, so pages without them pay almost nothing.
+   *
+   * @param Element
+   * @return void
+   **/
+  _removeMediaWikiEditLinks(doc) {
+    var isEditSection = function (node) {
+      return (
+        node.nodeType === this.ELEMENT_NODE &&
+        (" " + node.className + " ").includes(" mw-editsection ")
+      );
+    };
+    var headings = this._getAllNodesWithTag(doc, [
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+    ]);
+    this._forEachNode(headings, function (heading) {
+      // Older markup: the edit link is inside the heading.
+      // Current markup: the edit link is a sibling of the heading.
+      var containers = [heading];
+      if (heading.parentNode) {
+        containers.push(heading.parentNode);
+      }
+      containers.forEach(function (container) {
+        Array.from(container.children).forEach(function (child) {
+          if (isEditSection.call(this, child)) {
+            child.remove();
+          }
+        }, this);
+      }, this);
+    });
   },
 
   /**
