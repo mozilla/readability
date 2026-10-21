@@ -678,13 +678,48 @@ Readability.prototype = {
 
     this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
 
-    // Fix for issue #986: Remove Wikipedia edit section links that cause headings
-    // to be improperly removed. These spans contain "edit" links and add negative
-    // weight to otherwise good headings.
-    this._forEachNode(this._getAllNodesWithTag(doc, ["span"]), function (span) {
-      if (span.className && span.className.includes("mw-editsection")) {
-        span.remove();
+    this._removeMediaWikiEditLinks(doc);
+  },
+
+  /**
+   * MediaWiki (e.g. Wikipedia) puts "[edit]" links next to section headings,
+   * inside a wrapper like <div class="mw-heading"><h2>…</h2><span
+   * class="mw-editsection">…</span></div>. That link makes the wrapper look
+   * like a link-heavy block, so it gets removed together with the heading.
+   * Only headings are visited here, so pages without them pay almost nothing.
+   *
+   * @param Element
+   * @return void
+   **/
+  _removeMediaWikiEditLinks(doc) {
+    var isEditSection = function (node) {
+      return (
+        node.nodeType === this.ELEMENT_NODE &&
+        (" " + node.className + " ").includes(" mw-editsection ")
+      );
+    };
+    var headings = this._getAllNodesWithTag(doc, [
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+    ]);
+    this._forEachNode(headings, function (heading) {
+      // Older markup: the edit link is inside the heading.
+      // Current markup: the edit link is a sibling of the heading.
+      var containers = [heading];
+      if (heading.parentNode) {
+        containers.push(heading.parentNode);
       }
+      containers.forEach(function (container) {
+        Array.from(container.children).forEach(function (child) {
+          if (isEditSection.call(this, child)) {
+            child.remove();
+          }
+        }, this);
+      }, this);
     });
   },
 
@@ -2549,18 +2584,18 @@ Readability.prototype = {
           "iframe",
         ]);
 
-        for (var k = 0; k < embeds.length; k++) {
+        for (var i = 0; i < embeds.length; i++) {
           // If this embed has attribute that matches video regex, don't delete it.
-          for (var j = 0; j < embeds[k].attributes.length; j++) {
-            if (this._allowedVideoRegex.test(embeds[k].attributes[j].value)) {
+          for (var j = 0; j < embeds[i].attributes.length; j++) {
+            if (this._allowedVideoRegex.test(embeds[i].attributes[j].value)) {
               return false;
             }
           }
 
           // For embed with <object> tag, check inner HTML as well.
           if (
-            embeds[k].tagName === "object" &&
-            this._allowedVideoRegex.test(embeds[k].innerHTML)
+            embeds[i].tagName === "object" &&
+            this._allowedVideoRegex.test(embeds[i].innerHTML)
           ) {
             return false;
           }
@@ -2693,101 +2728,10 @@ Readability.prototype = {
    **/
   _cleanHeaders(e) {
     let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
-    const isPunctuationOnly = function (text) {
-      return !!text && /^[\s\[\]\(\){}#*¶·•:;|/\\\-.,!?'"`~_+=<>]+$/.test(text);
-    };
-    const getNodeText = function (node) {
-      if (!node) {
-        return "";
-      }
-      return node.textContent ? node.textContent.trim() : "";
-    };
-    const isLowValueNode = function (node, hasOtherMeaningfulText) {
-      let text = getNodeText.call(this, node);
-      if (!text) {
-        return true;
-      }
-      if (isPunctuationOnly(text)) {
-        return true;
-      }
-      return hasOtherMeaningfulText && text.length <= 1;
-    };
-    const collectTextNodes = function (node, texts) {
-      if (!node) {
-        return;
-      }
-      if (node.nodeType === this.TEXT_NODE) {
-        let text = getNodeText.call(this, node);
-        if (text) {
-          texts.push(text);
-        }
-        return;
-      }
-      if (node.nodeType !== this.ELEMENT_NODE || !node.childNodes) {
-        return;
-      }
-      for (let i = 0; i < node.childNodes.length; i++) {
-        collectTextNodes.call(this, node.childNodes[i], texts);
-      }
-    };
-    const headerHasLongMeaningfulText = function (heading) {
-      let texts = [];
-      collectTextNodes.call(this, heading, texts);
-      for (let i = 0; i < texts.length; i++) {
-        if (!isPunctuationOnly(texts[i]) && texts[i].length > 1) {
-          return true;
-        }
-      }
-      return false;
-    };
-    const getMeaningfulHeaderText = function (heading) {
-      let hasOtherMeaningfulText = headerHasLongMeaningfulText.call(this, heading);
-      let meaningfulParts = [];
-
-      for (let i = 0; i < heading.childNodes.length; i++) {
-        let child = heading.childNodes[i];
-        if (isLowValueNode.call(this, child, hasOtherMeaningfulText)) {
-          continue;
-        }
-
-        let childTexts = [];
-        collectTextNodes.call(this, child, childTexts);
-        for (let j = 0; j < childTexts.length; j++) {
-          let text = childTexts[j];
-          if (!isLowValueNode.call(this, { textContent: text }, hasOtherMeaningfulText)) {
-            meaningfulParts.push(text);
-          }
-        }
-      }
-
-      return meaningfulParts.join(" ").replace(this.REGEXPS.normalize, " ").trim();
-    };
-    const hasSemanticAnchorChild = function (heading) {
-      if (!heading || !heading.childNodes) {
-        return false;
-      }
-      for (let i = 0; i < heading.childNodes.length; i++) {
-        let child = heading.childNodes[i];
-        if (child.nodeType !== this.ELEMENT_NODE) {
-          continue;
-        }
-        if ((child.id || child.getAttribute("name")) && getNodeText.call(this, child)) {
-          return true;
-        }
-      }
-      return false;
-    };
     this._removeNodes(headingNodes, function (node) {
-      let meaningfulText = getMeaningfulHeaderText.call(this, node);
-      let shouldPreserveWithMeaningfulText =
-        meaningfulText.length > 0 && hasSemanticAnchorChild.call(this, node);
-      let shouldRemove =
-        this._getClassWeight(node) < 0 && !shouldPreserveWithMeaningfulText;
+      let shouldRemove = this._getClassWeight(node) < 0;
       if (shouldRemove) {
-        this.log(
-          "Removing header with low class weight and no meaningful text:",
-          node
-        );
+        this.log("Removing header with low class weight:", node);
       }
       return shouldRemove;
     });
