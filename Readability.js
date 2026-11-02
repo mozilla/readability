@@ -146,6 +146,7 @@ Readability.prototype = {
       /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
     negative:
       /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|footer|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|widget/i,
+    hiddenOverflow: /(^|\s)(?:\S+:)?!?overflow(?:-[xy])?-hidden!?(?=\s|$)/gi,
     extraneous:
       /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
     byline: /byline|author|dateline|writtenby|p-author/i,
@@ -2174,7 +2175,9 @@ Readability.prototype = {
 
     // Look for a special classname
     if (typeof e.className === "string" && e.className !== "") {
-      if (this.REGEXPS.negative.test(e.className)) {
+      // Overflow clipping can be used on visible article content.
+      var className = e.className.replace(this.REGEXPS.hiddenOverflow, "$1");
+      if (this.REGEXPS.negative.test(className)) {
         weight -= 25;
       }
 

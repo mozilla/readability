@@ -1,0 +1,9 @@
+{
+  "title": "Keeping content inside an overflow container",
+  "byline": null,
+  "dir": null,
+  "excerpt": "A reading view should keep the useful sections of an article, including sections\n                whose containers clip overflowing content. A layout class can stop a wide image\n                from extending beyond a column without making the explanation inside that column\n                invisible. This introduction provides the context for the examples that follow.",
+  "siteName": null,
+  "publishedTime": null,
+  "readerable": true
+}
