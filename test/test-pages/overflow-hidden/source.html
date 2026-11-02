@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Keeping content inside an overflow container</title>
+    </head>
+    <body>
+        <article>
+            <p>
+                A reading view should keep the useful sections of an article, including sections
+                whose containers clip overflowing content. A layout class can stop a wide image
+                from extending beyond a column without making the explanation inside that column
+                invisible. This introduction provides the context for the examples that follow.
+            </p>
+            <div class="overflow-hidden">
+                <p>
+                    This explanation belongs to the article. The container uses overflow clipping
+                    to fit its contents into the page layout, while the paragraphs remain visible
+                    to readers. The class name alone does not indicate that the text is hidden,
+                    unrelated to the article, or unsuitable for the reading view.
+                </p>
+                <p>
+                    A second paragraph continues the explanation inside the same container. It
+                    provides an example, adds context, and gives the reader more useful details.
+                    Keeping these paragraphs together preserves the author's intended structure
+                    when the surrounding layout and styling are removed from the page.
+                </p>
+            </div>
+            <div class="hidden">
+                <p>This separate hidden notice is not part of the article.</p>
+                <p>Existing hidden-content cleanup should still remove this notice.</p>
+            </div>
+            <p>
+                The conclusion follows the clipped section and should remain after it. A complete
+                reading view includes the introduction, the explanation in its container, and this
+                final paragraph in their original order. Layout utilities should not cause the
+                middle of an otherwise readable article to disappear during conditional cleanup.
+            </p>
+        </article>
+    </body>
+</html>

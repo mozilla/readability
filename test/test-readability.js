@@ -284,6 +284,34 @@ describe("Readability API", function () {
     });
   });
 
+  describe("overflow clipping class weights", function () {
+    [
+      ["overflow-hidden", 0],
+      ["overflow-x-hidden overflow-y-hidden", 0],
+      ["rounded\tmd:hover:overflow-hidden shadow", 0],
+      ["!overflow-hidden md:overflow-y-hidden!", 0],
+      ["content overflow-hidden", 25],
+      ["overflow-hidden hidden", -25],
+      ["overflow-hidden sidebar", -25],
+      ["not-overflow-hidden", -25],
+      ["overflow-hidden-note", -25],
+    ].forEach(function ([className, expectedWeight]) {
+      it("should score " + JSON.stringify(className), function () {
+        var doc = new JSDOM("<div></div>").window.document;
+        var node = doc.querySelector("div");
+        node.className = className;
+        expect(new Readability(doc)._getClassWeight(node)).eql(expectedWeight);
+      });
+    });
+
+    it("should retain the existing hidden ID weight", function () {
+      var doc = new JSDOM('<div id="overflow-hidden"></div>').window.document;
+      expect(
+        new Readability(doc)._getClassWeight(doc.querySelector("div"))
+      ).eql(-25);
+    });
+  });
+
   describe("#parse", function () {
     var exampleSource = testPages[0].source;
 
