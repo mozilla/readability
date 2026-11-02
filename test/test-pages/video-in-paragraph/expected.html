@@ -1,0 +1,15 @@
+<div id="readability-page-1" class="page">
+    <article>
+        <p> A useful article can explain an idea in words and demonstrate it with a video. Both parts belong in the reading view, even when the video has no caption or fallback text. The surrounding paragraphs provide the context for the demonstration, while the recording shows the details that would be difficult to describe in prose. </p>
+        <p><video controls="controls" src="https://example.com/direct.mp4"></video></p>
+        <p> The first recording has its address on the video element itself. Another recording can instead offer a source element, letting the browser choose the media to play. Neither arrangement needs to contain visible text to be meaningful article content. Removing an apparently empty paragraph must not remove the demonstration inside it. </p>
+        <p>
+            <video controls="controls">
+                <source src="https://example.com/source.mp4" type="video/mp4" />
+            </video>
+        </p>
+        <p><video controls="controls" src="https://example.com/wrapped.mp4"></video></p>
+        <p><span><video controls="controls" src="https://example.com/nested.mp4"></video></span></p>
+        <p> An empty paragraph can still be removed. Keeping useful media should preserve the article's structure without keeping blank space between its sections. Readers should be able to follow this explanation and watch each of the examples in the same order as they appeared in the original article, without losing a recording during cleanup. </p>
+    </article>
+</div>

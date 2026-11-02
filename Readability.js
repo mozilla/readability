@@ -849,6 +849,7 @@ Readability.prototype = {
         // ones remain.
         var contentElementCount = this._getAllNodesWithTag(paragraph, [
           "img",
+          "video",
           "embed",
           "object",
           "iframe",
